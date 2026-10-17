@@ -1,0 +1,52 @@
+---
+import Wordmark from "./Wordmark.astro";
+import Arrow from "./Arrow.astro";
+import { navigation } from "../data/academy";
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+---
+
+<header class="site-header">
+  <div class="header-inner wrap">
+    <Wordmark />
+    <nav class="desktop-nav" aria-label="Hauptnavigation">
+      {navigation.map(({ href, label }) => (
+        <a href={href} aria-current={path === href ? "page" : undefined}>
+          {label}
+        </a>
+      ))}
+    </nav>
+    <a
+      class="header-cta"
+      href="/trainingstermine"
+      aria-current={path === "/trainingstermine" ? "page" : undefined}
+    >
+      Trainingstermine <Arrow diagonal />
+    </a>
+    <details class="mobile-menu" data-mobile-menu>
+      <summary aria-label="Navigation öffnen oder schließen">
+        <span>Menü</span>
+        <span class="menu-bars" aria-hidden="true"></span>
+      </summary>
+      <nav aria-label="Mobile Navigation">
+        {navigation.map(({ href, label }) => (
+          <a href={href} aria-current={path === href ? "page" : undefined}>
+            {label}
+            <Arrow />
+          </a>
+        ))}
+        <a href="/trainingstermine">
+          Trainingstermine
+          <Arrow />
+        </a>
+        <a href="/organisation">
+          Organisation
+          <Arrow />
+        </a>
+        <a href="/kontakt">
+          Kontakt
+          <Arrow />
+        </a>
+      </nav>
+    </details>
+  </div>
+</header>

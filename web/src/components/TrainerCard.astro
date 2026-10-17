@@ -1,0 +1,50 @@
+---
+import Button from "./Button.astro";
+import { getAcademy } from "../lib/content";
+const trainer = getAcademy().trainers[0]!;
+---
+
+<article class="trainer-feature" data-reveal>
+  <a
+    href="/trainerpool"
+    class="trainer-portrait"
+    aria-label="Pierre Klein – Trainerprofil ansehen"
+  >
+    <img
+      src="/images/trainer-placeholder.svg"
+      width="700"
+      height="820"
+      alt="Grafischer PK-Platzhalter; ein freigegebenes Trainerfoto von Pierre Klein folgt."
+      loading="lazy"
+    />
+    <span class="image-label">TRAINERFOTO FOLGT · GRAFISCHER PLATZHALTER</span>
+    <span class="portrait-overlay">
+      Trainerprofil ansehen <span aria-hidden="true">↗</span>
+    </span>
+  </a>
+  <div class="trainer-copy">
+    <p class="eyebrow">PERSÖNLICH. AUFMERKSAM. ENGAGIERT.</p>
+    <h2>
+      DEIN TRAINER.
+      <br />
+      <span>PIERRE KLEIN.</span>
+    </h2>
+    <p class="trainer-role">{trainer.role} · PK Hockey Academy</p>
+    <p>
+      Hinter jedem Entwicklungsschritt steht ein Mensch, der genau hinschaut.
+      Pierre Klein hat die Academy für die individuelle Förderung junger
+      Eishockeyspieler gegründet.
+    </p>
+    <p>
+      Sein Hintergrund verbindet Eishockey und Inlinehockey. Das Training der
+      Academy konzentriert sich auf Eishockey.
+    </p>
+    <Button href="/trainerpool" variant="text">
+      Pierre kennenlernen
+    </Button>
+    <p class="small muted">
+      Ausführliche Biografie, Schwerpunkte und bestätigte Qualifikationen
+      folgen.
+    </p>
+  </div>
+</article>

@@ -1,0 +1,20 @@
+---
+import { getAcademy, formatPrice } from "../lib/content";
+const { pricing } = getAcademy();
+---
+
+<div class="pricing-grid">
+  {pricing.map((price, i) => (
+    <article class="price-card" data-reveal>
+      <p class="eyebrow">{i ? "MEHR RAUM FÜR ENTWICKLUNG" : "DEIN EINSTIEG"}</p>
+      <h3>{price.packageLabel}</h3>
+      <div class="price">{formatPrice(price.price)}</div>
+      <p>{price.description}</p>
+      <span class="price-foot">60 MIN ON-ICE + 60 MIN OFF-ICE / EINHEIT</span>
+    </article>
+  ))}
+</div>
+<p class="small muted pricing-note">
+  Informationen zu Paketbedingungen, Zahlung und Stornierung werden vor einer
+  Buchung ergänzt. Aktuell ist keine Buchung über diese Website möglich.
+</p>

@@ -1,0 +1,114 @@
+---
+import Button from "./Button.astro";
+import {
+  getAcademy,
+  getPublishedSessions,
+  getRegistrationUrl,
+} from "../lib/content";
+const sessions = getPublishedSessions();
+const { venues } = getAcademy();
+const date = (value: string, options: Intl.DateTimeFormatOptions) =>
+  new Intl.DateTimeFormat("de-DE", {
+    timeZone: "Europe/Berlin",
+    ...options,
+  }).format(new Date(value));
+---
+
+<div class="schedule-summary">
+  <span class="eyebrow">TRAININGSTERMINE</span>
+  <span class="small muted">WOCHENENDTRAINING · BIS U13</span>
+</div>
+{sessions.length ? (
+  <div class="sessions">
+    {sessions.map((session) => {
+      const url = getRegistrationUrl(session);
+      return (
+        <article class="session-card">
+          <p class="eyebrow">
+            {date(session.startAt, {
+              weekday: "long",
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
+            })}
+          </p>
+          <h3>{session.title}</h3>
+          <dl>
+            <div>
+              <dt>Uhrzeit</dt>
+              <dd>
+                {date(session.startAt, { hour: "2-digit", minute: "2-digit" })}–
+                {date(session.endAt, { hour: "2-digit", minute: "2-digit" })}{" "}
+                Uhr
+              </dd>
+            </div>
+            <div>
+              <dt>Standort</dt>
+              <dd>
+                {venues.find((v) => v.id === session.venueId)?.city ??
+                  "Wird bekannt gegeben"}
+              </dd>
+            </div>
+            <div>
+              <dt>Gruppe</dt>
+              <dd>{session.group}</dd>
+            </div>
+            <div>
+              <dt>Freie Plätze</dt>
+              <dd>{session.availableSpots ?? "Noch nicht bestätigt"}</dd>
+            </div>
+            <div>
+              <dt>Status</dt>
+              <dd>
+                {session.status === "cancelled"
+                  ? "Abgesagt"
+                  : session.status === "full"
+                    ? "Ausgebucht"
+                    : "Termin veröffentlicht"}
+              </dd>
+            </div>
+          </dl>
+          {url ? (
+            <a
+              class="button button--primary"
+              href={url}
+              rel="noopener noreferrer"
+            >
+              Bei SpielerPlus anmelden
+            </a>
+          ) : (
+            <button class="button" disabled>
+              Anmeldung noch nicht möglich
+            </button>
+          )}
+        </article>
+      );
+    })}
+  </div>
+) : (
+  <div class="schedule-empty" data-reveal>
+    <div class="calendar-art" aria-hidden="true">
+      <svg viewBox="0 0 80 80" fill="none">
+        <rect x="12" y="16" width="56" height="52" rx="2" />
+        <path d="M12 32h56M27 9v15M53 9v15M28 47h24M28 56h13" />
+      </svg>
+    </div>
+    <div>
+      <span class="status-label">
+        <span class="status-dot"></span> TERMINE IN VORBEREITUNG
+      </span>
+      <h3>DEIN NÄCHSTES EISZEIT-KAPITEL.</h3>
+      <p>
+        Die nächsten Trainingstermine werden hier veröffentlicht, sobald Zeit
+        und Ort feststehen. Aktuell gibt es keine freigegebenen Termine und
+        keine buchbaren Plätze.
+      </p>
+      <Button href="/training" variant="text">
+        Trainingskonzept entdecken
+      </Button>
+    </div>
+    <span class="empty-number" aria-hidden="true">
+      01
+    </span>
+  </div>
+)}

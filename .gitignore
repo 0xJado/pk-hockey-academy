@@ -1,0 +1,11 @@
+node_modules/
+web/dist/
+web/.astro/
+.env
+.env.*
+!.env.example
+.tools/
+output/
+.playwright-cli/
+*.log
+.DS_Store

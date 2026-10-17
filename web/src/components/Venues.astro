@@ -1,0 +1,55 @@
+---
+import { getAcademy } from "../lib/content";
+import Arrow from "./Arrow.astro";
+const { venues } = getAcademy();
+---
+
+<div class="venues-layout">
+  <div class="venue-visual" data-venue-mask>
+    <img
+      src="/images/rink.svg"
+      alt="Abstrakte Illustration einer Eisfläche; keine Darstellung einer konkreten Trainingsstätte."
+      width="800"
+      height="660"
+      loading="lazy"
+    />
+    <span class="image-label">DEINE REGION. DEIN EIS. · ILLUSTRATION</span>
+    <span class="venue-visual-text" aria-hidden="true">
+      HEIMAT
+      <br />
+      <b>
+        FÜR DEIN
+        <br />
+        POTENZIAL.
+      </b>
+    </span>
+  </div>
+  <div class="venue-list">
+    {venues
+      .filter((v) => v.status === "active_city")
+      .map((venue, i) => (
+        <a href={`/trainingsstaetten#${venue.id}`} class="venue-row">
+          <span class="small muted">0{i + 1}</span>
+          <h3>{venue.city}</h3>
+          <span class="venue-state">Trainingsstadt</span>
+          <Arrow diagonal />
+        </a>
+      ))}
+    <div class="planned-venues">
+      <p class="eyebrow muted">WEITERE STANDORTE IN PLANUNG</p>
+      <div>
+        {venues
+          .filter((v) => v.status === "planned_city")
+          .map((v) => (
+            <span>
+              {v.city} <small>In Planung</small>
+            </span>
+          ))}
+      </div>
+      <p class="small muted">
+        Konkrete Eishallen und Treffpunkte werden mit dem jeweiligen Termin
+        bekannt gegeben.
+      </p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,63 @@
+---
+import { trainingPhases } from "../data/academy";
+---
+
+<section
+  class="training-story section"
+  data-story
+  aria-labelledby="story-heading"
+>
+  <div class="wrap">
+    <div class="story-heading" data-reveal>
+      <p class="eyebrow">
+        <span></span>DAS 60/60-KONZEPT
+      </p>
+      <h2 id="story-heading">
+        ZWEI PHASEN.
+        <br />
+        <span>EIN ZIEL: DEINE ENTWICKLUNG.</span>
+      </h2>
+      <p>
+        Gezielte Arbeit auf dem Eis. Ergänzende Entwicklung daneben.
+        <br />
+        Jede Einheit verbindet beides.
+      </p>
+    </div>
+    <div class="story-panels">
+      {trainingPhases.map((phase) => (
+        <article class="story-panel" data-story-panel>
+          <div class="phase-top">
+            <span class="eyebrow">
+              {phase.number} / {phase.kicker}
+            </span>
+            <span class="phase-plus" aria-hidden="true">
+              ↗
+            </span>
+          </div>
+          <div class="phase-time">
+            <strong>{phase.time}</strong>
+            <span>
+              MIN
+              <br />
+              {phase.title}
+            </span>
+          </div>
+          <div class="phase-art" aria-hidden="true">
+            <svg viewBox="0 0 600 180">
+              <ellipse cx="300" cy="90" rx="270" ry="68" />
+              <ellipse cx="300" cy="90" rx="55" ry="68" />
+              <path d="M300 22v136M115 40v100M485 40v100M30 90h540" />
+              <path class="skate-line" d="M80 140Q230 20 340 115T550 55" />
+            </svg>
+          </div>
+          <p>{phase.text}</p>
+          <div class="phase-tags">
+            {phase.tags.map((tag) => (
+              <span>{tag}</span>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

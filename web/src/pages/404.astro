@@ -1,0 +1,30 @@
+---
+import Base from "../layouts/Base.astro";
+import Button from "../components/Button.astro";
+---
+
+<Base
+  title="Seite nicht gefunden"
+  description="Diese Seite wurde nicht gefunden. Hier geht es zurück zur PK Hockey Academy und zu den Trainingsterminen."
+>
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="eyebrow">404 / AUSSERHALB DER EISFLÄCHE</p>
+      <h1>
+        KURZ VOM WEG.
+        <br />
+        <span>GLEICH WIEDER DABEI.</span>
+      </h1>
+      <p class="page-intro">
+        Diese Seite gibt es hier nicht. Dein nächster Schritt wartet auf der
+        Startseite.
+      </p>
+      <div class="hero-actions">
+        <Button href="/">Zur Startseite</Button>
+        <Button href="/trainingstermine" variant="outline">
+          Trainingstermine ansehen
+        </Button>
+      </div>
+    </div>
+  </section>
+</Base>

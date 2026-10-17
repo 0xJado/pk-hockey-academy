@@ -1,0 +1,411 @@
+---
+import Base from "../layouts/Base.astro";
+import Button from "../components/Button.astro";
+import TrainingStory from "../components/TrainingStory.astro";
+import TrainerCard from "../components/TrainerCard.astro";
+import Schedule from "../components/Schedule.astro";
+import Pricing from "../components/Pricing.astro";
+import FinalCTA from "../components/FinalCTA.astro";
+import { pages, principles, organisationSteps } from "../data/pages";
+import type { ContentPage } from "../data/pages";
+import { getAcademy } from "../lib/content";
+
+export function getStaticPaths() {
+  return Object.keys(pages).map((page) => ({ params: { page } }));
+}
+const slug = Astro.params.page as ContentPage;
+const page = pages[slug];
+const { venues, trainers } = getAcademy();
+const legal = slug === "impressum" || slug === "datenschutz";
+---
+
+<Base
+  title={
+    slug === "trainingstermine"
+      ? "Trainingstermine – deine nächste Eiszeit"
+      : `${page.title} ${page.accent}`
+  }
+  description={page.description}
+>
+  <section class="page-hero">
+    <div class="wrap">
+      <a href="/" class="breadcrumb">
+        STARTSEITE <span aria-hidden="true">/</span>{" "}
+        {slug === "trainingsstaetten"
+          ? "TRAININGSSTÄTTEN"
+          : slug.toLocaleUpperCase("de-DE")}
+      </a>
+      <p class="eyebrow">{page.label}</p>
+      <h1>
+        {page.title}
+        <br />
+        <span>{page.accent}</span>
+      </h1>
+      <p class="page-intro">{page.intro}</p>
+    </div>
+    <div class="page-hero-lines" aria-hidden="true"></div>
+  </section>
+  {slug === "philosophie" && (
+    <>
+      <section class="section light-section">
+        <div class="wrap">
+          <div class="editorial-intro" data-reveal>
+            <p class="eyebrow">DAS INDIVIDUUM IM TEAMSPORT</p>
+            <h2>
+              MEHR AUFMERKSAMKEIT.
+              <br />
+              <span>MEHR ENTWICKLUNG.</span>
+            </h2>
+            <p class="lead">
+              Eishockey ist ein Teamsport. Und jedes Team besteht aus
+              individuellen Stärken.
+            </p>
+            <p>
+              Wir geben jungen Spielern bis U13 die Möglichkeit, ergänzend zum
+              Vereinstraining an ihrer eigenen Entwicklung zu arbeiten. Mit
+              persönlicher Betreuung und Inhalten, die zum jeweiligen
+              Leistungsstand passen.
+            </p>
+          </div>
+          <div class="principles">
+            {principles.map((item) => (
+              <article data-reveal>
+                <span>{item.number}</span>
+                <div>
+                  <h3>{item.title}</h3>
+                  <p>{item.text}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+          <Button href="/training">Unser Training kennenlernen</Button>
+        </div>
+      </section>
+    </>
+  )}
+  {slug === "training" && (
+    <>
+      <TrainingStory />
+      <section class="section light-section" id="zielgruppe">
+        <div class="wrap target-layout">
+          <div data-reveal>
+            <p class="eyebrow">FÜR WEN WIR TRAINIEREN</p>
+            <h2>
+              DEIN LEVEL.
+              <br />
+              <span>DEIN NÄCHSTER SCHRITT.</span>
+            </h2>
+            <span class="target-age">
+              KINDER & JUGENDLICHE <strong>BIS U13</strong>
+            </span>
+          </div>
+          <div>
+            <p class="lead">Individuelle Förderung in kleinen Gruppen.</p>
+            <p>
+              Das Angebot richtet sich an Kinder und Jugendliche bis U13. Die
+              Inhalte werden an die Spieler und ihre Entwicklung angepasst.
+              Vereins- und Mannschaftstraining bleiben die Basis.
+            </p>
+            <p>
+              Die genaue Altersgruppe wird mit dem jeweiligen Trainingstermin
+              veröffentlicht. Bei Fragen zur passenden Gruppe stehen künftig
+              unsere Kontaktmöglichkeiten zur Verfügung.
+            </p>
+            <Button href="/trainingstermine">Trainingstermine ansehen</Button>
+          </div>
+        </div>
+      </section>
+      <section class="section">
+        <div class="wrap">
+          <p class="eyebrow">DEIN TRAININGSRAHMEN</p>
+          <h2 class="mb-lg">
+            KLAR. PERSÖNLICH.
+            <br />
+            <span>MIT PERSPEKTIVE.</span>
+          </h2>
+          <Pricing />
+        </div>
+      </section>
+    </>
+  )}
+  {slug === "trainerpool" && (
+    <section class="section">
+      <div class="wrap">
+        <TrainerCard />
+        <div class="notice trainer-details">
+          <p class="eyebrow">PROFIL IM AUFBAU</p>
+          <h3>Was bereits feststeht</h3>
+          <p>
+            {trainers[0]!.verifiedBackground.join(" · ")}. Pierre Klein ist
+            Gründer und Trainer der Academy.
+          </p>
+          <p>
+            Trainerporträt, ausführliche Biografie, konkrete Schwerpunkte und
+            nachgewiesene Qualifikationen werden nach Freigabe ergänzt. Weitere
+            Trainer werden erst nach Bestätigung vorgestellt.
+          </p>
+          <Button href="/philosophie" variant="text">
+            Unsere Haltung kennenlernen
+          </Button>
+        </div>
+      </div>
+    </section>
+  )}
+  {slug === "trainingsstaetten" && (
+    <section class="section light-section">
+      <div class="wrap">
+        <p class="eyebrow">AKTUELLE TRAININGSSTÄDTE</p>
+        <div class="city-details">
+          {venues
+            .filter((v) => v.status === "active_city")
+            .map((venue, i) => (
+              <article id={venue.id} data-reveal>
+                <span class="city-number">0{i + 1}</span>
+                <div>
+                  <span class="status-label">TRAININGSSTADT</span>
+                  <h2>{venue.city}</h2>
+                  <p>{venue.details}</p>
+                  <span class="small muted">
+                    Eishalle und Adresse: noch nicht veröffentlicht
+                  </span>
+                </div>
+                <Button href="/trainingstermine" variant="text">
+                  Termine ansehen
+                </Button>
+              </article>
+            ))}
+        </div>
+        <div class="notice">
+          <p class="eyebrow">IN PLANUNG</p>
+          <h3>Die Region im Blick.</h3>
+          <div class="planned-tags">
+            {venues
+              .filter((v) => v.status === "planned_city")
+              .map((v) => (
+                <span>
+                  {v.city} <small>In Planung</small>
+                </span>
+              ))}
+          </div>
+          <p>
+            Diese Standorte sind geplant. Es gibt dort noch keinen bestätigten
+            Trainingsbetrieb.
+          </p>
+        </div>
+      </div>
+    </section>
+  )}
+  {slug === "trainingstermine" && (
+    <>
+      <section class="section light-section">
+        <div class="wrap">
+          <Schedule />
+          <div class="schedule-info">
+            <article>
+              <span class="eyebrow">01 / DER RAHMEN</span>
+              <h3>Eine Einheit. Zwei Phasen.</h3>
+              <p>
+                60 Minuten On-Ice plus 60 Minuten Off-Ice. Individuelle
+                Entwicklung in kleinen Gruppen bis U13.
+              </p>
+              <a href="/training" class="inline-link">
+                Mehr über das Training ↗
+              </a>
+            </article>
+            <article>
+              <span class="eyebrow">02 / DIE ORGANISATION</span>
+              <h3>Wochenende. Wechselnde Orte.</h3>
+              <p>
+                Datum, Start- und Endzeit, Eishalle und Altersgruppe werden mit
+                jedem einzelnen Termin veröffentlicht.
+              </p>
+              <a href="/organisation" class="inline-link">
+                Organisation & Preise ↗
+              </a>
+            </article>
+            <article>
+              <span class="eyebrow">03 / DIE ANMELDUNG</span>
+              <h3>Freigabe folgt.</h3>
+              <p>
+                SpielerPlus-Links werden künftig pro Termin hinterlegt. Aktuell
+                ist keine Anmeldung möglich. Es gibt keine
+                Live-Synchronisierung.
+              </p>
+              <a href="/kontakt" class="inline-link">
+                Kontaktmöglichkeiten ↗
+              </a>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section class="qr-note">
+        <div class="wrap">
+          <span aria-hidden="true">↗</span>
+          <div>
+            <h2>DEIN FESTER WEG ZUM TRAINING.</h2>
+            <p>
+              Diese Seite bleibt die zentrale Anlaufstelle für Trainingstermine
+              – auch über zukünftige QR-Codes.
+            </p>
+          </div>
+        </div>
+      </section>
+    </>
+  )}
+  {slug === "organisation" && (
+    <>
+      <section class="section light-section">
+        <div class="wrap">
+          <p class="eyebrow">SO IST DAS TRAINING ORGANISIERT</p>
+          <h2>
+            VOM TERMIN
+            <br />
+            <span>ZUR ENTWICKLUNG.</span>
+          </h2>
+          <div class="principles">
+            {organisationSteps.map((item) => (
+              <article data-reveal>
+                <span>{item.number}</span>
+                <div>
+                  <h3>{item.title}</h3>
+                  <p>{item.text}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+          <Button href="/trainingstermine">Trainingstermine ansehen</Button>
+        </div>
+      </section>
+      <section class="section">
+        <div class="wrap">
+          <p class="eyebrow">DIE PREISE</p>
+          <h2 class="mb-lg">
+            INVESTITION IN
+            <br />
+            <span>DEIN POTENZIAL.</span>
+          </h2>
+          <Pricing />
+        </div>
+      </section>
+    </>
+  )}
+  {slug === "kontakt" && (
+    <section class="section light-section">
+      <div class="wrap contact-layout">
+        <div>
+          <p class="eyebrow">WIR BEREITEN DEN KONTAKT VOR</p>
+          <h2>
+            PERSÖNLICH
+            <br />
+            <span>GEHT’S WEITER.</span>
+          </h2>
+          <p class="lead">Unsere Kontaktwege sind noch nicht freigegeben.</p>
+          <p>
+            Hier findest du künftig eine direkte Möglichkeit, Training
+            anzufragen. Bis zur Freigabe stehen weder ein Kontaktformular noch
+            eine WhatsApp-Verbindung zur Verfügung.
+          </p>
+          <p>
+            Bitte übermittle vorerst keine persönlichen Daten. Allgemeine Fragen
+            zum Trainingskonzept beantworten wir bereits auf den verlinkten
+            Seiten.
+          </p>
+          <Button href="/training" variant="text">
+            Das Training kennenlernen
+          </Button>
+        </div>
+        <div class="contact-options">
+          <article>
+            <span class="contact-icon" aria-hidden="true">
+              ↗
+            </span>
+            <h3>Training anfragen</h3>
+            <p>
+              Ein Anfrageformular folgt, sobald der Versand und die
+              Datenschutzinformationen eingerichtet sind.
+            </p>
+            <button class="button button--outline" disabled>
+              Formular in Vorbereitung
+            </button>
+          </article>
+          <article>
+            <span class="contact-icon" aria-hidden="true">
+              ↗
+            </span>
+            <h3>Direkter Kontakt</h3>
+            <p>
+              WhatsApp und weitere freigegebene Kontaktdaten werden hier nach
+              Bestätigung ergänzt.
+            </p>
+            <button class="button button--outline" disabled>
+              Kontakt wird ergänzt
+            </button>
+          </article>
+        </div>
+      </div>
+    </section>
+  )}
+  {legal && (
+    <section class="section light-section">
+      <div class="wrap legal-content">
+        <div class="legal-warning">
+          <strong>NICHT ZUR VERÖFFENTLICHUNG FREIGEGEBEN</strong>
+          <p>
+            Pflichtangaben und rechtliche Prüfung stehen aus. Dieser Platzhalter
+            ist keine rechtliche Freigabe für den Website-Start.
+          </p>
+        </div>
+        {slug === "impressum" ? (
+          <>
+            <h2>OFFENE ANGABEN</h2>
+            <ul class="todo-list">
+              <li>Verantwortlicher Anbieter und Rechtsform bestätigen</li>
+              <li>
+                Ladungsfähige Anschrift und verbindliche Kontaktdaten ergänzen
+              </li>
+              <li>
+                Vertretungsberechtigung sowie weitere zutreffende Pflichtangaben
+                prüfen
+              </li>
+              <li>Gegebenenfalls Register- und steuerliche Angaben ergänzen</li>
+              <li>Inhalt fachlich prüfen und vor Veröffentlichung freigeben</li>
+            </ul>
+          </>
+        ) : (
+          <>
+            <h2>OFFENE PRÜFPUNKTE</h2>
+            <ul class="todo-list">
+              <li>
+                Verantwortlichen und Kontakt für Datenschutzanfragen bestätigen
+              </li>
+              <li>
+                Tatsächlichen Hostingbetrieb, Verarbeitung und Serverprotokolle
+                erfassen
+              </li>
+              <li>Rechtsgrundlagen, Speicherfristen und Empfänger prüfen</li>
+              <li>Betroffenenrechte und zuständige Aufsicht ergänzen</li>
+              <li>
+                Vor Formular- oder WhatsApp-Freigabe Datenflüsse und
+                Informationen prüfen
+              </li>
+              <li>
+                SpielerPlus-Verlinkung und weitere spätere Dienste bewerten
+              </li>
+            </ul>
+            <p>
+              Im aktuellen Projekt sind keine Analysewerkzeuge, externen
+              Einbettungen oder Kontaktübermittlungen implementiert.
+              Schriftarten und Illustrationen werden lokal ausgeliefert. Diese
+              technische Bestandsbeschreibung ersetzt keine
+              Datenschutzerklärung.
+            </p>
+          </>
+        )}
+        <Button href="/" variant="text">
+          Zurück zur Startseite
+        </Button>
+      </div>
+    </section>
+  )}
+  {!legal && slug !== "trainingstermine" && <FinalCTA />}
+</Base>

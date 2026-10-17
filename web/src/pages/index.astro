@@ -1,0 +1,205 @@
+---
+import Base from "../layouts/Base.astro";
+import Button from "../components/Button.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import TrainingStory from "../components/TrainingStory.astro";
+import TrainerCard from "../components/TrainerCard.astro";
+import Venues from "../components/Venues.astro";
+import Schedule from "../components/Schedule.astro";
+import FinalCTA from "../components/FinalCTA.astro";
+---
+
+<Base
+  title="Dein Spiel. Dein Potenzial."
+  description="Individuelles Eishockeytraining für Kinder und Jugendliche bis U13. Kleine Gruppen, 60 Minuten On-Ice und 60 Minuten Off-Ice in Essen, Dinslaken und Duisburg."
+>
+  <section class="hero" data-hero aria-labelledby="hero-title">
+    <div class="hero-art" data-hero-art>
+      <img
+        src="/images/hero-hockey.svg"
+        data-parallax
+        width="1600"
+        height="1100"
+        alt="Dramatische grafische Illustration eines Eishockeyspielers in einer blau beleuchteten Arena."
+        fetchpriority="high"
+      />
+    </div>
+    <div class="hero-grid" aria-hidden="true"></div>
+    <div class="wrap hero-content">
+      <p class="eyebrow" data-hero-copy>
+        <span class="status-dot"></span> PK HOCKEY ACADEMY · BIS U13
+      </p>
+      <h1 id="hero-title">
+        <span class="line-mask">
+          <span data-hero-line>DEIN SPIEL.</span>
+        </span>
+        <span class="line-mask">
+          <span data-hero-line>
+            DEIN <em>POTENZIAL.</em>
+          </span>
+        </span>
+      </h1>
+      <div class="hero-subrow" data-hero-copy>
+        <span class="hero-rule" aria-hidden="true"></span>
+        <p>
+          Mehr Aufmerksamkeit. Gezielte Entwicklung.
+          <br />
+          Individuelles Eishockeytraining in kleinen Gruppen.
+        </p>
+      </div>
+      <div class="hero-actions" data-hero-copy>
+        <Button href="/trainingstermine">Trainingstermine ansehen</Button>
+        <Button href="/kontakt" variant="outline">
+          Training anfragen
+        </Button>
+      </div>
+      <span class="hero-art-label small">
+        ORIGINALE ILLUSTRATION · BILDMATERIAL FOLGT
+      </span>
+    </div>
+    <div class="hero-bottom wrap">
+      <div>
+        <span class="small muted">INDIVIDUELL BESSER. GEMEINSAM STÄRKER.</span>
+        <span>
+          Essen <b> / </b> Dinslaken <b> / </b> Duisburg
+        </span>
+      </div>
+      <a href="#philosophie" class="scroll-cue">
+        DAS IST PK HOCKEY <span aria-hidden="true">↓</span>
+      </a>
+    </div>
+    <span class="hero-side" aria-hidden="true">
+      FOKUS. ENTWICKLUNG. EISHOCKEY.
+    </span>
+  </section>
+  <div class="facts-strip">
+    <div class="wrap facts-inner">
+      <div>
+        <strong>
+          60<span>MIN</span>
+        </strong>
+        <span>ON-ICE TRAINING</span>
+      </div>
+      <span class="facts-plus" aria-hidden="true">
+        +
+      </span>
+      <div>
+        <strong>
+          60<span>MIN</span>
+        </strong>
+        <span>OFF-ICE TRAINING</span>
+      </div>
+      <div>
+        <strong>U13</strong>
+        <span>INDIVIDUELLE FÖRDERUNG</span>
+      </div>
+      <div class="fact-statement">
+        KLEINE GRUPPEN.
+        <br />
+        <span>GROSSE PERSPEKTIVEN.</span>
+      </div>
+    </div>
+  </div>
+  <section id="philosophie" class="section philosophy light-section">
+    <div class="wrap philosophy-layout">
+      <div class="philosophy-art" data-venue-mask>
+        <img
+          src="/images/blade.svg"
+          alt="Grafische Studie einer Schlittschuhkufe auf dem Eis."
+          width="720"
+          height="820"
+          loading="lazy"
+        />
+        <span class="image-label">JEDER SCHRITT ZÄHLT. · ILLUSTRATION</span>
+        <span class="art-index" aria-hidden="true">
+          01 / FOKUS
+        </span>
+      </div>
+      <div>
+        <SectionHeading
+          label="UNSERE PHILOSOPHIE"
+          title="DEIN TEAM. DEINE BASIS. DEIN NÄCHSTER SCHRITT."
+          light
+        />
+        <p class="lead" data-reveal>
+          Im Team wächst das Spiel.
+          <br />
+          Im Detail wächst dein Potenzial.
+        </p>
+        <p>
+          Vereinstraining ist die Grundlage. Wir ergänzen es dort, wo
+          persönliche Entwicklung Raum braucht: mit gezieltem Training,
+          individueller Aufmerksamkeit und einem klaren Blick für jeden Spieler.
+        </p>
+        <p>
+          Für Kinder und Jugendliche bis U13. In kleinen Gruppen. Mit Training,
+          das zum jeweiligen Entwicklungsstand passt.
+        </p>
+        <Button href="/philosophie" variant="text">
+          Unsere Philosophie entdecken
+        </Button>
+      </div>
+    </div>
+  </section>
+  <TrainingStory />
+  <section class="target-section light-section section">
+    <div class="wrap target-layout">
+      <div data-reveal>
+        <p class="eyebrow">FÜR DEN NACHWUCHS. MIT PERSPEKTIVE.</p>
+        <h2>
+          KLEINE GRUPPE.
+          <br />
+          <span>DEIN FORTSCHRITT.</span>
+        </h2>
+      </div>
+      <div data-reveal>
+        <span class="target-age">
+          BIS <strong>U13</strong>
+        </span>
+        <p>
+          Jeder Spieler bringt andere Stärken mit. Unser individuelles
+          Entwicklungstraining richtet sich an Kinder und Jugendliche bis U13
+          und berücksichtigt den persönlichen Leistungsstand.
+        </p>
+        <Button href="/training#zielgruppe" variant="text">
+          Für wen ist das Training?
+        </Button>
+      </div>
+    </div>
+  </section>
+  <section class="section trainer-section">
+    <div class="wrap">
+      <TrainerCard />
+    </div>
+  </section>
+  <section class="section venues-section">
+    <div class="wrap">
+      <div class="section-top">
+        <SectionHeading
+          label="UNSERE TRAININGSSTÄDTE"
+          title="DEIN EIS. DEINE REGION."
+        />
+        <Button href="/trainingsstaetten" variant="text">
+          Alle Standorte
+        </Button>
+      </div>
+      <Venues />
+    </div>
+  </section>
+  <section class="section light-section schedule-section">
+    <div class="wrap">
+      <div class="section-top">
+        <SectionHeading
+          label="ZEIT FÜR DEN NÄCHSTEN SCHRITT"
+          title="DIE NÄCHSTE EISZEIT."
+          light
+        />
+        <Button href="/trainingstermine" variant="text">
+          Alle Trainingstermine
+        </Button>
+      </div>
+      <Schedule />
+    </div>
+  </section>
+  <FinalCTA />
+</Base>
