@@ -346,13 +346,18 @@ p {
 }
 .hero-art {
   position: absolute;
-  inset: 0;
+  inset: 0 0 0 24%;
   z-index: -3;
+  background: #163953;
+  mask-image: linear-gradient(90deg, transparent, #000 28%);
 }
 .hero-art img {
   width: 100%;
   height: 114%;
-  object-position: center 45%;
+  object-position: 35% center;
+  filter: grayscale(1) contrast(1.1);
+  mix-blend-mode: luminosity;
+  opacity: 0.9;
 }
 .hero::after {
   content: "";
@@ -363,17 +368,18 @@ p {
     linear-gradient(
       90deg,
       #050b12f5 0%,
-      #050b12c7 27%,
-      #050b1233 64%,
-      #050b1205 100%
+      #050b12d9 36%,
+      #050b1240 66%,
+      #050b121a 100%
     ),
-    linear-gradient(0deg, #050b12 0%, #050b1200 28%);
+    linear-gradient(0deg, #050b12 0%, #050b1200 38%),
+    linear-gradient(180deg, #050b1266 0%, #050b1200 24%);
 }
 .hero-grid {
   position: absolute;
   inset: 0;
   z-index: -2;
-  opacity: 0.15;
+  opacity: 0.035;
   background-image:
     linear-gradient(#a3d3fa33 1px, transparent 1px),
     linear-gradient(90deg, #a3d3fa33 1px, transparent 1px);
@@ -739,6 +745,9 @@ p {
 .target-layout .lead {
   font-size: 22px !important;
   margin-bottom: 20px;
+}
+.target-actions {
+  margin-top: 30px;
 }
 .trainer-section {
   background: #0b1724;
@@ -1425,7 +1434,7 @@ p {
 }
 @media (min-width: 1600px) {
   .hero-art img {
-    object-position: center 48%;
+    object-position: 35% center;
   }
 }
 @media (max-width: 1100px) {
@@ -1542,7 +1551,7 @@ p {
     padding-block: 105px 150px;
   }
   .hero-art img {
-    object-position: 62% center;
+    object-position: 22% center;
   }
   .hero h1 {
     font-size: clamp(82px, 10vw, 105px);
@@ -1758,11 +1767,13 @@ p {
     align-items: flex-start;
   }
   .hero-art {
-    inset: -30px -80px 0 -155px;
+    inset: 0 0 auto;
+    height: 590px;
+    mask-image: none;
   }
   .hero-art img {
     height: 100%;
-    object-position: 62% top;
+    object-position: 50% top;
     opacity: 0.9;
   }
   .hero::after {

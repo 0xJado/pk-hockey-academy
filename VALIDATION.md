@@ -58,3 +58,13 @@ Screenshots are intentionally ignored rather than published to GitHub:
 This is an internal pre-launch foundation. Real media, logo, detailed biography/qualifications, concrete rinks, confirmed sessions, registration-link semantics, contact destinations/backend, package conditions and complete legal inputs are still required. Tests verify the current empty schedule and inactive contact state, not an external registration or enquiry service. No real video was available to test. No screen-reader audit or physical-device performance profiling was performed. A future hosting provider must serve generated static directory routes and the custom 404 correctly.
 
 The local dev preview is left available at `http://127.0.0.1:4321/` for the user's requested remote review on this PC. This is not a public deployment.
+
+## Hero photography and training spacing revision — 17 October 2026
+
+Replaced the displayed geometric hockey figure with a locally stored Ron Lach/Pexels stock photograph, credited and labeled `Symbolbild`. Its source/license are recorded in `ASSETS.md`. The heading, CTA placement and hero spacing were retained. Astro generated four responsive WebP variants, approximately 31–141 KiB each. The old SVG remains as an unused source artifact.
+
+Added a scoped action wrapper in the training target-group section: the CTA now has a measured 30px gap after the paragraph at 375, 768, 817 and 1440px.
+
+Re-ran `npm run check` (zero errors/warnings/hints), `npm test` (3 passed) and `npm run build` (successful static output and optimized images). Browser checks covered homepage and training at all four widths: no overflow, one H1 per page, no broken images. Hero opacity changed from `0` to `1`; three navigation returns retained 18 desktop ScrollTriggers. Back/forward passed. Separate reduced-motion and JavaScript-disabled contexts loaded the photograph and showed the headline, without overflow; reduced motion created zero triggers. No external resource requests or application runtime errors occurred. The `#zielgruppe` deep link positioned the correct section below the header.
+
+Revision screenshots are stored locally under `output/playwright/hero-revision/` (ignored). The development site remains running for review.

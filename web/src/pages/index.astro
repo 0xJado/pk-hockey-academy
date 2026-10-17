@@ -7,6 +7,8 @@ import TrainerCard from "../components/TrainerCard.astro";
 import Venues from "../components/Venues.astro";
 import Schedule from "../components/Schedule.astro";
 import FinalCTA from "../components/FinalCTA.astro";
+import { Image } from "astro:assets";
+import heroHockey from "../assets/hero-hockey-photo.jpg";
 ---
 
 <Base
@@ -15,13 +17,17 @@ import FinalCTA from "../components/FinalCTA.astro";
 >
   <section class="hero" data-hero aria-labelledby="hero-title">
     <div class="hero-art" data-hero-art>
-      <img
-        src="/images/hero-hockey.svg"
+      <Image
+        src={heroHockey}
+        format="webp"
+        quality={85}
+        widths={[640, 960, 1440, 2000]}
+        sizes="(max-width: 600px) 885px, (max-width: 1100px) 1265px, 100vw"
         data-parallax
-        width="1600"
-        height="1100"
-        alt="Dramatische grafische Illustration eines Eishockeyspielers in einer blau beleuchteten Arena."
+        width={2000}
+        alt="Junger Eishockeyspieler mit Helm und Gesichtsschutz, konzentriert auf dem Eis. Symbolbild."
         fetchpriority="high"
+        loading="eager"
       />
     </div>
     <div class="hero-grid" aria-hidden="true"></div>
@@ -54,7 +60,7 @@ import FinalCTA from "../components/FinalCTA.astro";
         </Button>
       </div>
       <span class="hero-art-label small">
-        ORIGINALE ILLUSTRATION · BILDMATERIAL FOLGT
+        SYMBOLBILD · FOTO: RON LACH / PEXELS
       </span>
     </div>
     <div class="hero-bottom wrap">

@@ -41,7 +41,7 @@ This local tooling is not part of the GitHub repository. A normal Node installat
 web/
   public/images/          original local SVG illustrations and social image
   src/
-    assets/              future optimized imported media (README explains usage)
+    assets/              locally stored licensed hero photo, optimized with Astro Image
     components/          shared header, footer, buttons, schedule and content sections
     layouts/Base.astro   German document, metadata, ClientRouter, global shell
     pages/               homepage, typed static content routes, robots and sitemap
@@ -58,7 +58,7 @@ The dynamic `[page].astro` file generates the nine fixed, static internal routes
 ## Design and motion
 
 - Charcoal/navy/electric-blue palette, condensed Barlow headlines and Inter body copy, self-hosted fonts.
-- Original abstract hockey athlete, skate and rink illustrations; no external media or real-looking trainer photograph. Provenance in [`ASSETS.md`](ASSETS.md).
+- Licensed Ron Lach/Pexels hockey portrait with a monochrome blue treatment and a visible `Symbolbild` credit; original skate and rink illustrations. All media is served locally, and no trainer photograph is fabricated. Provenance in [`ASSETS.md`](ASSETS.md).
 - Short diagonal hero reveal, staggered headline and CTA entrance.
 - Conservative desktop hero parallax, scoped two-phase training reveals and drawn rink lines.
 - Venue/image masks, trainer zoom/color and always-visible informational overlay.

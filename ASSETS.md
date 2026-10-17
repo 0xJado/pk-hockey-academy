@@ -1,6 +1,16 @@
 # Asset provenance
 
-No NHL/DEL assets, external embeds, remotely loaded media, stock photography or training footage are used.
+No NHL/DEL assets, external embeds, remotely loaded media or training footage are used. The hero uses one locally stored, licensed stock photograph; it does not depict academy training or imply an affiliation.
+
+## Hero photograph
+
+- Local source: `web/src/assets/hero-hockey-photo.jpg`.
+- Photographer: **Ron Lach**.
+- Source: [A Person Wearing Black Helmet with Cage — Pexels photo 8974646](https://www.pexels.com/photo/a-person-wearing-black-helmet-with-cage-8974646/).
+- Downloaded 17 October 2026 from `https://images.pexels.com/photos/8974646/pexels-photo-8974646.jpeg?auto=compress&cs=tinysrgb&w=2400`.
+- [Pexels License](https://www.pexels.com/license/), checked on the download date: permits website use and modification; attribution is optional. No endorsement by the depicted person or brands is claimed.
+- Displayed with a visible German `Symbolbild` label and photographer credit. This is stock imagery, not a trainer portrait or a real academy participant claim.
+- Astro `Image` emits local responsive WebP assets; CSS applies a monochrome blue treatment and responsive cropping. No runtime Pexels request is made.
 
 ## Original local illustrations
 
@@ -8,7 +18,7 @@ Created specifically for this repository as editable SVG artwork:
 
 | File | Purpose | Provenance |
 | --- | --- | --- |
-| `web/public/images/hero-hockey.svg` | Anonymous geometric hockey athlete and arena | Original code-authored illustration; no academy player or real arena depicted |
+| `web/public/images/hero-hockey.svg` | Retained original geometric hero, no longer displayed | Original code-authored illustration; no academy player or real arena depicted |
 | `web/public/images/blade.svg` | Editorial skate/ice illustration | Original code-authored illustration |
 | `web/public/images/trainer-placeholder.svg` | PK monogram in place of a portrait | Original code-authored graphic; explicitly not a portrait of Pierre |
 | `web/public/images/rink.svg` | Abstract arena, location visual | Original code-authored illustration; not an actual training venue |
