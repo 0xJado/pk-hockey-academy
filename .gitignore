@@ -7,5 +7,6 @@ web/.astro/
 .tools/
 output/
 .playwright-cli/
+.vercel/
 *.log
 .DS_Store

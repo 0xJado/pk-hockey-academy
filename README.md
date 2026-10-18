@@ -21,7 +21,26 @@ npm run build
 npm run preview
 ```
 
-Build output is `web/dist`. No hosting provider or adapter is required. No website was deployed and no domain was connected.
+Build output is `web/dist`. The app stays fully static and needs no hosting adapter. Vercel is the selected review host; no custom domain is connected.
+
+### Vercel review hosting
+
+Project: `driftwoodmedia/pk-hockey-academy`. Connected GitHub source: `0xJado/pk-hockey-academy`, branch `main`.
+
+- Root Directory: `web` (a Vercel project setting, not a `vercel.json` key).
+- Framework: Astro; Node.js: 24.x; install: `npm ci`; output: `dist`.
+- `web/vercel.json` runs Astro checks, the content tests and the static build before publishing. It preserves extensionless URLs and routes without trailing slashes.
+- Keep `PUBLIC_LAUNCH_READY=false` for both Preview and Production environments. Leave `SITE_URL` unset during review so the temporary host is not presented as the academy's canonical domain.
+- Keep deployment protection enabled. Use a Vercel shareable link for Pierre when the preview is ready; a plain protected URL can require a Vercel account. Do not put a shareable link's access token in Git.
+- `.vercel/` is ignored so local project links and pulled environment files stay out of Git.
+
+Review host: `https://pk-hockey-academy-git-main-driftwoodmedia.vercel.app`. The authenticated shareable link is provided privately in the setup chat. It has no expiry and is scoped to this branch alias; anyone holding the full link can view the review. Keep its token out of source files and public GitHub issues. The bare URL still requires Vercel access.
+
+Setup status (18 October 2026): the initial review was deployed from GitHub commit `454a83c` using the Vercel connector. The existing project is now connected to `0xJado/pk-hockey-academy`, confirmed in both Vercel's Git settings and the authenticated connector. See `VALIDATION.md` for executed checks; a connected repository alone does not prove that a push-triggered build has completed.
+
+The account mismatch was resolved by replacing the `adorajado` GitHub sign-in connection with `0xJado` in the existing Vercel account's Authentication settings, with explicit user approval. The academy project was then connected through `https://vercel.com/driftwoodmedia/pk-hockey-academy/settings/git`. Google and email remained listed as sign-in methods. No new Vercel account or project was created, and the repository was not moved.
+
+Pushes to `main` trigger the default deployment and other branches receive previews. Local edits only reach Vercel after a push or an explicit deployment. The same build command and root settings are also configured on the Vercel project. These review deployments use Vercel's Production target for the main branch while retaining protection, disabled booking/contact controls and incomplete legal notices; this is not approval for the public academy launch.
 
 ### This Codex Windows environment
 
@@ -99,7 +118,7 @@ These environment flags do not constitute launch approval or legal review. Impre
 5. Real business contact details, WhatsApp destination and approved form delivery/privacy handling.
 6. Package conditions, payment and cancellation information; do not infer these from the supplied prices.
 7. Complete provider details, privacy/hosting information and legal review.
-8. Hosting/domain choice and explicit permission to publish.
+8. Final public domain and explicit approval for the public academy launch. Vercel review hosting has been requested separately.
 
 ## Validation
 
@@ -107,4 +126,4 @@ See [`VALIDATION.md`](VALIDATION.md) for commands actually executed, viewport sc
 
 ## GitHub
 
-Requested destination: public `0xJado/pk-hockey-academy`. This source repository does not enable GitHub Pages or any automatic website deployment. Git history must preserve the original `AGENTS.md` and must never include `.env`, dependencies, build output or local test artifacts.
+Source: public `0xJado/pk-hockey-academy`. Vercel review hosting is configured separately as described above; GitHub Pages is not used. Git history must preserve the original `AGENTS.md` and must never include `.env`, dependencies, build output or local test artifacts.
