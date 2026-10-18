@@ -25,6 +25,11 @@ Reviewed the reference alongside the finished homepage in `output/design/brand-c
 - P1: A legacy mobile wordmark selector enlarged the new tagline and caused overflow. Removed the obsolete selector. All ten routes subsequently measured no horizontal overflow at 375, 768 and 1440 pixels.
 - P2: The old downward parallax exposed a gap above the new split photo. Changed it to a conservative upward movement and verified the image covered its frame at the top and end of the hero scroll range. Recaptured desktop evidence.
 - Focus outline adjusted to remain visible on both light and navy surfaces.
+- P1: A final hosted check at 611 pixels exposed hero text crowded by the split photograph. Moved the stacked brand layout breakpoint to 900 pixels and aligned responsive image sizing. A 720px intermediate breakpoint still crowded the headline just above its boundary, so the final layout keeps tablets stacked and reserves the split treatment for desktop.
+
+The initial breakpoint correction was checked on all ten routes at 611 pixels and had no horizontal overflow. The 721px visual capture exposed the remaining text/photo crowding and prompted the final wider breakpoint.
+
+Final boundary verification: all ten routes at 768 pixels have one H1 and no horizontal overflow; the homepage is stacked at 900 and split at 901 pixels. The final tablet and 901px captures are `home-tablet.jpg` and `home-901.jpg`. Astro check and static build passed again after the final correction.
 
 No actionable P0, P1 or P2 findings remain in this scope. A standalone approved Pierre portrait is a future asset improvement; the current crest graphic is explicitly labeled. Registration remains deferred by the user.
 
