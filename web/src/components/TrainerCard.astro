@@ -1,5 +1,7 @@
 ---
 import Button from "./Button.astro";
+import { Image } from "astro:assets";
+import crest from "../assets/brand/pk-hockey-crest.png";
 import { getAcademy } from "../lib/content";
 const trainer = getAcademy().trainers[0]!;
 ---
@@ -10,14 +12,16 @@ const trainer = getAcademy().trainers[0]!;
     class="trainer-portrait"
     aria-label="Pierre Klein – Trainerprofil ansehen"
   >
-    <img
-      src="/images/trainer-placeholder.svg"
-      width="700"
-      height="820"
-      alt="Grafischer PK-Platzhalter; ein freigegebenes Trainerfoto von Pierre Klein folgt."
+    <Image
+      src={crest}
+      width={500}
+      densities={[1, 2]}
+      format="webp"
+      quality={90}
+      alt="Wappen der PK Hockey Academy. Ein separates Trainerfoto folgt."
       loading="lazy"
     />
-    <span class="image-label">TRAINERFOTO FOLGT · GRAFISCHER PLATZHALTER</span>
+    <span class="image-label">PIERRE KLEIN · GRÜNDER & TRAINER</span>
     <span class="portrait-overlay">
       Trainerprofil ansehen <span aria-hidden="true">↗</span>
     </span>
@@ -43,8 +47,8 @@ const trainer = getAcademy().trainers[0]!;
       Pierre kennenlernen
     </Button>
     <p class="small muted">
-      Ausführliche Biografie, Schwerpunkte und bestätigte Qualifikationen
-      folgen.
+      Separates Trainerfoto, ausführliche Biografie und bestätigte
+      Qualifikationen folgen.
     </p>
   </div>
 </article>

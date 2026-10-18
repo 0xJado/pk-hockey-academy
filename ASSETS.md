@@ -1,6 +1,17 @@
 # Asset provenance
 
-No NHL/DEL assets, external embeds, remotely loaded media or training footage are used. The hero uses one locally stored, licensed stock photograph; it does not depict academy training or imply an affiliation.
+No NHL/DEL assets, external embeds, remotely loaded media or training footage are used. The supplied academy crest and one licensed stock photograph are served locally. The stock image does not depict academy training or imply an affiliation.
+
+## Supplied academy branding — 19 October 2026
+
+- Local original: `web/src/assets/brand/pk-hockey-crest.png`.
+- Source: **Vollständiges Hockey-Akademie-Wappen.png**, supplied by Pierre through the user's Google Drive file link in this chat. The user explicitly requested replacing the website logo with it.
+- Original: 1254 × 1254 RGBA PNG, 1,558,622 bytes. SHA-256: `913EF27652DA16D9940F8872A675174C4F99911ECF8348E074AD225A66FDEC53`.
+- The supplied pixels, proportions and transparency are preserved. Astro generates resized local WebP versions for the header, footer and trainer-profile graphic, a 64px PNG favicon, and a 512px social-image rendition when a real site origin is configured. No redrawing or AI alteration of the crest was performed.
+- Artwork ownership and any third-party designer's license have not been independently established; usage is based on the user's supplied business asset and explicit website instruction. No broader license claim is made.
+- Brand direction: **PK_Hockey_Academy_Flyer_Trainingsprogramm.pptx**, also supplied by Pierre through the user's Drive link. The one-slide PPTX contains one flattened 1024 × 1536 raster. It was inspected locally as a design reference; the full flyer is not published with the website.
+- The redesign takes the flyer's ice-white/navy/cobalt palette, condensed typography, “Skills. Mindset. Zukunft.” heading and training-band hierarchy as general visual direction. The flyer is not copied as a webpage screenshot. Its embedded portrait, credentials, contact details, QR destination and registration language have not been imported as independently verified website content.
+- A standalone trainer portrait is still needed before replacing the clearly described crest graphic in the trainer profile. The registration PDF is outside this task and is not imported or linked.
 
 ## Hero photograph
 
@@ -10,7 +21,7 @@ No NHL/DEL assets, external embeds, remotely loaded media or training footage ar
 - Downloaded 17 October 2026 from `https://images.pexels.com/photos/8974646/pexels-photo-8974646.jpeg?auto=compress&cs=tinysrgb&w=2400`.
 - [Pexels License](https://www.pexels.com/license/), checked on the download date: permits website use and modification; attribution is optional. No endorsement by the depicted person or brands is claimed.
 - Displayed with a visible German `Symbolbild` label and photographer credit. This is stock imagery, not a trainer portrait or a real academy participant claim.
-- Astro `Image` emits local responsive WebP assets; CSS applies a monochrome blue treatment and responsive cropping. No runtime Pexels request is made.
+- Astro `Image` emits local responsive WebP assets; CSS applies a cold, partially desaturated treatment and responsive cropping. No runtime Pexels request is made.
 
 ## Original local illustrations
 
@@ -20,14 +31,13 @@ Created specifically for this repository as editable SVG artwork:
 | --- | --- | --- |
 | `web/public/images/hero-hockey.svg` | Retained original geometric hero, no longer displayed | Original code-authored illustration; no academy player or real arena depicted |
 | `web/public/images/blade.svg` | Editorial skate/ice illustration | Original code-authored illustration |
-| `web/public/images/trainer-placeholder.svg` | PK monogram in place of a portrait | Original code-authored graphic; explicitly not a portrait of Pierre |
+| `web/public/images/trainer-placeholder.svg` | Retained unused early trainer graphic | Original code-authored graphic; no longer displayed |
 | `web/public/images/rink.svg` | Abstract arena, location visual | Original code-authored illustration; not an actual training venue |
-| `web/public/images/social.svg` | Social metadata source artwork | Original code-authored graphic |
-| `web/public/images/social.png` | Compatible social preview image | Rasterized locally from `social.svg` |
-| `web/public/favicon.svg` | Temporary PK favicon | Original code-authored mark |
-| `web/src/components/Wordmark.astro` | Temporary wordmark | Original code-authored mark; final academy branding pending |
+| `web/public/images/social.svg` | Retained early social artwork | Original code-authored graphic; no longer referenced by metadata |
+| `web/public/images/social.png` | Retained early social raster | Rasterized locally from `social.svg`; no longer referenced |
+| `web/public/favicon.svg` | Retained early favicon | Original code-authored mark; no longer referenced |
 
-These are project placeholder assets, not approved final academy branding. Replace with approved academy photography and logo when available. Preserve descriptive alternatives and image dimensions. A future hero video must retain the local poster and respect reduced motion.
+The illustrations remain clearly identified project placeholders. The supplied crest is now the displayed academy branding; real training and venue photography remain pending. Preserve descriptive alternatives and image dimensions. A future hero video must retain the local poster and respect reduced motion.
 
 ## Self-hosted fonts
 

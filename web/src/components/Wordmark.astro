@@ -1,4 +1,6 @@
 ---
+import { Image } from "astro:assets";
+import crest from "../assets/brand/pk-hockey-crest.png";
 interface Props {
   footer?: boolean;
 }
@@ -10,25 +12,19 @@ const { footer = false } = Astro.props;
   href="/"
   aria-label="PK Hockey Academy – Startseite"
 >
-  <svg
-    width="55"
-    height="45"
-    viewBox="0 0 62 48"
-    fill="none"
-    aria-hidden="true"
-  >
-    <path
-      d="M4 41 15 5h18c14 0 14 22-1 22H19l-4 14H4Zm18-24h9c4 0 5-4 1-4h-9l-1 4Z"
-      fill="currentColor"
-    />
-    <path
-      d="m35 41 11-36h11l-5 15L64 5h12L59 24l5 17H51l-3-12-4 12h-9Z"
-      fill="currentColor"
-      transform="translate(-6)"
-    />
-    <path d="M1 46h48l4-3H5l-4 3Z" fill="#087ED5" />
-  </svg>
-  <span>
-    HOCKEY<span>ACADEMY</span>
+  <Image
+    src={crest}
+    width={footer ? 112 : 88}
+    height={footer ? 112 : 88}
+    densities={[1, 2]}
+    format="webp"
+    quality={90}
+    alt=""
+    loading={footer ? "lazy" : "eager"}
+    class="wordmark-crest"
+  />
+  <span class="wordmark-copy">
+    <span class="wordmark-name">PK HOCKEY ACADEMY</span>
+    <span class="wordmark-tagline">INDIVIDUELLES EISHOCKEYTRAINING</span>
   </span>
 </a>

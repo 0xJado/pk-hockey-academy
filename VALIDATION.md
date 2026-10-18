@@ -90,3 +90,23 @@ Pushed configuration commit `fd44099e8ed8729f85a67e9967f3cdf6d1b0b08d` to `main`
 The hosted robots.txt retained `Disallow: /`, and an unknown route returned 404 after applying `web/vercel.json`.
 
 Connection screenshot: `output/playwright/vercel/git-connected.jpg` (local, ignored). No website design or motion code changed. The setup files and documentation were committed and pushed; no shareable-link tokens or credentials were included.
+
+## Supplied crest and flyer branding — 19 October 2026
+
+Integrated Pierre's supplied transparent crest unchanged, with Astro-generated optimized variants in the header, footer, trainer graphic, favicon and configured social metadata. Used the supplied flyer as general visual direction: ice-white, navy and cobalt, condensed display headings, “Skills. Mindset. Zukunft.” and an earlier, prominent training-program section. Shared styles update all ten content pages. Retained the existing licensed stock photo and explicit illustration labels. The flyer is flattened; no standalone trainer portrait, contact destination, qualification or booking claim was extracted into the website. The registration form is deferred and was not incorporated.
+
+Files changed: the original crest and asset documentation; Wordmark, Header, Footer, TrainerCard and TrainingStory; Base metadata; homepage; shared CSS; hero parallax and training accent colors; README and design QA record. No new dependency or backend was added. Original `AGENTS.md` is unchanged.
+
+Commands executed from `web` using the bundled npm CLI (`node ../.tools/package/bin/npm-cli.js`), with `ASTRO_TELEMETRY_DISABLED=1`:
+
+- `run check`: 26 files, zero errors/warnings/hints.
+- `test`: all three content tests passed.
+- `run build`: successful static output, including optimized supplied-crest variants. Header images are approximately 6/16 KB at 1x/2x; the favicon is approximately 9 KB.
+
+In-app-browser verification covered all ten routes at 375, 768 and 1440 CSS pixels (30 combinations): one H1 per page and no horizontal overflow. German language and pre-launch robots metadata were retained. Fixed a legacy mobile wordmark rule that initially caused overflow. Verified the replacement parallax covers the photo frame at both ends of its scroll range.
+
+Keyboard Enter opened the mobile menu; Escape closed it and restored visible focus to its summary. Selecting the schedule navigated and closed the menu. Browser back/forward restored the correct titles. Three repeated homepage/schedule cycles retained 18 desktop ScrollTriggers, without accumulation. All six homepage images loaded after scrolling. No application console errors or warnings were recorded.
+
+Static fallbacks were checked on the built output using ignored, local-only QA endpoints. With all application scripts stripped, content and images remained visible, the native menu worked, schedule navigation passed and the document had zero scripts. A second endpoint emulated the reduced-motion startup query and CSS branch: zero ScrollTriggers, visible headline, no parallax and negligible animation duration. This was harness emulation; the real OS/browser reduced-motion preference was not toggled in this revision. No real video, physical device or screen reader was available for validation.
+
+Final visual comparison with the source flyer and the resolved findings are in `design-qa.md` (`final result: passed`). Screenshots and comparison images are ignored under `output/design/`. The whole flyer, registration PDF and share-link token are not included in the repository. Existing contact, schedule and legal placeholders remain pre-launch limitations.

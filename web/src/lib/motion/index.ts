@@ -69,7 +69,7 @@ function initialize() {
             );
           if (desktop)
             gsap.to("[data-parallax]", {
-              y: 85,
+              y: -45,
               ease: "none",
               scrollTrigger: {
                 trigger: hero,
@@ -128,13 +128,13 @@ function initialize() {
             })
             .fromTo(
               panels[0]!,
-              { borderTopColor: "#087ed5" },
-              { borderTopColor: "#3a4e63" },
+              { borderTopColor: "#0754db" },
+              { borderTopColor: "#adc8e6" },
             )
             .fromTo(
               panels[1]!,
-              { borderTopColor: "#3a4e63" },
-              { borderTopColor: "#087ed5" },
+              { borderTopColor: "#adc8e6" },
+              { borderTopColor: "#0754db" },
               "<",
             );
         }

@@ -12,7 +12,7 @@ import heroHockey from "../assets/hero-hockey-photo.jpg";
 ---
 
 <Base
-  title="Dein Spiel. Dein Potenzial."
+  title="Skills. Mindset. Zukunft."
   description="Individuelles Eishockeytraining für Kinder und Jugendliche bis U13. Kleine Gruppen, 60 Minuten On-Ice und 60 Minuten Off-Ice in Essen, Dinslaken und Duisburg."
 >
   <section class="hero" data-hero aria-labelledby="hero-title">
@@ -22,61 +22,62 @@ import heroHockey from "../assets/hero-hockey-photo.jpg";
         format="webp"
         quality={85}
         widths={[640, 960, 1440, 2000]}
-        sizes="(max-width: 600px) 885px, (max-width: 1100px) 1265px, 100vw"
+        sizes="(max-width: 600px) 100vw, (max-width: 900px) 60vw, 58vw"
         data-parallax
         width={2000}
         alt="Junger Eishockeyspieler mit Helm und Gesichtsschutz, konzentriert auf dem Eis. Symbolbild."
         fetchpriority="high"
         loading="eager"
       />
+      <span class="hero-photo-credit">SYMBOLBILD · RON LACH / PEXELS</span>
     </div>
-    <div class="hero-grid" aria-hidden="true"></div>
     <div class="wrap hero-content">
-      <p class="eyebrow" data-hero-copy>
-        <span class="status-dot"></span> PK HOCKEY ACADEMY · BIS U13
-      </p>
-      <h1 id="hero-title">
-        <span class="line-mask">
-          <span data-hero-line>DEIN SPIEL.</span>
-        </span>
-        <span class="line-mask">
-          <span data-hero-line>
-            DEIN <em>POTENZIAL.</em>
-          </span>
-        </span>
-      </h1>
-      <div class="hero-subrow" data-hero-copy>
-        <span class="hero-rule" aria-hidden="true"></span>
-        <p>
-          Mehr Aufmerksamkeit. Gezielte Entwicklung.
-          <br />
-          Individuelles Eishockeytraining in kleinen Gruppen.
+      <div class="hero-copy">
+        <p class="eyebrow" data-hero-copy>
+          INDIVIDUELLES EISHOCKEYTRAINING · BIS U13
         </p>
+        <h1 id="hero-title">
+          <span class="line-mask">
+            <span data-hero-line>SKILLS.</span>
+          </span>
+          <span class="line-mask">
+            <span data-hero-line>MINDSET.</span>
+          </span>
+          <span class="line-mask">
+            <span data-hero-line>
+              <em>ZUKUNFT.</em>
+            </span>
+          </span>
+        </h1>
+        <div class="hero-subrow" data-hero-copy>
+          <p>
+            Gemeinsam besser werden –<br />
+            auf und neben dem Eis.
+          </p>
+        </div>
+        <p class="hero-description" data-hero-copy>
+          Kleine Gruppen. Persönliche Betreuung. Gezielte Entwicklung als
+          Ergänzung zum Vereinstraining.
+        </p>
+        <div class="hero-actions" data-hero-copy>
+          <Button href="/trainingstermine">Trainingstermine ansehen</Button>
+          <Button href="/kontakt" variant="outline">
+            Training anfragen
+          </Button>
+        </div>
       </div>
-      <div class="hero-actions" data-hero-copy>
-        <Button href="/trainingstermine">Trainingstermine ansehen</Button>
-        <Button href="/kontakt" variant="outline">
-          Training anfragen
-        </Button>
-      </div>
-      <span class="hero-art-label small">
-        SYMBOLBILD · FOTO: RON LACH / PEXELS
-      </span>
     </div>
     <div class="hero-bottom wrap">
       <div>
-        <span class="small muted">INDIVIDUELL BESSER. GEMEINSAM STÄRKER.</span>
+        <span class="small muted">DEIN TRAINING. DEINE REGION.</span>
         <span>
           Essen <b> / </b> Dinslaken <b> / </b> Duisburg
         </span>
       </div>
       <a href="#philosophie" class="scroll-cue">
-        DAS IST PK HOCKEY <span aria-hidden="true">↓</span>
+        UNSERE PHILOSOPHIE <span aria-hidden="true">↓</span>
       </a>
     </div>
-    <span class="hero-side" aria-hidden="true">
-      FOKUS. ENTWICKLUNG. EISHOCKEY.
-    </span>
   </section>
   <div class="facts-strip">
     <div class="wrap facts-inner">
@@ -97,15 +98,16 @@ import heroHockey from "../assets/hero-hockey-photo.jpg";
       </div>
       <div>
         <strong>U13</strong>
-        <span>INDIVIDUELLE FÖRDERUNG</span>
+        <span>FÜR DEN NACHWUCHS</span>
       </div>
       <div class="fact-statement">
         KLEINE GRUPPEN.
         <br />
-        <span>GROSSE PERSPEKTIVEN.</span>
+        <span>PERSÖNLICHE ENTWICKLUNG.</span>
       </div>
     </div>
   </div>
+  <TrainingStory />
   <section id="philosophie" class="section philosophy light-section">
     <div class="wrap philosophy-layout">
       <div class="philosophy-art" data-venue-mask>
@@ -147,7 +149,6 @@ import heroHockey from "../assets/hero-hockey-photo.jpg";
       </div>
     </div>
   </section>
-  <TrainingStory />
   <section class="target-section light-section section">
     <div class="wrap target-layout">
       <div data-reveal>
@@ -173,7 +174,7 @@ import heroHockey from "../assets/hero-hockey-photo.jpg";
       </div>
     </div>
   </section>
-  <section class="section trainer-section">
+  <section class="section trainer-section light-section">
     <div class="wrap">
       <TrainerCard />
     </div>

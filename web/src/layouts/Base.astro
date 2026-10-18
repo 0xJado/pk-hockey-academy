@@ -1,5 +1,7 @@
 ---
 import { ClientRouter } from "astro:transitions";
+import { getImage } from "astro:assets";
+import crest from "../assets/brand/pk-hockey-crest.png";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import "../styles/global.css";
@@ -13,8 +15,10 @@ const canonical = Astro.site
   : undefined;
 const launchReady =
   import.meta.env.PUBLIC_LAUNCH_READY === "true" && !!canonical;
+const favicon = await getImage({ src: crest, width: 64, format: "png" });
+const socialCrest = await getImage({ src: crest, width: 512, format: "png" });
 const socialImage = Astro.site
-  ? new URL("/images/social.png", Astro.site)
+  ? new URL(socialCrest.src, Astro.site)
   : undefined;
 ---
 
@@ -40,19 +44,19 @@ const socialImage = Astro.site
     {socialImage && (
       <>
         <meta property="og:image" content={socialImage} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
+        <meta property="og:image:width" content="512" />
+        <meta property="og:image:height" content="512" />
         <meta
           property="og:image:alt"
-          content="PK Hockey Academy – Dein Spiel. Dein Potenzial."
+          content="PK Hockey Academy – Skills. Mindset. Zukunft."
         />
         <meta name="twitter:image" content={socialImage} />
       </>
     )}
-    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href={favicon.src} />
     <ClientRouter fallback="none" />
   </head>
   <body>
