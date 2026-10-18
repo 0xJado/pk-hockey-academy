@@ -36,7 +36,7 @@ Project: `driftwoodmedia/pk-hockey-academy`. Connected GitHub source: `0xJado/pk
 
 Review host: `https://pk-hockey-academy-git-main-driftwoodmedia.vercel.app`. The authenticated shareable link is provided privately in the setup chat. It has no expiry and is scoped to this branch alias; anyone holding the full link can view the review. Keep its token out of source files and public GitHub issues. The bare URL still requires Vercel access.
 
-Setup status (18 October 2026): the initial review was deployed from GitHub commit `454a83c` using the Vercel connector. The existing project is now connected to `0xJado/pk-hockey-academy`, confirmed in both Vercel's Git settings and the authenticated connector. See `VALIDATION.md` for executed checks; a connected repository alone does not prove that a push-triggered build has completed.
+Setup status (18 October 2026): the existing project is connected to `0xJado/pk-hockey-academy`, confirmed in both Vercel's Git settings and the authenticated connector. Pushing setup commit `fd44099` automatically triggered deployment `dpl_g3o37kfb5A9fJnwvgxX9BNcuKuhp`, which reached READY after checks, tests and the static build. The existing branch shareable link followed the new deployment without changing its access token. See `VALIDATION.md` for executed checks.
 
 The account mismatch was resolved by replacing the `adorajado` GitHub sign-in connection with `0xJado` in the existing Vercel account's Authentication settings, with explicit user approval. The academy project was then connected through `https://vercel.com/driftwoodmedia/pk-hockey-academy/settings/git`. Google and email remained listed as sign-in methods. No new Vercel account or project was created, and the repository was not moved.
 
