@@ -23,6 +23,13 @@ No NHL/DEL assets, external embeds, remotely loaded media or training footage ar
 - Displayed with a visible German `Symbolbild` label and photographer credit. This is stock imagery, not a trainer portrait or a real academy participant claim.
 - Astro `Image` emits local responsive WebP assets; CSS applies a cold, partially desaturated treatment and responsive cropping. No runtime Pexels request is made.
 
+## Off-Ice running image — 19 October 2026
+
+- Local asset: `web/src/assets/off-ice-running.png`.
+- Source: the image of children running supplied by the user in this conversation for the Off-Ice training card. Usage is based on that explicit instruction; no independent ownership or participant affiliation is claimed.
+- Image Gen applied cool blue grading and a navy edge vignette to the supplied image. It remains an illustrative `Symbolbild`, not evidence of an academy session.
+- Astro generates responsive, locally served WebP renditions. CSS adds a restrained blue light overlay, a lower-edge shade for the caption and a diagonal corner cut. No runtime external image requests.
+
 ## Original local illustrations
 
 Created specifically for this repository as editable SVG artwork:

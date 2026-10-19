@@ -1,5 +1,7 @@
 ---
 import { trainingPhases } from "../data/academy";
+import { Image } from "astro:assets";
+import offIceRunning from "../assets/off-ice-running.png";
 ---
 
 <section
@@ -40,6 +42,20 @@ import { trainingPhases } from "../data/academy";
               {phase.title}
             </span>
           </div>
+          {phase.title === "OFF-ICE" ? (
+            <figure class="phase-photo">
+              <Image
+                src={offIceRunning}
+                alt="Kinder laufen gemeinsam auf einem Weg im Grünen."
+                widths={[400, 640, 960, 1280]}
+                sizes="(max-width: 767px) 90vw, 45vw"
+                format="webp"
+                loading="lazy"
+                class="phase-photo-image"
+              />
+              <figcaption>Symbolbild · Off-Ice</figcaption>
+            </figure>
+          ) : (
           <div class="phase-art" aria-hidden="true">
             <svg viewBox="0 0 600 180">
               <ellipse cx="300" cy="90" rx="270" ry="68" />
@@ -48,6 +64,7 @@ import { trainingPhases } from "../data/academy";
               <path class="skate-line" d="M80 140Q230 20 340 115T550 55" />
             </svg>
           </div>
+          )}
           <p>{phase.text}</p>
           <div class="phase-tags">
             {phase.tags.map((tag) => (
