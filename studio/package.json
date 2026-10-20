@@ -1,0 +1,29 @@
+{
+  "name": "pk-hockey-academy-studio",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.22.0"
+  },
+  "scripts": {
+    "dev": "sanity dev --host 127.0.0.1",
+    "check": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test tests/*.test.mjs",
+    "build": "sanity build",
+    "schema:extract": "sanity schema extract",
+    "deploy": "sanity deploy"
+  },
+  "dependencies": {
+    "@sanity/locale-de-de": "1.1.37",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "sanity": "6.20.0",
+    "styled-components": "6.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "@types/react": "19.2.17",
+    "typescript": "6.0.3"
+  }
+}

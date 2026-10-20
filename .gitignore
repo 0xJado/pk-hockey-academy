@@ -1,6 +1,8 @@
 node_modules/
 web/dist/
 web/.astro/
+studio/dist/
+studio/.sanity/
 .env
 .env.*
 !.env.example
