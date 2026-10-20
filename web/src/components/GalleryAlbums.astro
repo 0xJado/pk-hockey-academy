@@ -1,0 +1,76 @@
+---
+import Button from "./Button.astro";
+import GalleryImage from "./GalleryImage.astro";
+import { formatCampDate } from "../lib/gallery";
+import type { GalleryAlbum } from "../types/gallery";
+interface Props {
+  albums: GalleryAlbum[];
+}
+const { albums } = Astro.props;
+---
+
+{albums.length ? (
+  <div class="album-grid">
+    {albums.map((album, index) => (
+      <article class="album-card" data-reveal>
+        <a href={`/galerie/${album.slug}`} class="album-link">
+          <div class="album-cover">
+            <GalleryImage image={album.cover} eager={index === 0} />
+            <span class="album-count">
+              {album.media.filter((item) => item.type === "image").length} Fotos
+              · {album.media.filter((item) => item.type === "video").length}{" "}
+              Videos
+            </span>
+            <span class="album-arrow" aria-hidden="true">
+              ↗
+            </span>
+          </div>
+          <div class="album-copy">
+            <p class="eyebrow">
+              {album.city} <span aria-hidden="true">/</span>{" "}
+              <time datetime={album.occurredOn}>
+                {formatCampDate(album.occurredOn)}
+              </time>
+            </p>
+            <h2>{album.title}</h2>
+            <p>{album.description}</p>
+            <span class="inline-link">
+              Camp-Album ansehen <span aria-hidden="true">↗</span>
+            </span>
+          </div>
+        </a>
+      </article>
+    ))}
+  </div>
+) : (
+  <div class="gallery-empty">
+    <div class="gallery-empty-art" aria-hidden="true">
+      <div class="gallery-rink">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <span class="gallery-art-label">AUF DEM EIS. IN ERINNERUNG.</span>
+      <strong>
+        PK<span>GALERIE</span>
+      </strong>
+    </div>
+    <div class="gallery-empty-copy" data-reveal>
+      <p class="eyebrow">DIE NÄCHSTEN EINBLICKE FOLGEN</p>
+      <h2>
+        VIEL EINSATZ.
+        <br />
+        <span>ECHTE MOMENTE.</span>
+      </h2>
+      <p>
+        Hier ist Platz für Fotos und Videos aus unseren Trainingscamps – auf dem
+        Eis und daneben.
+      </p>
+      <p>
+        Aktuell sind noch keine Camp-Aufnahmen veröffentlicht. Sobald die ersten
+        Alben freigegeben sind, findest du sie hier.
+      </p>
+      <Button href="/trainingstermine">Trainingstermine ansehen</Button>
+    </div>
+  </div>
+)}

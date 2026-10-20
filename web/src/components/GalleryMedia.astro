@@ -1,0 +1,124 @@
+---
+import GalleryTile from "./GalleryTile.astro";
+import { groupGalleryMedia } from "../lib/gallery";
+import { layoutGalleryTiles } from "../lib/gallery-layout";
+import type { GalleryAlbum } from "../types/gallery";
+interface Props {
+  album: GalleryAlbum;
+}
+const { album } = Astro.props;
+const sections = groupGalleryMedia(album.media).map((section) => ({
+  ...section,
+  tiles: layoutGalleryTiles(section.media, 5),
+  tablet: new Map(
+    layoutGalleryTiles(section.media, 3).map((tile) => [tile.item.id, tile]),
+  ),
+}));
+---
+
+<camp-gallery>
+  <div class="gallery-toolbar">
+    <p>
+      <strong>{album.media.length}</strong> Einblicke ins Camp
+    </p>
+    <div
+      class="gallery-filters"
+      role="group"
+      aria-label="Medien filtern"
+      data-gallery-filters
+      hidden
+    >
+      <button type="button" data-filter="all" aria-pressed="true">
+        Alle
+      </button>
+      <button type="button" data-filter="image" aria-pressed="false">
+        Fotos
+      </button>
+      <button type="button" data-filter="video" aria-pressed="false">
+        Videos
+      </button>
+    </div>
+  </div>
+  <p
+    class="gallery-filter-status"
+    role="status"
+    aria-live="polite"
+    data-filter-status
+  ></p>
+  {sections.length > 1 && (
+    <nav class="gallery-section-nav" aria-label="Galerie-Bereiche">
+      {sections.map((section) => (
+        <a href={`#galerie-${section.id}`} data-section-link={section.id}>
+          {section.title} <span aria-hidden="true">↓</span>
+        </a>
+      ))}
+    </nav>
+  )}
+  {sections.map((section, sectionIndex) => (
+    <section
+      class="gallery-media-section"
+      id={`galerie-${section.id}`}
+      aria-labelledby={`galerie-heading-${section.id}`}
+      data-gallery-section={section.id}
+    >
+      <div class="gallery-section-heading">
+        <h2 id={`galerie-heading-${section.id}`}>{section.title}</h2>
+        <span data-section-count>
+          {section.media.length}{" "}
+          {section.media.length === 1 ? "Aufnahme" : "Aufnahmen"}
+        </span>
+      </div>
+      <div class="camp-media-grid">
+        {section.tiles.map((tile, index) => (
+          <GalleryTile
+            placement={tile}
+            tablet={section.tablet.get(tile.item.id)!}
+            eager={sectionIndex === 0 && index === 0}
+          />
+        ))}
+      </div>
+      <div class="gallery-video-notes">
+        {section.media
+          .filter((item) => item.type === "video")
+          .map((item) => (
+            <details
+              class="video-transcript"
+              id={`transcript-${item.id}`}
+              data-video-note={item.id}
+            >
+              <summary>{item.title} · Videoinhalt als Text</summary>
+              <p>{item.transcript}</p>
+            </details>
+          ))}
+      </div>
+    </section>
+  ))}
+  <dialog class="gallery-dialog" aria-label="Fotoansicht" data-gallery-dialog>
+    <div class="gallery-dialog-bar">
+      <p data-photo-position aria-live="polite"></p>
+      <button
+        type="button"
+        data-gallery-close
+        aria-label="Fotoansicht schließen"
+      >
+        Schließen <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="gallery-dialog-image">
+      <img data-dialog-image alt="" />
+    </div>
+    <div class="gallery-dialog-bottom">
+      <button type="button" data-gallery-prev aria-label="Vorheriges Foto">
+        ←
+      </button>
+      <p data-photo-description></p>
+      <button type="button" data-gallery-next aria-label="Nächstes Foto">
+        →
+      </button>
+    </div>
+  </dialog>
+</camp-gallery>
+<script>
+  import { installGallery } from "../lib/gallery-interactions";
+  installGallery();
+</script>

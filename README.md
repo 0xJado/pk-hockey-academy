@@ -1,6 +1,6 @@
 # PK Hockey Academy
 
-First milestone: a German, static Astro marketing website with a cinematic homepage, nine internal content routes and a custom 404. The academy's source instructions are preserved verbatim in [`AGENTS.md`](AGENTS.md).
+A German, static Astro marketing website with a cinematic homepage, training information, camp gallery and a separate Sanity administrator CMS. The academy's source instructions are preserved verbatim in [`AGENTS.md`](AGENTS.md).
 
 ## Run locally
 
@@ -54,7 +54,7 @@ This local tooling is not part of the GitHub repository. A normal Node installat
 
 ## Architecture
 
-`/web` contains the frontend so a future `/studio` can remain separate. There is **no CMS, database, authentication, payment provider, shop or booking backend** in this milestone.
+`/web` contains the static Astro frontend. `/studio` now contains a separate German Sanity CMS for camp photo/video albums, with project-member authentication. Its real project, administrator invitations, read token and deployment still need connecting; see [`studio/README.md`](studio/README.md). There is no visitor authentication, payment provider, shop or booking backend.
 
 ```text
 web/
@@ -91,13 +91,24 @@ The dynamic `[page].astro` file generates the nine fixed, static internal routes
 
 ## Content and future integrations
 
-`TrainingSession`, `Trainer`, `Venue`, `SiteSettings` and `Pricing` are defined in `src/types/content.ts`. Edit local data in `src/data/academy.ts`; later replace the retrieval boundary in `src/lib/content.ts` with Sanity queries. Do not import CMS clients into presentation components.
+`TrainingSession`, `Trainer`, `Venue`, `SiteSettings` and `Pricing` are defined in `src/types/content.ts`. Edit local data in `src/data/academy.ts`; later replace the retrieval boundary in `src/lib/content.ts` with Sanity queries. Do not import CMS clients into presentation components. The gallery is the first CMS boundary: `src/lib/gallery-source.ts` fetches approved published albums at build time, while `src/lib/gallery.ts` independently validates the response.
 
 The live schedule and separate demo collection are intentionally empty. Published sessions require timezone-aware timestamps, valid duration, non-demo content and non-draft status, and are sorted chronologically. Rendered cards support title, date, start/end, location, group, available spots and status. Unknown capacity stays unknown.
 
 `getRegistrationUrl()` deliberately returns no functional registration URL in this milestone, including for a configured URL: the approved SpielerPlus destination and semantics must be verified before enabling this boundary. No live synchronization is implied. The stable permanent QR destination is **`/trainingstermine`**.
 
-Contact options are visibly disabled, have no form or destination, and never collect or transmit data. No analytics, third-party embeds or non-essential cookies are configured.
+Contact options are visibly disabled, have no form or destination, and never collect or transmit data. No analytics, third-party video embeds or non-essential visitor cookies are configured. Once real albums are connected, gallery media is delivered by Sanity's CDN; document this in the reviewed privacy notice.
+
+### Camp gallery and administrator CMS
+
+- `/galerie`: German album index with an honest empty state until approved albums exist.
+- `/galerie/[slug]`: static pages with On-Ice, Off-Ice and optional other camp sections; five-column square photo tiles, native videos, credits, transcripts, filters and a keyboard-operable photo lightbox. Optional photo spotlights span two columns/two rows strictly on the left (1–2) or right (4–5), never in the middle. Tablets use three columns; phones use one. Each upload has an optional CMS section assignment, with unassigned media preserved. Responsive photos use Sanity's image pipeline; videos load on demand.
+- `src/lib/gallery-layout.ts` shares deterministic edge-only packing between static rendering and browser filtering. Thumbnail crops fill tiles; the dialog shows complete photos. Keyboard/lightbox order follows visible layout, including after responsive changes. CMS media order remains the basis for packing and selecting the album cover.
+- `/verwaltung`: always noindex. Links to the authenticated Studio when `PUBLIC_SANITY_STUDIO_URL` is configured; otherwise explains setup is pending. The link grants no permissions.
+- `/studio`: separate npm project using Sanity 6, German UI, native uploads, reorderable media, required metadata and explicit publication approval. No React/Studio runtime is shipped to visitors.
+- Motion reuses scoped section reveals and reduced-motion support; small photo hover zooms are disabled for reduced motion. Gallery listeners and video observers clean up on navigation.
+
+Connect the gallery variables in `web/.env.example` only when the real project is ready. The website token is read-only and server-only; keep the dataset private. Changes and unpublishing require a successful website rebuild/deployment. A build webhook is documented but not connected. See [CMS setup and Pierre's editing workflow](studio/README.md) for full steps and the public-asset limitation.
 
 Future commerce should live at `/shop` behind a separate commerce interface, with hosted Shopify guest checkout once approved. There is currently no shop route, checkout, account UI or integration.
 

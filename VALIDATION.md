@@ -1,5 +1,84 @@
 # Validation record
 
+## Git handoff — 20 October 2026
+
+At the user's request, grouped the pending work into three cohesive commits: training-card visuals/assets and their documentation; the separate Sanity CMS and ignore rules; the public camp gallery, On-Ice/Off-Ice sections, edge spotlights, tests and remaining documentation. Earlier entries describing work as local/uncommitted record the status at the time of those checks.
+
+Immediately before committing, fetched `origin/main` and confirmed no divergence. Re-ran web Astro check (40 files, zero errors/warnings/hints), all 16 web tests and the static build, plus Studio TypeScript check, its asset-validation test and Studio build with explicit test identifiers. All passed. Only environment examples are included; credentials, dependencies, generated output and QA artifacts remain ignored. The user authorized pushing these commits to `main`. The real Sanity project, administrator invitations, Studio deployment and build webhook still require connection; pushing source does not activate CMS uploads.
+
+## Follow-up: five-column grid and edge-only spotlights — 20 October 2026
+
+Changed camp media grids to five square columns on desktop. CMS photo display choices are normal, spotlight left, or spotlight right. Spotlights reserve exactly two columns/two rows, exclusively desktop columns 1–2 or 4–5. The shared packing function fills free cells without overlap; normal tiles cannot inherit a poster's spotlight. Three-column tablet grids keep spotlights at an edge, and one-column phone grids render ordinary full-width tiles. Thumbnails crop to their cells; enlargement preserves the complete photograph. Photo captions/credits overlay tiles; native video controls remain usable, with full text alternatives below the grid.
+
+Files added: `web/src/lib/gallery-layout.ts`, `web/src/components/GalleryTile.astro`, `web/tests/gallery-layout.test.mjs`. Updated gallery types, normalization/query, GalleryMedia, interactions, CSS, existing gallery boundary tests, Studio photo schema, README, Studio guide and this record. No new package, real media, account or deployment was added. No new animation was introduced; reduced-motion rules and existing motion lifecycle remain intact.
+
+Keyboard/DOM/lightbox order follows the current visual layout. Filtering repacks visible tiles, and breakpoint changes update their order while retaining an open photo. New media-query listeners use the existing abort/disconnect cleanup. Initial five- and three-column coordinates are rendered in static HTML, so edge placement also works without application scripts.
+
+Executed checks:
+
+- Final `web`: Astro check, **40 files, zero errors/warnings/hints**; **16 tests pass**; successful final static build. Temporary spotlight and script-free test routes are absent from final source/output.
+- Studio: TypeScript check, **1 test passes**, successful Studio bundle build and schema extraction to ignored `output/gallery-spotlight-schema.json`, using explicit test identifiers.
+- New tests cover ordinary 20-photo grids, exact 2×2 left/right occupancy, 72 combinations of 60 tiles across 5/3/1 columns, no collisions/out-of-bounds/middle positions, filter compaction, unsupported spotlight values and video/poster independence.
+
+In-app-browser verification used a temporary labeled fixture with 20 graphics, three spotlights and one video-poster tile. At 1440px, normal tiles measured approximately **246.4 × 246.4px**, spotlight tiles **504.8 × 504.8px**, with a 12px gutter. Confirmed left column 1/span 2, right column 4/span 2 and row span 2. Checked widths **1440, 1001, 1000, 768, 700 and 375px**: correct 5/3/1 column breakpoints, square dimensions, edge positions and no horizontal overflow. Desktop and phone views were inspected visually.
+
+Clicking the right spotlight opened the full photo at its visual album position (11/20); changing to phone size retained that photo and updated its position to 7/20. Escape and reopening worked. Video filtering packed the single remaining video into row 1/column 1; photo filtering restored 20 photographs, edge spotlights and lightbox behavior. Video notes were hidden/restored with filters. No application warnings/errors were recorded in this session.
+
+A **script-stripped built fixture** was served through the already-running static preview on port 4322. It contained zero script tags and retained the five-/three-column spotlight placements and one-column fallback at 1440/768/375px, with loaded local photos and no overflow. No global browser JavaScript setting was changed. A second preview launch was refused because that preview already existed; it was reused without stopping/replacing it. All temporary QA pages were removed by the final build. Actual OS reduced-motion switching, physical-device testing and real authenticated CMS uploads were not repeated in this layout increment.
+
+Preview: `http://127.0.0.1:4323/galerie` or the existing static preview at `http://127.0.0.1:4322/galerie`. The gallery remains empty until real albums are connected. Content/Studio activation requirements remain unchanged in the earlier CMS record and Studio setup guide.
+
+## Follow-up: On-Ice / Off-Ice gallery sections — 20 October 2026
+
+Added an optional **Galerie-Bereich** choice to photo/video uploads: On-Ice, Off-Ice, or Weitere Camp-Momente. Existing/unassigned media remain visible in the last group. Video posters inherit their video's assignment. The build query/normalizer passes this field through to stable sections, preserving media order within each. Public sections have H2 headings, counts and native jump links; media filters hide empty sections/links and recalculate visible counts. Lightbox navigation spans all album photos. Existing scoped motion and reduced-motion behavior are preserved; no new animation or dependency was added.
+
+Files updated: `studio/schemaTypes/gallery.ts`, `web/src/types/gallery.ts`, `web/src/lib/gallery.ts`, `web/src/lib/gallery-interactions.ts`, `web/src/components/GalleryMedia.astro`, `web/src/styles/gallery.css`, `web/tests/gallery.test.mjs`, root README, Studio README and this log.
+
+Checks executed: `web` Astro check (37 files; zero errors/warnings/hints), 11 passing web tests and successful final static build; Studio TypeScript check, 1 passing Studio test, successful Studio build and schema extraction to ignored `output/gallery-sections-schema.json` using test identifiers. Two new tests cover the 20-photo split, stable ordering, missing/unknown section values, empty groups and a video assigned differently from its poster.
+
+Browser verification used a clearly labeled temporary fixture with 20 local test graphics plus one video-poster entry, removed before the final build. At 1440/768px the tile grid had two columns, at 375px one column; no horizontal overflow. All three section headings and links appeared. Opening a photo showed “Foto 1 von 20”; previous navigation wrapped to “Foto 20 von 20”, including across section boundaries; Escape closed it. Photos filtering showed 20 photos with counts 10/9/1; Videos showed just the Off-Ice section with one item and hid empty sections/jump links; Alle restored all three sections and 21 items. No application errors/warnings were recorded for the fixture. Real authenticated CMS upload remains dependent on connecting the project, as described below.
+
+## Camp gallery and Sanity CMS — 20 October 2026
+
+Implemented locally; no commit, push, live CMS provisioning, invitations or deployment performed. Preserved the existing uncommitted training-card/design changes.
+
+Files added: `studio/` (pinned npm manifest/lockfile, strict TS, German Studio configuration, gallery photo/video/album schemas, asset validation, tests, environment template and setup guide); gallery types, build-time retrieval/normalization and browser interactions in `web/src/`; three gallery components; `/galerie`, `/galerie/[slug]`, `/verwaltung`; gallery CSS and boundary tests. Updated Header, Footer, Base metadata, homepage teaser, sitemap, privacy draft, environment template, ignore rules, README and asset documentation. Existing academy content and motion implementation were not replaced.
+
+Design: the site's established ice-white, navy and cobalt system, condensed headings, a CSS rink graphic for the empty state, image-led album cards, native videos and a centered photo dialog. No fictional camps, images or coach identities are published. Gallery cards/empty-state copy reuse scoped reveals; modest image hover scaling respects reduced motion. The gallery custom element disconnects listeners/observers and pauses videos when leaving a page.
+
+Commands actually run using `node ../.tools/package/bin/npm-cli.js`:
+
+| Project / check | Result |
+| --- | --- |
+| `web`: `run check` | 37 files, zero errors/warnings/hints |
+| `web`: `test` | 9 passing tests: existing booking safety plus CMS configuration, publication filters, ordering, invalid media and API failures |
+| `web`: `run build` | Successful final static build; temporary QA routes absent |
+| `studio`: `run check` | TypeScript passes |
+| `studio`: `test` | 1 passing asset type/size validation test |
+| `studio`: `run build` | Successful bundle using explicit synthetic project/dataset identifiers; no remote project created |
+| `studio`: `run schema:extract -- --path ../output/gallery-schema-final.json` | Schema extracted successfully; ignored local artifact |
+| `git diff --check` | No whitespace errors; existing LF/CRLF normalization notices |
+
+Studio installation initially needed network permission. Astro needed permission to use its user configuration directory. A repeated schema extraction refused to overwrite the earlier QA artifact; the final extraction succeeded at the new path above. Web tests have no dependency on installing the separate Studio package. A search of final `web/dist` found no synthetic project identifier, test token or test-album copy.
+
+In-app-browser checks:
+
+- Final `/galerie` and `/verwaltung` at **1440, 768 and 375px**: six combinations, one H1, German metadata, `noindex,nofollow`, no horizontal overflow. Desktop, tablet and phone screenshots inspected.
+- Phone menu opens; Escape closes it and returns focus to its summary. Gallery/navigation links are present.
+- A temporary, explicitly labeled local fixture exercised the actual gallery components with two local SVGs and two generated, silent WebM clips. It was removed from source and the final build.
+- Photo dialog opens, centers correctly, locks background scrolling, changes photo with arrow keys, closes with Escape and restores focus/scrolling. Fixed its initial missing auto margins.
+- Photos/videos filters show the correct two media entries, update pressed states/status and pause filtered-out videos. The generated video played with native controls; starting another paused the previous one.
+- Settled back/forward navigation restores the pages and working gallery filters. Three repeated cycles retained one gallery element and one ScrollTrigger, without accumulating triggers. QA must allow Astro's transition to complete before clicking the newly restored UI.
+- Reduced-motion **startup harness** overriding the media query produced zero ScrollTriggers and visible album content. CSS reduced-motion rules were inspected. The real OS/browser preference was not toggled; this is not physical-device or native media-emulation verification. Astro emitted its expected reduced-motion transition warning in that harness.
+- A script-stripped static fixture had zero scripts, all four media entries, loaded photo links, hidden enhancement-only filters and native video controls/posters. This checked content fallback; its temporary font/brand asset proxy was incomplete, so it is not a complete JavaScript-disabled visual signoff.
+- No application console errors were reported on the final gallery/administrator entry checks. Temporary QA asset endpoints produced development errors while being corrected; all were removed before final checks.
+
+Preview: `http://127.0.0.1:4323/galerie` (new local dev session). Setup and Pierre's editing workflow: [`studio/README.md`](studio/README.md).
+
+Remaining external verification: real Sanity project/private dataset, dedicated server-only read token, Studio hostname/CORS, Pierre/admin membership, authenticated photo/video uploads and publication/withdrawal through a build webhook. No account access or live synchronization is claimed. Sanity dataset assets remain publicly retrievable by URL even for drafts; Studio guidance requires clearing rights before upload. Real licensed camp media and reviewed privacy/consent/removal procedures are required before publication. Physical-device, screen-reader and actual academy video-format checks remain unperformed.
+
+## Original website validation
+
 Executed on 17 October 2026, Europe/Berlin, on the user's Windows PC. No unexecuted check is counted as a pass.
 
 ## Commands and outcomes

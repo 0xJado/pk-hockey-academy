@@ -1,0 +1,38 @@
+---
+import Base from "../../layouts/Base.astro";
+import GalleryAlbums from "../../components/GalleryAlbums.astro";
+import FinalCTA from "../../components/FinalCTA.astro";
+import { getGalleryAlbums } from "../../lib/gallery-source";
+import "../../styles/gallery.css";
+const albums = await getGalleryAlbums();
+---
+
+<Base
+  title="Camp-Galerie – Fotos & Videos"
+  description="Einblicke in die Trainingscamps der PK Hockey Academy. Entdecke freigegebene Fotos und Videos vom Eishockeytraining auf und neben dem Eis."
+>
+  <section class="page-hero gallery-hero">
+    <div class="wrap">
+      <a href="/" class="breadcrumb">
+        STARTSEITE <span aria-hidden="true">/</span> GALERIE
+      </a>
+      <p class="eyebrow">DIE CAMP-GALERIE</p>
+      <h1>
+        AUF DEM EIS.
+        <br />
+        <span>MITTENDRIN.</span>
+      </h1>
+      <p class="page-intro">
+        Training ist Bewegung. Entwicklung. Miteinander. Hier sammeln wir die
+        Momente aus unseren Camps – in Fotos und Videos.
+      </p>
+    </div>
+    <div class="page-hero-lines" aria-hidden="true"></div>
+  </section>
+  <section class="section gallery-section" aria-label="Camp-Alben">
+    <div class="wrap">
+      <GalleryAlbums albums={albums} />
+    </div>
+  </section>
+  <FinalCTA />
+</Base>

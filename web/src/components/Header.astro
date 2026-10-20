@@ -20,6 +20,12 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/";
           {label}
         </a>
       ))}
+      <a
+        href="/galerie"
+        aria-current={path.startsWith("/galerie") ? "page" : undefined}
+      >
+        Galerie
+      </a>
     </nav>
     <a
       class="header-cta"
@@ -40,6 +46,12 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/";
             <Arrow />
           </a>
         ))}
+        <a
+          href="/galerie"
+          aria-current={path.startsWith("/galerie") ? "page" : undefined}
+        >
+          Galerie <Arrow />
+        </a>
         <a href="/trainingstermine">
           Trainingstermine
           <Arrow />

@@ -1,0 +1,63 @@
+---
+import GalleryImage from "./GalleryImage.astro";
+import { imageUrl } from "../lib/gallery";
+import type { GalleryTilePlacement } from "../lib/gallery-layout";
+import type { GalleryMedia } from "../types/gallery";
+interface Props {
+  placement: GalleryTilePlacement<GalleryMedia>;
+  tablet: GalleryTilePlacement<GalleryMedia>;
+  eager?: boolean;
+}
+const { placement, tablet, eager = false } = Astro.props;
+const { item } = placement;
+const spotlight = item.type === "image" ? item.spotlight : undefined;
+const sizes = spotlight
+  ? "(max-width: 700px) calc(100vw - 40px), (max-width: 1000px) 66vw, (min-width: 1392px) 505px, 40vw"
+  : "(max-width: 700px) calc(100vw - 40px), (max-width: 1000px) 33vw, (min-width: 1392px) 247px, 20vw";
+---
+
+<figure
+  class:list={["camp-media", { "camp-media--video": item.type === "video" }]}
+  data-media-type={item.type}
+  data-media-id={item.id}
+  data-gallery-order={placement.order}
+  data-spotlight={spotlight}
+  style={`--tile-column:${placement.column};--tile-row:${placement.row};--tile-span:${placement.span};--tablet-column:${tablet.column};--tablet-row:${tablet.row}`}
+>
+  {item.type === "image" ? (
+    <a
+      href={imageUrl(item, 2000)}
+      data-gallery-photo
+      class="camp-photo"
+      aria-label={`Foto vergrößern: ${item.alt}`}
+    >
+      <GalleryImage image={item} eager={eager} sizes={sizes} />
+      <span class="photo-expand" aria-hidden="true">
+        ↗
+      </span>
+    </a>
+  ) : (
+    <video
+      controls
+      playsinline
+      preload="none"
+      poster={imageUrl(item.poster, 640)}
+      width={item.poster.width}
+      height={item.poster.height}
+      aria-label={item.title}
+      aria-describedby={`transcript-${item.id}`}
+    >
+      <source src={item.url} type={item.mimeType} />
+      Dein Browser kann dieses Video nicht abspielen.{" "}
+      <a href={item.url}>Video öffnen</a>.
+    </video>
+  )}
+  <figcaption>
+    {item.type === "video" && <span class="video-title">{item.title}</span>}
+    {item.caption && <span>{item.caption}</span>}
+    <small>Aufnahme: {item.credit}</small>
+    {item.type === "video" && item.poster.credit !== item.credit && (
+      <small>Vorschaubild: {item.poster.credit}</small>
+    )}
+  </figcaption>
+</figure>

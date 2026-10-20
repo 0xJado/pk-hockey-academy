@@ -1,6 +1,12 @@
 # Asset provenance
 
-No NHL/DEL assets, external embeds, remotely loaded media or training footage are used. The supplied academy crest, licensed hero stock photograph, supplied Off-Ice illustration and generated On-Ice illustration are served locally. Illustrative photographs do not document academy training or imply an affiliation.
+No NHL/DEL assets or external video embeds are used. Existing branding and illustrative assets are served locally. The gallery is empty until real, approved camp albums are connected; those photos, video files and posters will be served by Sanity's CDN. Illustrative photographs do not document academy training or imply an affiliation.
+
+## Camp gallery — 20 October 2026
+
+- The empty gallery's rink/PK graphic is original CSS artwork in `web/src/styles/gallery.css`, created for this repository. It contains no third-party imagery.
+- No camp media, fabricated camps or coach identities have been added. Each real upload must include a credit and required descriptions; videos need a poster and text alternative. Album rights/consent approval is required before website publication.
+- Sanity's private dataset protects document reads, but asset CDN URLs are public to anyone who has the URL, including for drafts. Only already-cleared media should be uploaded. See [`studio/README.md`](studio/README.md) for removal and metadata handling.
 
 ## Supplied academy branding — 19 October 2026
 

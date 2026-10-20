@@ -1,0 +1,51 @@
+---
+import Base from "../../layouts/Base.astro";
+import Button from "../../components/Button.astro";
+import GalleryMedia from "../../components/GalleryMedia.astro";
+import { getGalleryAlbums } from "../../lib/gallery-source";
+import { formatCampDate } from "../../lib/gallery";
+import type { GalleryAlbum } from "../../types/gallery";
+import "../../styles/gallery.css";
+export async function getStaticPaths() {
+  return (await getGalleryAlbums()).map((album) => ({
+    params: { slug: album.slug },
+    props: { album },
+  }));
+}
+interface Props {
+  album: GalleryAlbum;
+}
+const { album } = Astro.props;
+---
+
+<Base title={`${album.title} – Camp-Galerie`} description={album.description}>
+  <section class="page-hero gallery-hero">
+    <div class="wrap">
+      <a href="/galerie" class="breadcrumb">
+        ← ZURÜCK ZUR CAMP-GALERIE
+      </a>
+      <p class="eyebrow">
+        {album.city} ·{" "}
+        <time datetime={album.occurredOn}>
+          {formatCampDate(album.occurredOn)}
+        </time>
+      </p>
+      <h1>{album.title}</h1>
+      <p class="page-intro">{album.description}</p>
+    </div>
+    <div class="page-hero-lines" aria-hidden="true"></div>
+  </section>
+  <section
+    class="section gallery-section"
+    aria-label="Fotos und Videos des Camps"
+  >
+    <div class="wrap">
+      <GalleryMedia album={album} />
+      <div class="gallery-back">
+        <Button href="/galerie" variant="outline">
+          Alle Camp-Alben
+        </Button>
+      </div>
+    </div>
+  </section>
+</Base>

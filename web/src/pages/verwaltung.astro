@@ -1,0 +1,60 @@
+---
+import Base from "../layouts/Base.astro";
+import Button from "../components/Button.astro";
+import { getStudioUrl } from "../lib/gallery-source";
+const studioUrl = getStudioUrl();
+---
+
+<Base
+  noindex
+  title="Redaktion – Camp-Galerie verwalten"
+  description="Geschützter Redaktionszugang für Pierre Klein und freigeschaltete Administratoren der PK Hockey Academy."
+>
+  <section class="page-hero">
+    <div class="wrap">
+      <a href="/" class="breadcrumb">
+        STARTSEITE <span aria-hidden="true">/</span> REDAKTION
+      </a>
+      <p class="eyebrow">PK HOCKEY ACADEMY · REDAKTION</p>
+      <h1>
+        CAMP-MOMENTE.
+        <br />
+        <span>GEMEINSAM TEILEN.</span>
+      </h1>
+      <p class="page-intro">
+        Der Redaktionsbereich für Pierre und freigeschaltete Administratoren.
+        Camp-Alben anlegen, Fotos und Videos hochladen und Inhalte freigeben.
+      </p>
+    </div>
+  </section>
+  <section class="section light-section">
+    <div class="wrap editorial-intro">
+      <p class="eyebrow">PERSÖNLICHER ZUGANG</p>
+      <h2>{studioUrl ? "ZUR REDAKTION." : "ZUGANG FOLGT."}</h2>
+      {studioUrl ? (
+        <>
+          <p class="lead">
+            Melde dich mit deinem freigeschalteten Sanity-Konto an.
+          </p>
+          <p>
+            Nur eingeladene Projektmitglieder mit passenden Rechten können Alben
+            bearbeiten und Medien hochladen.
+          </p>
+          <Button href={studioUrl}>Redaktion öffnen</Button>
+        </>
+      ) : (
+        <>
+          <p class="lead">Der Redaktionszugang wird noch eingerichtet.</p>
+          <p>
+            Sobald der geschützte Bereich verbunden ist, können eingeladene
+            Administratoren hier zur Anmeldung gelangen. Aktuell ist über diese
+            Seite kein Upload möglich.
+          </p>
+          <Button href="/galerie" variant="outline">
+            Zur Camp-Galerie
+          </Button>
+        </>
+      )}
+    </div>
+  </section>
+</Base>

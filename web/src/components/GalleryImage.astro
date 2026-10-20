@@ -1,0 +1,32 @@
+---
+import type { GalleryImage } from "../types/gallery";
+import { imageUrl } from "../lib/gallery";
+interface Props {
+  image: GalleryImage;
+  eager?: boolean;
+  sizes?: string;
+}
+const {
+  image,
+  eager = false,
+  sizes = "(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 33vw",
+} = Astro.props;
+const widths = [
+  ...new Set(
+    [320, 640, 960, 1440].map((width) => Math.min(width, image.width)),
+  ),
+];
+---
+
+<img
+  src={imageUrl(image, 960)}
+  srcset={widths
+    .map((width) => `${imageUrl(image, width)} ${width}w`)
+    .join(", ")}
+  sizes={sizes}
+  width={image.width}
+  height={image.height}
+  alt={image.alt}
+  loading={eager ? "eager" : "lazy"}
+  decoding="async"
+/>
