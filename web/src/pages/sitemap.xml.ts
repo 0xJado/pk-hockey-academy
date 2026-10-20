@@ -8,6 +8,7 @@ export const GET: APIRoute = async ({ site }) => {
         "/",
         ...Object.keys(pages).map((page) => `/${page}`),
         "/galerie",
+        "/medienkit",
         ...(await getGalleryAlbums()).map((album) => `/galerie/${album.slug}`),
       ]
     : [];

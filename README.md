@@ -91,6 +91,8 @@ The dynamic `[page].astro` file generates the nine fixed, static internal routes
 
 ## Content and future integrations
 
+The `/medienkit` page is linked from the footer and currently offers only the original transparent academy logo. `web/src/data/media-kit.ts` holds its typed download metadata for a later Sanity migration. Astro optimizes the preview separately; the download preserves the supplied PNG and uses the filename `PK-Hockey-Academy-Logo.png`. No CMS, ZIP or additional media downloads are included.
+
 `TrainingSession`, `Trainer`, `Venue`, `SiteSettings` and `Pricing` are defined in `src/types/content.ts`. Edit local data in `src/data/academy.ts`; later replace the retrieval boundary in `src/lib/content.ts` with Sanity queries. Do not import CMS clients into presentation components. The gallery is the first CMS boundary: `src/lib/gallery-source.ts` fetches approved published albums at build time, while `src/lib/gallery.ts` independently validates the response.
 
 The live schedule and separate demo collection are intentionally empty. Published sessions require timezone-aware timestamps, valid duration, non-demo content and non-draft status, and are sorted chronologically. Rendered cards support title, date, start/end, location, group, available spots and status. Unknown capacity stays unknown.

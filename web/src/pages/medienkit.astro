@@ -1,0 +1,60 @@
+---
+import { Image } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import Arrow from "../components/Arrow.astro";
+import { mediaKitAssets } from "../data/media-kit";
+---
+
+<Base
+  title="Medienkit – Academy-Logo herunterladen"
+  description="Das Logo der PK Hockey Academy als transparente PNG-Originaldatei herunterladen."
+>
+  <section class="page-hero">
+    <div class="wrap">
+      <a href="/" class="breadcrumb">STARTSEITE <span aria-hidden="true">/</span> MEDIENKIT</a>
+      <p class="eyebrow">DIE ACADEMY ZUM DOWNLOAD</p>
+      <h1>UNSER ZEICHEN.<br /><span>DEIN DOWNLOAD.</span></h1>
+      <p class="page-intro">Hier findest du das Logo der PK Hockey Academy als Originaldatei zum Herunterladen.</p>
+    </div>
+    <div class="page-hero-lines" aria-hidden="true"></div>
+  </section>
+  <section class="section light-section" aria-labelledby="downloads-heading">
+    <div class="wrap">
+      <p class="eyebrow">MEDIENKIT</p>
+      <h2 id="downloads-heading">DAS ACADEMY-LOGO.</h2>
+      {mediaKitAssets.map((asset) => (
+        <article class="media-download" aria-labelledby={`${asset.id}-title`}>
+          <div class="media-download-preview">
+            <Image src={asset.image} alt="Wappen der PK Hockey Academy" width={360} widths={[240, 360, 720]} sizes="(max-width: 600px) 70vw, 360px" format="webp" />
+          </div>
+          <div class="media-download-details">
+            <p class="eyebrow">01 / ORIGINALDATEI</p>
+            <h3 id={`${asset.id}-title`}>{asset.title}</h3>
+            <p>{asset.description}</p>
+            <dl class="media-download-meta">
+              <div><dt>Format</dt><dd>{asset.format} · transparent</dd></div>
+              <div><dt>Auflösung</dt><dd>{asset.image.width} × {asset.image.height} px</dd></div>
+              <div><dt>Dateigröße</dt><dd>{new Intl.NumberFormat("de-DE", { maximumFractionDigits: 2 }).format(asset.sizeBytes / 1_000_000)} MB</dd></div>
+            </dl>
+            <a class="button button--primary" href={asset.image.src} download={asset.downloadName}>
+              <span>Logo herunterladen</span><Arrow />
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .media-download { display: grid; grid-template-columns: 1fr 1fr; margin-top: 36px; border: 1px solid #c2d8f2; border-top: 4px solid var(--blue); }
+  .media-download-preview { display: grid; place-items: center; padding: 40px; background: #e8f1fc; }
+  .media-download-preview img { display: block; width: 100%; max-width: 360px; height: auto; }
+  .media-download-details { padding: clamp(24px, 4vw, 56px); align-self: center; min-width: 0; }
+  .media-download-details h3 { font-size: clamp(30px, 3vw, 42px); margin: 16px 0; }
+  .media-download-details > p:not(.eyebrow) { color: #405a7b; }
+  .media-download-meta { margin: 28px 0; font-size: 13px; }
+  .media-download-meta > div { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; padding: 12px 0; border-bottom: 1px solid #c2d8f2; }
+  dt { color: #405a7b; } dd { margin: 0; font-weight: 600; }
+  @media (max-width: 767px) { .media-download { grid-template-columns: 1fr; } .media-download-preview { padding: 28px; } }
+</style>

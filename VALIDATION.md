@@ -1,5 +1,13 @@
 # Validation record
 
+## Media kit — 20 October 2026
+
+Before pushing, integrated the newer gallery/Sanity commits from main, preserving their footer links, sitemap entries and documentation. Re-ran Astro check (42 files, zero errors/warnings/hints), all 16 web tests and the static build successfully on the combined source.
+
+Added `/medienkit` with one original logo download, an optimized preview and a footer link. Astro check passed for 28 files with zero errors, warnings or hints; all three existing content tests passed; the static build succeeded.
+
+Chromium/Playwright checks against the production preview at 375, 768 and 1440px verified the image loads, exactly one H1 and download link, no horizontal overflow or application runtime errors, footer navigation and browser back/forward. Actual browser downloads used `PK-Hockey-Academy-Logo.png`; all three matched the original PNG's SHA-256 and 1,558,622-byte length. A JavaScript-disabled page retained the download link. Noindex metadata, robots `Disallow: /` and the empty pre-launch sitemap were preserved. Browser checks used reduced motion. Screenshots are ignored under `output/playwright/media-kit/`. No deployment was performed.
+
 ## Git handoff — 20 October 2026
 
 At the user's request, grouped the pending work into three cohesive commits: training-card visuals/assets and their documentation; the separate Sanity CMS and ignore rules; the public camp gallery, On-Ice/Off-Ice sections, edge spotlights, tests and remaining documentation. Earlier entries describing work as local/uncommitted record the status at the time of those checks.
