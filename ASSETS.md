@@ -1,6 +1,6 @@
 # Asset provenance
 
-No NHL/DEL assets, external embeds, remotely loaded media or training footage are used. The supplied academy crest and one licensed stock photograph are served locally. The stock image does not depict academy training or imply an affiliation.
+No NHL/DEL assets, external embeds, remotely loaded media or training footage are used. The supplied academy crest, licensed hero stock photograph, supplied Off-Ice illustration and generated On-Ice illustration are served locally. Illustrative photographs do not document academy training or imply an affiliation.
 
 ## Supplied academy branding — 19 October 2026
 
@@ -28,7 +28,15 @@ No NHL/DEL assets, external embeds, remotely loaded media or training footage ar
 - Local asset: `web/src/assets/off-ice-running.png`.
 - Source: the image of children running supplied by the user in this conversation for the Off-Ice training card. Usage is based on that explicit instruction; no independent ownership or participant affiliation is claimed.
 - Image Gen applied cool blue grading and a navy edge vignette to the supplied image. It remains an illustrative `Symbolbild`, not evidence of an academy session.
-- Astro generates responsive, locally served WebP renditions. CSS adds a restrained blue light overlay, a lower-edge shade for the caption and a diagonal corner cut. No runtime external image requests.
+- Astro generates responsive, locally served WebP renditions. Shared CSS adds a subtle navy edge vignette. The diagonal CSS corner cut and visible image caption were removed on 20 October 2026 at the user's request; the source image is unchanged. Descriptive alt text identifies this as a `Symbolbild`. No runtime external image requests.
+
+## On-Ice practice image — 20 October 2026
+
+- Local original: `web/src/assets/on-ice-practice.png`.
+- Generated specifically for this project with the built-in `image_gen` tool at the user's explicit request. This is fictional illustrative media, not a photograph of academy participants, Pierre or a verified venue. No third-party team imagery or supplied personal photographs were used as generation inputs. No independent license or exclusivity claim is made.
+- Depicts fully equipped youth players practicing puck control in a generic indoor rink. No academy, sponsor or team marks were requested. The visible caption was removed at the user's request for this placeholder preview; descriptive alt text still identifies it as a `KI-generiertes Symbolbild`.
+- The source is preserved locally. Astro produces responsive WebP renditions; the shared rectangular 16:9 frame keeps the image corners intact and uses a subtle navy edge vignette. No image-generation API or external image request runs in the website.
+- Full final generation prompt: [`web/src/assets/on-ice-practice.prompt.txt`](web/src/assets/on-ice-practice.prompt.txt). Real approved training photography can replace this illustration later.
 
 ## Original local illustrations
 

@@ -107,14 +107,6 @@ function initialize() {
             delay: desktop ? i * 0.2 : 0,
             scrollTrigger: { trigger: panel, start: "top 90%", once: true },
           });
-          const line = panel.querySelector(".skate-line");
-          if (line)
-            gsap.from(line, {
-              strokeDashoffset: 650,
-              duration: 1.6,
-              ease: "power2.out",
-              scrollTrigger: { trigger: panel, start: "top 80%", once: true },
-            });
         });
         if (desktop && panels.length === 2) {
           gsap

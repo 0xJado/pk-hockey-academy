@@ -1,7 +1,13 @@
 ---
 import { trainingPhases } from "../data/academy";
 import { Image } from "astro:assets";
+import onIcePractice from "../assets/on-ice-practice.png";
 import offIceRunning from "../assets/off-ice-running.png";
+
+const phaseImages = {
+  "on-ice": onIcePractice,
+  "off-ice": offIceRunning,
+};
 ---
 
 <section
@@ -19,52 +25,41 @@ import offIceRunning from "../assets/off-ice-running.png";
       </h2>
       <p>
         Gezielte Arbeit auf dem Eis. Ergänzende Entwicklung daneben.
-        <br />
+        <br />{" "}
         60 Minuten On-Ice. 60 Minuten Off-Ice.
       </p>
     </div>
     <div class="story-panels">
       {trainingPhases.map((phase) => (
-        <article class="story-panel" data-story-panel>
+        <article
+          class="story-panel"
+          data-story-panel
+          aria-labelledby={`phase-${phase.id}`}
+        >
           <div class="phase-top">
             <span class="eyebrow">
               {phase.number} / {phase.kicker}
             </span>
-            <span class="phase-plus" aria-hidden="true">
-              ↗
-            </span>
           </div>
           <div class="phase-time">
-            <strong>{phase.time}</strong>
-            <span>
-              MIN
+            <strong aria-hidden="true">{phase.time}</strong>
+            <h3 id={`phase-${phase.id}`}>
+              <span class="sr-only">{phase.time} </span>MIN
               <br />
               {phase.title}
-            </span>
+            </h3>
           </div>
-          {phase.title === "OFF-ICE" ? (
-            <figure class="phase-photo">
-              <Image
-                src={offIceRunning}
-                alt="Kinder laufen gemeinsam auf einem Weg im Grünen."
-                widths={[400, 640, 960, 1280]}
-                sizes="(max-width: 767px) 90vw, 45vw"
-                format="webp"
-                loading="lazy"
-                class="phase-photo-image"
-              />
-              <figcaption>Symbolbild · Off-Ice</figcaption>
-            </figure>
-          ) : (
-          <div class="phase-art" aria-hidden="true">
-            <svg viewBox="0 0 600 180">
-              <ellipse cx="300" cy="90" rx="270" ry="68" />
-              <ellipse cx="300" cy="90" rx="55" ry="68" />
-              <path d="M300 22v136M115 40v100M485 40v100M30 90h540" />
-              <path class="skate-line" d="M80 140Q230 20 340 115T550 55" />
-            </svg>
-          </div>
-          )}
+          <figure class="phase-photo">
+            <Image
+              src={phaseImages[phase.id]}
+              alt={phase.imageAlt}
+              widths={[400, 640, 960, 1280]}
+              sizes="(max-width: 600px) calc(100vw - 92px), (max-width: 900px) calc(100vw - 108px), (max-width: 1100px) calc((100vw - 238px) / 2), (max-width: 1392px) calc((100vw - 278px) / 2), 557px"
+              format="webp"
+              loading="lazy"
+              class="phase-photo-image"
+            />
+          </figure>
           <p>{phase.text}</p>
           <div class="phase-tags">
             {phase.tags.map((tag) => (

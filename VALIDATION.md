@@ -116,3 +116,42 @@ The first redesign deployment (`dpl_E5rSmBo9gM2eJbfH8RzvacKhvh6i`, commit `5f48f
 After the initial breakpoint correction, Astro check again reported zero errors/warnings/hints and the static build succeeded. All ten routes at 611px passed the H1/overflow checks, and 375px remained free of horizontal overflow. Visual inspection at 721px still showed text/photo crowding, so the final layout stacks through tablet widths rather than only through 720px.
 
 The final 900px breakpoint passed another Astro check and static build. Rechecked all ten routes at 768px: one H1 and no horizontal overflow. At 900px the hero is stacked, and at 901px it returns to the split layout. Final captures include `home-tablet.jpg` and `home-901.jpg`; desktop 1440px and phone 375px styling are unaffected by this boundary change.
+
+## On-Ice / Off-Ice training cards — 20 October 2026
+
+Fast-forwarded the clean local checkout to the cloud-session commit `d9cfdc7`, preserving its supplied Off-Ice image. Removed the explicit diagonal CSS `clip-path` from the photo frame; the source image did not have a missing corner. Generated a fictional On-Ice youth-practice image with the built-in Image Gen tool and saved it with the full prompt in `web/src/assets/`. Provenance and visible illustration labeling are documented in `ASSETS.md`.
+
+The shared `TrainingStory` now renders matching rectangular 16:9 photographs on `/` and `/training`. Desktop image, copy and tag rows align; smaller screens retain ordinary stacked cards. Added labeled H3 phase headings and data-driven image alternatives/captions, removed the noninteractive decorative arrows, and fixed the intro's missing mobile word space. Preserved the scoped card reveals and desktop accent handover, removing the obsolete SVG line animation and styles.
+
+Files changed in this increment: `TrainingStory.astro`, `global.css`, `academy.ts`, `lib/motion/index.ts`, the new On-Ice PNG and prompt, `src/assets/README.md`, root `ASSETS.md`, `README.md` and this validation record. No dependency, backend, registration or contact change was required.
+
+Executed from `web` with the bundled npm CLI (`node ../.tools/package/bin/npm-cli.js`) and `ASTRO_TELEMETRY_DISABLED=1`:
+
+- `run check`: 26 files; zero errors, warnings or hints.
+- `test`: all three existing content tests passed.
+- `run build`: successful static output and local responsive WebP images. On-Ice variants are approximately 13–95 KiB; desktop uses the 640px rendition at approximately 26 KiB.
+- `git diff --check`: no whitespace errors; Git reports its existing LF/CRLF normalization notices.
+
+Verified the built static site in an isolated headless Edge session through Playwright CLI:
+
+| Check | Result |
+| --- | --- |
+| Homepage and training page at 1440, 768 and 375px | All six combinations: no horizontal overflow, one H1, both photographs loaded, both photo clip paths `none` |
+| Desktop card alignment | Both photo frames 557 × 313.3125px; copy and tag rows aligned |
+| Mobile/tablet presentation | Normal stacked cards, intact image frames, readable captions and wrapping tags |
+| Keyboard menu | Enter opens; Escape closes and restores summary focus with a visible 3px outline |
+| Schedule navigation and history | Mobile menu navigates to the permanent schedule route; back/forward restores the expected pages |
+| Repeated ClientRouter navigation | Three homepage/schedule cycles retain 16 desktop ScrollTriggers without accumulation; mobile homepage has 14 |
+| Reduced motion | Actual Playwright media emulation; zero ScrollTriggers, visible cards/photos, no overflow |
+| JavaScript disabled | Actual separate browser context at 375px; training cards and both images visible, no overflow; native menu and keyboard schedule navigation work |
+| Console and requests | No application errors or warnings; no external requests in the monitored main-page session |
+
+Screenshots and the one-time QA script are ignored under `output/playwright/training-cards/`, including homepage/training captures at all three widths and `reduced-motion.png`. Desktop, tablet and mobile screenshots were inspected visually. The initial sandboxed browser/server could not connect; the final isolated browser and local static preview were run with process/network permissions. QA waits account for Astro's page transition completion, and the JavaScript-disabled menu link was activated with the keyboard.
+
+Local preview: `http://127.0.0.1:4322/`. This increment remains local and has not been committed, pushed or deployed. The generated scene remains labeled `KI-Symbolbild · On-Ice`; approved real academy training photography is still needed to replace the illustrative media. No video was introduced or available to test, and no physical-device or screen-reader audit was performed.
+
+### Follow-up: navy vignette and caption removal
+
+At the user's request, removed the visible captions from both training photos and the unused caption data/styles. Their alt text retains the illustrative provenance. Replaced the bottom-heavy caption shading with a subtle shared navy radial edge vignette and inset shade; the original image files remain unchanged. Updated README and asset documentation to reflect this preview preference.
+
+Re-ran Astro check (26 files, zero errors/warnings/hints) and the static build successfully. Playwright verified both routes at 1440, 768 and 375px: no horizontal overflow, both photos loaded, intact corners, no captions or other text inside either photo, and the same navy radial gradient on both. No runtime errors were recorded. Visually inspected the desktop result. Updated screenshots are `output/playwright/training-cards/no-captions-1440.png` and `no-captions-375.png` (ignored). No new interaction or dependency was introduced; the existing content tests were not rerun for this presentation-only follow-up. Changes remain local, with the preview available at `http://127.0.0.1:4322/`.

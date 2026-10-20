@@ -67,18 +67,23 @@ export const sessions: TrainingSession[] = [];
 export const demoSessions: TrainingSession[] = [];
 export const trainingPhases = [
   {
+    id: "on-ice" as const,
     number: "01",
     title: "ON-ICE",
     time: "60",
     kicker: "AUF DEM EIS",
+    imageAlt:
+      "KI-generiertes Symbolbild: Junge Eishockeyspieler in voller Schutzausrüstung üben die Puckführung auf dem Eis.",
     text: "Zeit für dein Spiel. Gezielte individuelle Entwicklung auf dem Eis – angepasst an den jeweiligen Leistungsstand.",
     tags: ["Individuell angepasst", "Kleine Gruppen"],
   },
   {
+    id: "off-ice" as const,
     number: "02",
     title: "OFF-ICE",
     time: "60",
     kicker: "NEBEN DEM EIS",
+    imageAlt: "Symbolbild: Kinder laufen gemeinsam auf einem Weg im Grünen.",
     text: "Entwicklung geht weiter. Die ergänzende Arbeit neben dem Eis macht den Trainingsblock komplett.",
     tags: ["Persönliche Betreuung", "Ganzheitlicher Trainingsblock"],
   },
