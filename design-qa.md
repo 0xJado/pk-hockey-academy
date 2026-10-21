@@ -40,3 +40,73 @@ Astro check completed with zero errors, warnings or hints across 26 files. All t
 The generated static site was also served through an ignored QA harness with application scripts removed: content and images remained visible, the native menu worked and the schedule link navigated with zero scripts. A second QA endpoint emulated the reduced-motion startup media query and CSS branch: zero ScrollTriggers, visible headline, no parallax and negligible animation duration. This tests the reduced-motion code path; the operating-system/browser preference itself was not changed. No video was supplied, and no physical-device or screen-reader audit was performed.
 
 See `VALIDATION.md` for the implementation and deployment record. Review hosting remains protected and non-indexable; this visual QA pass is not a public-launch or legal-compliance approval.
+
+## Gallery section tabs — 21 October 2026
+
+final result: passed
+
+### Reference, implementation and comparison
+
+Scope is the user's annotated gallery screenshot: replace photo/video filters and jump links with centered, joined, curved-border On-Ice/Off-Ice tabs; remove section counts and visible video-to-text labels; retain the overall count and existing gallery presentation. The sketch is a control annotation, not a request to reproduce its handwriting or change the surrounding page.
+
+- Source visual truth: `output/gallery-local/tabs-reference.png`, an unchanged local copy of the supplied 1608 × 914 screenshot (ignored).
+- Implementation: `output/gallery-local/tabs-full-desktop.png`, 1608 × 2369 browser-rendered pixels at a 1608 × 914 CSS viewport, devicePixelRatio 1. `tabs-desktop.png` crops the rendered full page to 1608 × 914 with the preview notice aligned at source y=101.
+- Source CSS density was not supplied; its 1608 × 914 pixel frame is compared at 1:1 to the normalized implementation. Existing page framing/margins and the shorter toolbar are intentional scope differences.
+- State: On-Ice selected, original supplied spotlight on the left, five-column grid, overall count visible. Video playback position is irrelevant to the tab comparison.
+- Full-view combined evidence: `output/gallery-local/tabs-comparison.png` shows source left / implementation right, both scaled equally to 804 × 457.
+- Focused combined evidence: `output/gallery-local/tabs-detail-comparison.png` compares the source annotation and rendered control. Both 1280 × 160 regions are scaled equally to 800 × 100. This isolates the tab outline, central divider, labels and continuous baseline from the old controls crossed out by the user.
+
+### Findings and required fidelity surfaces
+
+No actionable P0/P1/P2 findings were identified in the first comparison; no visual corrections were required after that comparison.
+
+| Surface | Assessment |
+| --- | --- |
+| Fonts and typography | Existing self-hosted Barlow Condensed gives the tab labels the site's established display treatment; Inter remains the body/count face. The sketch's handwritten ON/OFF labels are represented as readable On-Ice/Off-Ice controls. No clipping or wrapping at tested widths. |
+| Spacing and layout | Centered 250px desktop tabs share a border and broad curved outside shoulders, meeting the full-width baseline. Active tab opens into the gallery beneath it. The removed filter/status row intentionally compacts the toolbar. Phone tabs remain 161 × 64px without overflow. |
+| Colors and tokens | Brand cobalt outlines/selected text, navy inactive text and ice-blue inactive fill reproduce the outlined direction using the existing palette. The selected state and navy focus ring remain distinguishable. |
+| Image quality and assets | All supplied media, thumbnail crops, edge spotlights and enlarged-image resolution are retained. No new image/icon asset was needed; the tab borders are native interactive-control styling. No text labels or gradients were reintroduced over photographs. |
+| Copy and content | Only On-Ice/Off-Ice are shown for this album. Overall count stays at 15; section counts, photo/video filters, secondary status count and visible video-to-text labels are absent. Unknown/unassigned CMS media remain supported through an optional additional tab. |
+
+### Interaction and responsive evidence
+
+Browser checks passed at 1608, 768 and 375 CSS pixels: one visible panel, five/three/one grid columns and no horizontal overflow. Arrow keys wrap, Home/End select the ends, Space/Enter activate, and the active tab is the only tab stop. Hiding On-Ice pauses playback. Enlarged views contain eight On-Ice or six Off-Ice photos and restore focus on Escape. Reload and album/index back-forward navigation preserve the selected hash and retain one gallery element. No browser warnings/errors were observed in the monitored session.
+
+A separate local harness removed all application scripts: zero scripts, both sections and all 14 photos remain available, and ordinary Off-Ice anchor navigation works. The actual browser's JavaScript setting was not toggled. Reduced-motion CSS disables the new tab transition; the actual media preference and screen-reader output were not tested in this increment.
+
+Implementation checklist complete: joined bordered tabs; accessible selected/hidden state; scoped lightbox; hidden-video pause; responsive and no-script checks; requested labels/counts removed; overall total retained. No P3 follow-up is required for this scoped annotation.
+
+final result: passed
+
+## Gallery goalkeeper selector — 21 October 2026
+
+final result: passed
+
+### Reference and comparison
+
+The latest annotation requests removal of the repeated large section heading and a small overhead goalkeeper that slides beneath the selected On-Ice/Off-Ice label. Existing curved tab borders, overall total, media layout and placeholder notice remain in scope as surrounding context.
+
+- Source: unchanged attached image copied to `output/gallery-local/goalie-reference.png`, 1518 × 660 pixels. Source CSS density was not supplied.
+- Rendered implementation: `goalie-full-desktop.png`, 1503 × 2316 pixels from a 1518 × 854 CSS viewport at devicePixelRatio 1; browser capture excludes the 15px scrollbar. `goalie-desktop.png` crops from document y=579 to align the notice at source y=50, and pads 15px on the right to compare equal 1518 × 660 frames without scaling the page.
+- Combined full-view comparison: `goalie-comparison.png`, source left / implementation right, each scaled equally to 759 × 330. Focused comparison: `goalie-detail-comparison.png`, source above / implementation below, equal 1280 × 300 regions scaled to 960 × 225. Both were opened and visually reviewed.
+- State: On-Ice selected, left spotlight, overall count 15. `goalie-off-ice.png` captures the other endpoint. Tablet and phone evidence: `goalie-tablet.png`, `goalie-phone.png`. Artifacts and preparation tools remain ignored.
+
+### Fidelity surfaces
+
+| Surface | Assessment |
+| --- | --- |
+| Fonts and typography | Existing Barlow Condensed tab labels retained; repeated large section heading removed visually once tabs initialize. Accessible heading text remains available. |
+| Spacing and layout | Curved shoulders, divider and baseline retained. Goalkeeper centers exactly beneath the selected label; 54px below-tab spacing leaves clearance before the grid. Removing the heading intentionally moves the photos up. No overflow at 1518, 768 or 375px. |
+| Colors and tokens | Navy, white and restrained electric blue goalkeeper matches the established sports palette. Existing selected text and keyboard focus remain clear. |
+| Image quality and assets | Actual transparent overhead goalkeeper illustration generated with built-in Image Gen, optimized to a 352 × 165px source and rendered through Astro. Displays at 88 × 46px, or 76 × 40px on phone. This polished illustration intentionally replaces the rough black annotation; gallery media and crops are unchanged. |
+| Copy and content | Duplicate visible On-Ice/Off-Ice heading removed; selected tab carries that information. Overall total and local-preview notice retained. No captions, section counts or extra text added. |
+
+### Behavior and accessibility
+
+Clicking and keyboard arrow selection move the goalkeeper between labels using a 420ms transform transition. An intermediate computed transform was observed during movement, and both settled endpoints match label centers exactly. Resize tracking realigns it on tablet and phone; the phone grid starts 24px below the marker. The illustration is decorative (`aria-hidden`, empty alt), does not receive focus and cannot intercept clicks.
+
+A local harness exercised both reduced-motion branches: JavaScript sets animation false, CSS computes a zero-second transition, and the goalkeeper immediately matches the new label center. This is emulation of the reduced-motion path, not a change to the operating-system/browser preference. A second harness removed all scripts: the marker stays hidden and both headings and sections remain visible. Keyboard focus remains visible in responsive captures. No physical-device or screen-reader audit was performed.
+
+No actionable P0/P1/P2 findings remain in this scope. No P3 follow-up is required. The requested heading removal, compact overhead selector, both movement endpoints, responsive layout, reduced-motion and static fallbacks have been verified.
+
+final result: passed

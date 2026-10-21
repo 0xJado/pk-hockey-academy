@@ -7,6 +7,11 @@ interface Props {
   albums: GalleryAlbum[];
 }
 const { albums } = Astro.props;
+const mediaCount = (album: GalleryAlbum) => {
+  const photos = album.media.filter((item) => item.type === "image").length;
+  const videos = album.media.filter((item) => item.type === "video").length;
+  return `${photos} ${photos === 1 ? "Foto" : "Fotos"} · ${videos} ${videos === 1 ? "Video" : "Videos"}`;
+};
 ---
 
 {albums.length ? (
@@ -16,26 +21,25 @@ const { albums } = Astro.props;
         <a href={`/galerie/${album.slug}`} class="album-link">
           <div class="album-cover">
             <GalleryImage image={album.cover} eager={index === 0} />
-            <span class="album-count">
-              {album.media.filter((item) => item.type === "image").length} Fotos
-              · {album.media.filter((item) => item.type === "video").length}{" "}
-              Videos
-            </span>
-            <span class="album-arrow" aria-hidden="true">
-              ↗
-            </span>
           </div>
           <div class="album-copy">
             <p class="eyebrow">
-              {album.city} <span aria-hidden="true">/</span>{" "}
-              <time datetime={album.occurredOn}>
-                {formatCampDate(album.occurredOn)}
-              </time>
+              {album.isLocalPreview ? (
+                "PLATZHALTER · LOKALE VORSCHAU"
+              ) : (
+                <>
+                  {album.city} <span aria-hidden="true">/</span>{" "}
+                  <time datetime={album.occurredOn}>
+                    {formatCampDate(album.occurredOn)}
+                  </time>
+                </>
+              )}
             </p>
             <h2>{album.title}</h2>
+            <span class="album-count">{mediaCount(album)}</span>
             <p>{album.description}</p>
             <span class="inline-link">
-              Camp-Album ansehen <span aria-hidden="true">↗</span>
+              {album.isLocalPreview ? "Vorschau öffnen" : "Camp-Album ansehen"}{" "}
             </span>
           </div>
         </a>

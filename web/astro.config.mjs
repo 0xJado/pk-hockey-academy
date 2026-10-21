@@ -1,6 +1,7 @@
 import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import { loadEnv } from "vite";
+import localGalleryPlugin from "./local-gallery-plugin.mjs";
 
 const env = loadEnv(process.env.NODE_ENV || "production", process.cwd(), "");
 const configuredUrl = env.SITE_URL?.trim();
@@ -29,6 +30,6 @@ export default defineConfig({
   site,
   output: "static",
   trailingSlash: "never",
-  vite: { plugins: [tailwindcss()] },
+  vite: { plugins: [tailwindcss(), localGalleryPlugin()] },
   devToolbar: { enabled: false },
 });

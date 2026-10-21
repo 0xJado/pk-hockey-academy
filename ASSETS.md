@@ -69,3 +69,15 @@ The illustrations remain clearly identified project placeholders. The supplied c
 Font CSS and WOFF2 files are bundled locally through npm/Vite. No Google Fonts requests. Font package licenses are retained in their installed packages; copies are included in `web/licenses/` for distribution. See `web/package-lock.json` for exact package versions and integrity hashes.
 
 GSAP is a runtime dependency, under its own Standard License (see the installed `gsap` package). No redistribution claim is made for third-party packages. Third-party libraries retain their respective licenses.
+
+## Local gallery preview media
+
+User-supplied placeholder media may be prepared locally under `web/.local-gallery/`, including optimized images, a video poster and an optional silent video rendition. Originals remain untouched. The folder, album manifest and preparation tooling are Git-ignored; no personal asset filenames or sample metadata are recorded here. These samples are authorized for the local gallery demonstration only. They are visibly labeled and excluded from production output. Their use does not establish publication rights or identify a real camp, venue or participant. Approved publication assets and credits must be entered through the CMS separately.
+
+## Gallery goalkeeper indicator — 21 October 2026
+
+`web/src/assets/gallery-goalie.png` is a fictional, directly overhead hockey goalkeeper illustration created with the built-in Image Gen tool for the gallery's moving tab indicator. It is decorative UI artwork, with no real person, team identity, logo or affiliation. The generated original is preserved unchanged in the local generated-images directory; transparent padding was trimmed and the source downsampled to 352 × 165 RGBA pixels (92,329 bytes). Astro produces the small local rendition, displayed at 88px wide on desktop/tablet and 76px on phones. No external image request is required.
+
+SHA-256: `2be9f44a572779daf4483fedabb4dbfeffdae0f0dedbac1ed6f19a8404a39efa`.
+
+The initial generation and refinement prompts, tool choice and preparation are recorded in `web/src/assets/gallery-goalie.prompt.txt`. This reusable design asset is part of the website source; personal sample gallery files and metadata remain Git-ignored.

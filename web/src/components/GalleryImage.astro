@@ -20,9 +20,11 @@ const widths = [
 
 <img
   src={imageUrl(image, 960)}
-  srcset={widths
-    .map((width) => `${imageUrl(image, width)} ${width}w`)
-    .join(", ")}
+  srcset={
+    image.url.startsWith("/__local-gallery/")
+      ? undefined
+      : widths.map((width) => `${imageUrl(image, width)} ${width}w`).join(", ")
+  }
   sizes={sizes}
   width={image.width}
   height={image.height}

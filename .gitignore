@@ -1,6 +1,7 @@
 node_modules/
 web/dist/
 web/.astro/
+web/.local-gallery/
 studio/dist/
 studio/.sanity/
 .env

@@ -1,4 +1,5 @@
 import { layoutGalleryTiles } from "./gallery-layout";
+import { enhanceVideoPlayer } from "./video-player";
 
 export function installGallery() {
   if (customElements.get("camp-gallery")) return;
@@ -7,6 +8,13 @@ export function installGallery() {
     class extends HTMLElement {
       private cleanup?: () => void;
       connectedCallback() {
+        // Astro replaces inert video nodes immediately after connecting the new body.
+        // Bind after that synchronous swap so playback references stay attached.
+        queueMicrotask(() => {
+          if (this.isConnected) this.initialize();
+        });
+      }
+      private initialize() {
         this.cleanup?.();
         const events = new AbortController();
         const options = { signal: events.signal };
@@ -16,37 +24,105 @@ export function installGallery() {
         const image = this.querySelector<HTMLImageElement>(
           "[data-dialog-image]",
         );
-        let photos = Array.from(
-          this.querySelectorAll<HTMLAnchorElement>("[data-gallery-photo]"),
+        const viewerVideo = this.querySelector<HTMLVideoElement>(
+          "[data-dialog-video]",
+        );
+        const viewerPlayer = this.querySelector<HTMLElement>(
+          "[data-dialog-player]",
+        );
+        for (const player of this.querySelectorAll<HTMLElement>(
+          "[data-video-player]",
+        ))
+          enhanceVideoPlayer(player, events.signal);
+        let media = Array.from(
+          this.querySelectorAll<HTMLElement>(
+            ".camp-media-grid > [data-media-type]",
+          ),
+        );
+        const viewerNav = Array.from(
+          this.querySelectorAll<HTMLButtonElement>(
+            "[data-gallery-prev], [data-gallery-next]",
+          ),
         );
         const videos = Array.from(
-          this.querySelectorAll<HTMLVideoElement>("video"),
+          this.querySelectorAll<HTMLVideoElement>(".camp-media-grid video"),
         );
+        const pauseVideos = () => {
+          for (const video of videos) video.pause();
+          viewerVideo?.pause();
+        };
         let current = 0;
-        let opener: HTMLAnchorElement | undefined;
+        let displayed: HTMLElement | undefined;
+        let opener: HTMLElement | undefined;
         let overflow = "";
+        const clearViewer = () => {
+          if (image) {
+            image.hidden = true;
+            image.removeAttribute("src");
+            image.alt = "";
+          }
+          if (viewerVideo) {
+            viewerVideo.pause();
+            viewerVideo.hidden = true;
+            if (viewerVideo.hasAttribute("src")) {
+              viewerVideo.removeAttribute("src");
+              viewerVideo.load();
+            }
+            viewerVideo.removeAttribute("poster");
+          }
+          if (viewerPlayer) viewerPlayer.hidden = true;
+          if (dialog) delete dialog.dataset.viewerType;
+          displayed = undefined;
+        };
         const show = (index: number) => {
-          if (!photos.length || !image) return;
-          current = (index + photos.length) % photos.length;
-          const link = photos[current]!;
-          const thumbnail = link.querySelector("img")!;
-          image.src = link.href;
-          image.alt = thumbnail.alt;
-          const position = this.querySelector("[data-photo-position]");
+          if (!media.length || !image || !viewerVideo) return;
+          current = (index + media.length) % media.length;
+          const tile = media[current]!;
+          const isVideo = tile.dataset.mediaType === "video";
+          const position = this.querySelector("[data-media-position]");
           if (position)
-            position.textContent = `Foto ${current + 1} von ${photos.length}`;
-          const description = this.querySelector("[data-photo-description]");
+            position.textContent = `${isVideo ? "Video" : "Foto"} ${current + 1} von ${media.length}`;
+          for (const button of viewerNav) button.hidden = media.length < 2;
+          // A responsive repack must not restart the currently viewed video.
+          if (displayed === tile) return;
+          clearViewer();
+          displayed = tile;
+          const description = this.querySelector("[data-media-description]");
           if (description)
-            description.textContent =
-              Array.from(
-                link.closest("figure")?.querySelector("figcaption")?.children ??
-                  [],
-              )
-                .map((element) => element.textContent)
-                .join("\n") || thumbnail.alt;
+            description.textContent = Array.from(
+              tile.querySelector("figcaption")?.children ?? [],
+            )
+              .map((element) => element.textContent)
+              .join("\n");
+          if (isVideo) {
+            const inline = tile.querySelector("video")!;
+            const source = inline.querySelector("source")!;
+            viewerVideo.src = source.src;
+            viewerVideo.poster = inline.poster;
+            viewerVideo.width = inline.width;
+            viewerVideo.height = inline.height;
+            viewerVideo.setAttribute(
+              "aria-label",
+              inline.getAttribute("aria-label") ?? "Camp-Video",
+            );
+            const fallback = viewerVideo.querySelector<HTMLAnchorElement>(
+              "[data-dialog-video-link]",
+            );
+            if (fallback) fallback.href = source.src;
+            viewerVideo.hidden = false;
+            if (viewerPlayer) viewerPlayer.hidden = false;
+            if (dialog) dialog.dataset.viewerType = "video";
+          } else {
+            const link = tile.querySelector<HTMLAnchorElement>(
+              "[data-gallery-photo]",
+            )!;
+            image.src = link.href;
+            image.alt = link.querySelector("img")!.alt;
+            image.hidden = false;
+          }
         };
         const refreshLayout = () => {
-          const selected = photos[current];
+          const selected = media[current];
           for (const grid of this.querySelectorAll<HTMLElement>(
             ".camp-media-grid",
           )) {
@@ -109,24 +185,29 @@ export function installGallery() {
               grid.append(...desired);
             }
           }
-          photos = Array.from(
-            this.querySelectorAll<HTMLAnchorElement>(
-              "[data-media-type]:not([hidden]) [data-gallery-photo]",
+          media = Array.from(
+            this.querySelectorAll<HTMLElement>(
+              "[data-gallery-section]:not([hidden]) .camp-media-grid > [data-media-type]",
             ),
-          );
-          current = selected ? Math.max(0, photos.indexOf(selected)) : 0;
+          ).filter((tile) => !tile.hidden);
+          current = selected ? Math.max(0, media.indexOf(selected)) : 0;
           if (dialog?.open) show(current);
         };
-        refreshLayout();
         for (const query of ["(max-width: 1000px)", "(max-width: 700px)"]) {
           window
             .matchMedia(query)
             .addEventListener("change", refreshLayout, options);
         }
-        if (dialog && image && typeof dialog.showModal === "function") {
-          for (const link of this.querySelectorAll<HTMLAnchorElement>(
-            "[data-gallery-photo]",
+        if (
+          dialog &&
+          image &&
+          viewerVideo &&
+          typeof dialog.showModal === "function"
+        ) {
+          for (const link of this.querySelectorAll<HTMLElement>(
+            "[data-gallery-open]",
           )) {
+            link.hidden = false;
             link.addEventListener(
               "click",
               (event) => {
@@ -138,10 +219,12 @@ export function installGallery() {
                   event.button !== 0
                 )
                   return;
-                const index = photos.indexOf(link);
+                const tile = link.closest<HTMLElement>("[data-media-type]");
+                const index = tile ? media.indexOf(tile) : -1;
                 if (index < 0) return;
                 event.preventDefault();
                 opener = link;
+                pauseVideos();
                 show(index);
                 overflow = document.documentElement.style.overflow;
                 document.documentElement.style.overflow = "hidden";
@@ -168,6 +251,12 @@ export function installGallery() {
           dialog.addEventListener(
             "keydown",
             (event) => {
+              // Preserve the native video's arrow-key seek/volume controls.
+              if (
+                event.target instanceof Element &&
+                event.target.closest("[data-video-player]")
+              )
+                return;
               if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
                 event.preventDefault();
                 show(current + (event.key === "ArrowLeft" ? -1 : 1));
@@ -196,82 +285,131 @@ export function installGallery() {
             () => {
               document.documentElement.style.overflow = overflow;
               opener?.focus({ preventScroll: true });
-              image.removeAttribute("src");
+              clearViewer();
             },
             options,
           );
         }
-        const filters = this.querySelector<HTMLElement>(
-          "[data-gallery-filters]",
+        const tabList = this.querySelector<HTMLElement>("[data-gallery-tabs]");
+        const tabs = Array.from(
+          this.querySelectorAll<HTMLAnchorElement>("[data-gallery-tab]"),
         );
-        if (filters) filters.hidden = false;
-        for (const button of this.querySelectorAll<HTMLButtonElement>(
-          "[data-filter]",
-        )) {
-          button.addEventListener(
-            "click",
-            () => {
-              const filter = button.dataset.filter;
-              let count = 0;
-              for (const media of this.querySelectorAll<HTMLElement>(
-                "[data-media-type]",
-              )) {
-                media.hidden =
-                  filter !== "all" && media.dataset.mediaType !== filter;
-                if (!media.hidden) count++;
-                else media.querySelector("video")?.pause();
-              }
-              for (const note of this.querySelectorAll<HTMLElement>(
-                "[data-video-note]",
-              ))
-                note.hidden = filter === "image";
-              refreshLayout();
-              for (const section of this.querySelectorAll<HTMLElement>(
-                "[data-gallery-section]",
-              )) {
-                const visibleCount = section.querySelectorAll(
-                  "[data-media-type]:not([hidden])",
-                ).length;
-                section.hidden = visibleCount === 0;
-                const countLabel = section.querySelector(
-                  "[data-section-count]",
-                );
-                if (countLabel)
-                  countLabel.textContent = `${visibleCount} ${visibleCount === 1 ? "Aufnahme" : "Aufnahmen"}`;
-                const link = this.querySelector<HTMLElement>(
-                  `[data-section-link="${section.dataset.gallerySection}"]`,
-                );
-                if (link) link.hidden = section.hidden;
-              }
-              const navigation = this.querySelector<HTMLElement>(
-                ".gallery-section-nav",
-              );
-              if (navigation) navigation.hidden = count === 0;
-              for (const sibling of this.querySelectorAll("[data-filter]"))
-                sibling.setAttribute(
-                  "aria-pressed",
-                  String(sibling === button),
-                );
-              const status = this.querySelector("[data-filter-status]");
-              const noun =
-                filter === "image"
-                  ? count === 1
-                    ? "Foto"
-                    : "Fotos"
-                  : filter === "video"
-                    ? count === 1
-                      ? "Video"
-                      : "Videos"
-                    : count === 1
-                      ? "Medium"
-                      : "Medien";
-              if (status)
-                status.textContent = count
-                  ? `${count} ${noun} angezeigt.`
-                  : "Für diesen Filter sind noch keine Aufnahmen vorhanden.";
-            },
-            options,
+        const panels = Array.from(
+          this.querySelectorAll<HTMLElement>("[data-gallery-section]"),
+        );
+        const goalie = this.querySelector<HTMLElement>("[data-gallery-goalie]");
+        const reducedMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        );
+        const positionGoalie = (animate = false) => {
+          const active = tabs.find(
+            (tab) => tab.getAttribute("aria-selected") === "true",
           );
+          if (!goalie || !tabList || !active) return;
+          const label =
+            active.querySelector<HTMLElement>("[data-gallery-tab-label]") ??
+            active;
+          goalie.hidden = false;
+          goalie.dataset.animate = String(animate && !reducedMotion.matches);
+          const target = label.getBoundingClientRect();
+          const left =
+            target.left +
+            target.width / 2 -
+            tabList.getBoundingClientRect().left -
+            goalie.offsetWidth / 2;
+          goalie.style.setProperty("--goalie-x", `${left}px`);
+        };
+        const goalieResize =
+          typeof ResizeObserver !== "undefined"
+            ? new ResizeObserver(() => positionGoalie())
+            : undefined;
+        if (tabList) goalieResize?.observe(tabList);
+        for (const tab of tabs)
+          goalieResize?.observe(
+            tab.querySelector("[data-gallery-tab-label]") ?? tab,
+          );
+        reducedMotion.addEventListener(
+          "change",
+          () => positionGoalie(),
+          options,
+        );
+        const activateTab = (
+          tab: HTMLAnchorElement,
+          focus = false,
+          updateHash = true,
+        ) => {
+          for (const candidate of tabs) {
+            const active = candidate === tab;
+            candidate.setAttribute("aria-selected", String(active));
+            candidate.tabIndex = active ? 0 : -1;
+          }
+          for (const panel of panels) {
+            panel.hidden =
+              panel.dataset.gallerySection !== tab.dataset.galleryTab;
+            if (panel.hidden)
+              for (const video of panel.querySelectorAll("video"))
+                video.pause();
+          }
+          refreshLayout();
+          positionGoalie(updateHash);
+          if (focus) tab.focus({ preventScroll: true });
+          if (updateHash && location.hash !== tab.hash)
+            history.replaceState(history.state, "", tab.hash);
+        };
+        if (tabList && tabs.length) {
+          tabList.setAttribute("role", "tablist");
+          for (const tab of tabs) {
+            const panel = panels.find(
+              (item) => item.dataset.gallerySection === tab.dataset.galleryTab,
+            );
+            if (!panel) continue;
+            tab.setAttribute("role", "tab");
+            tab.setAttribute("aria-controls", panel.id);
+            tab.removeAttribute("aria-current");
+            panel.setAttribute("role", "tabpanel");
+            panel.setAttribute("aria-labelledby", tab.id);
+            panel.tabIndex = 0;
+            tab.addEventListener(
+              "click",
+              (event) => {
+                if (
+                  event.ctrlKey ||
+                  event.metaKey ||
+                  event.shiftKey ||
+                  event.altKey ||
+                  event.button !== 0
+                )
+                  return;
+                event.preventDefault();
+                activateTab(tab);
+              },
+              options,
+            );
+            tab.addEventListener(
+              "keydown",
+              (event) => {
+                let index = tabs.indexOf(tab);
+                if (event.key === "ArrowRight")
+                  index = (index + 1) % tabs.length;
+                else if (event.key === "ArrowLeft")
+                  index = (index - 1 + tabs.length) % tabs.length;
+                else if (event.key === "Home") index = 0;
+                else if (event.key === "End") index = tabs.length - 1;
+                else if (event.key !== " ") return;
+                event.preventDefault();
+                activateTab(tabs[index]!, true);
+              },
+              options,
+            );
+          }
+          this.dataset.tabsReady = "true";
+          activateTab(
+            tabs.find((tab) => tab.hash === location.hash) ?? tabs[0]!,
+            false,
+            false,
+          );
+        } else {
+          refreshLayout();
         }
         const observer =
           "IntersectionObserver" in window
@@ -290,14 +428,22 @@ export function installGallery() {
             "play",
             () => {
               for (const other of videos) if (other !== video) other.pause();
+              viewerVideo?.pause();
             },
             options,
           );
         }
+        viewerVideo?.addEventListener(
+          "play",
+          () => {
+            for (const video of videos) video.pause();
+          },
+          options,
+        );
         document.addEventListener(
           "visibilitychange",
           () => {
-            if (document.hidden) for (const video of videos) video.pause();
+            if (document.hidden) pauseVideos();
           },
           options,
         );
@@ -306,9 +452,11 @@ export function installGallery() {
             dialog.close();
             document.documentElement.style.overflow = overflow;
           }
+          clearViewer();
           events.abort();
+          goalieResize?.disconnect();
           observer?.disconnect();
-          for (const video of videos) video.pause();
+          pauseVideos();
         };
       }
       disconnectedCallback() {

@@ -14,7 +14,7 @@ export interface GalleryTilePlacement<T> {
   span: number;
 }
 
-// Shared by static HTML and filter/viewport changes. Only edge positions exist.
+// Shared by static HTML and viewport changes. Only edge positions exist.
 export function layoutGalleryTiles<T extends Tile>(
   items: readonly T[],
   columns: 1 | 3 | 5,

@@ -27,6 +27,7 @@ export interface GalleryVideo {
 }
 export type GalleryMedia = GalleryImage | GalleryVideo;
 export interface GalleryAlbum {
+  isLocalPreview?: true;
   id: string;
   title: string;
   slug: string;

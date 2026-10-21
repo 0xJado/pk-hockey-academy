@@ -1,5 +1,8 @@
 ---
 import GalleryTile from "./GalleryTile.astro";
+import VideoControls from "./VideoControls.astro";
+import { Image } from "astro:assets";
+import goalie from "../assets/gallery-goalie.png";
 import { groupGalleryMedia } from "../lib/gallery";
 import { layoutGalleryTiles } from "../lib/gallery-layout";
 import type { GalleryAlbum } from "../types/gallery";
@@ -19,41 +22,26 @@ const sections = groupGalleryMedia(album.media).map((section) => ({
 <camp-gallery>
   <div class="gallery-toolbar">
     <p>
-      <strong>{album.media.length}</strong> Einblicke ins Camp
+      <strong>{album.media.length}</strong>{" "}
+      {album.isLocalPreview ? "Medien in der Vorschau" : "Einblicke ins Camp"}
     </p>
-    <div
-      class="gallery-filters"
-      role="group"
-      aria-label="Medien filtern"
-      data-gallery-filters
-      hidden
-    >
-      <button type="button" data-filter="all" aria-pressed="true">
-        Alle
-      </button>
-      <button type="button" data-filter="image" aria-pressed="false">
-        Fotos
-      </button>
-      <button type="button" data-filter="video" aria-pressed="false">
-        Videos
-      </button>
-    </div>
   </div>
-  <p
-    class="gallery-filter-status"
-    role="status"
-    aria-live="polite"
-    data-filter-status
-  ></p>
-  {sections.length > 1 && (
-    <nav class="gallery-section-nav" aria-label="Galerie-Bereiche">
-      {sections.map((section) => (
-        <a href={`#galerie-${section.id}`} data-section-link={section.id}>
-          {section.title} <span aria-hidden="true">↓</span>
-        </a>
-      ))}
-    </nav>
-  )}
+  <nav class="gallery-tabs" aria-label="Galerie-Bereiche" data-gallery-tabs>
+    {sections.map((section, index) => (
+      <a
+        class="gallery-tab"
+        id={`galerie-tab-${section.id}`}
+        href={`#galerie-${section.id}`}
+        data-gallery-tab={section.id}
+        aria-current={index === 0 ? "true" : undefined}
+      >
+        <span data-gallery-tab-label>{section.title}</span>
+      </a>
+    ))}
+    <span class="gallery-goalie" data-gallery-goalie aria-hidden="true" hidden>
+      <Image src={goalie} width={176} alt="" loading="eager" />
+    </span>
+  </nav>
   {sections.map((section, sectionIndex) => (
     <section
       class="gallery-media-section"
@@ -63,10 +51,6 @@ const sections = groupGalleryMedia(album.media).map((section) => ({
     >
       <div class="gallery-section-heading">
         <h2 id={`galerie-heading-${section.id}`}>{section.title}</h2>
-        <span data-section-count>
-          {section.media.length}{" "}
-          {section.media.length === 1 ? "Aufnahme" : "Aufnahmen"}
-        </span>
       </div>
       <div class="camp-media-grid">
         {section.tiles.map((tile, index) => (
@@ -77,45 +61,80 @@ const sections = groupGalleryMedia(album.media).map((section) => ({
           />
         ))}
       </div>
-      <div class="gallery-video-notes">
-        {section.media
-          .filter((item) => item.type === "video")
-          .map((item) => (
-            <details
-              class="video-transcript"
-              id={`transcript-${item.id}`}
-              data-video-note={item.id}
-            >
-              <summary>{item.title} · Videoinhalt als Text</summary>
-              <p>{item.transcript}</p>
-            </details>
-          ))}
-      </div>
     </section>
   ))}
-  <dialog class="gallery-dialog" aria-label="Fotoansicht" data-gallery-dialog>
+  <dialog
+    class="gallery-dialog"
+    aria-label="Medienansicht"
+    aria-describedby="gallery-media-description"
+    data-gallery-dialog
+  >
     <div class="gallery-dialog-bar">
-      <p data-photo-position aria-live="polite"></p>
+      <p data-media-position aria-live="polite"></p>
       <button
         type="button"
         data-gallery-close
-        aria-label="Fotoansicht schließen"
+        aria-label="Medienansicht schließen"
       >
-        Schließen <span aria-hidden="true">×</span>
+        <span>Schließen</span>
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path d="m6 6 12 12M18 6 6 18" />
+        </svg>
       </button>
     </div>
-    <div class="gallery-dialog-image">
-      <img data-dialog-image alt="" />
-    </div>
-    <div class="gallery-dialog-bottom">
-      <button type="button" data-gallery-prev aria-label="Vorheriges Foto">
-        ←
+    <div class="gallery-dialog-stage">
+      <img data-dialog-image alt="" hidden />
+      <div
+        class="gallery-player gallery-dialog-player"
+        data-video-player
+        data-dialog-player
+        hidden
+      >
+        <video
+          data-dialog-video
+          controls
+          playsinline
+          preload="none"
+          aria-describedby="gallery-media-description"
+          hidden
+        >
+          Dein Browser kann dieses Video nicht abspielen.{" "}
+          <a data-dialog-video-link>Video öffnen</a>.
+        </video>
+        <VideoControls />
+      </div>
+      <button
+        type="button"
+        class="gallery-viewer-nav gallery-viewer-prev"
+        data-gallery-prev
+        aria-label="Vorheriges Medium"
+      >
+        <svg viewBox="0 0 32 100" fill="none" aria-hidden="true">
+          <path d="M24 6 8 50l16 44" />
+        </svg>
       </button>
-      <p data-photo-description></p>
-      <button type="button" data-gallery-next aria-label="Nächstes Foto">
-        →
+      <button
+        type="button"
+        class="gallery-viewer-nav gallery-viewer-next"
+        data-gallery-next
+        aria-label="Nächstes Medium"
+      >
+        <svg viewBox="0 0 32 100" fill="none" aria-hidden="true">
+          <path d="m8 6 16 44L8 94" />
+        </svg>
       </button>
     </div>
+    <p
+      id="gallery-media-description"
+      class="gallery-sr-only"
+      data-media-description
+    ></p>
   </dialog>
 </camp-gallery>
 <script>

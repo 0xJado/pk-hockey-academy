@@ -1,5 +1,6 @@
 ---
 import GalleryImage from "./GalleryImage.astro";
+import VideoControls from "./VideoControls.astro";
 import { imageUrl } from "../lib/gallery";
 import type { GalleryTilePlacement } from "../lib/gallery-layout";
 import type { GalleryMedia } from "../types/gallery";
@@ -17,7 +18,7 @@ const sizes = spotlight
 ---
 
 <figure
-  class:list={["camp-media", { "camp-media--video": item.type === "video" }]}
+  class="camp-media"
   data-media-type={item.type}
   data-media-id={item.id}
   data-gallery-order={placement.order}
@@ -28,36 +29,40 @@ const sizes = spotlight
     <a
       href={imageUrl(item, 2000)}
       data-gallery-photo
+      data-gallery-open
       class="camp-photo"
       aria-label={`Foto vergrößern: ${item.alt}`}
     >
       <GalleryImage image={item} eager={eager} sizes={sizes} />
-      <span class="photo-expand" aria-hidden="true">
-        ↗
-      </span>
     </a>
   ) : (
-    <video
-      controls
-      playsinline
-      preload="none"
-      poster={imageUrl(item.poster, 640)}
-      width={item.poster.width}
-      height={item.poster.height}
-      aria-label={item.title}
-      aria-describedby={`transcript-${item.id}`}
-    >
-      <source src={item.url} type={item.mimeType} />
-      Dein Browser kann dieses Video nicht abspielen.{" "}
-      <a href={item.url}>Video öffnen</a>.
-    </video>
+    <div class="gallery-player" data-video-player>
+      <video
+        controls
+        playsinline
+        preload="none"
+        poster={imageUrl(item.poster, 640)}
+        width={item.poster.width}
+        height={item.poster.height}
+        aria-label={item.title}
+        aria-describedby={`transcript-${item.id}`}
+      >
+        <source src={item.url} type={item.mimeType} />
+        Dein Browser kann dieses Video nicht abspielen.{" "}
+        <a href={item.url}>Video öffnen</a>.
+      </video>
+      <VideoControls />
+    </div>
   )}
-  <figcaption>
-    {item.type === "video" && <span class="video-title">{item.title}</span>}
+  <figcaption class="gallery-sr-only">
+    {item.type === "video" && <span>{item.title}</span>}
     {item.caption && <span>{item.caption}</span>}
     <small>Aufnahme: {item.credit}</small>
     {item.type === "video" && item.poster.credit !== item.credit && (
       <small>Vorschaubild: {item.poster.credit}</small>
+    )}
+    {item.type === "video" && (
+      <span id={`transcript-${item.id}`}>{item.transcript}</span>
     )}
   </figcaption>
 </figure>

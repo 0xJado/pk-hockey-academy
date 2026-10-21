@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import GalleryAlbums from "../../components/GalleryAlbums.astro";
 import FinalCTA from "../../components/FinalCTA.astro";
+import GalleryPreviewNotice from "../../components/GalleryPreviewNotice.astro";
 import { getGalleryAlbums } from "../../lib/gallery-source";
 import "../../styles/gallery.css";
 const albums = await getGalleryAlbums();
@@ -9,6 +10,7 @@ const albums = await getGalleryAlbums();
 
 <Base
   title="Camp-Galerie – Fotos & Videos"
+  noindex={albums.some((album) => album.isLocalPreview)}
   description="Einblicke in die Trainingscamps der PK Hockey Academy. Entdecke freigegebene Fotos und Videos vom Eishockeytraining auf und neben dem Eis."
 >
   <section class="page-hero gallery-hero">
@@ -31,6 +33,7 @@ const albums = await getGalleryAlbums();
   </section>
   <section class="section gallery-section" aria-label="Camp-Alben">
     <div class="wrap">
+      {albums.some((album) => album.isLocalPreview) && <GalleryPreviewNotice />}
       <GalleryAlbums albums={albums} />
     </div>
   </section>

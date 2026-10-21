@@ -1,0 +1,65 @@
+<button
+  class="player-start"
+  type="button"
+  data-player-start
+  aria-label="Video abspielen"
+  hidden
+>
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="m9 5 11 7-11 7Z" />
+  </svg>
+</button>
+<div
+  class="player-controls"
+  data-player-controls
+  role="group"
+  aria-label="Videosteuerung"
+  hidden
+>
+  <input
+    class="player-seek"
+    data-player-seek
+    type="range"
+    min="0"
+    max="1000"
+    step="1"
+    value="0"
+    aria-label="Videoposition"
+    aria-valuetext="Noch nicht geladen"
+    disabled
+  />
+  <div class="player-control-row">
+    <button type="button" data-player-toggle aria-label="Video abspielen">
+      <svg class="player-play-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="m8 5 11 7-11 7Z" />
+      </svg>
+      <svg class="player-pause-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 5h4v14H6Zm8 0h4v14h-4Z" />
+      </svg>
+    </button>
+    <span class="player-time" data-player-time aria-hidden="true">
+      0:00 / —:—
+    </span>
+    <div class="player-secondary-controls">
+      <button type="button" data-player-mute aria-label="Ton ausschalten">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M11 5 6 9H3v6h3l5 4Z" />
+          <path
+            class="player-sound-icon"
+            d="M15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"
+          />
+          <path class="player-muted-icon" d="m16 9 5 6m0-6-5 6" />
+        </svg>
+      </button>
+      <button type="button" data-player-fullscreen aria-label="Vollbild öffnen">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+<p class="player-error" data-player-error role="status" hidden>
+  Video konnte nicht geladen werden.{" "}
+  <a data-player-direct>Video direkt öffnen</a>
+</p>

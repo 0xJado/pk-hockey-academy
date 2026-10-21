@@ -271,6 +271,8 @@ export async function fetchGallery(
 }
 
 export function imageUrl(image: GalleryImage, width: number) {
+  // Local samples are already optimized; never send them through a remote CDN.
+  if (image.url.startsWith("/__local-gallery/")) return image.url;
   const url = new URL(image.url);
   url.searchParams.set("w", String(Math.min(width, image.width)));
   url.searchParams.set("auto", "format");

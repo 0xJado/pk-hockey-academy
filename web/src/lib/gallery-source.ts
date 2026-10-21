@@ -1,12 +1,24 @@
 import { fetchGallery, getGalleryConfig } from "./gallery";
 import type { GalleryAlbum } from "../types/gallery";
+import { loadLocalGallery } from "./local-gallery";
+import { join } from "node:path";
 
 // Build-time boundary only. Never import this module into a browser script.
 let pending: Promise<GalleryAlbum[]> | undefined;
-export function getGalleryAlbums(): Promise<GalleryAlbum[]> {
+export async function getGalleryAlbums(): Promise<GalleryAlbum[]> {
+  const local = await loadLocalGallery(
+    import.meta.env.DEV,
+    join(process.cwd(), ".local-gallery"),
+  );
   const config = getGalleryConfig(import.meta.env);
-  if (!config) return Promise.resolve([]);
-  return (pending ??= fetchGallery(config));
+  if (!config) return local;
+  const published = await (pending ??= fetchGallery(config));
+  return [
+    ...local,
+    ...published.filter(
+      (album) => !local.some((sample) => sample.slug === album.slug),
+    ),
+  ];
 }
 
 export function getStudioUrl(): string | undefined {

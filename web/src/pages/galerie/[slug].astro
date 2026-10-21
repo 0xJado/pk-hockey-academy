@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import Button from "../../components/Button.astro";
 import GalleryMedia from "../../components/GalleryMedia.astro";
+import GalleryPreviewNotice from "../../components/GalleryPreviewNotice.astro";
 import { getGalleryAlbums } from "../../lib/gallery-source";
 import { formatCampDate } from "../../lib/gallery";
 import type { GalleryAlbum } from "../../types/gallery";
@@ -18,17 +19,27 @@ interface Props {
 const { album } = Astro.props;
 ---
 
-<Base title={`${album.title} – Camp-Galerie`} description={album.description}>
+<Base
+  title={`${album.title} – Camp-Galerie`}
+  description={album.description}
+  noindex={album.isLocalPreview}
+>
   <section class="page-hero gallery-hero">
     <div class="wrap">
       <a href="/galerie" class="breadcrumb">
         ← ZURÜCK ZUR CAMP-GALERIE
       </a>
       <p class="eyebrow">
-        {album.city} ·{" "}
-        <time datetime={album.occurredOn}>
-          {formatCampDate(album.occurredOn)}
-        </time>
+        {album.isLocalPreview ? (
+          "PLATZHALTER · LOKALE VORSCHAU"
+        ) : (
+          <>
+            {album.city} ·{" "}
+            <time datetime={album.occurredOn}>
+              {formatCampDate(album.occurredOn)}
+            </time>
+          </>
+        )}
       </p>
       <h1>{album.title}</h1>
       <p class="page-intro">{album.description}</p>
@@ -37,9 +48,14 @@ const { album } = Astro.props;
   </section>
   <section
     class="section gallery-section"
-    aria-label="Fotos und Videos des Camps"
+    aria-label={
+      album.isLocalPreview
+        ? "Fotos und Videos der Vorschau"
+        : "Fotos und Videos des Camps"
+    }
   >
     <div class="wrap">
+      {album.isLocalPreview && <GalleryPreviewNotice />}
       <GalleryMedia album={album} />
       <div class="gallery-back">
         <Button href="/galerie" variant="outline">
