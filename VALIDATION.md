@@ -1,5 +1,13 @@
 # Validation record
 
+## Sticky taskbar — 23 October 2026
+
+Changed the shared header to CSS `position: sticky; top: 0`, preserving its white background, stacking order and normal document space. Added responsive anchor clearance and a viewport-height limit with internal scrolling for the mobile menu. Updated `web/src/styles/global.css` and README; no JavaScript, animation, dependencies or content inputs were added.
+
+Executed Astro check (48 files, zero diagnostics), all 18 existing tests, the static build (14 pages) and `git diff --check`, all passing. Isolated Edge verified the header remains at viewport top after scrolling at 1440 × 1000, 768 × 1024, 375 × 812 and 812 × 375 with no horizontal overflow. Verified keyboard menu opening, visible focus, reaching the final menu link on short screens, Escape/focus restoration, target-group anchor clearance, schedule CTA navigation, two Back/Forward round trips, reduced motion and a JavaScript-disabled phone context. No runtime errors or console warnings/errors were observed; Edge emitted informational lazy-image messages only. Visually inspected final desktop/phone screenshots and the landscape menu. Hero/video behavior was unchanged and not retested. No physical-device or screen-reader audit was performed.
+
+Ignored QA script: `.tools/sticky-header-qa.js`; screenshots: `output/playwright/sticky-header-*.png` and `sticky-menu-*.png`. Local production preview: `http://127.0.0.1:4322/`. These checks were completed locally before release. The user subsequently authorized committing and pushing this change to `main`, which triggers the existing Vercel review deployment for `driftwoodmedia/pk-hockey-academy`. Deployment protection and launch gates remain in place. No additional input from Pierre is needed for this change.
+
 ## Media kit — 20 October 2026
 
 Before pushing, integrated the newer gallery/Sanity commits from main, preserving their footer links, sitemap entries and documentation. Re-ran Astro check (42 files, zero errors/warnings/hints), all 16 web tests and the static build successfully on the combined source.
