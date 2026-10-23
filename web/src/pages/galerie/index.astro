@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import GalleryAlbums from "../../components/GalleryAlbums.astro";
+import AcademyUpdates from "../../components/AcademyUpdates.astro";
 import FinalCTA from "../../components/FinalCTA.astro";
 import GalleryPreviewNotice from "../../components/GalleryPreviewNotice.astro";
 import { getGalleryAlbums } from "../../lib/gallery-source";
@@ -31,11 +32,16 @@ const albums = await getGalleryAlbums();
     </div>
     <div class="page-hero-lines" aria-hidden="true"></div>
   </section>
-  <section class="section gallery-section" aria-label="Camp-Alben">
+  <div class="section gallery-section">
     <div class="wrap">
       {albums.some((album) => album.isLocalPreview) && <GalleryPreviewNotice />}
-      <GalleryAlbums albums={albums} />
+      <div class="gallery-editorial-layout">
+        <section class="gallery-albums" aria-label="Camp-Alben">
+          <GalleryAlbums albums={albums} />
+        </section>
+        <AcademyUpdates />
+      </div>
     </div>
-  </section>
+  </div>
   <FinalCTA />
 </Base>

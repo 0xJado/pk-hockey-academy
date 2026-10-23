@@ -1,0 +1,165 @@
+<aside class="academy-updates" aria-labelledby="academy-updates-title">
+  <header class="updates-heading">
+    <p class="eyebrow">NEUES AUS DER ACADEMY</p>
+    <h2 id="academy-updates-title">AKTUELLES<span>.</span></h2>
+    <p>Die kleinen Momente neben den großen Camp-Alben.</p>
+  </header>
+
+  <div class="updates-placeholder">
+    <div class="updates-art" aria-hidden="true">
+      <svg viewBox="0 0 80 80" fill="none">
+        <rect x="12" y="12" width="56" height="56" rx="15" />
+        <circle cx="40" cy="40" r="13" />
+        <circle cx="57" cy="23" r="2" class="updates-art-dot" />
+      </svg>
+      <span>MOMENTE VOM EIS</span>
+    </div>
+    <p class="updates-status">FEED IN VORBEREITUNG</p>
+    <h3>Hier geht es bald weiter.</h3>
+    <p>
+      Hier ist Platz für ausgewählte Beiträge von Instagram und Facebook.
+      Aktuell sind noch keine Profile verknüpft oder Beiträge veröffentlicht.
+    </p>
+    <div class="updates-preview-rows" aria-hidden="true">
+      <div class="updates-preview-row"><span></span><i></i></div>
+      <div class="updates-preview-row"><span></span><i></i></div>
+    </div>
+    <p class="updates-placeholder-label">Layoutvorschau · noch keine Beiträge</p>
+  </div>
+
+  <footer class="updates-footer">
+    <span>Instagram / Facebook</span>
+    <p>Einblicke. Kurz &amp; direkt.</p>
+  </footer>
+</aside>
+
+<style>
+  .academy-updates {
+    min-width: 0;
+    border-top: 3px solid var(--blue);
+    padding-top: 22px;
+  }
+  .updates-heading .eyebrow {
+    color: #536372;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+  }
+  .updates-heading h2 {
+    margin-block: 12px 14px;
+    font-size: 44px;
+  }
+  .updates-heading > p:last-child,
+  .updates-placeholder > p:not(.updates-status, .updates-placeholder-label) {
+    color: #536372;
+    font-size: 13px;
+    line-height: 1.75;
+  }
+  .updates-placeholder {
+    margin-top: 26px;
+  }
+  .updates-art {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 17px;
+    width: 100%;
+    min-width: 0;
+    min-height: 180px;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: #071d45;
+    color: #ddecf8;
+  }
+  .updates-art::before {
+    content: "";
+    position: absolute;
+    inset: -50% 20%;
+    border-inline: 1px solid #8baed040;
+    transform: rotate(28deg);
+  }
+  .updates-art svg {
+    width: 60px;
+    stroke: currentColor;
+    stroke-width: 2;
+  }
+  .updates-art-dot {
+    fill: currentColor;
+    stroke: none;
+  }
+  .updates-art span {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+  }
+  .updates-status {
+    margin-top: 22px;
+    color: #0754db;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+  .updates-placeholder h3 {
+    margin-block: 10px 12px;
+    font-size: 28px;
+  }
+  .updates-preview-rows {
+    margin-top: 24px;
+  }
+  .updates-preview-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-block: 18px;
+    border-top: 1px solid #cfdce8;
+  }
+  .updates-preview-row > span {
+    width: 54px;
+    height: 54px;
+    flex-shrink: 0;
+    background: #e1eaf3;
+  }
+  .updates-preview-row > i {
+    width: 100%;
+    height: 30px;
+    background: linear-gradient(#d4dfe9 0 0) top left / 55% 5px no-repeat,
+      linear-gradient(#e1eaf3 0 0) center left / 100% 4px no-repeat,
+      linear-gradient(#e1eaf3 0 0) bottom left / 80% 4px no-repeat;
+  }
+  .updates-placeholder-label {
+    margin-top: 4px;
+    color: #536372;
+    font-size: 10px;
+  }
+  .updates-footer {
+    margin-top: 26px;
+    padding-top: 18px;
+    border-top: 1px solid #cfdce8;
+  }
+  .updates-footer span {
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .updates-footer p {
+    margin-top: 4px;
+    color: #536372;
+    font-size: 11px;
+  }
+  @media (min-width: 701px) and (max-width: 1099px) {
+    .academy-updates {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 40px;
+      align-items: start;
+    }
+    .updates-placeholder {
+      grid-column: 2;
+      grid-row: 1 / 3;
+      margin-top: 0;
+    }
+    .updates-footer {
+      grid-column: 1;
+    }
+  }
+</style>
