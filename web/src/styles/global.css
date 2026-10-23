@@ -863,6 +863,32 @@ p {
   font-size: 11px;
   color: #526b87;
 }
+.trainer-list {
+  display: grid;
+  gap: 96px;
+}
+.trainer-copy h2,
+.trainer-facts {
+  overflow-wrap: anywhere;
+}
+.trainer-detail-heading {
+  margin-block: 24px 10px;
+  font-size: 25px;
+}
+.trainer-facts {
+  padding-left: 20px;
+  color: #4d6380;
+  font-size: 14px;
+  list-style: disc;
+}
+.trainer-feature .trainer-portrait--photo img {
+  object-fit: cover;
+  padding: 0;
+}
+.trainer-portrait--photo .image-label {
+  padding: 4px 8px;
+  background: #fff;
+}
 .venues-section {
   background: #050b12;
 }

@@ -22,9 +22,9 @@ export const pages = {
     title: "MIT LEIDENSCHAFT.",
     accent: "MIT PERSPEKTIVE.",
     description:
-      "Pierre Klein, Gründer und Trainer der PK Hockey Academy. Persönliche Betreuung für die Entwicklung junger Eishockeyspieler.",
+      "Der Trainerpool der PK Hockey Academy: bestätigte Profile und persönliche Betreuung für die individuelle Entwicklung junger Eishockeyspieler.",
     intro:
-      "Individuelle Entwicklung beginnt mit Aufmerksamkeit. Lerne den Gründer der PK Hockey Academy kennen.",
+      "Individuelle Entwicklung beginnt mit Aufmerksamkeit. Lerne die Menschen hinter dem Training kennen.",
   },
   trainingsstaetten: {
     label: "UNSERE TRAININGSSTÄDTE",

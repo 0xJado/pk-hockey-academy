@@ -1,0 +1,13 @@
+# Coach CMS — partial implementation of issue 4
+
+Implements the coach schema, verified Pierre starter template, optional portrait with alt/credit validation, display order, activity and explicit publication approval. The Studio's private **Profilvorschau** shows the current draft without a public draft endpoint. The trainer pool renders multiple or zero profiles; the first visible profile supplies the homepage teaser. Existing motion and the academy crest fallback are retained.
+
+Leave `SANITY_TRAINERS_ENABLED=false` until the real project contains the intended approved profiles. Then enable the flag and configure the server-only Sanity project, dataset and read token. The CMS becomes authoritative, including an empty list. Drafts, releases, hidden, inactive and unapproved profiles are excluded; an API failure or invalid approved profile fails the build without restoring old local profiles. Changes and withdrawals require a successful website rebuild.
+
+Shared validation and native schema tests cover required fields, whitespace, approval, upload types/sizes and optional portraits. The website's `npm run test:cms` builds isolated starter, populated, empty and malformed CMS scenarios; it checks real environment substitution, public rendering, escaping and token/private-record isolation. It uses synthetic data, does not change `web/dist`, and does not connect to a real Sanity project.
+
+The adversarial review found and repaired fallback resurrection, empty-list assumptions, stale personal metadata, untrusted portrait URLs, ineffective private-environment passing and warning-level custom validation. The existing upload validator now also rejects nonnumeric, negative, fractional and nonfinite byte counts.
+
+Before committing, checked an isolated copy of this commit's staged files, without the later admin implementation: website type check (53 files, no diagnostics), 25 website tests, the 14-page static build, all CMS integration build scenarios, Studio type check, 5 Studio tests and the Studio build passed. Only the synthetic public identifiers `cmsqa123/qa` were used for Studio compilation.
+
+This is a local implementation commit referencing #4, not a ticket closure. Real Sanity configuration, approved content/portraits and an authenticated publish/edit/unpublish → rebuild acceptance test remain deferred. No push or deployment is authorized by the commit request.

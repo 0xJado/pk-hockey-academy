@@ -3,13 +3,12 @@ import {
   pricing,
   sessions,
   settings,
-  trainers,
   venues,
 } from "../data/academy.ts";
 import type { TrainingSession } from "../types/content.ts";
 
 // Replace this repository boundary with Sanity queries in a later milestone.
-export const getAcademy = () => ({ settings, trainers, venues, pricing });
+export const getAcademy = () => ({ settings, venues, pricing });
 const timestamp = (value: string) =>
   /(?:Z|[+-]\d{2}:\d{2})$/.test(value) ? Date.parse(value) : NaN;
 export function getPublishedSessions(

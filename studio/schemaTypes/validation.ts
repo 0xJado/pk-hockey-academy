@@ -15,7 +15,12 @@ export function validateAsset(
       ? "Bitte JPEG, PNG oder WebP verwenden."
       : "Bitte ein browserfähiges MP4- oder WebM-Video verwenden.";
   const max = kind === "image" ? MAX_IMAGE_BYTES : MAX_VIDEO_BYTES;
-  if (!asset.size || asset.size > max)
+  if (
+    typeof asset.size !== "number" ||
+    !Number.isSafeInteger(asset.size) ||
+    asset.size <= 0 ||
+    asset.size > max
+  )
     return kind === "image"
       ? "Bilder dürfen höchstens 12 MB groß sein."
       : "Videos dürfen höchstens 100 MB groß sein. Bitte vor dem Upload komprimieren.";

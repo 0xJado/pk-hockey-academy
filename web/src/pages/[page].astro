@@ -9,13 +9,15 @@ import FinalCTA from "../components/FinalCTA.astro";
 import { pages, principles, organisationSteps } from "../data/pages";
 import type { ContentPage } from "../data/pages";
 import { getAcademy } from "../lib/content";
+import { getTrainers } from "../lib/trainer-source";
 
 export function getStaticPaths() {
   return Object.keys(pages).map((page) => ({ params: { page } }));
 }
 const slug = Astro.params.page as ContentPage;
 const page = pages[slug];
-const { venues, trainers } = getAcademy();
+const { venues } = getAcademy();
+const trainers = slug === "trainerpool" ? await getTrainers() : [];
 const legal = slug === "impressum" || slug === "datenschutz";
 ---
 
@@ -133,19 +135,13 @@ const legal = slug === "impressum" || slug === "datenschutz";
   {slug === "trainerpool" && (
     <section class="section">
       <div class="wrap">
-        <TrainerCard />
+        <div class="trainer-list">
+          {trainers.map(trainer => <TrainerCard trainer={trainer} />)}
+        </div>
         <div class="notice trainer-details">
-          <p class="eyebrow">PROFIL IM AUFBAU</p>
-          <h3>Was bereits feststeht</h3>
-          <p>
-            {trainers[0]!.verifiedBackground.join(" · ")}. Pierre Klein ist
-            Gründer und Trainer der Academy.
-          </p>
-          <p>
-            Trainerporträt, ausführliche Biografie, konkrete Schwerpunkte und
-            nachgewiesene Qualifikationen werden nach Freigabe ergänzt. Weitere
-            Trainer werden erst nach Bestätigung vorgestellt.
-          </p>
+          <p class="eyebrow">PERSÖNLICHE ENTWICKLUNG</p>
+          <h3>{trainers.length ? "Die Haltung hinter dem Training" : "Trainerprofile folgen"}</h3>
+          <p>{trainers.length ? "Weitere Trainer werden nach Bestätigung vorgestellt." : "Aktuell sind keine Trainerprofile veröffentlicht."}</p>
           <Button href="/philosophie" variant="text">
             Unsere Haltung kennenlernen
           </Button>

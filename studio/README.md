@@ -1,6 +1,6 @@
 # PK Hockey Academy — Camp-Galerie / Redaktion
 
-Standalone German Sanity Studio. The website remains static; React is used only in this separate administrator app. This increment manages camp albums, photos and videos. Sessions, trainers, venues and prices remain in `web/src/data/academy.ts`.
+Standalone German Sanity Studio for trainer profiles and camp albums, photos and videos. The website remains static; React is used only in this separate administrator app. Sessions, venues and prices remain in `web/src/data/academy.ts`. The verified local Pierre profile stays active until the coach CMS migration is explicitly enabled.
 
 ## Connect the real project
 
@@ -23,6 +23,17 @@ Standalone German Sanity Studio. The website remains static; React is used only 
 In Sanity Manage → project → Members, invite each administrator using their real email address. Each person uses their own account. Grant the least available role permitting editing, asset uploads and publishing (typically Editor); reserve project administration for the owner. Available roles and seat limits depend on the plan. Loading the Studio URL does not grant permissions to the private dataset. No shared passwords or public write API are implemented.
 
 Invitations, membership permissions and authenticated uploads require the real project and accounts. They have **not** been provisioned or verified here. Send account invitations only with explicit user authorization.
+
+## Trainerprofile: Ersteinrichtung und Redaktion
+
+1. Für die erste Übernahme unter **Alle Trainerprofile → Neu** die Vorlage **Pierre Klein · geprüftes Startprofil** wählen. Sie übernimmt ausschließlich die bereits bestätigten Angaben aus `shared/pierre-profile.ts`, ohne erfundene Qualifikationen oder ein Porträt. Die Vorlage startet zurückgehalten und ohne Freigabebestätigung. Alternativ ein leeres Trainerprofil für einen bestätigten weiteren Trainer anlegen.
+2. **Profil**: Name, Rolle, Biografie und bestätigten Hintergrund ergänzen. Qualifikationen und Eishockey-Schwerpunkte sind optionale Listen. Nur freigegebene Tatsachen verwenden. Absätze mit einer Leerzeile trennen; die Website zeigt Klartext und führt kein HTML aus.
+3. **Trainerfoto**: optional JPEG, PNG oder WebP, maximal 12 MB, mit Bildbeschreibung und Urhebernachweis. Ohne Foto zeigt die Website das Academy-Wappen als erkennbaren Platzhalter. Vor Uploads Rechte klären und GPS/EXIF entfernen. CDN-Dateien sind über die URL auch bei Entwürfen öffentlich erreichbar.
+4. **Profilvorschau** zeigt den aktuellen Bearbeitungsstand im angemeldeten Studio. Sie unterstützt unvollständige Entwürfe mit einer Erklärung, veröffentlicht nichts und ist keine pixelgleiche Live-Website-Vorschau. Es gibt keinen öffentlichen Draft-Endpunkt und keine geteilten Vorschau-Token.
+5. **Freigabe**: Sortiernummer (kleinere zuerst), Aktivität und bestätigte Angaben festlegen. Gleiche Nummern werden stabil nach Dokument-ID sortiert. Das erste aktive, freigegebene Profil erscheint auf der Startseite. **Auf der Website zeigen** wählen und veröffentlichen; Pflichtfelder, Zustimmung und hochgeladene Dateien werden geprüft. Fehler blockieren die Veröffentlichung. Ein Entwurf bleibt im Studio.
+6. Bei der ersten Migration im Website-Build `SANITY_TRAINERS_ENABLED=true` setzen und dieselben drei serverseitigen CMS-Variablen wie für die Galerie konfigurieren. Erst aktivieren, wenn alle vorgesehenen Profile freigegeben und veröffentlicht sind. Ohne Aktivierung bleibt Pierre aus den lokalen Daten erhalten. Bei aktiviertem CMS ist eine leere Liste ausdrücklich leer; Fehler oder Unpublishing stellen keine alten lokalen Profile wieder her.
+7. Nach Veröffentlichung oder Änderung die Website erfolgreich neu bauen. Erst dann aktualisieren sich `/trainerpool` und der Startseiten-Teaser. Ohne angebundenen Build-Webhook ist dies weiterhin ein manueller Betriebsschritt. Ein fehlgeschlagener Build lässt die vorherige veröffentlichte Website bestehen.
+8. Zum Zurückziehen **Zurückhalten** wählen und veröffentlichen, **Aktiver Trainer** deaktivieren und veröffentlichen oder die Veröffentlichung aufheben. Für die native Unpublish-Aktion gegebenenfalls zuerst die veröffentlichte Perspektive auswählen. Anschließend die Website neu bauen und beide Seiten kontrollieren. Eine Datenänderung allein entfernt keine bereits gebauten Seiten oder CDN-Dateien.
 
 ## Publishing workflow (für Pierre)
 

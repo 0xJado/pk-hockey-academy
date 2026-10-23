@@ -14,9 +14,18 @@ export interface Trainer {
   id: string;
   name: string;
   role: string;
+  biography: string;
   verifiedBackground: string[];
+  qualifications: string[];
   specialties: string[];
-  portrait?: string;
+  portrait?: {
+    url: string;
+    alt: string;
+    credit: string;
+    width: number;
+    height: number;
+  };
+  displayOrder: number;
   active: boolean;
 }
 export interface Venue {

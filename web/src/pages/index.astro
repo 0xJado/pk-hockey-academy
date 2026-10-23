@@ -10,6 +10,8 @@ import FinalCTA from "../components/FinalCTA.astro";
 import { Image } from "astro:assets";
 import heroHockey from "../assets/hero-hockey-photo.jpg";
 import "../styles/gallery.css";
+import { getTrainers } from "../lib/trainer-source";
+const [featuredTrainer] = await getTrainers();
 ---
 
 <Base
@@ -175,11 +177,11 @@ import "../styles/gallery.css";
       </div>
     </div>
   </section>
-  <section class="section trainer-section light-section">
+  {featuredTrainer && <section class="section trainer-section light-section">
     <div class="wrap">
-      <TrainerCard />
+      <TrainerCard trainer={featuredTrainer} teaser />
     </div>
-  </section>
+  </section>}
   <section class="section venues-section">
     <div class="wrap">
       <div class="section-top">

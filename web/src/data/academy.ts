@@ -5,6 +5,7 @@ import type {
   TrainingSession,
   Venue,
 } from "../types/content.ts";
+import { pierreProfile } from "../../../shared/pierre-profile.ts";
 
 export const settings: SiteSettings = {
   brandName: "PK Hockey Academy",
@@ -26,10 +27,7 @@ export const navigation = [
 export const trainers: Trainer[] = [
   {
     id: "pierre-klein",
-    name: "Pierre Klein",
-    role: "Gründer & Trainer",
-    verifiedBackground: ["Eishockey- und Inlinehockey-Hintergrund"],
-    specialties: [],
+    ...pierreProfile,
     active: true,
   },
 ];

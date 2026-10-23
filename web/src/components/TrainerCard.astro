@@ -2,17 +2,29 @@
 import Button from "./Button.astro";
 import { Image } from "astro:assets";
 import crest from "../assets/brand/pk-hockey-crest.png";
-import { getAcademy } from "../lib/content";
-const trainer = getAcademy().trainers[0]!;
+import type { Trainer } from "../types/content";
+import { trainerImageUrl } from "../lib/trainers";
+interface Props { trainer: Trainer; teaser?: boolean; }
+const { trainer, teaser = false } = Astro.props;
+const profileId = `trainer-${trainer.id}`;
+const profileUrl = `/trainerpool#${profileId}`;
+const paragraphs = trainer.biography.split(/\n\s*\n/).filter(Boolean);
+const portrait = trainer.portrait;
+const widths = portrait ? [...new Set([400, 800, 1200].map(width => Math.min(width, portrait.width)))] : [];
 ---
 
-<article class="trainer-feature" data-reveal>
+<article id={teaser ? undefined : profileId} class="trainer-feature" data-reveal>
   <a
-    href="/trainerpool"
-    class="trainer-portrait"
-    aria-label="Pierre Klein – Trainerprofil ansehen"
+    href={teaser ? profileUrl : "#" + profileId}
+    class:list={["trainer-portrait", { "trainer-portrait--photo": !!portrait }]}
+    aria-label={`${trainer.name} – Trainerprofil ansehen`}
   >
-    <Image
+    {portrait ? (
+      <img src={trainerImageUrl(portrait, 800)}
+        srcset={widths.map(width => `${trainerImageUrl(portrait, width)} ${width}w`).join(", ")}
+        sizes="(max-width: 600px) calc(100vw - 40px), (max-width: 900px) 40vw, 45vw"
+        width={portrait.width} height={portrait.height} alt={portrait.alt} loading="lazy" decoding="async" />
+    ) : <Image
       src={crest}
       width={500}
       densities={[1, 2]}
@@ -20,35 +32,34 @@ const trainer = getAcademy().trainers[0]!;
       quality={90}
       alt="Wappen der PK Hockey Academy. Ein separates Trainerfoto folgt."
       loading="lazy"
-    />
-    <span class="image-label">PIERRE KLEIN · GRÜNDER & TRAINER</span>
+    />}
+    <span class="image-label">{portrait ? trainer.name : "WAPPEN · TRAINERFOTO FOLGT"}</span>
     <span class="portrait-overlay">
       Trainerprofil ansehen <span aria-hidden="true">↗</span>
     </span>
   </a>
   <div class="trainer-copy">
-    <p class="eyebrow">PERSÖNLICH. AUFMERKSAM. ENGAGIERT.</p>
+    <p class="eyebrow">{teaser ? "PERSÖNLICH. AUFMERKSAM. ENGAGIERT." : "UNSER TRAINERPOOL"}</p>
     <h2>
-      DEIN TRAINER.
-      <br />
-      <span>PIERRE KLEIN.</span>
+      {teaser && <>DEIN TRAINER.<br /></>}
+      <span>{trainer.name.toLocaleUpperCase("de-DE")}.</span>
     </h2>
     <p class="trainer-role">{trainer.role} · PK Hockey Academy</p>
-    <p>
-      Hinter jedem Entwicklungsschritt steht ein Mensch, der genau hinschaut.
-      Pierre Klein hat die Academy für die individuelle Förderung junger
-      Eishockeyspieler gegründet.
-    </p>
-    <p>
-      Sein Hintergrund verbindet Eishockey und Inlinehockey. Das Training der
-      Academy konzentriert sich auf Eishockey.
-    </p>
-    <Button href="/trainerpool" variant="text">
-      Pierre kennenlernen
-    </Button>
-    <p class="small muted">
-      Separates Trainerfoto, ausführliche Biografie und bestätigte
-      Qualifikationen folgen.
-    </p>
+    {(teaser ? paragraphs.slice(0, 1) : paragraphs).map(paragraph => <p>{paragraph}</p>)}
+    {!teaser && <>
+      <h3 class="trainer-detail-heading">Hintergrund</h3>
+      <ul class="trainer-facts">{trainer.verifiedBackground.map(item => <li>{item}</li>)}</ul>
+      {trainer.qualifications.length > 0 && <>
+        <h3 class="trainer-detail-heading">Bestätigte Qualifikationen</h3>
+        <ul class="trainer-facts">{trainer.qualifications.map(item => <li>{item}</li>)}</ul>
+      </>}
+      {trainer.specialties.length > 0 && <>
+        <h3 class="trainer-detail-heading">Trainingsschwerpunkte</h3>
+        <ul class="trainer-facts">{trainer.specialties.map(item => <li>{item}</li>)}</ul>
+      </>}
+    </>}
+    {teaser && <Button href={profileUrl} variant="text">{trainer.name} kennenlernen</Button>}
+    {portrait && <p class="small muted">Bildnachweis: {portrait.credit}</p>}
+    {!portrait && <p class="small muted">Ein freigegebenes Trainerfoto folgt.</p>}
   </div>
 </article>

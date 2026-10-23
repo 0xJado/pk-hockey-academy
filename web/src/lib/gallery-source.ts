@@ -10,7 +10,11 @@ export async function getGalleryAlbums(): Promise<GalleryAlbum[]> {
     import.meta.env.DEV,
     join(process.cwd(), ".local-gallery"),
   );
-  const config = getGalleryConfig(import.meta.env);
+  const config = getGalleryConfig({
+    SANITY_PROJECT_ID: import.meta.env.SANITY_PROJECT_ID,
+    SANITY_DATASET: import.meta.env.SANITY_DATASET,
+    SANITY_READ_TOKEN: import.meta.env.SANITY_READ_TOKEN,
+  });
   if (!config) return local;
   const published = await (pending ??= fetchGallery(config));
   return [

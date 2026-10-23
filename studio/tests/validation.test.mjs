@@ -9,4 +9,7 @@ test("Studio assets require supported types, completed uploads and bounded sizes
   assert.notEqual(validateAsset("image", { mimeType: "image/jpeg", size: 13 * 1024 * 1024 }), true);
   assert.notEqual(validateAsset("video", { mimeType: "video/mp4", size: 101 * 1024 * 1024 }), true);
   assert.notEqual(validateAsset("video", null), true);
+  for (const size of [-1, NaN, Infinity, 0.5, "1024"]) {
+    assert.notEqual(validateAsset("image", { mimeType: "image/webp", size }), true);
+  }
 });
