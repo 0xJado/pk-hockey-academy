@@ -24,25 +24,3 @@ export async function getGalleryAlbums(): Promise<GalleryAlbum[]> {
     ),
   ];
 }
-
-export function getStudioUrl(): string | undefined {
-  const value = import.meta.env.PUBLIC_SANITY_STUDIO_URL?.trim();
-  if (!value) return;
-  try {
-    const url = new URL(value);
-    if (
-      url.protocol !== "https:" ||
-      url.username ||
-      url.password ||
-      url.search ||
-      url.hash ||
-      url.hostname === "localhost" ||
-      url.hostname.endsWith(".example") ||
-      url.hostname.endsWith(".invalid")
-    )
-      return;
-    return url.href;
-  } catch {
-    return;
-  }
-}

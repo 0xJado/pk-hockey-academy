@@ -1,13 +1,13 @@
 ---
 import Base from "../layouts/Base.astro";
 import Button from "../components/Button.astro";
-import { getStudioUrl } from "../lib/gallery-source";
-const studioUrl = getStudioUrl();
+import { getStudioUrl } from "../lib/admin";
+const studioUrl = getStudioUrl(import.meta.env);
 ---
 
 <Base
   noindex
-  title="Redaktion – Camp-Galerie verwalten"
+  title="Redaktion – Trainerprofile und Camp-Galerie verwalten"
   description="Geschützter Redaktionszugang für Pierre Klein und freigeschaltete Administratoren der PK Hockey Academy."
 >
   <section class="page-hero">
@@ -17,13 +17,14 @@ const studioUrl = getStudioUrl();
       </a>
       <p class="eyebrow">PK HOCKEY ACADEMY · REDAKTION</p>
       <h1>
-        CAMP-MOMENTE.
+        UNSERE ACADEMY.
         <br />
-        <span>GEMEINSAM TEILEN.</span>
+        <span>GEMEINSAM GESTALTEN.</span>
       </h1>
       <p class="page-intro">
         Der Redaktionsbereich für Pierre und freigeschaltete Administratoren.
-        Camp-Alben anlegen, Fotos und Videos hochladen und Inhalte freigeben.
+        Trainerprofile bearbeiten, Camp-Alben anlegen, Fotos und Videos hochladen
+        und bestätigte Inhalte freigeben.
       </p>
     </div>
   </section>
@@ -37,10 +38,16 @@ const studioUrl = getStudioUrl();
             Melde dich mit deinem freigeschalteten Sanity-Konto an.
           </p>
           <p>
-            Nur eingeladene Projektmitglieder mit passenden Rechten können Alben
-            bearbeiten und Medien hochladen.
+            Verwende dieselbe Anmeldemethode wie bei deiner Einladung. Nur
+            freigeschaltete Projektmitglieder mit passenden Rechten können
+            Profile und Alben bearbeiten. Die Anmeldung erfolgt direkt bei Sanity.
           </p>
           <Button href={studioUrl}>Redaktion öffnen</Button>
+          <p class="small">
+            Hilfe zu Vorschau, Veröffentlichung und Abmeldung findest du im
+            Studio unter „Redaktionshilfe“. Änderungen erscheinen nach einem
+            erfolgreichen Website-Build.
+          </p>
         </>
       ) : (
         <>
@@ -48,7 +55,7 @@ const studioUrl = getStudioUrl();
           <p>
             Sobald der geschützte Bereich verbunden ist, können eingeladene
             Administratoren hier zur Anmeldung gelangen. Aktuell ist über diese
-            Seite kein Upload möglich.
+            Seite keine Bearbeitung und kein Upload möglich.
           </p>
           <Button href="/galerie" variant="outline">
             Zur Camp-Galerie

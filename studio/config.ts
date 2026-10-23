@@ -1,6 +1,11 @@
-export function getStudioConfig() {
-  const projectId = process.env.SANITY_STUDIO_PROJECT_ID?.trim();
-  const dataset = process.env.SANITY_STUDIO_DATASET?.trim();
+export function getStudioConfig(
+  env: Record<string, string | undefined> = {
+    SANITY_STUDIO_PROJECT_ID: process.env.SANITY_STUDIO_PROJECT_ID,
+    SANITY_STUDIO_DATASET: process.env.SANITY_STUDIO_DATASET,
+  },
+) {
+  const projectId = env.SANITY_STUDIO_PROJECT_ID?.trim();
+  const dataset = env.SANITY_STUDIO_DATASET?.trim();
   if (
     !projectId ||
     !/^[a-z0-9]+$/.test(projectId) ||

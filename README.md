@@ -24,6 +24,8 @@ npm run preview
 
 Build output is `web/dist`. The app stays fully static and needs no hosting adapter. Vercel is the selected review host; no custom domain is connected.
 
+`npm run test:cms` builds isolated starter, populated-CMS, empty-CMS and malformed-content cases using a test-only fetch transport. It verifies real bundler environment substitution, publication filtering, escaping, ordering, withdrawal behavior, admin linking and absence of read tokens/private fixtures from public output. It uses no real project or token and retains its artifacts under ignored `output/cms-integration-*`; it never changes `web/dist` or deploys anything.
+
 ### Vercel review hosting
 
 Project: `driftwoodmedia/pk-hockey-academy`. Connected GitHub source: `0xJado/pk-hockey-academy`, branch `main`.
@@ -92,15 +94,20 @@ The dynamic `[page].astro` file generates the nine fixed, static internal routes
 - Reduced-motion mode removes reveal/parallax animations and CSS transitions. Mobile uses normal document flow with lighter reveals. No scroll hijacking or pinning.
 - All content is visible in server HTML before JavaScript; the native `<details>` mobile menu works without JS. Escape closes it and restores focus when JS is available.
 
-## Coach CMS — partial implementation (#4)
-
-Coach schemas, private Studio preview, published-only profile retrieval and website rendering are implemented. The verified local Pierre profile remains until `SANITY_TRAINERS_ENABLED=true`; after activation, the CMS is authoritative, including an empty collection. Sanity project setup and real publishing acceptance remain deferred. See [coach implementation and validation](docs/issue-4-implementation.md) and the trainer workflow in [Studio README](studio/README.md). `npm run test:cms` verifies isolated builds without a real project or token.
-
 ## Content and future integrations
 
 The `/medienkit` page is linked from the footer and currently offers only the original transparent academy logo. `web/src/data/media-kit.ts` holds its typed download metadata for a later Sanity migration. Astro optimizes the preview separately; the download preserves the supplied PNG and uses the filename `PK-Hockey-Academy-Logo.png`. No CMS, ZIP or additional media downloads are included.
 
 `TrainingSession`, `Trainer`, `Venue`, `SiteSettings` and `Pricing` are defined in `src/types/content.ts`. Local sessions, settings, venues and prices remain in `src/data/academy.ts`, behind `src/lib/content.ts`. Coaches now use `src/lib/trainer-source.ts`; `src/lib/trainers.ts` fetches and validates approved published profiles. `shared/pierre-profile.ts` preserves the verified local starter content and supplies an optional Studio template; `shared/trainer-profile.ts` shares validation between Studio and the website. Do not import CMS clients into presentation components. `src/lib/gallery-source.ts` fetches approved published albums at build time, while `src/lib/gallery.ts` independently validates the response.
+
+### Coach CMS and administrator access — local implementation
+
+- Studio includes German coach fields for name, role, biography, confirmed background/qualifications, specialties, optional portrait/alt/credit, activity, approval and ordering. Its private **Profilvorschau** shows draft content within Studio; it is not a public preview endpoint. The authenticated **Redaktionshilfe** tool explains editing, publication, withdrawals, roles, sign-out and recovery.
+- `SANITY_TRAINERS_ENABLED=false` preserves Pierre's local profile. Set it to `true` only after approved profiles are published in the configured Sanity project. Once enabled, the CMS is authoritative, including an empty collection. Invalid approved content and request failures fail the build; they never republish a local fallback. Drafts, releases, inactive, hidden and unapproved profiles are excluded independently of the GROQ query.
+- `/trainerpool` renders ordered profiles, with a clear empty state. The first visible coach supplies the homepage teaser. Uploaded portraits use the same-project Sanity image pipeline; absent portraits use the clearly labeled existing crest. Profile links account for the sticky header. All profile content is server-rendered and escaped; no new visitor JavaScript or assets were added.
+- `/verwaltung` stays noindex and links to a validated configured HTTPS Studio address. Blank configuration displays setup pending; malformed configuration fails explicitly. Credentials, uploads and permissions use native Sanity. Optional `SANITY_STUDIO_AUTH_PROVIDER` narrows native login choices; it does not enable MFA or grant rights. The [access runbook](studio/ACCESS.md) covers real-account setup and checks, including plan-dependent roles.
+- Studio/website environment settings use explicit property access so their bundlers can substitute the values correctly. Server read tokens stay out of public artifacts. Gallery configuration uses the same corrected boundary.
+- No real Sanity project, accounts, MFA, Studio hosting or build webhook has been provisioned. A real authenticated publish/edit/unpublish → rebuild acceptance test remains necessary; neither GitHub issue was closed. See the [adversarial audits and repairs](docs/issues-1-4-audit.md), [editor workflow](studio/README.md), and executed checks in [VALIDATION.md](VALIDATION.md). Work stays local until separately authorized.
 
 The live schedule and separate demo collection are intentionally empty. Published sessions require timezone-aware timestamps, valid duration, non-demo content and non-draft status, and are sorted chronologically. Rendered cards support title, date, start/end, location, group, available spots and status. Unknown capacity stays unknown.
 

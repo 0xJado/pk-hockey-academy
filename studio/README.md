@@ -1,6 +1,6 @@
 # PK Hockey Academy — Camp-Galerie / Redaktion
 
-Standalone German Sanity Studio for trainer profiles and camp albums, photos and videos. The website remains static; React is used only in this separate administrator app. Sessions, venues and prices remain in `web/src/data/academy.ts`. The verified local Pierre profile stays active until the coach CMS migration is explicitly enabled.
+Standalone German Sanity Studio for trainer profiles and camp albums, photos and videos. The website remains static; React is used only in this separate administrator app. Sessions, venues and prices remain in `web/src/data/academy.ts`. The existing local Pierre profile remains active until the coach migration is explicitly enabled.
 
 ## Connect the real project
 
@@ -17,12 +17,17 @@ Standalone German Sanity Studio for trainer profiles and camp albums, photos and
    Open the URL printed by Sanity (normally `http://127.0.0.1:3333`). Sign in using an invited project member's own account. If needed, add the exact local Studio origin in the project's API/CORS settings with credentials enabled. Do not use wildcard origins. Add the real deployed Studio origin when deploying.
 4. Run `npm run check`, `npm test`, `npm run schema:extract` and `npm run build`. Deploy with `npm run deploy` after choosing the real Studio hostname, or host the generated SPA separately with history fallback. No Studio deployment has been performed here.
 5. Set `PUBLIC_SANITY_STUDIO_URL` in the website build environment to the actual HTTPS Studio address. `/verwaltung` then links to the real login. Until then it reports setup is pending.
+6. Optional: set `SANITY_STUDIO_AUTH_PROVIDER` to `google`, `github` or `sanity` only after confirming membership and recovery with that exact sign-in method. Blank preserves native providers. This filters native login choices; it does not grant access, enforce MFA or invalidate existing sessions. Unknown or unavailable providers fail explicitly.
 
 ## Pierre and other administrators
 
 In Sanity Manage → project → Members, invite each administrator using their real email address. Each person uses their own account. Grant the least available role permitting editing, asset uploads and publishing (typically Editor); reserve project administration for the owner. Available roles and seat limits depend on the plan. Loading the Studio URL does not grant permissions to the private dataset. No shared passwords or public write API are implemented.
 
 Invitations, membership permissions and authenticated uploads require the real project and accounts. They have **not** been provisioned or verified here. Send account invitations only with explicit user authorization.
+
+The built Studio retains Sanity's native `noindex` metadata. The website's `/verwaltung` is always noindex and contains no password form, upload endpoint or write credentials. Its configured HTTPS destination is validated; local/IP destinations, placeholders, credentials and query/fragment links fail the website build rather than silently pointing editors elsewhere. A public Studio shell is not an authorization boundary: the private Content Lake and native grants are.
+
+See [`ACCESS.md`](ACCESS.md) for the role matrix, invitations, revocation, sign-out, MFA, recovery and real-account acceptance checks. The authenticated **Redaktionshilfe** tool provides the German editing/publication guide in Studio. Its displayed role names are informational; Sanity evaluates the actual grants.
 
 ## Trainerprofile: Ersteinrichtung und Redaktion
 
@@ -50,10 +55,11 @@ Set these build-server variables in `web/.env` and the hosting build environment
 
 - `SANITY_PROJECT_ID` and `SANITY_DATASET`: the same project/dataset as Studio.
 - `SANITY_READ_TOKEN`: a dedicated read-only/Viewer token. Never put it in a `PUBLIC_*` or `SANITY_STUDIO_*` variable, browser code, screenshots or Git.
+- `SANITY_TRAINERS_ENABLED=true`: opt in to CMS coach profiles after migration. Leave `false` until ready; this flag does not affect gallery activation.
 
 The build uses the origin API and `published` perspective, excludes drafts/releases, and requires public visibility plus confirmed rights. Independent runtime validation rejects missing metadata, unsupported files, invalid dates and foreign asset URLs. A configured but broken/inaccessible API fails the build; it never silently deploys an empty gallery. With all three variables blank, no CMS request is made and the gallery is honestly empty.
 
-For automatic updates, configure a Sanity webhook calling the chosen host's secret build-hook URL. Include published `galleryCamp` create/update/delete events, exclude `drafts.**` and `versions.**`, and include unpublish/withdrawal events. Do not filter only on public visibility, because withdrawal needs a rebuild too. Test publishing, editing and removing an album. Keep hook URLs private and out of Studio/browser code. No hosting vendor is required by this implementation.
+For automatic updates, configure a Sanity webhook calling the chosen host's secret build-hook URL. Include published `galleryCamp` and `trainer` create/update/delete events, exclude `drafts.**` and `versions.**`, and include unpublish/withdrawal events. Do not filter only on public visibility or activity, because withdrawal needs a rebuild too. Test publishing, editing and removing both an album and a trainer. Keep hook URLs private and out of Studio/browser code. No hosting vendor is required by this implementation. No build hook is connected locally; an editor-to-website workflow without developer assistance requires this one-time account/hosting setup and acceptance test.
 
 ## Media handling
 
@@ -86,3 +92,6 @@ Document actual Sanity media delivery and hosting in the privacy notice before l
 - [Published perspectives](https://www.sanity.io/docs/content-lake/perspectives)
 - [Project roles](https://www.sanity.io/docs/user-guides/roles)
 - [Asset CDN visibility](https://www.sanity.io/docs/content-lake/manage-assets)
+- [Native authentication](https://www.sanity.io/docs/studio/custom-auth), [Studio component views](https://www.sanity.io/docs/studio/structure-builder-reference)
+- [Account recovery](https://www.sanity.io/docs/help/account-recovery), [account management](https://www.sanity.io/docs/platform-management/manage-your-account)
+- [Roles and plan availability](https://www.sanity.io/docs/content-lake/roles-concepts)
