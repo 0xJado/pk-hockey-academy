@@ -10,6 +10,7 @@ studio/.sanity/
 .tools/
 output/
 .playwright-cli/
+.codex-remote-attachments/
 .vercel/
 *.log
 .DS_Store

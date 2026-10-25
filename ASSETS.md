@@ -8,6 +8,13 @@ No NHL/DEL assets or external video embeds are used. Existing branding and illus
 - No camp media, fabricated camps or coach identities have been added. Each real upload must include a credit and required descriptions; videos need a poster and text alternative. Album rights/consent approval is required before website publication.
 - Sanity's private dataset protects document reads, but asset CDN URLs are public to anyone who has the URL, including for drafts. Only already-cleared media should be uploaded. See [`studio/README.md`](studio/README.md) for removal and metadata handling.
 
+## Supplied registration template — 23 October 2026
+
+- Source: `PK_Hockey_Academy_Anmeldeformular_v2.pdf`, attached by the user in this chat as the registration-form source for issue #3. It is a blank template with no completed personal details, two A4 pages, and no AcroForm fields, page annotations, JavaScript name tree or open action.
+- Public download: `web/public/downloads/PK-Hockey-Academy-Anmeldung-v2.pdf`; 203,522 bytes. SHA-256: `5ad3b2845008b09213280653fda49d6fb15882a4ddbfcb0ca975dc664162bff9`. This is byte-for-byte identical to the attached original; branding, typography, text, metadata and signatures remain unchanged. No derivative PDF was generated.
+- The original was extracted with pypdf and both pages rendered with Poppler and visually inspected. The supplied file is a paper/handwriting template; it is not represented as fillable or legally approved. Its express legal-review warning is retained in the download and reproduced in the online preview.
+- Usage is based on the user's supplied business document and registration implementation request. No broader ownership/license or legal-validity claim is made. The attachment directory stays Git-ignored; no other attachment was copied into the site. The website preview stores no personal data and contains no submission form.
+
 ## Supplied academy branding — 19 October 2026
 
 - Local original: `web/src/assets/brand/pk-hockey-crest.png`.
@@ -18,7 +25,7 @@ No NHL/DEL assets or external video embeds are used. Existing branding and illus
 - Artwork ownership and any third-party designer's license have not been independently established; usage is based on the user's supplied business asset and explicit website instruction. No broader license claim is made.
 - Brand direction: **PK_Hockey_Academy_Flyer_Trainingsprogramm.pptx**, also supplied by Pierre through the user's Drive link. The one-slide PPTX contains one flattened 1024 × 1536 raster. It was inspected locally as a design reference; the full flyer is not published with the website.
 - The redesign takes the flyer's ice-white/navy/cobalt palette, condensed typography, “Skills. Mindset. Zukunft.” heading and training-band hierarchy as general visual direction. The flyer is not copied as a webpage screenshot. Its embedded portrait, credentials, contact details, QR destination and registration language have not been imported as independently verified website content.
-- A standalone trainer portrait is still needed before replacing the clearly described crest graphic in the trainer profile. The registration PDF is outside this task and is not imported or linked.
+- A standalone trainer portrait is still needed before replacing the clearly described crest graphic in the trainer profile. The registration PDF was outside that branding task; its later supplied version is recorded above.
 
 ## Hero photograph
 
