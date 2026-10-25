@@ -28,7 +28,7 @@ Treat only these facts as established:
 - Training is generally organized on weekends at variable locations; do not invent a recurring calendar.
 - Pricing provided: **50 € per single session; 200 € for a five-session package**. Do not invent package rules, payment methods, cancellation policies, or availability.
 - Pierre has an ice hockey and inline hockey background. **Inline hockey is biographical context ONLY, not a service/product offered by the academy**.
-- Registration will ultimately link each training session to an individually configured **SpielerPlus** URL; exact integration/link behavior is not yet verified.
+- The training registration form covers single-session and multiple-session bookings. **SpielerPlus** becomes relevant only for participants who have booked multiple sessions, as clarified by the user on 23 October 2026. Do not present it as the default single-session registration path. Exact multi-session integration/link behavior is not yet verified.
 - Contact should ultimately offer a form and WhatsApp option; actual destinations and backend are not yet known.
 - No approved logo, trainers' portraits, real venues, session dates, phone number, email, shop catalog, or training footage has yet been supplied.
 

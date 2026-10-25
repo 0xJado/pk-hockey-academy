@@ -38,7 +38,8 @@ export function getRegistrationUrl(
     return;
   try {
     const url = new URL(session.spielerPlusUrl);
-    // Activate the verified player registration domain/semantics only after confirmation.
+    // SpielerPlus applies only to participants with multiple-session bookings.
+    // Activate only after that participant-specific workflow is verified.
     // The entire integration stays disabled for this milestone.
     if (url.protocol !== "https:") return;
     return undefined;

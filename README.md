@@ -111,7 +111,7 @@ The `/medienkit` page is linked from the footer and currently offers only the or
 
 The live schedule and separate demo collection are intentionally empty. Published sessions require timezone-aware timestamps, valid duration, non-demo content and non-draft status, and are sorted chronologically. Rendered cards support title, date, start/end, location, group, available spots and status. Unknown capacity stays unknown.
 
-`getRegistrationUrl()` deliberately returns no functional registration URL in this milestone, including for a configured URL: the approved SpielerPlus destination and semantics must be verified before enabling this boundary. No live synchronization is implied. The stable permanent QR destination is **`/trainingstermine`**.
+`getRegistrationUrl()` deliberately returns no functional registration URL in this milestone, including for a configured URL. The user clarified on 23 October 2026 that SpielerPlus is relevant only for participants who booked multiple sessions; it is not the default single-session registration path. Its destination, participant eligibility and multi-session workflow must be verified before enabling this boundary. No live synchronization is implied. The stable permanent QR destination is **`/trainingstermine`**.
 
 Contact options are visibly disabled, have no form or destination, and never collect or transmit data. No analytics, third-party video embeds or non-essential visitor cookies are configured. Once real albums are connected, gallery media is delivered by Sanity's CDN; document this in the reviewed privacy notice.
 

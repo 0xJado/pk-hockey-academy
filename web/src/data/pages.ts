@@ -113,6 +113,6 @@ export const organisationSteps = [
   {
     number: "03",
     title: "Anmeldung prüfen",
-    text: "Die Formularvorlage ist als PDF und in einer Onlinevorschau verfügbar. Onlineanmeldung und Papierabgabe werden vor der Freigabe bestätigt.",
+    text: "Die Formularvorlage ist als PDF und in einer Onlinevorschau verfügbar. Onlineanmeldung und Papierabgabe werden vor der Freigabe bestätigt. SpielerPlus ist nur für Mehrfachbuchungen vorgesehen.",
   },
 ];
