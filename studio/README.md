@@ -2,6 +2,14 @@
 
 Standalone German Sanity Studio for trainer profiles and camp albums, photos and videos. The website remains static; React is used only in this separate administrator app. Sessions, venues and prices remain in `web/src/data/academy.ts`. The existing local Pierre profile remains active until the coach migration is explicitly enabled.
 
+## Ownership and first account setup
+
+The user confirmed on 25 October 2026 that Pierre should own the academy's Sanity project; the user is its developer. A single Pierre-owned account is sufficient; technical setup needs authorized account access, while code development needs no Sanity seat. A separate developer account is optional. Real account/project setup remains pending. The German [owner setup guide](OWNER-SETUP.md) covers the initial steps.
+
+Use **Sanity Free with a public dataset for public website content**. Player/guardian registrations belong in the separate private Google Sheet planned in [the registration notes](../docs/issue-3-registration.md), never Sanity. The earlier private-dataset assumption is superseded. [Free currently supports up to 20 accounts](https://www.sanity.io/pricing), so an optional second account does not itself require payment. Its human roles are Administrator and Viewer; independent developer setup would require an explicitly owner-approved Administrator invitation. No additional human account, invitation, paid subscription or broader role grant has been created by the agent. See [ACCESS.md](ACCESS.md) for acceptance checks.
+
+Published documents in a public dataset are anonymously readable through Sanity's API, including records withheld from the website with `visibility: "hidden"`, `active: false` or approval flags. These fields control website inclusion, not confidentiality. [Native drafts and release versions require authentication](https://www.sanity.io/docs/content-lake/drafts-and-versions). Only content suitable for public release belongs in this CMS; never store registrations, health data, consent records or private editorial notes here. Dataset media remain URL-public even in drafts.
+
 ## Connect the real project
 
 1. Create or choose Pierre's academy project in [Sanity Manage](https://www.sanity.io/manage), keep the **Free** plan and use a **public dataset**, normally `production`.

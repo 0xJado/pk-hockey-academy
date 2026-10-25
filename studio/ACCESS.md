@@ -8,6 +8,8 @@ This checkout has no `studio/.env` or `web/.env`, real project/member configurat
 
 ## Role assignment
 
+Direction, 25 October 2026: Pierre should control the academy project. Use Sanity Free with a public dataset holding public website content; player registrations remain in the separately planned private Google Sheet. One Pierre-owned account is sufficient; a separate developer account is optional. No real account, project or local credential has been configured by this preparation. Follow [OWNER-SETUP.md](OWNER-SETUP.md) for the owner handoff. No invitation or elevated grant is authorized by this documentation alone.
+
 | Person/service | Intended access | Setup decision |
 | --- | --- | --- |
 | Pierre / responsible owner and publisher | Administrator | Retain project, membership and any organization/billing control. Verify his account recovery. |

@@ -1,5 +1,17 @@
 # Validation record
 
+## Pre-connection commit batch — 25 October 2026
+
+The user authorized committing and pushing the work completed before the real Sanity connection, split into focused commits. The batch separates gallery notices, the supplied blank registration PDF, the inactive registration preview/package savings, multi-session SpielerPlus scope, the original hero photograph, its retouch, public-dataset compatibility and owner setup guides. The three previously created local coach/admin/gallery-layout commits are also within the authorized push. Live account/project connection status, Studio application binding, the later content-list API-version fix and real environment files are excluded; their working-tree changes are preserved.
+
+Verified the combined pre-connection source in the isolated ignored snapshot `.tools/pre-sanity-check-20261025`, assembled from the committed baseline and selectively staged content without changing the working source. Website check passed (61 files, zero diagnostics), all 30 website tests passed and the static build produced 15 pages. All five CMS build cases passed: unconfigured starter, authenticated populated, tokenless public populated, empty and deliberately rejected malformed content. Studio check, all 7 tests and build passed with synthetic `cmsqa123/qa` identifiers. No real environment files or account credentials were copied into the snapshot. Existing browser/media verification is recorded in the feature entries below; no new visual implementation or browser audit was added during this commit-only task.
+
+## Pierre's combined setup guide — 25 October 2026
+
+Added `docs/PIERRE-SETUP.md`, a self-contained German owner guide for Sanity Free/public website content and the private Google Sheet for registrations. It covers owner-controlled accounts, project/dataset identifiers, a blank `Anmeldungen` tab, restricted/named sharing and inherited folder access, the private handoff, development responsibilities and the unresolved field/consent/retention decisions. Linked it from the root README, the Sanity owner guide and registration notes. Corrected the root architecture paragraph's stale requirement for a public-dataset read token.
+
+Checked the Google creation/sharing instructions and spreadsheet-ID/API behavior against official Google documentation; verified the changed guides' relative links and whitespace. This increment changes documentation only, so application builds and tests were not rerun. No Sanity or Google resource, invitation, credential, live data transfer, submission handler, commit, push or deployment was created. The registration form remains inactive.
+
 ## Sanity Free / public website content — 25 October 2026
 
 Clarified the CMS boundary: Sanity holds public trainer/gallery content; player and guardian registrations remain destined for the separately planned private Google Sheet. Removed the paid/private-dataset assumption from current setup guidance. Pierre remains the intended owner; one account is sufficient and Free also permits optional additional accounts within its limits. No project, account, invitation, token, subscription, webhook or deployment was created.
