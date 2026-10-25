@@ -1,5 +1,11 @@
 # Validation record
 
+## Academy hero studio retouch — 23 October 2026
+
+At the user's request, edited Pierre's original with the built-in Image Gen tool for neutral ice whites, more even face lighting, contrast and apparent detail. Saved the output separately as `web/src/assets/hero-academy-players-retouched.png` (1445 × 1088), preserved the original JPEG and recorded the complete prompt. Updated the homepage import, WebP quality (85 to 92), responsive widths and crop-aware desktop `sizes`. Removed hero grayscale/contrast and opacity treatments that were muting the photograph. No motion logic changed. Updated README and provenance notes.
+
+Executed `run check` (61 files, zero diagnostics) and `run build` (15 static pages, five responsive retouched WebP renditions) with the bundled npm CLI. Playwright/Edge checks passed at 1440, 1024, 768 and 375px: retouched image loaded, filter was `none`, opacity was `1`, no overflow, no stock label and one H1. Desktop and mobile screenshots were visually inspected. Keyboard menu and visible CTA focus, schedule navigation, Back/Forward, reduced-motion display and JavaScript-disabled hero/CTA also passed; no runtime errors. Only Astro's expected reduced-motion warning appeared. Updated ignored QA script `.tools/hero-photo-qa.js`; screenshots under `output/playwright/hero-retouched-*.png`. Existing content tests were not rerun for this media/CSS-only increment; the preceding photo swap ran all 27 successfully. No commit, push or deployment. Local preview remains `http://127.0.0.1:4382/`.
+
 ## Supplied academy hero photograph — 23 October 2026
 
 Replaced the homepage stock image with Pierre's supplied, unchanged 1280 × 962 JPEG (`web/src/assets/hero-academy-players.jpg`). Updated the homepage import, responsive image widths/sizes and German alt text; removed the stock-image credit. Adjusted the diagonal frame and image coverage for the group photograph, with top-aligned mobile framing. Existing reveal, headline/CTA animation and desktop parallax remain in place. Updated README, asset notes and asset provenance; no integration, dependency or deployment change. Existing unrelated working changes were preserved.

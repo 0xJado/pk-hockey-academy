@@ -31,8 +31,15 @@ No NHL/DEL assets or external video embeds are used. Existing branding and illus
 
 - Local original: `web/src/assets/hero-academy-players.jpg` (1280 × 962 JPEG).
 - Source: `1000046804.jpg`, supplied by the user directly from Pierre with explicit authorization to use it for the homepage hero. Depicts three young players in academy jerseys on the ice; no player names, venue or session details are asserted.
-- SHA-256: `4cf7bd5c1d8251cb7512b980259d2ce9dc7af7c943c6310db02eec6b6f0cf5e7`. The supplied original is preserved unchanged and supplies the homepage hero. No external image requests run on the website.
+- SHA-256: `4cf7bd5c1d8251cb7512b980259d2ce9dc7af7c943c6310db02eec6b6f0cf5e7`. The supplied original is preserved unchanged. A separately saved retouch now supplies the hero, as described below. No external image requests run on the website.
 - Usage is based on the supplied academy asset and explicit website instruction; no independent ownership, photographer credit or broader license is asserted. The former stock-photo label has been removed. Responsive framing, the existing reveal and desktop parallax remain.
+
+### Studio retouch — 23 October 2026
+
+- At the user's request, the built-in Image Gen tool edited the supplied photograph for cleaner white balance, more even facial lighting, controlled contrast, richer blue kit and improved apparent clarity. The prompt explicitly requested preservation of identities, equipment, composition and branding. This is an AI-retouched derivative, not newly captured detail or an unmodified original.
+- Local derivative: `web/src/assets/hero-academy-players-retouched.png`, 1445 × 1088, 2,606,153 bytes. SHA-256: `3c784ea982f8b2761b0e60319ded51746f6e379c3521e90a7e478b802c967a28`. Output is saved in the repository alongside the original; no alternate academy, venue or player facts are introduced.
+- Full generation prompt: [`web/src/assets/hero-academy-players-retouched.prompt.txt`](web/src/assets/hero-academy-players-retouched.prompt.txt). The requested ideal resolution was higher; the tool actually returned 1445 × 1088. The website does not claim a 4K master or recovery of original lost detail.
+- Astro generates local WebP renditions from 480px to 1445px at quality 92. Desktop image sizing accounts for the height-driven cover crop, avoiding an unnecessarily small source. Removed the old grayscale/contrast filter and translucent navy tint so the retouch displays at full opacity. Mobile framing and motion remain unchanged.
 
 ## Former hero photograph — retained, unused
 

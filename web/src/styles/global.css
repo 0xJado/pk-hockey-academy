@@ -396,8 +396,8 @@ p {
   height: calc(100% + 48px);
   object-fit: cover;
   object-position: 44% center;
-  filter: grayscale(0.35) contrast(1.06);
-  opacity: 0.9;
+  filter: none;
+  opacity: 1;
 }
 .hero::after {
   display: none;
@@ -1836,7 +1836,7 @@ p {
   .hero-art img {
     height: 100%;
     object-position: 50% top;
-    opacity: 0.9;
+    opacity: 1;
   }
   .hero::after {
     background: linear-gradient(
@@ -2583,7 +2583,7 @@ p {
   .hero-art img {
     height: 100%;
     object-position: center top;
-    opacity: 0.9;
+    opacity: 1;
   }
   .hero-photo-credit {
     right: 20px;
