@@ -1,5 +1,13 @@
 # Validation record
 
+## Supplied academy hero photograph — 23 October 2026
+
+Replaced the homepage stock image with Pierre's supplied, unchanged 1280 × 962 JPEG (`web/src/assets/hero-academy-players.jpg`). Updated the homepage import, responsive image widths/sizes and German alt text; removed the stock-image credit. Adjusted the diagonal frame and image coverage for the group photograph, with top-aligned mobile framing. Existing reveal, headline/CTA animation and desktop parallax remain in place. Updated README, asset notes and asset provenance; no integration, dependency or deployment change. Existing unrelated working changes were preserved.
+
+Executed from `web` using the bundled npm CLI: `run check` (61 files, zero errors/warnings/hints), `test` (27 passing) and `run build` (15 static pages, four responsive hero WebP assets). `git diff --check` passed. Playwright/Edge verified image loading, German alt text, removal of the stock credit, one H1 and no horizontal overflow at widths 1440, 1024, 768 and 375px. Desktop, tablet and mobile screenshots were visually inspected. The mobile menu, keyboard CTA focus, schedule link, Back/Forward, reduced-motion hero and JavaScript-disabled image/CTA passed. No runtime errors; the only console warning was Astro's expected reduced-motion notice. The first test run needed its CTA locator scoped to the hero because the page repeats the same link below.
+
+Local sandbox isolation prevented the first preview/browser connection; an isolated Edge session and local dev server outside the sandbox completed the checks. Preview: `http://127.0.0.1:4382/`. Ignored QA script: `.tools/hero-photo-qa.js`; screenshots: `output/playwright/hero-photo-*.png`. No commit, push or deployment was performed. No further input from Pierre is needed for this photo swap.
+
 ## Consolidated 5er savings card — 23 October 2026
 
 Implemented the user's scoped browser annotation on the registration pricing section. Replaced three online boxes with two offers; the third benefit record is now nested under the 5er offer in typed registration data. The navy package card contains a static angled ice-blue **50 EUR Ersparnis gesamt** sticker and **40 EUR je Doppelstunde** benefit line, alongside the unchanged **200 EUR** package total. Five single bookings cost 250 EUR, so the total saving is 50 EUR; 40 EUR is the per-double-session package price, not the saving. The original two-page PDF is unchanged. Updated `RegistrationPreview.astro`, `src/data/registration.ts`, `src/styles/registration.css`, README and issue #3 notes. No animation, JavaScript, dependency, form activation or integration change was added.

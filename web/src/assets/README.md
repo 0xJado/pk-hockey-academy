@@ -1,6 +1,6 @@
 # Imported media
 
-`hero-hockey-photo.jpg` is a locally stored Ron Lach/Pexels stock photograph, rendered with Astro `Image` as responsive WebP. See root `ASSETS.md` for its exact source, license and visible stock-image labeling.
+`hero-academy-players.jpg` is Pierre's supplied 1280 × 962 academy photograph, authorized by the user for the homepage hero on 23 October 2026. The original is preserved unchanged. Astro Image generates responsive local WebP renditions; the former Ron Lach/Pexels stock original is retained unused. See root `ASSETS.md` for provenance and usage details.
 
 `brand/pk-hockey-crest.png` is Pierre's supplied transparent 1254px academy crest, imported unchanged on 19 October 2026. Astro creates the website renditions. The supplied flyer guides the visual system but is not bundled or published, and its flattened portrait is not treated as a separate trainer photograph. The registration PDF is deferred.
 

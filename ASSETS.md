@@ -27,14 +27,21 @@ No NHL/DEL assets or external video embeds are used. Existing branding and illus
 - The redesign takes the flyer's ice-white/navy/cobalt palette, condensed typography, “Skills. Mindset. Zukunft.” heading and training-band hierarchy as general visual direction. The flyer is not copied as a webpage screenshot. Its embedded portrait, credentials, contact details, QR destination and registration language have not been imported as independently verified website content.
 - A standalone trainer portrait is still needed before replacing the clearly described crest graphic in the trainer profile. The registration PDF was outside that branding task; its later supplied version is recorded above.
 
-## Hero photograph
+## Supplied academy hero photograph — 23 October 2026
+
+- Local original: `web/src/assets/hero-academy-players.jpg` (1280 × 962 JPEG).
+- Source: `1000046804.jpg`, supplied by the user directly from Pierre with explicit authorization to use it for the homepage hero. Depicts three young players in academy jerseys on the ice; no player names, venue or session details are asserted.
+- SHA-256: `4cf7bd5c1d8251cb7512b980259d2ce9dc7af7c943c6310db02eec6b6f0cf5e7`. The supplied original is preserved unchanged and supplies the homepage hero. No external image requests run on the website.
+- Usage is based on the supplied academy asset and explicit website instruction; no independent ownership, photographer credit or broader license is asserted. The former stock-photo label has been removed. Responsive framing, the existing reveal and desktop parallax remain.
+
+## Former hero photograph — retained, unused
 
 - Local source: `web/src/assets/hero-hockey-photo.jpg`.
 - Photographer: **Ron Lach**.
 - Source: [A Person Wearing Black Helmet with Cage — Pexels photo 8974646](https://www.pexels.com/photo/a-person-wearing-black-helmet-with-cage-8974646/).
 - Downloaded 17 October 2026 from `https://images.pexels.com/photos/8974646/pexels-photo-8974646.jpeg?auto=compress&cs=tinysrgb&w=2400`.
 - [Pexels License](https://www.pexels.com/license/), checked on the download date: permits website use and modification; attribution is optional. No endorsement by the depicted person or brands is claimed.
-- Displayed with a visible German `Symbolbild` label and photographer credit. This is stock imagery, not a trainer portrait or a real academy participant claim.
+- Previously displayed with a visible German `Symbolbild` label and photographer credit. Replaced by Pierre's supplied academy photo on 23 October 2026; this stock original is retained but no longer referenced by the website.
 - Astro `Image` emits local responsive WebP assets; CSS applies a cold, partially desaturated treatment and responsive cropping. No runtime Pexels request is made.
 
 ## Off-Ice running image — 19 October 2026
