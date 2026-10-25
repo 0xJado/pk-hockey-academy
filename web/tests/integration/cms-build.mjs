@@ -97,12 +97,12 @@ console.log(
   `Starter build passed; ${await scan(starter.folder, true)} public text artifacts scanned.`,
 );
 
-for (const mode of ["normal", "empty", "malformed"]) {
+for (const mode of ["normal", "public", "empty", "malformed"]) {
   const trace = resolve(output, `${mode}-requests.jsonl`);
   const { folder, result } = build(mode, {
     SANITY_PROJECT_ID: "cmsqa123",
     SANITY_DATASET: "qa",
-    SANITY_READ_TOKEN: "test-token-never-real",
+    SANITY_READ_TOKEN: mode === "public" ? "" : "test-token-never-real",
     SANITY_TRAINERS_ENABLED: "true",
     PUBLIC_SANITY_STUDIO_URL: "https://pk-hockey-academy.sanity.studio/",
     NODE_OPTIONS: `--import=${fixture}`,
@@ -119,7 +119,10 @@ for (const mode of ["normal", "empty", "malformed"]) {
   );
   assert.ok(
     requests.every(
-      (request) => request.perspective === "published" && request.authenticated,
+      (request) =>
+        request.perspective === "published" &&
+        request.authenticated === (mode !== "public") &&
+        request.hasAuthorization === (mode !== "public"),
     ),
     "Unexpected CMS transport configuration.",
   );
@@ -142,7 +145,7 @@ for (const mode of ["normal", "empty", "malformed"]) {
     "utf8",
   );
   const home = await readFile(resolve(folder, "index.html"), "utf8");
-  if (mode === "normal") {
+  if (mode === "normal" || mode === "public") {
     assert.match(pool, /Technisches Testprofil A/);
     assert.match(pool, /Technisches Testprofil B/);
     assert.ok(
@@ -153,6 +156,13 @@ for (const mode of ["normal", "empty", "malformed"]) {
     assert.equal(pool.includes("<script>window.__coachXss"), false);
     assert.match(home, /Technisches Testprofil A/);
     assert.equal(home.includes("Technisches Testprofil B"), false);
+    if (mode === "public") {
+      const gallery = await readFile(resolve(folder, "galerie/index.html"), "utf8");
+      const album = await readFile(resolve(folder, "galerie/cms-test-album/index.html"), "utf8");
+      assert.match(gallery, /Technisches Testalbum/);
+      assert.match(album, /Technisches Testalbum/);
+      assert.match(album, /https:\/\/cdn\.sanity\.io\/images\/cmsqa123\/qa\//);
+    }
   } else {
     assert.match(pool, /Aktuell sind keine Trainerprofile veröffentlicht/);
     assert.equal(pool.includes("Pierre Klein"), false);

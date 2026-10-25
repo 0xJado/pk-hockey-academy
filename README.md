@@ -24,7 +24,7 @@ npm run preview
 
 Build output is `web/dist`. The app stays fully static and needs no hosting adapter. Vercel is the selected review host; no custom domain is connected.
 
-`npm run test:cms` builds isolated starter, populated-CMS, empty-CMS and malformed-content cases using a test-only fetch transport. It verifies real bundler environment substitution, publication filtering, escaping, ordering, withdrawal behavior, admin linking and absence of read tokens/private fixtures from public output. It uses no real project or token and retains its artifacts under ignored `output/cms-integration-*`; it never changes `web/dist` or deploys anything.
+`npm run test:cms` builds isolated starter, populated-CMS (with and without a token), empty-CMS and malformed-content cases using a test-only fetch transport. It verifies real bundler environment substitution, publication filtering, escaping, ordering, withdrawal behavior, admin linking, tokenless public reads and absence of read tokens/withheld fixtures from website output. It uses no real project or token and retains its artifacts under ignored `output/cms-integration-*`; it never changes `web/dist` or deploys anything.
 
 ### Vercel review hosting
 
@@ -57,7 +57,7 @@ This local tooling is not part of the GitHub repository. A normal Node installat
 
 ## Architecture
 
-`/web` contains the static Astro frontend. `/studio` now contains a separate German Sanity CMS for camp photo/video albums, with project-member authentication. Its real project, administrator invitations, read token and deployment still need connecting; see [`studio/README.md`](studio/README.md). There is no visitor authentication, payment provider, shop or booking backend.
+`/web` contains the static Astro frontend. `/studio` contains a separate German trainer/gallery CMS with native project-member authentication. Its real project, account access, local environment settings and deployment still need connecting; public-dataset reads need no token. See [`studio/README.md`](studio/README.md). There is no visitor authentication, payment provider, shop or booking backend.
 
 ```text
 web/
@@ -137,7 +137,7 @@ Issue #3 remains open for secure delivery, spam protection, accessible required-
 - Motion reuses scoped section reveals and reduced-motion support; small photo hover zooms and viewer arrow fades are disabled for reduced motion. Gallery listeners, goalkeeper resize tracking and video observers clean up on navigation. Gallery initialization waits until Astro's synchronous page swap has finished replacing video elements, so player references remain valid after client navigation.
 - Gallery photos and videos have no visible caption/credit overlays or shading for text. Descriptions and credits remain available to assistive technology; album media counts sit below the cover. The local placeholder notice appears above the gallery.
 
-Connect the gallery variables in `web/.env.example` only when the real project is ready. The website token is read-only and server-only; keep the dataset private. Changes and unpublishing require a successful website rebuild/deployment. A build webhook is documented but not connected. See [CMS setup and Pierre's editing workflow](studio/README.md) for full steps and the public-asset limitation.
+Connect the project/dataset variables in `web/.env.example` only when the real project is ready. The agreed starting direction is **Sanity Free with a public dataset for website content**, owned by Pierre. `SANITY_READ_TOKEN` stays blank; the website reads published content without credentials. Native drafts and release versions require authorized access, but published records remain API-readable even when excluded from the website. Never store player registrations, health data or consent documents in Sanity; registration delivery to a separate private Google Sheet remains deferred. Free supports up to 20 accounts, with Administrator/Viewer roles, so an optional developer account does not itself require payment. Changes and unpublishing require a successful website rebuild/deployment. A build webhook is documented but not connected. See [CMS setup and Pierre's editing workflow](studio/README.md).
 
 Future commerce should live at `/shop` behind a separate commerce interface, with hosted Shopify guest checkout once approved. There is currently no shop route, checkout, account UI or integration.
 

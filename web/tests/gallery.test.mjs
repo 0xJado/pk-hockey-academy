@@ -107,6 +107,8 @@ test("unassigned media remain visible and videos use their own section, not thei
 test("CMS is optional but partial configuration fails closed", () => {
   assert.equal(getGalleryConfig({}), undefined);
   assert.throws(() => getGalleryConfig({ SANITY_PROJECT_ID: "realproject" }));
+  assert.throws(() => getGalleryConfig({ SANITY_DATASET: "production" }));
+  assert.throws(() => getGalleryConfig({ SANITY_READ_TOKEN: config.token }));
   assert.throws(() =>
     getGalleryConfig({
       SANITY_PROJECT_ID: "../escape",
@@ -122,6 +124,19 @@ test("CMS is optional but partial configuration fails closed", () => {
     }),
     config,
   );
+});
+
+test("public CMS configuration needs only project and dataset; blank tokens stay absent", () => {
+  for (const token of [undefined, "", "   "]) {
+    assert.deepEqual(
+      getGalleryConfig({
+        SANITY_PROJECT_ID: " cmsqa123 ",
+        SANITY_DATASET: " qa ",
+        SANITY_READ_TOKEN: token,
+      }),
+      { projectId: "cmsqa123", dataset: "qa" },
+    );
+  }
 });
 test("only supported photo spotlight placements are accepted; poster settings do not enlarge videos", () => {
   for (const spotlight of ["left", "right", "middle", undefined, "none"]) {
@@ -238,6 +253,25 @@ test("videos need valid files, posters, credits and accessible text alternatives
     );
   }
 });
+test("public gallery fetch omits authorization and retains approval and draft filtering", async () => {
+  const result = await fetchGallery(
+    { projectId: config.projectId, dataset: config.dataset },
+    async (url, options) => {
+      assert.equal(new Headers(options.headers).has("Authorization"), false);
+      assert.equal(url.searchParams.get("perspective"), "published");
+      assert.match(url.searchParams.get("query"), /rightsConfirmed == true/);
+      return new Response(JSON.stringify({ result: [
+        album,
+        { ...album, _id: "drafts.qa-album" },
+        { ...album, _id: "versions.release.qa-album" },
+        { ...album, _id: "hidden", visibility: "hidden" },
+        { ...album, _id: "unapproved", rightsConfirmed: false },
+      ] }));
+    },
+  );
+  assert.deepEqual(result.map((item) => item.id), [album._id]);
+});
+
 test("build fetch uses a server-only token and published perspective; errors never silently empty the gallery", async () => {
   const result = await fetchGallery(config, async (url, options) => {
     assert.equal(url.searchParams.get("perspective"), "published");

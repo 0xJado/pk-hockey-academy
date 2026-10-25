@@ -28,6 +28,18 @@ const profile = {
   },
 };
 
+const album = {
+  _id: "fixture-album",
+  title: "Technisches Testalbum",
+  slug: "cms-test-album",
+  occurredOn: "2026-10-01",
+  city: "Testort",
+  description: "Technischer Testdatensatz ohne echte Camp-Inhalte.",
+  visibility: "public",
+  rightsConfirmed: true,
+  media: [{ _key: "fixture-photo", _type: "galleryPhoto", ...profile.portrait }],
+};
+
 globalThis.fetch = async (input, options) => {
   const url = new URL(
     typeof input === "string" || input instanceof URL ? input : input.url,
@@ -44,11 +56,16 @@ globalThis.fetch = async (input, options) => {
       perspective: url.searchParams.get("perspective"),
       authenticated:
         options?.headers?.Authorization === "Bearer test-token-never-real",
+      hasAuthorization: new Headers(options?.headers).has("Authorization"),
     }) + "\n",
   );
   const mode = process.env.PK_CMS_QA_MODE;
   const result =
-    !trainers || mode === "empty"
+    !trainers
+      ? mode === "public"
+        ? [album, { ...album, _id: "drafts.fixture-album", title: "DRAFT_DO_NOT_EXPOSE" }]
+        : []
+      : mode === "empty"
       ? []
       : [
           { ...profile, _id: "drafts.hidden", name: "DRAFT_DO_NOT_EXPOSE" },

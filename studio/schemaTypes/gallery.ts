@@ -244,7 +244,7 @@ export const galleryCamp = defineType({
         layout: "radio",
       },
       description:
-        "Freigabe wählen und „Veröffentlichen“ klicken. Änderungen und Rücknahmen erscheinen nach einem erfolgreichen Website-Build. Ein Zurückhalten löscht keine hochgeladenen Dateien vom CDN.",
+        "Freigabe wählen und „Veröffentlichen“ klicken. Änderungen und Rücknahmen erscheinen nach einem erfolgreichen Website-Build. Zurückhalten steuert nur die Website; veröffentlichte Dokumente bleiben über die öffentliche API lesbar. Hochgeladene Dateien bleiben über ihre CDN-URL erreichbar.",
       validation: (Rule) => Rule.required(),
     }),
   ],

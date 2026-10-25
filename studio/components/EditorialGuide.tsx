@@ -57,6 +57,13 @@ export function EditorialGuideContent({
           Aktualisierung ist noch nicht eingerichtet.
         </p>
       </aside>
+      <p>
+        Dieses CMS enthält öffentliche Website-Inhalte. Veröffentlichte Dokumente
+        sind über Sanitys API lesbar, auch wenn „Zurückhalten“ sie von der
+        Website ausschließt. Unveröffentlichte Texte im Entwurf lassen.
+        Trainingsanmeldungen und Spielerangaben gehören in das separat
+        vorgesehene private Google Sheet.
+      </p>
       <section aria-labelledby="coach-guide">
         <h2 id="coach-guide">Trainerprofile</h2>
         <ol>
@@ -121,8 +128,8 @@ export function EditorialGuideContent({
         <div className="pk-editorial-table">
           <table>
             <caption>
-              Vorgesehene Aufgabenverteilung; verfügbare Rollen hängen vom Tarif
-              ab.
+              Im Free-Tarif sind Administrator und Viewer verfügbar. Weitere
+              Rollen hängen vom Tarif ab.
             </caption>
             <thead>
               <tr>
@@ -134,8 +141,8 @@ export function EditorialGuideContent({
               <tr>
                 <th scope="row">Administrator</th>
                 <td>
-                  Projekt, Zugänge und Konfiguration verwalten. Nur für
-                  verantwortliche Eigentümer.
+                  Projekt, Zugänge und Konfiguration verwalten. Für den
+                  Eigentümer und ausdrücklich von ihm autorisierte Personen.
                 </td>
               </tr>
               <tr>

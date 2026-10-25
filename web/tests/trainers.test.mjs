@@ -72,6 +72,14 @@ test("coach migration is opt-in and incomplete/invalid configuration fails close
     }),
     config,
   );
+  assert.deepEqual(
+    getTrainerConfig({
+      SANITY_TRAINERS_ENABLED: "true",
+      SANITY_PROJECT_ID: "cmsqa123",
+      SANITY_DATASET: "qa",
+    }),
+    { projectId: "cmsqa123", dataset: "qa" },
+  );
 });
 
 test("only active approved published coaches survive independently of query filtering", () => {
@@ -247,6 +255,26 @@ test("shared validation accepts approved verified content and rejects missing ap
     }),
     true,
   );
+});
+
+test("public trainer transport needs no token and still excludes drafts and withheld profiles", async () => {
+  const result = await fetchTrainers(
+    { projectId: config.projectId, dataset: config.dataset },
+    async (input, options) => {
+      const url = new URL(input);
+      assert.equal(new Headers(options.headers).has("Authorization"), false);
+      assert.equal(url.searchParams.get("perspective"), "published");
+      assert.equal(options.redirect, "error");
+      return new Response(JSON.stringify({ result: [
+        coach,
+        { ...coach, _id: "drafts.fixture" },
+        { ...coach, _id: "versions.release.fixture" },
+        { ...coach, _id: "hidden", visibility: "hidden" },
+        { ...coach, _id: "unapproved", contentApproved: false },
+      ] }));
+    },
+  );
+  assert.deepEqual(result.map((item) => item.id), [coach._id]);
 });
 
 test("build transport is published-only, fresh, bounded and keeps the read token server-side", async () => {

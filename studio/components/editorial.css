@@ -92,6 +92,9 @@
   text-align: left;
   vertical-align: top;
 }
+.pk-editorial th[scope="row"] {
+  white-space: nowrap;
+}
 @media (max-width: 700px) {
   .pk-coach-preview {
     grid-template-columns: minmax(0, 1fr);

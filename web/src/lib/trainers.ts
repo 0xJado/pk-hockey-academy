@@ -15,7 +15,7 @@ export function getTrainerConfig(
   const config = getGalleryConfig(env);
   if (!config)
     throw new Error(
-      "Trainer CMS requires SANITY_PROJECT_ID, SANITY_DATASET and a server-only read token.",
+      "Trainer CMS requires SANITY_PROJECT_ID and SANITY_DATASET. A public dataset needs no read token.",
     );
   return config;
 }
@@ -143,7 +143,7 @@ export async function fetchTrainers(
   let response: Response;
   try {
     response = await request(url, {
-      headers: { Authorization: `Bearer ${config.token}` },
+      headers: config.token ? { Authorization: `Bearer ${config.token}` } : undefined,
       signal: AbortSignal.timeout(15000),
       redirect: "error",
     });

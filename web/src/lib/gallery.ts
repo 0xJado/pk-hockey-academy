@@ -8,7 +8,7 @@ import type {
 export interface GalleryConfig {
   projectId: string;
   dataset: string;
-  token: string;
+  token?: string;
 }
 
 export function getGalleryConfig(
@@ -22,14 +22,13 @@ export function getGalleryConfig(
     !projectId ||
     !/^[a-z0-9]+$/.test(projectId) ||
     !dataset ||
-    !/^[a-z0-9_-]+$/.test(dataset) ||
-    !token
+    !/^[a-z0-9_-]+$/.test(dataset)
   ) {
     throw new Error(
-      "Gallery CMS configuration incomplete: set SANITY_PROJECT_ID, SANITY_DATASET and a server-only SANITY_READ_TOKEN.",
+      "Gallery CMS configuration incomplete: set SANITY_PROJECT_ID and SANITY_DATASET. A public dataset needs no read token.",
     );
   }
-  return { projectId, dataset, token };
+  return { projectId, dataset, ...(token ? { token } : {}) };
 }
 
 // Explicitly published perspective AND document filters: no drafts or releases.
@@ -259,7 +258,7 @@ export async function fetchGallery(
   url.searchParams.set("perspective", "published");
   // Fresh build data. Fail a configured build rather than silently deploy an empty gallery.
   const response = await request(url, {
-    headers: { Authorization: `Bearer ${config.token}` },
+    headers: config.token ? { Authorization: `Bearer ${config.token}` } : undefined,
     signal: AbortSignal.timeout(15000),
   });
   if (!response.ok)

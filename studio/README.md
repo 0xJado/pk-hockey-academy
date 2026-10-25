@@ -4,7 +4,7 @@ Standalone German Sanity Studio for trainer profiles and camp albums, photos and
 
 ## Connect the real project
 
-1. Create or choose the academy's project in [Sanity Manage](https://www.sanity.io/manage) and use a **private dataset**.
+1. Create or choose Pierre's academy project in [Sanity Manage](https://www.sanity.io/manage), keep the **Free** plan and use a **public dataset**, normally `production`.
 2. Copy `.env.example` to `.env`. Enter the real `SANITY_STUDIO_PROJECT_ID` and `SANITY_STUDIO_DATASET`. These identifiers are public configuration. There are no fictional fallback identifiers; unconfigured startup/build fails with a setup message.
 3. Run:
 
@@ -21,11 +21,11 @@ Standalone German Sanity Studio for trainer profiles and camp albums, photos and
 
 ## Pierre and other administrators
 
-In Sanity Manage → project → Members, invite each administrator using their real email address. Each person uses their own account. Grant the least available role permitting editing, asset uploads and publishing (typically Editor); reserve project administration for the owner. Available roles and seat limits depend on the plan. Loading the Studio URL does not grant permissions to the private dataset. No shared passwords or public write API are implemented.
+Pierre uses his own Administrator account. No additional human account is required. If he explicitly authorizes another person's access, invite their individual account under Sanity Manage → project → Members. Free offers Administrator and Viewer; editing/setup requires Administrator, with its full project permissions. Do not describe a Free administrator as a restricted editor. Editor/Developer/Contributor roles are paid-plan options, not prerequisites. Published documents are public, while edits, uploads and native draft reads still require actual grants. No shared-password service or public write API is implemented.
 
 Invitations, membership permissions and authenticated uploads require the real project and accounts. They have **not** been provisioned or verified here. Send account invitations only with explicit user authorization.
 
-The built Studio retains Sanity's native `noindex` metadata. The website's `/verwaltung` is always noindex and contains no password form, upload endpoint or write credentials. Its configured HTTPS destination is validated; local/IP destinations, placeholders, credentials and query/fragment links fail the website build rather than silently pointing editors elsewhere. A public Studio shell is not an authorization boundary: the private Content Lake and native grants are.
+The built Studio retains Sanity's native `noindex` metadata. The website's `/verwaltung` is always noindex and contains no password form, upload endpoint or write credentials. Its configured HTTPS destination is validated; local/IP destinations, placeholders, credentials and query/fragment links fail the website build rather than silently pointing editors elsewhere. Native Content Lake grants protect edits and unpublished documents; the public Studio shell and website inclusion flags do not provide confidentiality for published content.
 
 See [`ACCESS.md`](ACCESS.md) for the role matrix, invitations, revocation, sign-out, MFA, recovery and real-account acceptance checks. The authenticated **Redaktionshilfe** tool provides the German editing/publication guide in Studio. Its displayed role names are informational; Sanity evaluates the actual grants.
 
@@ -36,7 +36,7 @@ See [`ACCESS.md`](ACCESS.md) for the role matrix, invitations, revocation, sign-
 3. **Trainerfoto**: optional JPEG, PNG oder WebP, maximal 12 MB, mit Bildbeschreibung und Urhebernachweis. Ohne Foto zeigt die Website das Academy-Wappen als erkennbaren Platzhalter. Vor Uploads Rechte klären und GPS/EXIF entfernen. CDN-Dateien sind über die URL auch bei Entwürfen öffentlich erreichbar.
 4. **Profilvorschau** zeigt den aktuellen Bearbeitungsstand im angemeldeten Studio. Sie unterstützt unvollständige Entwürfe mit einer Erklärung, veröffentlicht nichts und ist keine pixelgleiche Live-Website-Vorschau. Es gibt keinen öffentlichen Draft-Endpunkt und keine geteilten Vorschau-Token.
 5. **Freigabe**: Sortiernummer (kleinere zuerst), Aktivität und bestätigte Angaben festlegen. Gleiche Nummern werden stabil nach Dokument-ID sortiert. Das erste aktive, freigegebene Profil erscheint auf der Startseite. **Auf der Website zeigen** wählen und veröffentlichen; Pflichtfelder, Zustimmung und hochgeladene Dateien werden geprüft. Fehler blockieren die Veröffentlichung. Ein Entwurf bleibt im Studio.
-6. Bei der ersten Migration im Website-Build `SANITY_TRAINERS_ENABLED=true` setzen und dieselben drei serverseitigen CMS-Variablen wie für die Galerie konfigurieren. Erst aktivieren, wenn alle vorgesehenen Profile freigegeben und veröffentlicht sind. Ohne Aktivierung bleibt Pierre aus den lokalen Daten erhalten. Bei aktiviertem CMS ist eine leere Liste ausdrücklich leer; Fehler oder Unpublishing stellen keine alten lokalen Profile wieder her.
+6. Bei der ersten Migration im Website-Build `SANITY_TRAINERS_ENABLED=true` sowie Projekt-ID und Dataset wie für die Galerie konfigurieren. Für das öffentliche Dataset bleibt der Lesetoken leer. Erst aktivieren, wenn alle vorgesehenen Profile freigegeben und veröffentlicht sind. Ohne Aktivierung bleibt Pierre aus den lokalen Daten erhalten. Bei aktiviertem CMS ist eine leere Liste ausdrücklich leer; Fehler oder Unpublishing stellen keine alten lokalen Profile wieder her.
 7. Nach Veröffentlichung oder Änderung die Website erfolgreich neu bauen. Erst dann aktualisieren sich `/trainerpool` und der Startseiten-Teaser. Ohne angebundenen Build-Webhook ist dies weiterhin ein manueller Betriebsschritt. Ein fehlgeschlagener Build lässt die vorherige veröffentlichte Website bestehen.
 8. Zum Zurückziehen **Zurückhalten** wählen und veröffentlichen, **Aktiver Trainer** deaktivieren und veröffentlichen oder die Veröffentlichung aufheben. Für die native Unpublish-Aktion gegebenenfalls zuerst die veröffentlichte Perspektive auswählen. Anschließend die Website neu bauen und beide Seiten kontrollieren. Eine Datenänderung allein entfernt keine bereits gebauten Seiten oder CDN-Dateien.
 
@@ -54,10 +54,10 @@ See [`ACCESS.md`](ACCESS.md) for the role matrix, invitations, revocation, sign-
 Set these build-server variables in `web/.env` and the hosting build environment:
 
 - `SANITY_PROJECT_ID` and `SANITY_DATASET`: the same project/dataset as Studio.
-- `SANITY_READ_TOKEN`: a dedicated read-only/Viewer token. Never put it in a `PUBLIC_*` or `SANITY_STUDIO_*` variable, browser code, screenshots or Git.
+- `SANITY_READ_TOKEN`: leave blank for the public dataset; published content is read without an Authorization header. Optional private-dataset compatibility is retained: if explicitly configured later, use a dedicated read-only/Viewer token, never a `PUBLIC_*` or `SANITY_STUDIO_*` variable, browser code, screenshots or Git.
 - `SANITY_TRAINERS_ENABLED=true`: opt in to CMS coach profiles after migration. Leave `false` until ready; this flag does not affect gallery activation.
 
-The build uses the origin API and `published` perspective, excludes drafts/releases, and requires public visibility plus confirmed rights. Independent runtime validation rejects missing metadata, unsupported files, invalid dates and foreign asset URLs. A configured but broken/inaccessible API fails the build; it never silently deploys an empty gallery. With all three variables blank, no CMS request is made and the gallery is honestly empty.
+The build uses the origin API and `published` perspective, excludes drafts/releases, and requires website visibility plus confirmed rights. Independent runtime validation rejects missing metadata, unsupported files, invalid dates and foreign asset URLs. A configured but broken/inaccessible API fails the build; it never silently deploys an empty gallery. With project, dataset and token blank, no CMS request is made and the gallery is honestly empty. Either project/dataset alone, or a token without both identifiers, is invalid configuration.
 
 For automatic updates, configure a Sanity webhook calling the chosen host's secret build-hook URL. Include published `galleryCamp` and `trainer` create/update/delete events, exclude `drafts.**` and `versions.**`, and include unpublish/withdrawal events. Do not filter only on public visibility or activity, because withdrawal needs a rebuild too. Test publishing, editing and removing both an album and a trainer. Keep hook URLs private and out of Studio/browser code. No hosting vendor is required by this implementation. No build hook is connected locally; an editor-to-website workflow without developer assistance requires this one-time account/hosting setup and acceptance test.
 

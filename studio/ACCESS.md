@@ -10,23 +10,26 @@ This checkout has no `studio/.env` or `web/.env`, real project/member configurat
 
 | Person/service | Intended access | Setup decision |
 | --- | --- | --- |
-| Responsible owner | Administrator | Full project and membership control; keep a separate recovery-capable owner. |
-| Trusted content publisher | Editor | Edit/upload/publish, without project administration; available on supported paid plans. |
-| Draft author | Contributor | Draft editing without publishing, where the plan supports it. |
+| Pierre / responsible owner and publisher | Administrator | Retain project, membership and any organization/billing control. Verify his account recovery. |
+| User / technical developer (optional account) | Explicitly owner-approved Administrator on Free | Independent configuration requires broad project access. Otherwise perform setup using Pierre's authorized session. Code work needs no Sanity account. |
+| Additional content publisher (optional) | Explicitly owner-approved Administrator on Free; Editor only on a supporting paid plan | Free has no restricted publishing role. Do not grant broad administration automatically. |
+| Draft author (future paid-plan option) | Contributor | Draft editing without publishing, only where the plan supports it. |
 | Content reviewer | Viewer | Read-only access; native permissions prevent mutations. |
-| Website build | Dedicated Viewer/read-only API token | Build server only; never expose the token in Studio or visitor code. |
+| Website build | Anonymous read of published content | No read token needed. Optional private-dataset compatibility retains a server-only Viewer token if intentionally configured later. |
 
-Default-role availability depends on the real plan. Do not substitute Administrator for an unavailable narrower editor role without an explicit owner decision. Roles are additive: an extra broad role can undo an intended restriction. Fine-grained custom roles are plan-dependent; no custom role has been created or implied here. A private dataset protects documents from unauthenticated reads; native CDN assets remain URL-public.
+Free provides Administrator and Viewer human roles and currently supports up to 20 accounts. More than one account does not itself require a subscription. Do not substitute Administrator for an unavailable narrower editor role without an explicit owner decision. Roles are additive: an extra broad role can undo an intended restriction. Fine-grained custom roles are plan-dependent; no custom role has been created or implied here.
 
-Source: [Sanity roles and permissions](https://www.sanity.io/docs/content-lake/roles-concepts), [role administration](https://www.sanity.io/docs/user-guides/roles).
+Published records in the public dataset are anonymously readable, including published hidden/inactive/unapproved records that the website filters out. Those flags are editorial controls, not access permissions. Native drafts/releases require authentication, and edits/uploads/publishing require write grants. All uploaded dataset assets remain URL-public even in drafts. Store only public-release material here; no registration records, health data, private notes or consent documents. No subscription or billing configuration is needed or has been created.
+
+Source: [Sanity roles and permissions](https://www.sanity.io/docs/content-lake/roles-concepts), [role administration](https://www.sanity.io/docs/user-guides/roles), [Free plan](https://www.sanity.io/pricing), [drafts and versions](https://www.sanity.io/docs/content-lake/drafts-and-versions).
 
 ## Invitations and removal
 
-1. The authorized owner selects the academy project in Sanity Manage and checks the dataset is private.
+1. The authorized owner selects the academy project in Sanity Manage and verifies Free/public dataset configuration and public-only content. Invitations are optional for the single-owner setup.
 2. Confirm each person's identity, address, intended login method and role. Use individual accounts. Invite only after approval to send that invitation.
 3. The person accepts with the exact intended sign-in method. Different methods can create separate accounts even at the same email address. Confirm the accepted account actually holds the intended membership.
 4. Verify permitted and denied actions using that account; Studio visibility is not sufficient evidence of backend access.
-5. To revoke access, remove the membership (and any other organization/project grants supplying access) in Manage. Test an already-open Studio session and a fresh login: future reads/mutations must be denied. Revocation cannot erase information already downloaded into a browser.
+5. To revoke access, remove the membership (and any other organization/project grants supplying access) in Manage. Test an already-open Studio session and a fresh login: future draft reads and privileged mutations must be denied. Published records remain publicly readable. Revocation cannot erase information already downloaded into a browser.
 6. If a service token was exposed, revoke/rotate it separately. Removing a human membership is not a substitute for rotating an independent API token.
 
 No invitations or memberships were created, removed or modified during local implementation.
@@ -45,16 +48,16 @@ Sources: [Sanity native authentication and SAML](https://www.sanity.io/docs/stud
 
 | Check | Required evidence |
 | --- | --- |
-| Private dataset | Owner verifies visibility; anonymous API read fails. No unapproved raw assets uploaded. |
-| Outsider | Anonymous and authenticated nonmember cannot read private documents, edit, upload or publish. |
-| Editor | Intended account can create/update permitted profiles/albums and publish; cannot administer membership/tokens. |
-| Contributor/Viewer | Applicable account cannot publish; Viewer cannot edit/upload. Test backend denial, not only disabled controls. |
+| Free/public dataset | Owner verifies plan/visibility. Anonymous queries may read published records, including website-withheld records, but cannot read native drafts/releases. No registrations, private notes or unapproved raw assets uploaded. |
+| Outsider | Anonymous and authenticated nonmember cannot read native drafts/releases, edit, upload or publish. Published website content is deliberately readable. |
+| Owner publishing | Pierre can create/update profiles/albums and publish without developer assistance. His Administrator role also permits project administration; do not claim an editor restriction. |
+| Optional additional roles | If a Viewer is added, verify reads and denial of edit/upload/publish against the backend. Only test Editor/Contributor restrictions if a supporting plan and those roles are actually configured. |
 | Invite / recovery / MFA | Real intended identity accepts membership; recovery and provider MFA succeed without shared credentials. |
 | Sign-out | Native sign-out succeeds and a fresh Studio visit requires authentication. |
-| Revocation | An already-open session and a fresh login lose access after all relevant grants are removed. |
+| Revocation | An already-open session and a fresh login lose draft/edit/upload/publish access after all relevant grants are removed. Published records remain readable. |
 | CMS publishing | Create a draft; public build omits it. Publish with approval and rebuild; public pages update. Edit and rebuild; new copy appears. Withdraw/unpublish and rebuild; content disappears, including the homepage teaser. |
-| Build failure | Revoke read-token access or simulate a configured API failure in staging; build fails, existing deployment is not replaced with an empty fallback. |
+| Build failure | Simulate a configured API failure in staging; build fails, existing deployment is not replaced with an empty fallback. If private-dataset compatibility is ever configured, also test read-token failure. |
 | Editor independence | Configure/test the native server-to-server build webhook once. Subsequent publishing, changes and withdrawal update the site after a successful build without developer action. |
-| Secrets/CORS | Server-only read token and private build-hook destination; exact Studio origins only, no wildcard credentialed CORS. |
+| Secrets/CORS | Public reads omit authorization. Build-hook destination and any optional service tokens stay server-only; exact Studio origins only, no wildcard credentialed CORS. |
 
 Use only approved academy content during real acceptance. Fixture accounts/documents in automated tests do not establish these checks.

@@ -145,7 +145,7 @@ export const trainer = defineType({
       type: "boolean",
       group: "publication",
       description:
-        "Inaktive Profile erscheinen nach dem nächsten erfolgreichen Website-Build nicht mehr öffentlich.",
+        "Inaktive Profile erscheinen nach dem nächsten erfolgreichen Website-Build nicht mehr auf der Website. Veröffentlichte Dokumente bleiben über die öffentliche API lesbar.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -176,7 +176,7 @@ export const trainer = defineType({
         ],
       },
       description:
-        "Freigabe wählen, veröffentlichen und anschließend die Website neu bauen. Entwürfe erscheinen ausschließlich in der Studio-Vorschau.",
+        "Freigabe wählen, veröffentlichen und anschließend die Website neu bauen. Zurückhalten steuert nur die Website; veröffentlichte Dokumente bleiben über die öffentliche API lesbar. Für unveröffentlichte Texte den Entwurf verwenden.",
       validation: (Rule) =>
         Rule.required().custom(
           (value) =>
