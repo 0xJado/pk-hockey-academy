@@ -115,6 +115,16 @@ The live schedule and separate demo collection are intentionally empty. Publishe
 
 Contact options are visibly disabled, have no form or destination, and never collect or transmit data. No analytics, third-party video embeds or non-essential visitor cookies are configured. Once real albums are connected, gallery media is delivered by Sanity's CDN; document this in the reviewed privacy notice.
 
+### Registration template — partial issue #3
+
+The user supplied the blank `PK_Hockey_Academy_Anmeldeformular_v2.pdf` on 23 October 2026. `/anmeldung` provides the unchanged two-page A4 original at `/downloads/PK-Hockey-Academy-Anmeldung-v2.pdf` and a German online preview of all eight sections. The preview preserves the source's ASCII transliterations, wording, prices, health notes, insurance/medical/media choices and legal-review warning. `src/data/registration.ts` holds the typed copy/download metadata, `RegistrationPreview.astro` renders the sections, `RegistrationField.astro` labels text controls, and `src/styles/registration.css` follows the existing site design. Duplicate guardian phone/email labels have visually hidden context. The schedule, organisation page and footer link to the explicitly pending registration route. The route remains independently noindex and is omitted from the launch sitemap while it is a preview.
+
+Data entry is intentionally inactive: all 28 inputs/textareas are disabled, no choices are preselected, no required fields are invented, and there is no `<form>`, named control, submission action, storage, new visitor JavaScript or network integration. Signature lines reproduce the paper fields without pretending to capture a digital signature. The PDF is a handwriting/print template, not a fillable AcroForm. Its source warning explicitly says legal review is required. Source/download provenance and SHA-256 are recorded in [ASSETS.md](ASSETS.md); attachments remain Git-ignored, with only the selected blank PDF copied to public downloads.
+
+At the user's request, online pricing uses two offer cards. The former separate package-benefit card is folded into the navy 5er card: a small ice-blue sticker states **50 EUR Ersparnis gesamt**, and **40 EUR je Doppelstunde** appears inside the card. The package total remains **200 EUR**. The supplied printable PDF keeps its original three-box layout and wording.
+
+Issue #3 remains open for secure delivery, spam protection, accessible required-field validation and success/failure feedback after the process is agreed. Inputs still needed: the destination Sheet/account, authorized staff access and retention, approved privacy/consent wording (including health-data handling), which fields/confirmations are mandatory, whether one or two guardians must sign, interpretation of the three separate media-consent boxes, paper hand-in instructions, and the exact SpielerPlus workflow for multi-session participants. The user selected a **private Google Sheet with one row per registration** on 23 October 2026. The academy-owned account, Sheet URL/ID, sharing and server authentication remain unconfigured. Planned delivery is website → validated server-side submission handler → private Google Sheet, without using Sanity as a registration database or introducing another CMS. No Google Form or public spreadsheet embed is required. No registration data is currently stored or sent anywhere. See [implementation notes](docs/issue-3-registration.md) and executed checks in [VALIDATION.md](VALIDATION.md).
+
 ### Camp gallery and administrator CMS
 
 - `/galerie`: German album index with an honest empty state until approved albums exist. At desktop widths (1100px and up), albums occupy roughly three quarters of an editorial grid, with a compact **Aktuelles** sidebar on the right. Updates follow the albums on tablet/phone. `AcademyUpdates.astro` now renders a finished, static empty state with a working training-schedule link. Skeleton rows, setup/preview labels and unlinked social-channel names are omitted. Its typed `state="unavailable"` variant provides a matching notice for a future feed adapter; no real source exists yet to select this state automatically. German copy lives in `src/data/academy-updates.ts`. Both notices use semantic HTML and CSS without visitor JavaScript, third-party requests or artificial retry/signup controls. The layout and notice work is complete; GitHub #5 remains open for admin-managed posts, real social integration, approved consent handling, fallback post links and live deleted/private/blocked-post acceptance checks.
@@ -152,10 +162,10 @@ These environment flags do not constitute launch approval or legal review. Impre
 
 ## Required from Pierre before launch
 
-1. A standalone approved trainer photograph, licensed academy/player media and any training footage. The supplied crest is already integrated. The registration form is explicitly deferred to a later task.
+1. A standalone approved trainer photograph, further approved academy/player media and any training footage. The supplied crest is already integrated. The registration v2 template is now supplied; live registration still needs the process and privacy decisions above.
 2. Full biography, verified qualifications and concrete coaching specialties.
 3. Confirmed training dates, start/end times, age groups, hall names, addresses, capacity/status.
-4. Verified per-session SpielerPlus link format and desired registration behavior.
+4. Verified SpielerPlus link format and workflow for participants with multiple-session bookings; single-session registrations do not default to SpielerPlus.
 5. Real business contact details, WhatsApp destination and approved form delivery/privacy handling.
 6. Package conditions, payment and cancellation information; do not infer these from the supplied prices.
 7. Complete provider details, privacy/hosting information and legal review.

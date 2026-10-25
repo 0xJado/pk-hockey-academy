@@ -1,0 +1,13 @@
+---
+import type { RegistrationField } from "../data/registration";
+interface Props { field: RegistrationField }
+const { field } = Astro.props;
+---
+<div class="registration-field">
+  <label for={field.id}>{field.label}{field.context && <span class="sr-only"> – {field.context}</span>}</label>
+  {field.type === "textarea" ? (
+    <textarea id={field.id} rows="4" disabled autocomplete="off"></textarea>
+  ) : (
+    <input id={field.id} type={field.type ?? "text"} disabled autocomplete="off" />
+  )}
+</div>

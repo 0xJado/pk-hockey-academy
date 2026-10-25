@@ -1,0 +1,100 @@
+---
+import RegistrationField from "./RegistrationField.astro";
+import { registration as form } from "../data/registration";
+---
+<!-- No form element or named controls: this draft cannot submit personal data,
+     including without JavaScript. Every input is disabled independently. -->
+<div class="registration-preview" aria-describedby="registration-preview-status">
+  <fieldset disabled>
+    <legend><span>01</span> {form.sections[0]}</legend>
+    <div class="registration-fields registration-fields--child">
+      {form.child.map(field => <RegistrationField field={field} />)}
+    </div>
+    <fieldset class="registration-choice-group" disabled>
+      <legend>Position</legend>
+      <div class="registration-choice-row">
+        {form.positions.map(label => <label class="registration-choice"><input type="checkbox" disabled />{label}</label>)}
+      </div>
+    </fieldset>
+    <RegistrationField field={form.experience} />
+  </fieldset>
+
+  <fieldset disabled>
+    <legend><span>02</span> {form.sections[1]}</legend>
+    <div class="registration-fields registration-fields--guardians">
+      {form.guardians.map(field => <RegistrationField field={field} />)}
+    </div>
+  </fieldset>
+
+  <fieldset disabled>
+    <legend><span>03</span> {form.sections[2]}</legend>
+    <p>{form.bookingDescription}</p>
+    <div class="registration-pricing">
+      {form.pricing.map(price => (
+        <div class:list={["registration-price", { "registration-price--package": !!price.advantage }]}>
+          <div class="registration-price-heading">
+            <h3>{price.title}</h3>
+            {price.advantage && (
+              <span class="registration-savings-badge">
+                <b>{price.advantage.saving}</b>
+                <span>{price.advantage.savingLabel}</span>
+              </span>
+            )}
+          </div>
+          <strong class="registration-price-total">{price.price}</strong>
+          <p>{price.detail}</p>
+          <small>{price.note}</small>
+          {price.advantage && (
+            <div class="registration-price-benefit">
+              <span class="sr-only">{price.advantage.title}: </span>
+              <p><b>{price.advantage.price}</b> {price.advantage.detail}</p>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+    <div class="registration-choice-list">
+      {form.bookingChoices.map(label => <label class="registration-choice"><input type="checkbox" disabled />{label}</label>)}
+    </div>
+  </fieldset>
+
+  <fieldset disabled>
+    <legend><span>04</span> {form.sections[3]}</legend>
+    <RegistrationField field={form.health} />
+    <label class="registration-choice"><input type="checkbox" disabled />{form.healthConfirmation}</label>
+  </fieldset>
+
+  <fieldset disabled>
+    <legend><span>05</span> {form.sections[4]}</legend>
+    {form.insurance.map(paragraph => <p>{paragraph}</p>)}
+    <div class="registration-choice-list">
+      {form.insuranceChoices.map(label => <label class="registration-choice"><input type="checkbox" disabled />{label}</label>)}
+    </div>
+    <p class="registration-source-note">{form.legalNote}</p>
+  </fieldset>
+
+  <fieldset disabled>
+    <legend><span>06</span> {form.sections[5]}</legend>
+    <p>{form.medicalDescription}</p>
+    <div class="registration-choice-row">
+      {form.medicalChoices.map(label => <label class="registration-choice"><input type="checkbox" disabled />{label}</label>)}
+    </div>
+  </fieldset>
+
+  <fieldset disabled>
+    <legend><span>07</span> {form.sections[6]}</legend>
+    <p>{form.mediaDescription}</p>
+    <div class="registration-choice-list">
+      {form.mediaChoices.map(label => <label class="registration-choice"><input type="checkbox" disabled />{label}</label>)}
+    </div>
+  </fieldset>
+
+  <fieldset disabled>
+    <legend><span>08</span> {form.sections[7]}</legend>
+    <p>{form.signatureDescription}</p>
+    <div class="registration-signatures">
+      {form.signatures.map(label => <div><span class="registration-signature-line" aria-hidden="true"></span><p>{label}</p></div>)}
+    </div>
+    <p class="registration-source-note">Die Vorlage enthält Unterschriftsfelder. Wie diese online bestätigt werden, ist noch nicht festgelegt.</p>
+  </fieldset>
+</div>

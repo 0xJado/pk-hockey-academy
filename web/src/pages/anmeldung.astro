@@ -1,0 +1,61 @@
+---
+import Base from "../layouts/Base.astro";
+import Arrow from "../components/Arrow.astro";
+import RegistrationPreview from "../components/RegistrationPreview.astro";
+import { registration } from "../data/registration";
+import "../styles/registration.css";
+---
+<Base title="Anmeldung – Formularvorlage & PDF" description="Die bereitgestellte Anmeldevorlage der PK Hockey Academy als A4-PDF und in einer Onlinevorschau. Die Onlineanmeldung ist noch nicht freigegeben." noindex>
+  <section class="page-hero">
+    <div class="wrap">
+      <a href="/" class="breadcrumb">STARTSEITE <span aria-hidden="true">/</span> ANMELDUNG</a>
+      <p class="eyebrow">DEIN WEG ZUM TRAINING</p>
+      <h1>DER ERSTE SCHRITT.<br /><span>DEIN FORMULAR.</span></h1>
+      <p class="page-intro">Hier findest du die Anmeldevorlage als PDF und einen Überblick über ihre Inhalte. Die Onlineanmeldung wird noch vorbereitet.</p>
+      <div class="registration-hero-actions">
+        <a href="#formular" class="button button--primary"><span>Formularvorschau ansehen</span><Arrow /></a>
+        <a href={registration.downloadUrl} download={registration.downloadName} class="button button--outline"><span>PDF-Vorlage herunterladen</span><Arrow diagonal /></a>
+      </div>
+    </div>
+    <div class="page-hero-lines" aria-hidden="true"></div>
+  </section>
+
+  <section class="section registration-section" aria-labelledby="registration-heading">
+    <div class="wrap registration-layout">
+      <div class="registration-main" id="formular">
+        <p class="eyebrow">DIE BEREITGESTELLTE VORLAGE · VERSION 2</p>
+        <h2 id="registration-heading">ALLE ANGABEN.<br /><span>IM ÜBERBLICK.</span></h2>
+        <p class="registration-training-format">{registration.tagline}<br /><strong>{registration.trainingFormat}</strong></p>
+        <div class="registration-status" id="registration-preview-status" role="note">
+          <strong>Onlineanmeldung noch nicht freigegeben</strong>
+          <p>Diese Vorschau zeigt die Felder der bereitgestellten Vorlage. Eingabe und Versand sind deaktiviert. Bitte übermittle hier keine persönlichen Daten.</p>
+        </div>
+        <p class="registration-source-instruction">Aus der PDF-Vorlage: {registration.instruction}</p>
+        <RegistrationPreview />
+        <p class="registration-end-note">Über diese Seite werden keine Anmeldungen angenommen oder Trainingsplätze gebucht.</p>
+      </div>
+
+      <aside class="registration-sidebar" aria-labelledby="registration-download-heading">
+        <div class="registration-download">
+          <span class="registration-pdf-icon" aria-hidden="true">PDF</span>
+          <p class="eyebrow">ZUM HERUNTERLADEN</p>
+          <h2 id="registration-download-heading">DEINE<br /><span>PAPIERVORLAGE.</span></h2>
+          <p>Die unveränderte, bereitgestellte Vorlage mit allen acht Abschnitten und Unterschriftsfeldern.</p>
+          <dl>
+            <div><dt>Format</dt><dd>A4 · {registration.pages} Seiten</dd></div>
+            <div><dt>Dateigröße</dt><dd>{Math.round(registration.sizeBytes / 1000)} kB</dd></div>
+          </dl>
+          <a href={registration.downloadUrl} download={registration.downloadName} class="button button--primary"><span>PDF herunterladen</span><Arrow /></a>
+          <p class="registration-small">Die Vorlage enthält einen Hinweis auf die noch erforderliche rechtliche Prüfung. Eine Datenschutzinformation für die Onlineverarbeitung steht noch aus.</p>
+        </div>
+        <div class="registration-process">
+          <h3>Wie geht es weiter?</h3>
+          <p>Die Abgabe ausgefüllter Papierformulare und der sichere Versand der Onlineanmeldung werden noch abgestimmt. Bitte sende vorerst keine ausgefüllten Formulare über unbestätigte Kontaktwege.</p>
+          <h3>Formular &amp; Trainingstermin</h3>
+          <p>Die Zuordnung der Formularvorlage zu Trainingsterminen und der genaue Buchungsablauf werden vor der Freigabe erklärt.</p>
+          <a href="/trainingstermine" class="registration-inline-link">Trainingstermine ansehen <Arrow /></a>
+        </div>
+      </aside>
+    </div>
+  </section>
+</Base>
