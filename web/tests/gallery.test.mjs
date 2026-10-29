@@ -280,6 +280,8 @@ test("invalid approved album fields or any malformed media fail instead of silen
     { media: [photo, { ...photo, _key: "bad", credit: "   " }] },
     { media: [{ ...photo, spotlight: "middle" }] },
     { media: [{ ...photo, section: "unknown" }] },
+    { media: [{ ...photo, section: ["on-ice"] }] },
+    { media: [{ ...photo, spotlight: ["left"] }] },
     { media: [{ ...photo, asset: { ...photo.asset, size: 1.5 } }] },
     {
       media: [

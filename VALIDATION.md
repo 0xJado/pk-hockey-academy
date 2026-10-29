@@ -12,6 +12,8 @@ Real responsive checks passed at 1440/768/375px with one h1, one restored profil
 
 No new design/motion or shop work was added. Authentic media uploads, real gallery publication/withdrawal, hosted Presentation click/edit/refresh, owner security lifecycle and public launch remain separate checks. The acceptance record distinguishes real native actions from synthetic fixtures.
 
+Release: repair commit `c70a833` was pushed to `main`; its protected Vercel deployment `dpl_2nQv8TmfLfSenDQGW597xGyBimgE` reached READY. The existing Sanity Studio and its schema deployed successfully with hosted Presentation left disabled. A final strict-type review also rejected array values masquerading as section/spotlight strings; both native-schema and website regressions were added, and all 58 tests plus both type checks passed again. Git's default credential helper had no usable session; the push succeeded through the existing signed-in GitHub CLI without changing saved authentication settings.
+
 ## Approved real coach publishing acceptance — 25 October 2026
 
 After the user explicitly approved publishing Pierre's existing verified starter profile and testing an edit/withdrawal/restoration, completed all actions through the native authenticated Studio. No new identity, portrait, qualification or claim was added. Enabled `SANITY_TRAINERS_ENABLED=true` for both Vercel Production/Preview and the ignored local website environment. The protected review site remains noindex with launch readiness disabled.

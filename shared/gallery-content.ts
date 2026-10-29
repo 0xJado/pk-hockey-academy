@@ -128,13 +128,15 @@ export function validateGalleryPublication(value: unknown): true | string {
     keys.add(item._key);
     if (
       item.section != null &&
-      !["on-ice", "off-ice", "other"].includes(String(item.section))
+      (typeof item.section !== "string" ||
+        !["on-ice", "off-ice", "other"].includes(item.section))
     )
       return prefix + "Einen gültigen Galerie-Bereich wählen.";
     if (
       item._type === "galleryPhoto" &&
       item.spotlight != null &&
-      !["none", "left", "right"].includes(String(item.spotlight))
+      (typeof item.spotlight !== "string" ||
+        !["none", "left", "right"].includes(item.spotlight))
     )
       return prefix + "Eine gültige Randplatzierung wählen.";
     const result =
