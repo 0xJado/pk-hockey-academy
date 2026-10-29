@@ -1,6 +1,6 @@
 # Issues 4 and 1 — implementation and adversarial review
 
-The implementation was initially kept uncommitted. The user subsequently authorized separate local commits for the partial work on issues 4 and 1; pushing, deployment, invitations and account-access changes remain outside this commit request. The real Sanity project, account permissions and publishing round trip must be verified separately before either ticket can be closed end to end.
+The original implementation was committed and pushed in the user-authorized pre-connection batch. Subsequent explicit setup and publishing approvals connected the real project and protected review website. On 25 October 2026, native owner sign-in, draft privacy, denied anonymous mutation and the real coach publish/edit/unpublish/restore round trip passed. The [publishing runbook](CMS-PUBLISHING.md) records all four successful deployments. Remaining account lifecycle and authentic media checks are listed below; new integration source remains uncommitted.
 
 ## Issue 4 — coach profiles
 
@@ -46,7 +46,7 @@ Implemented a noindex public entry page that links only to a valid configured HT
 
 ### Remaining external acceptance checks
 
-Neither `.env` exists in this checkout, and no Sanity connector or real project/member configuration is available. No account or provider policy was changed. Real-project tests remain: private-dataset verification, an owner/editor/contributor/viewer/outsider permission check appropriate to the selected plan, invitation acceptance, provider MFA, sign-out, recovery, membership revocation (including an already open session), and a publish/edit/unpublish → website rebuild round trip. These are deployment/account acceptance checks, not completed by synthetic fixtures. Do not close either issue until they pass.
+The real public dataset and ignored local environment files are configured. The owner account's native sign-in and Administrator role, draft exclusion, denied anonymous mutation, approved profile publication, draft isolation, published edit, withdrawal and restoration are verified. Trainer migration is active; empty CMS results do not resurrect local profiles. No additional member or provider policy was changed. Remaining real-account checks are invitation acceptance, appropriate other-member roles, supported MFA, sign-out/recovery and revocation of an already open session. Do not revoke the only owner as a test. An authentic approved portrait and camp-media upload/publication also remain untested; no synthetic identity or unapproved media was uploaded for acceptance. Keep these limitations distinct from the completed coach content round trip.
 
 ### React and lifecycle review
 

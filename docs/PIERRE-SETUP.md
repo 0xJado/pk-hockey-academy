@@ -4,7 +4,7 @@ Stand: 25. Oktober 2026.
 
 Mit dieser Anleitung bereitest du die Website-Verwaltung und die private Tabelle für Trainingsanmeldungen vor. Du behältst die Kontrolle über beide Konten. Die technische Verbindung zur Website übernimmt anschließend die Entwicklung.
 
-**Aktueller Stand:** Sanity-Konto, Academy-Projekt und die private Google-Tabelle müssen noch angelegt und technisch verbunden werden. Der vorhandene Studio- und Website-Code ist vorbereitet. Das Online-Anmeldeformular nimmt weiterhin keine Eingaben entgegen.
+**Aktueller Stand:** Die Academy-E-Mail-Adressen sowie das Sanity-Konto und -Projekt wurden vom Entwickler angelegt. Das öffentliche Dataset ist lokal mit Studio und Website verbunden; die Redaktion ist unter [pk-hockey-academy.sanity.studio](https://pk-hockey-academy.sanity.studio/) bereitgestellt. Anmeldung, Trainerbearbeitung, private Profilvorschau, Camp-Alben und deutsche Redaktionshilfe sind geprüft; das Academy-Konto hat laut Studio die Rolle Administrator. Pierres bestätigtes Startprofil ist freigegeben und veröffentlicht. Die Trainerübernahme und automatische Aktualisierung sind aktiv; Veröffentlichen, Ändern, Zurückziehen und Wiederherstellen wurden auf der geschützten Review-Website geprüft. Echte Camp-Medien und Kontowiederherstellung bleiben gesonderte Abnahmepunkte. Die private Google-Tabelle ist noch nicht verbunden; das Online-Anmeldeformular nimmt weiterhin keine Eingaben entgegen.
 
 | Dienst | Wofür wir ihn verwenden |
 | --- | --- |
@@ -13,7 +13,7 @@ Mit dieser Anleitung bereitest du die Website-Verwaltung und die private Tabelle
 
 ## 1. Sanity für die Website einrichten
 
-Die folgenden Schritte bereiten das Academy-Projekt vor. Falls Konto oder Projekt bereits vorhanden sind, dieselben weiterverwenden und kein zweites Projekt erstellen. Die Anmeldemethode dauerhaft beibehalten.
+Konto und Projekt sind bereits angelegt; die Anmeldung wurde geprüft. Die folgenden Schritte bleiben als Dokumentation erhalten; dafür kein zweites Projekt erstellen. Verwende im oben verlinkten Studio die Academy-E-Mail und dieselbe Anmeldemethode **E-Mail/Passwort**. Als Nächstes den vorbereiteten Trainerentwurf inhaltlich prüfen.
 
 1. Öffne [Sanity](https://www.sanity.io/get-started) und lege dein eigenes Konto an. Nutze eine E-Mail-Adresse und Anmeldemethode, auf die du dauerhaft zugreifen kannst. Verwende später dieselbe Anmeldemethode.
 2. Öffne [Sanity Manage](https://www.sanity.io/manage) und erstelle ein Projekt mit dem Namen **PK Hockey Academy**. Falls eine Organisation ausgewählt werden soll, verwende eine von dir verwaltete Academy-Organisation. Du behältst die Administratorrolle.
