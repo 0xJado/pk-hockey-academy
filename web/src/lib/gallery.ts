@@ -4,6 +4,13 @@ import type {
   GalleryMedia,
   GallerySection,
 } from "../types/gallery.ts";
+import {
+  galleryText,
+  parseGalleryAlbumFields,
+  validateGalleryImageFields,
+  validateGalleryPublication,
+} from "../../../shared/gallery-content.ts";
+import { validateAsset } from "../../../shared/media-validation.ts";
 
 export interface GalleryConfig {
   projectId: string;
@@ -48,8 +55,7 @@ const record = (value: unknown): Record<string, unknown> =>
   value && typeof value === "object" && !Array.isArray(value)
     ? (value as Record<string, unknown>)
     : {};
-const text = (value: unknown, max: number) =>
-  typeof value === "string" && value.trim().length <= max ? value.trim() : "";
+const text = (value: unknown, max: number) => galleryText(value, 0, max) ?? "";
 
 const section = (value: unknown): GallerySection =>
   value === "on-ice" || value === "off-ice" ? value : "other";
@@ -106,23 +112,19 @@ function image(
   const asset = record(raw.asset);
   const url = assetUrl(asset.url, "images", config);
   const dimensions = record(record(asset.metadata).dimensions);
-  const width = Number(dimensions.width);
-  const height = Number(dimensions.height);
+  const width = dimensions.width;
+  const height = dimensions.height;
   const alt = text(raw.alt, 240);
   const credit = text(raw.credit, 160);
   if (
     !url ||
     !/\.(?:jpe?g|png|webp)$/.test(url) ||
-    !alt ||
-    !credit ||
-    !["image/jpeg", "image/png", "image/webp"].includes(
-      String(asset.mimeType),
-    ) ||
-    typeof asset.size !== "number" ||
-    asset.size <= 0 ||
-    asset.size > 12 * 1024 * 1024 ||
-    !Number.isFinite(width) ||
-    !Number.isFinite(height) ||
+    validateGalleryImageFields(raw) !== true ||
+    validateAsset("image", asset) !== true ||
+    typeof width !== "number" ||
+    typeof height !== "number" ||
+    !Number.isSafeInteger(width) ||
+    !Number.isSafeInteger(height) ||
     width <= 0 ||
     height <= 0
   )
@@ -152,46 +154,38 @@ export function normalizeGallery(
     throw new Error("Invalid gallery CMS response: expected an array.");
   const albums: GalleryAlbum[] = [];
   const slugs = new Set<string>();
+  const ids = new Set<string>();
   for (const value of source) {
     const raw = record(value);
     const id = text(raw._id, 200);
-    const slug = text(raw.slug, 80);
-    const title = text(raw.title, 100);
-    const city = text(raw.city, 80);
-    const description = text(raw.description, 600);
-    const occurredOn = text(raw.occurredOn, 10);
     if (
-      !id ||
       id.startsWith("drafts.") ||
       id.startsWith("versions.") ||
       raw.visibility !== "public" ||
-      raw.rightsConfirmed !== true ||
-      !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) ||
-      slugs.has(slug) ||
-      !title ||
-      !city ||
-      !description ||
-      !/^\d{4}-\d{2}-\d{2}$/.test(occurredOn)
+      raw.rightsConfirmed !== true
     )
       continue;
-    const date = new Date(`${occurredOn}T12:00:00Z`);
-    if (
-      !Number.isFinite(date.getTime()) ||
-      date.toISOString().slice(0, 10) !== occurredOn
-    )
-      continue;
+    function invalid(reason: string): never {
+      const label = /^[a-zA-Z0-9_.-]{1,200}$/.test(id) ? ` (${id})` : "";
+      throw new Error(
+        `An approved gallery album${label} has invalid content: ${reason} Correct it in Sanity before rebuilding.`,
+      );
+    }
+    if (!/^[a-zA-Z0-9_.-]{1,200}$/.test(id) || ids.has(id))
+      invalid("missing or duplicate document ID.");
+    const validation = validateGalleryPublication(raw);
+    if (validation !== true) invalid(validation);
+    const fields = parseGalleryAlbumFields(raw);
+    if (!fields) invalid("invalid album fields.");
+    if (slugs.has(fields.slug)) invalid("duplicate album route.");
     const media: GalleryMedia[] = [];
-    const keys = new Set<string>();
-    for (const entry of Array.isArray(raw.media)
-      ? raw.media.slice(0, 60)
-      : []) {
+    for (const entry of raw.media as unknown[]) {
       const item = record(entry);
       const key = text(item._key, 200);
-      if (!/^[a-zA-Z0-9_-]+$/.test(key) || keys.has(key)) continue;
-      keys.add(key);
       if (item._type === "galleryPhoto") {
         const photo = image(item, key, config);
-        if (photo) media.push(photo);
+        if (!photo) invalid("invalid photo asset or metadata.");
+        media.push(photo);
       } else if (item._type === "galleryVideo") {
         const asset = record(record(item.file).asset);
         const url = assetUrl(asset.url, "files", config);
@@ -208,9 +202,7 @@ export function normalizeGallery(
           credit &&
           (mimeType === "video/mp4" || mimeType === "video/webm") &&
           url.endsWith(mimeType === "video/mp4" ? ".mp4" : ".webm") &&
-          typeof asset.size === "number" &&
-          asset.size > 0 &&
-          asset.size <= 100 * 1024 * 1024
+          validateAsset("video", asset) === true
         ) {
           media.push({
             type: "video",
@@ -224,19 +216,16 @@ export function normalizeGallery(
             credit,
             caption: text(item.caption, 240) || undefined,
           });
-        }
+        } else invalid("invalid video file, poster or metadata.");
       }
     }
     const first = media[0];
-    if (!first) continue;
-    slugs.add(slug);
+    if (!first) invalid("no valid media.");
+    slugs.add(fields.slug);
+    ids.add(id);
     albums.push({
       id,
-      slug,
-      title,
-      city,
-      description,
-      occurredOn,
+      ...fields,
       media,
       cover: first.type === "image" ? first : first.poster,
     });
@@ -258,8 +247,11 @@ export async function fetchGallery(
   url.searchParams.set("perspective", "published");
   // Fresh build data. Fail a configured build rather than silently deploy an empty gallery.
   const response = await request(url, {
-    headers: config.token ? { Authorization: `Bearer ${config.token}` } : undefined,
+    headers: config.token
+      ? { Authorization: `Bearer ${config.token}` }
+      : undefined,
     signal: AbortSignal.timeout(15000),
+    redirect: "error",
   });
   if (!response.ok)
     throw new Error(

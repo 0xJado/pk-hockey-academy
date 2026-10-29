@@ -87,7 +87,7 @@ test("unassigned media remain visible and videos use their own section, not thei
             section: "off-ice",
             poster: { ...photo, section: "on-ice" },
           },
-          { ...photo, _key: "unknown-section", section: "unknown" },
+          { ...photo, _key: "unassigned-section", section: "other" },
         ],
       },
     ],
@@ -139,7 +139,7 @@ test("public CMS configuration needs only project and dataset; blank tokens stay
   }
 });
 test("only supported photo spotlight placements are accepted; poster settings do not enlarge videos", () => {
-  for (const spotlight of ["left", "right", "middle", undefined, "none"]) {
+  for (const spotlight of ["left", "right", undefined, "none"]) {
     const [result] = normalizeGallery(
       [
         {
@@ -163,16 +163,13 @@ test("only supported photo spotlight placements are accepted; poster settings do
     assert.equal(result.media[1].spotlight, undefined);
   }
 });
-test("only approved published albums render; drafts, releases and malformed dates do not", () => {
+test("only approved published albums render; withheld data never enters publication validation", () => {
   const result = normalizeGallery(
     [
       { ...album, _id: "drafts.qa-album" },
       { ...album, _id: "versions.release.qa-album" },
       { ...album, visibility: "hidden" },
       { ...album, rightsConfirmed: false },
-      { ...album, occurredOn: "2026-02-30" },
-      { ...album, slug: "../verwaltung" },
-      { ...album, title: "" },
       album,
     ],
     config,
@@ -183,7 +180,7 @@ test("only approved published albums render; drafts, releases and malformed date
     ["image", "video"],
   );
 });
-test("albums are newest first, ordered media are retained and duplicate routes are rejected", () => {
+test("albums are newest first, ordered media are retained and duplicate routes fail the build", () => {
   const newer = {
     ...album,
     _id: "newer",
@@ -191,16 +188,21 @@ test("albums are newest first, ordered media are retained and duplicate routes a
     occurredOn: "2026-10-02",
     media: [video, photo],
   };
-  const result = normalizeGallery(
-    [album, newer, { ...album, _id: "duplicate" }],
-    config,
-  );
+  const result = normalizeGallery([album, newer], config);
   assert.deepEqual(
     result.map((item) => item.slug),
     ["newer", "test-album"],
   );
   assert.equal(result[0].cover.url, photo.asset.url);
   assert.equal(result[0].media[0].type, "video");
+  assert.throws(
+    () => normalizeGallery([album, { ...album, _id: "duplicate" }], config),
+    /duplicate album route/,
+  );
+  assert.throws(
+    () => normalizeGallery([album, album], config),
+    /duplicate document ID/,
+  );
 });
 test("untrusted or wrong-project assets and unsupported uploads cannot reach the page", () => {
   for (const url of [
@@ -210,31 +212,34 @@ test("untrusted or wrong-project assets and unsupported uploads cannot reach the
     "https://cdn.sanity.io/images/cmsqa123/qa/evil.svg",
     `${photo.asset.url}?token=secret`,
   ]) {
-    assert.deepEqual(
-      normalizeGallery(
-        [{ ...album, media: [{ ...photo, asset: { ...photo.asset, url } }] }],
-        config,
-      ),
-      [],
+    assert.throws(
+      () =>
+        normalizeGallery(
+          [{ ...album, media: [{ ...photo, asset: { ...photo.asset, url } }] }],
+          config,
+        ),
+      /approved gallery album/,
     );
   }
-  assert.deepEqual(
-    normalizeGallery([{ ...album, media: [{ ...photo, alt: "" }] }], config),
-    [],
+  assert.throws(
+    () =>
+      normalizeGallery([{ ...album, media: [{ ...photo, alt: "" }] }], config),
+    /approved gallery album/,
   );
-  assert.deepEqual(
-    normalizeGallery(
-      [
-        {
-          ...album,
-          media: [
-            { ...photo, asset: { ...photo.asset, size: 13 * 1024 * 1024 } },
-          ],
-        },
-      ],
-      config,
-    ),
-    [],
+  assert.throws(
+    () =>
+      normalizeGallery(
+        [
+          {
+            ...album,
+            media: [
+              { ...photo, asset: { ...photo.asset, size: 13 * 1024 * 1024 } },
+            ],
+          },
+        ],
+        config,
+      ),
+    /approved gallery album/,
   );
 });
 test("videos need valid files, posters, credits and accessible text alternatives", () => {
@@ -247,11 +252,51 @@ test("videos need valid files, posters, credits and accessible text alternatives
       file: { asset: { ...video.file.asset, mimeType: "application/pdf" } },
     },
   ]) {
-    assert.deepEqual(
-      normalizeGallery([{ ...album, media: [invalid] }], config),
-      [],
+    assert.throws(
+      () => normalizeGallery([{ ...album, media: [invalid] }], config),
+      /approved gallery album/,
     );
   }
+});
+
+test("invalid approved album fields or any malformed media fail instead of silently disappearing", () => {
+  for (const change of [
+    { title: "   " },
+    { city: " " },
+    { description: "\n " },
+    { occurredOn: "2026-02-30" },
+    { slug: "../verwaltung" },
+    { slug: "x".repeat(81) },
+    { media: [] },
+    { media: "invalid" },
+    { media: [photo, { ...photo }] },
+    { media: [{ ...photo, _key: "" }] },
+    {
+      media: Array.from({ length: 61 }, (_, i) => ({
+        ...photo,
+        _key: `p${i}`,
+      })),
+    },
+    { media: [photo, { ...photo, _key: "bad", credit: "   " }] },
+    { media: [{ ...photo, spotlight: "middle" }] },
+    { media: [{ ...photo, section: "unknown" }] },
+    { media: [{ ...photo, asset: { ...photo.asset, size: 1.5 } }] },
+    {
+      media: [
+        {
+          ...photo,
+          asset: {
+            ...photo.asset,
+            metadata: { dimensions: { width: "800", height: 600 } },
+          },
+        },
+      ],
+    },
+  ])
+    assert.throws(
+      () => normalizeGallery([{ ...album, ...change }], config),
+      /approved gallery album/,
+    );
 });
 test("public gallery fetch omits authorization and retains approval and draft filtering", async () => {
   const result = await fetchGallery(
@@ -260,16 +305,23 @@ test("public gallery fetch omits authorization and retains approval and draft fi
       assert.equal(new Headers(options.headers).has("Authorization"), false);
       assert.equal(url.searchParams.get("perspective"), "published");
       assert.match(url.searchParams.get("query"), /rightsConfirmed == true/);
-      return new Response(JSON.stringify({ result: [
-        album,
-        { ...album, _id: "drafts.qa-album" },
-        { ...album, _id: "versions.release.qa-album" },
-        { ...album, _id: "hidden", visibility: "hidden" },
-        { ...album, _id: "unapproved", rightsConfirmed: false },
-      ] }));
+      return new Response(
+        JSON.stringify({
+          result: [
+            album,
+            { ...album, _id: "drafts.qa-album" },
+            { ...album, _id: "versions.release.qa-album" },
+            { ...album, _id: "hidden", visibility: "hidden" },
+            { ...album, _id: "unapproved", rightsConfirmed: false },
+          ],
+        }),
+      );
     },
   );
-  assert.deepEqual(result.map((item) => item.id), [album._id]);
+  assert.deepEqual(
+    result.map((item) => item.id),
+    [album._id],
+  );
 });
 
 test("build fetch uses a server-only token and published perspective; errors never silently empty the gallery", async () => {

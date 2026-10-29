@@ -105,7 +105,13 @@ console.log(
   `Starter build passed; ${await scan(starter.folder, true)} public text artifacts scanned.`,
 );
 
-for (const mode of ["normal", "public", "empty", "malformed"]) {
+for (const mode of [
+  "normal",
+  "public",
+  "empty",
+  "malformed",
+  "malformed-gallery",
+]) {
   const trace = resolve(output, `${mode}-requests.jsonl`);
   const { folder, result } = build(mode, {
     SANITY_PROJECT_ID: "cmsqa123",
@@ -122,10 +128,12 @@ for (const mode of ["normal", "public", "empty", "malformed"]) {
     .trim()
     .split("\n")
     .map((line) => JSON.parse(line));
-  assert.ok(
-    requests.some((request) => request.type === "trainers"),
-    "Server-only coach configuration was not activated.",
-  );
+  if (mode !== "malformed-gallery") {
+    assert.ok(
+      requests.some((request) => request.type === "trainers"),
+      "Server-only coach configuration was not activated.",
+    );
+  }
   assert.ok(
     requests.every(
       (request) =>
@@ -135,13 +143,17 @@ for (const mode of ["normal", "public", "empty", "malformed"]) {
     ),
     "Unexpected CMS transport configuration.",
   );
-  if (mode === "malformed") {
+  if (mode === "malformed" || mode === "malformed-gallery") {
     assert.notEqual(result.status, 0);
     assert.match(
       result.stdout + result.stderr,
-      /approved trainer profile has invalid required fields/,
+      mode === "malformed"
+        ? /approved trainer profile has invalid required fields/
+        : /approved gallery album.*invalid content/,
     );
-    console.log("Malformed approved content correctly rejected the build.");
+    console.log(
+      `${mode}: malformed approved content correctly rejected the build.`,
+    );
     continue;
   }
   assert.equal(result.status, 0, result.stdout + result.stderr);
@@ -154,14 +166,26 @@ for (const mode of ["normal", "public", "empty", "malformed"]) {
     "utf8",
   );
   const home = await readFile(resolve(folder, "index.html"), "utf8");
-  const socialPage = await readFile(resolve(folder, "galerie/index.html"), "utf8");
-  assert.ok(requests.some(request => request.type === "social"), "Social CMS configuration did not activate.");
+  const socialPage = await readFile(
+    resolve(folder, "galerie/index.html"),
+    "utf8",
+  );
+  assert.ok(
+    requests.some((request) => request.type === "social"),
+    "Social CMS configuration did not activate.",
+  );
   if (mode === "empty") {
     assert.equal(socialPage.includes("Technischer Testbeitrag"), false);
   } else {
     assert.match(socialPage, /Technischer Testbeitrag/);
-    assert.match(socialPage, /href="https:\/\/www.instagram.com\/p\/fixture123\/"/);
-    assert.match(socialPage, /href="https:\/\/www.instagram.com\/fixtureacademy\/"/);
+    assert.match(
+      socialPage,
+      /href="https:\/\/www.instagram.com\/p\/fixture123\/"/,
+    );
+    assert.match(
+      socialPage,
+      /href="https:\/\/www.instagram.com\/fixtureacademy\/"/,
+    );
     assert.match(socialPage, /Dieser Beitrag ist aktuell nicht verfügbar/);
     assert.equal(socialPage.includes("<script>window.__socialXss"), false);
     assert.match(socialPage, /&lt;script&gt;window.__socialXss/);
@@ -171,17 +195,30 @@ for (const mode of ["normal", "public", "empty", "malformed"]) {
   if (mode === "normal" || mode === "public") {
     assert.match(pool, /Technisches Testprofil A/);
     assert.match(pool, /Technisches Testprofil B/);
-    assert.ok(
-      pool.indexOf("Technisches Testprofil A") <
-        pool.indexOf("Technisches Testprofil B"),
-    );
+    const firstName =
+      mode === "public"
+        ? "Technisches Testprofil B"
+        : "Technisches Testprofil A";
+    const secondName =
+      mode === "public"
+        ? "Technisches Testprofil A"
+        : "Technisches Testprofil B";
+    assert.ok(pool.indexOf(firstName) < pool.indexOf(secondName));
     assert.match(pool, /&lt;script&gt;/);
     assert.equal(pool.includes("<script>window.__coachXss"), false);
-    assert.match(home, /Technisches Testprofil A/);
-    assert.equal(home.includes("Technisches Testprofil B"), false);
+    assert.ok(home.includes(firstName));
+    assert.equal(home.includes(secondName), false);
     if (mode === "public") {
-      const gallery = await readFile(resolve(folder, "galerie/index.html"), "utf8");
-      const album = await readFile(resolve(folder, "galerie/cms-test-album/index.html"), "utf8");
+      assert.match(pool, /Geänderte Testrolle/);
+      assert.match(pool, /def-800x1000/);
+      const gallery = await readFile(
+        resolve(folder, "galerie/index.html"),
+        "utf8",
+      );
+      const album = await readFile(
+        resolve(folder, "galerie/cms-test-album/index.html"),
+        "utf8",
+      );
       assert.match(gallery, /Technisches Testalbum/);
       assert.match(album, /Technisches Testalbum/);
       assert.match(album, /https:\/\/cdn\.sanity\.io\/images\/cmsqa123\/qa\//);

@@ -1,5 +1,7 @@
 # Project assessment — 29 October 2026
 
+Follow-up: the pending source was subsequently committed and pushed. The gallery validation mismatch below has been repaired with shared publication/asset rules and build failures for malformed approved albums. The native coach workflow has now passed [issue #4 acceptance](issue-4-acceptance.md) using the user-approved logo backdrop. This report preserves the state found during the initial assessment; follow the linked acceptance record for the later results.
+
 Scope: the academy website, CMS, registration, gallery, social content, administration and Pierre's player/trainer interview prototypes. The shop is excluded.
 
 The project has a substantial, working website and editorial foundation. It is still a protected review site: a parent cannot currently book training, submit a registration or contact the academy through it. The largest gaps concern operating workflows and approved content, rather than rebuilding the frontend.

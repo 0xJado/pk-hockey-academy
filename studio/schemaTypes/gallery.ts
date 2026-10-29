@@ -1,5 +1,12 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { validateAsset } from "./validation";
+import { validateAsset } from "./validation.ts";
+import {
+  GALLERY_LIMITS,
+  galleryText,
+  validateGalleryImageFields,
+  validateGalleryPublication,
+  validateGalleryVideoFields,
+} from "../../shared/gallery-content.ts";
 
 const credit = defineField({
   name: "credit",
@@ -7,7 +14,15 @@ const credit = defineField({
   type: "string",
   description:
     "Nur den freigegebenen Urhebernachweis eintragen, keine Namen abgebildeter Kinder.",
-  validation: (Rule) => Rule.required().max(160),
+  validation: (Rule) =>
+    Rule.required()
+      .max(GALLERY_LIMITS.credit)
+      .custom(
+        (value) =>
+          galleryText(value, 1, GALLERY_LIMITS.credit) !== undefined ||
+          "Urhebernachweis ergänzen; Leerzeichen allein reichen nicht.",
+      )
+      .error(),
 });
 const alt = defineField({
   name: "alt",
@@ -15,13 +30,22 @@ const alt = defineField({
   type: "string",
   description:
     "Kurz beschreiben, was zu sehen ist. Keine Namen oder persönlichen Daten der Kinder.",
-  validation: (Rule) => Rule.required().min(8).max(240),
+  validation: (Rule) =>
+    Rule.required()
+      .min(8)
+      .max(GALLERY_LIMITS.alt)
+      .custom(
+        (value) =>
+          galleryText(value, 8, GALLERY_LIMITS.alt) !== undefined ||
+          "Bildbeschreibung mit mindestens 8 sichtbaren Zeichen ergänzen.",
+      )
+      .error(),
 });
 const caption = defineField({
   name: "caption",
   title: "Bildunterschrift",
   type: "string",
-  validation: (Rule) => Rule.max(240),
+  validation: (Rule) => Rule.max(GALLERY_LIMITS.caption),
 });
 
 const section = defineField({
@@ -78,20 +102,28 @@ export const galleryPhoto = defineType({
             value === undefined ||
             ["none", "left", "right"].includes(value) ||
             "Bitte normale Kachel, linken oder rechten Rand wählen.",
-        ),
+        ).error(),
     }),
     alt,
     caption,
     credit,
   ],
   validation: (Rule) =>
-    Rule.required().custom(async (value, context) => {
-      if (!value?.asset?._ref) return "Bitte ein Foto hochladen.";
-      const asset = await context
-        .getClient({ apiVersion: "2026-10-01" })
-        .fetch("*[_id == $id][0]{mimeType,size}", { id: value.asset._ref });
-      return validateAsset("image", asset);
-    }),
+    Rule.required()
+      .custom(async (value, context) => {
+        if (!value?.asset?._ref) return "Bitte ein Foto hochladen.";
+        if (validateGalleryImageFields(value) !== true)
+          return validateGalleryImageFields(value);
+        try {
+          const asset = await context
+            .getClient({ apiVersion: "2026-10-01" })
+            .fetch("*[_id == $id][0]{mimeType,size}", { id: value.asset._ref });
+          return validateAsset("image", asset);
+        } catch {
+          return "Die Bilddatei konnte nicht geprüft werden. Verbindung und Berechtigung prüfen.";
+        }
+      })
+      .error(),
   preview: { select: { title: "alt", subtitle: "credit", media: "asset" } },
 });
 
@@ -105,7 +137,7 @@ export const galleryVideo = defineType({
       name: "title",
       title: "Videotitel",
       type: "string",
-      validation: (Rule) => Rule.required().max(120),
+      validation: (Rule) => Rule.required().max(GALLERY_LIMITS.videoTitle),
     }),
     defineField({
       name: "file",
@@ -115,13 +147,21 @@ export const galleryVideo = defineType({
         "MP4 (H.264) oder WebM, höchstens 100 MB. Vor dem Upload Einwilligungen klären, Metadaten entfernen und Video komprimieren. Upload-URLs sind öffentlich erreichbar. Keine privaten Rohaufnahmen hochladen.",
       options: { accept: "video/mp4,video/webm", storeOriginalFilename: false },
       validation: (Rule) =>
-        Rule.required().custom(async (value, context) => {
-          if (!value?.asset?._ref) return "Bitte ein Video hochladen.";
-          const asset = await context
-            .getClient({ apiVersion: "2026-10-01" })
-            .fetch("*[_id == $id][0]{mimeType,size}", { id: value.asset._ref });
-          return validateAsset("video", asset);
-        }),
+        Rule.required()
+          .custom(async (value, context) => {
+            if (!value?.asset?._ref) return "Bitte ein Video hochladen.";
+            try {
+              const asset = await context
+                .getClient({ apiVersion: "2026-10-01" })
+                .fetch("*[_id == $id][0]{mimeType,size}", {
+                  id: value.asset._ref,
+                });
+              return validateAsset("video", asset);
+            } catch {
+              return "Die Videodatei konnte nicht geprüft werden. Verbindung und Berechtigung prüfen.";
+            }
+          })
+          .error(),
     }),
     defineField({
       name: "poster",
@@ -136,11 +176,13 @@ export const galleryVideo = defineType({
       rows: 5,
       description:
         "Barrierefreie Textalternative: wichtige sichtbare Handlungen und den vollständigen gesprochenen Inhalt wiedergeben. Keine Namen der Kinder nennen.",
-      validation: (Rule) => Rule.required().min(20).max(6000),
+      validation: (Rule) =>
+        Rule.required().min(20).max(GALLERY_LIMITS.transcript),
     }),
     caption,
     credit,
   ],
+  validation: (Rule) => Rule.custom(validateGalleryVideoFields).error(),
   preview: { select: { title: "title", subtitle: "credit", media: "poster" } },
 });
 
@@ -162,23 +204,25 @@ export const galleryCamp = defineType({
       title: "Albumtitel",
       type: "string",
       group: "camp",
-      validation: (Rule) => Rule.required().min(3).max(100),
+      validation: (Rule) => Rule.required().min(3).max(GALLERY_LIMITS.title),
     }),
     defineField({
       name: "slug",
       title: "Seitenadresse",
       type: "slug",
       group: "camp",
-      options: { source: "title", maxLength: 80 },
+      options: { source: "title", maxLength: GALLERY_LIMITS.slug },
       description:
         "Nach Veröffentlichung möglichst beibehalten, damit gespeicherte Links funktionieren.",
       validation: (Rule) =>
-        Rule.required().custom(
-          (value) =>
-            !value?.current ||
-            /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value.current) ||
-            "Bitte Kleinbuchstaben, Ziffern und Bindestriche verwenden.",
-        ),
+        Rule.required()
+          .custom(
+            (value) =>
+              !value?.current ||
+              /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value.current) ||
+              "Bitte Kleinbuchstaben, Ziffern und Bindestriche verwenden.",
+          )
+          .error(),
     }),
     defineField({
       name: "occurredOn",
@@ -193,7 +237,7 @@ export const galleryCamp = defineType({
       title: "Stadt",
       type: "string",
       group: "camp",
-      validation: (Rule) => Rule.required().max(80),
+      validation: (Rule) => Rule.required().max(GALLERY_LIMITS.city),
     }),
     defineField({
       name: "description",
@@ -201,7 +245,7 @@ export const galleryCamp = defineType({
       type: "text",
       rows: 3,
       group: "camp",
-      validation: (Rule) => Rule.required().max(600),
+      validation: (Rule) => Rule.required().max(GALLERY_LIMITS.description),
     }),
     defineField({
       name: "media",
@@ -214,7 +258,7 @@ export const galleryCamp = defineType({
         defineArrayMember({ type: "galleryPhoto" }),
         defineArrayMember({ type: "galleryVideo" }),
       ],
-      validation: (Rule) => Rule.required().min(1).max(60),
+      validation: (Rule) => Rule.required().min(1).max(GALLERY_LIMITS.media),
     }),
     defineField({
       name: "rightsConfirmed",
@@ -229,7 +273,7 @@ export const galleryCamp = defineType({
             context.document?.visibility !== "public" ||
             value === true ||
             "Für die Website-Freigabe müssen Rechte und Einwilligungen bestätigt sein.",
-        ),
+        ).error(),
     }),
     defineField({
       name: "visibility",
@@ -248,6 +292,7 @@ export const galleryCamp = defineType({
       validation: (Rule) => Rule.required(),
     }),
   ],
+  validation: (Rule) => Rule.custom(validateGalleryPublication).error(),
   orderings: [
     {
       title: "Neueste Camps zuerst",

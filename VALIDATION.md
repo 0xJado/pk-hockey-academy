@@ -1,5 +1,17 @@
 # Validation record
 
+## Gallery validation repair and issue #4 acceptance — 29 October 2026
+
+Repaired the reproduced whitespace-only gallery-credit mismatch. Shared validators now align Studio publication and website normalization for trimmed text, real dates, slug limits, rights, media count/keys, sections, spotlights and file type/size. Studio errors block publication, including failed asset lookups. Invalid approved albums now fail the build with a corrective message instead of silently losing media/albums; duplicate routes fail too. Draft/withheld/unconfirmed content remains deliberately excluded.
+
+Executed: website `npm test` (40 passed), `npm run check` (70 files, zero diagnostics), configured `npm run build`; Studio `npm test` (18 passed), `npm run check` and `npm run build`; `npm run test:cms` (all six isolated builds passed). The final Studio checks/build were repeated after replacing schema limits with shared constants. Initial sandbox DNS blocked the real Sanity build; the permitted network retry passed. Existing dependency bundling warnings remain; no application type/build failure remains. `git diff --check` passed.
+
+The [criterion-by-criterion acceptance](docs/issue-4-acceptance.md) records native profile creation, equivalent verified-copy/order edits, invalid-name publication blocking, private preview, draft privacy and withheld publication. Four new automatic deployments reached READY. Native withdrawal of the original removed the trainer pool profile and homepage teaser; republishing restored the unchanged approved business fields. The user approved disposal of the separate temporary draft, which was discarded. No trainer image was added: the user requested the existing logo backdrop.
+
+Real responsive checks passed at 1440/768/375px with one h1, one restored profile, no overflow and no public editor metadata. Isolated compiled cases covered four trainer states at those widths, edited ordering/copy/optional portrait URL, homepage selection, populated gallery layout, reduced-motion emulation, visible keyboard focus, two back/forward loops and actual no-JavaScript phone rendering. Zero page exceptions; the monitored live page warning/error log was empty. Evidence remains ignored under `output/playwright/issue4-*` and `output/cms-integration-eCjh4x/`.
+
+No new design/motion or shop work was added. Authentic media uploads, real gallery publication/withdrawal, hosted Presentation click/edit/refresh, owner security lifecycle and public launch remain separate checks. The acceptance record distinguishes real native actions from synthetic fixtures.
+
 ## Approved real coach publishing acceptance — 25 October 2026
 
 After the user explicitly approved publishing Pierre's existing verified starter profile and testing an edit/withdrawal/restoration, completed all actions through the native authenticated Studio. No new identity, portrait, qualification or claim was added. Enabled `SANITY_TRAINERS_ENABLED=true` for both Vercel Production/Preview and the ignored local website environment. The protected review site remains noindex with launch readiness disabled.

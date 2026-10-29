@@ -1,5 +1,7 @@
 # Coach CMS — partial implementation of issue 4
 
+Current status, 29 October 2026: the native editor and publishing workflow has passed the [issue #4 acceptance](issue-4-acceptance.md), including creation, blocking validation, draft privacy and live withdrawal/restoration. The user approved keeping the academy crest because no trainer photography is available. The earlier implementation account below is historical; hosted Visual Editing and authentic portrait-upload acceptance are separate follow-ups.
+
 Follow-up, 25 October 2026: the academy will use Sanity Free with a public dataset for public website content. The website now supports project/dataset configuration without a read token; the optional token path remains for deliberate private-dataset use. Player registrations stay in the separate private Google Sheet. Published hidden/inactive records are API-readable even though the website excludes them; native drafts/releases still require authentication. See [current setup](../studio/README.md) and [owner handoff](../studio/OWNER-SETUP.md). The implementation/validation account below describes the earlier increment.
 
 Implements the coach schema, verified Pierre starter template, optional portrait with alt/credit validation, display order, activity and explicit publication approval. The Studio's private **Profilvorschau** shows the current draft without a public draft endpoint. The trainer pool renders multiple or zero profiles; the first visible profile supplies the homepage teaser. Existing motion and the academy crest fallback are retained.

@@ -17,6 +17,8 @@ The original draft backup and credential remain ignored. Final trainer configura
 
 ## One-time connection
 
+The [29 October issue #4 acceptance](issue-4-acceptance.md) extends the earlier check with native new-document creation, blocking validation, withheld publication and draft cleanup, plus a fresh real-profile withdrawal/restoration. All four associated deployments reached READY. The original public profile was restored without changing its business fields. The user requested the current logo backdrop because no approved trainer photography exists. Portrait URL replacement and ordering were checked in isolated compiled fixtures; real photo upload remains separate.
+
 1. Keep the existing `driftwoodmedia/pk-hockey-academy` project, Git repository and `main` branch. Retain deployment protection and `PUBLIC_LAUNCH_READY=false`.
 2. The build settings use `web`; configure `SANITY_PROJECT_ID`, `SANITY_DATASET` and `PUBLIC_SANITY_STUDIO_URL`. Public dataset reads need no read token. These public settings are configured for Production and Preview. Do not copy the Studio's CLI session into hosting.
 3. In Vercel's Git settings, create one deploy hook named **PK Hockey Academy · Sanity** for **main**. Its URL is a deployment credential: keep it out of Git, screenshots, chat messages, Studio client configuration and public build output.
@@ -35,6 +37,6 @@ The original draft backup and credential remain ignored. Final trainer configura
 - Test an anonymous mutation against the existing draft as a no-op only; it must be denied. Document role/sign-out/recovery checks independently. Do not revoke the only owner's account as a test, create invitations without authorization, reset credentials automatically, or claim MFA was enabled.
 - A delivery acknowledgment is not proof of a successful build. A failed build must retain the prior deployment, and its failure must be visible during acceptance. Never close #1 or #4 merely because a webhook exists.
 
-The editor guide reflects the connected hook and active coach migration. A webhook fetches the committed branch, so local-only website changes need their own reviewed deployment before editors can use them on the review website. The new social website implementation remains local and inactive. A successful webhook response still does not guarantee a successful website build; verify deployment completion and page output after each publication.
+The editor guide reflects the connected hook and active coach migration. A webhook fetches the committed branch, so local-only website changes need their own deployment before editors can use them on the review website. Social link-card source is now committed; activation remains disabled. A successful webhook response still does not guarantee a successful website build; verify deployment completion and page output after each publication.
 
 Sources: [Vercel deploy hooks](https://vercel.com/docs/deploy-hooks), [Sanity webhooks API](https://www.sanity.io/docs/http-reference/webhooks), [Sanity webhook practices](https://www.sanity.io/docs/content-lake/webhook-best-practices).
