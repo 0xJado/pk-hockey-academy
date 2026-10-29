@@ -41,6 +41,14 @@ The built Studio retains Sanity's native `noindex` metadata. The website's `/ver
 
 See [`ACCESS.md`](ACCESS.md) for the role matrix, invitations, revocation, sign-out, MFA, recovery and real-account acceptance checks. The authenticated **Redaktionshilfe** tool provides the German editing/publication guide in Studio. Its displayed role names are informational; Sanity evaluates the actual grants.
 
+## Medienkit-Downloads
+
+Unter **Inhalte → Medienkit-Downloads** Dateien anlegen und bearbeiten. Titel, Beschreibung, öffentlichen Dateinamen und Reihenfolge eintragen; über das Dateimenü hochladen, ersetzen oder auswählen. PNG/JPEG/WebP/PDF bis 20 MB, ein optionales geprüftes ZIP bis 50 MB. Format und Größe liest die Website aus der Datei. Ein Vorschaubild ist optional. Nur abgestimmte Nutzungshinweise eintragen; ohne freigegebenen Wortlaut zeigt die Website den fehlenden Stand ausdrücklich an.
+
+Datei, Angaben und Rechte bestätigen, **Auf der Website zeigen** wählen und veröffentlichen. Fehler blockieren die Veröffentlichung. Nach erfolgreichem automatischem Build `/medienkit` und den Download prüfen. Zum Entfernen **Zurückhalten** veröffentlichen oder die Veröffentlichung aufheben. Eine leere CMS-Sammlung bleibt leer; lokale Starter-Dateien kehren nicht zurück. Nur bereits zur öffentlichen Weitergabe freigegebene Dateien hochladen: CDN-URLs sind auch bei Entwürfen erreichbar. Eine Rücknahme sperrt keine bestehenden Datei-URLs. Details und Abnahme: [Issue #2](../docs/issue-2-media-kit.md).
+
+Die bestehende Original-Logo-Datei kann einmalig mit `npm run media-kit:migrate-logo` geprüft und mit `npm run media-kit:migrate-logo -- --apply` als Entwurf übernommen werden. Der Befehl prüft den dokumentierten Hash und überschreibt keine vorhandenen Dokumente. Anschließend im nativen Studio veröffentlichen. Zusätzliche Pressebilder, Academy-PDFs, Nutzungstexte oder ZIP-Inhalte sind noch nicht freigegeben.
+
 ## Trainerprofile: Ersteinrichtung und Redaktion
 
 Stand 29. Oktober 2026: Der native Ablauf wurde einschließlich Neuanlage, Pflichtfeldprüfung, Entwurfsschutz und Rücknahme/Wiederherstellung abgenommen; siehe [Abnahmeprotokoll](../docs/issue-4-acceptance.md). Es gibt derzeit keine freigegebenen Trainerfotos. Auf Wunsch bleibt deshalb der vorhandene Logo-Hintergrund bestehen; ein Foto ist keine Voraussetzung für die Profilveröffentlichung.

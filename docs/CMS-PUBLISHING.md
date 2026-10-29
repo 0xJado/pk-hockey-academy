@@ -17,6 +17,8 @@ The original draft backup and credential remain ignored. Final trainer configura
 
 ## One-time connection
 
+Media-kit extension, 30 October 2026: the existing hook now also handles published `mediaKitDownload` changes and file-asset deletion. New uploads/ordinary asset metadata changes remain excluded. The bounded filter-update command preserved the destination, API version, HTTP method, projection and draft/release exclusions and verified its readback. See the [media-kit workflow](issue-2-media-kit.md).
+
 The [29 October issue #4 acceptance](issue-4-acceptance.md) extends the earlier check with native new-document creation, blocking validation, withheld publication and draft cleanup, plus a fresh real-profile withdrawal/restoration. All four associated deployments reached READY. The original public profile was restored without changing its business fields. The user requested the current logo backdrop because no approved trainer photography exists. Portrait URL replacement and ordering were checked in isolated compiled fixtures; real photo upload remains separate.
 
 1. Keep the existing `driftwoodmedia/pk-hockey-academy` project, Git repository and `main` branch. Retain deployment protection and `PUBLIC_LAUNCH_READY=false`.

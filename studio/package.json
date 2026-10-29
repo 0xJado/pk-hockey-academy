@@ -12,6 +12,7 @@
     "test": "node --experimental-strip-types --test tests/*.test.mjs",
     "build": "sanity build",
     "schema:extract": "sanity schema extract",
+    "media-kit:migrate-logo": "node --env-file-if-exists=.env --experimental-strip-types scripts/migrate-media-kit-logo.mjs",
     "deploy": "sanity deploy",
     "webhook:setup": "node --env-file-if-exists=.env --experimental-strip-types scripts/configure-publication-hook.mjs"
   },

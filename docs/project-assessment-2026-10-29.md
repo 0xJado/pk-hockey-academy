@@ -1,5 +1,7 @@
 # Project assessment — 29 October 2026
 
+Follow-up, 30 October: the omitted Sanity media-kit scope from closed issue #2 is now implemented; see [the media-kit workflow and verification](issue-2-media-kit.md). The historical finding below describes the original assessment.
+
 Follow-up: the pending source was subsequently committed and pushed. The gallery validation mismatch below has been repaired with shared publication/asset rules and build failures for malformed approved albums. The native coach workflow has now passed [issue #4 acceptance](issue-4-acceptance.md) using the user-approved logo backdrop. This report preserves the state found during the initial assessment; follow the linked acceptance record for the later results.
 
 Scope: the academy website, CMS, registration, gallery, social content, administration and Pierre's player/trainer interview prototypes. The shop is excluded.

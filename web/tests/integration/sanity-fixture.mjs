@@ -54,10 +54,46 @@ const socialPost = {
   contentApproved: true,
 };
 
+const mediaKitDownload = {
+  _id: "fixture-download",
+  _type: "mediaKitDownload",
+  title: "Technischer Testdownload A",
+  description: "<script>window.__downloadXss=true</script>",
+  downloadName: "Academy-Test.png",
+  displayOrder: 10,
+  visibility: "public",
+  contentApproved: true,
+  file: {
+    asset: {
+      url: "https://cdn.sanity.io/files/cmsqa123/qa/abc.png",
+      mimeType: "image/png",
+      extension: "png",
+      size: 1024,
+    },
+  },
+  preview: profile.portrait,
+};
+
 globalThis.fetch = async (input, options) => {
   const url = new URL(
     typeof input === "string" || input instanceof URL ? input : input.url,
   );
+  if (
+    url.hostname === "cdn.sanity.io" &&
+    url.pathname.startsWith("/files/cmsqa123/qa/") &&
+    options?.method === "HEAD"
+  ) {
+    appendFileSync(
+      process.env.PK_CMS_QA_TRACE,
+      JSON.stringify({
+        type: "media-kit-file",
+        hasAuthorization: new Headers(options.headers).has("Authorization"),
+      }) + "\n",
+    );
+    return new Response(null, {
+      status: url.pathname.endsWith("missing.png") ? 404 : 200,
+    });
+  }
   if (url.hostname !== "cmsqa123.api.sanity.io")
     return originalFetch(input, options);
   const trainers = url.searchParams
@@ -66,10 +102,19 @@ globalThis.fetch = async (input, options) => {
   const social = url.searchParams
     .get("query")
     ?.includes('_type == "socialPost"');
+  const mediaKit = url.searchParams
+    .get("query")
+    ?.includes('_type == "mediaKitDownload"');
   appendFileSync(
     process.env.PK_CMS_QA_TRACE,
     JSON.stringify({
-      type: trainers ? "trainers" : social ? "social" : "gallery",
+      type: trainers
+        ? "trainers"
+        : social
+          ? "social"
+          : mediaKit
+            ? "media-kit"
+            : "gallery",
       perspective: url.searchParams.get("perspective"),
       authenticated:
         options?.headers?.Authorization === "Bearer test-token-never-real",
@@ -77,6 +122,87 @@ globalThis.fetch = async (input, options) => {
     }) + "\n",
   );
   const mode = process.env.PK_CMS_QA_MODE;
+  if (mediaKit) {
+    const result =
+      mode === "empty"
+        ? []
+        : [
+            {
+              ...mediaKitDownload,
+              ...(mode === "malformed-media-kit" ? { title: " " } : {}),
+              ...(mode === "public"
+                ? {
+                    description: "Geänderter technischer Downloadtext",
+                    displayOrder: 30,
+                    downloadName: "Academy-Test-Edited.png",
+                    file: {
+                      asset: {
+                        ...mediaKitDownload.file.asset,
+                        url: "https://cdn.sanity.io/files/cmsqa123/qa/def.png",
+                      },
+                    },
+                  }
+                : {}),
+            },
+            {
+              ...mediaKitDownload,
+              _id: "fixture-pdf",
+              title: "Technischer Testdownload B",
+              downloadName: "Academy-Test.pdf",
+              displayOrder: 20,
+              preview: undefined,
+              usageGuidance: "Technischer Nutzungshinweis für isolierte Tests.",
+              file: {
+                asset: {
+                  url: "https://cdn.sanity.io/files/cmsqa123/qa/abc.pdf",
+                  mimeType: "application/pdf",
+                  extension: "pdf",
+                  size: 2048,
+                },
+              },
+            },
+            {
+              ...mediaKitDownload,
+              _id: "drafts.download",
+              title: "DRAFT_DO_NOT_EXPOSE",
+            },
+            {
+              ...mediaKitDownload,
+              _id: "versions.release.download",
+              title: "RELEASE_DO_NOT_EXPOSE",
+            },
+            {
+              ...mediaKitDownload,
+              _id: "hidden-download",
+              visibility: "hidden",
+              title: "HIDDEN_DO_NOT_EXPOSE",
+            },
+            {
+              ...mediaKitDownload,
+              _id: "unapproved-download",
+              contentApproved: false,
+              title: "UNAPPROVED_DO_NOT_EXPOSE",
+            },
+            {
+              ...mediaKitDownload,
+              _id: "unresolved-download",
+              title: "MISSING_DOWNLOAD_DO_NOT_EXPOSE",
+              file: { asset: null },
+            },
+            {
+              ...mediaKitDownload,
+              _id: "missing-download",
+              title: "MISSING_DOWNLOAD_DO_NOT_EXPOSE",
+              file: {
+                asset: {
+                  ...mediaKitDownload.file.asset,
+                  url: "https://cdn.sanity.io/files/cmsqa123/qa/missing.png",
+                },
+              },
+            },
+          ];
+    return Response.json({ result });
+  }
   const result = social
     ? mode === "empty"
       ? []

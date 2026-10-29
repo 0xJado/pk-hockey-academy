@@ -73,6 +73,7 @@ const scan = async (directory, starter) => {
       "INACTIVE_DO_NOT_EXPOSE",
       "UNAPPROVED_DO_NOT_EXPOSE",
       "OLD_SOCIAL_COPY_DO_NOT_EXPOSE",
+      "MISSING_DOWNLOAD_DO_NOT_EXPOSE",
     ]) {
       assert.equal(
         content.includes(marker),
@@ -111,6 +112,7 @@ for (const mode of [
   "empty",
   "malformed",
   "malformed-gallery",
+  "malformed-media-kit",
 ]) {
   const trace = resolve(output, `${mode}-requests.jsonl`);
   const { folder, result } = build(mode, {
@@ -128,28 +130,42 @@ for (const mode of [
     .trim()
     .split("\n")
     .map((line) => JSON.parse(line));
-  if (mode !== "malformed-gallery") {
+  if (mode !== "malformed-gallery" && mode !== "malformed-media-kit") {
     assert.ok(
       requests.some((request) => request.type === "trainers"),
       "Server-only coach configuration was not activated.",
     );
   }
   assert.ok(
-    requests.every(
-      (request) =>
-        request.perspective === "published" &&
-        request.authenticated === (mode !== "public") &&
-        request.hasAuthorization === (mode !== "public"),
-    ),
+    requests
+      .filter((request) => request.type !== "media-kit-file")
+      .every(
+        (request) =>
+          request.perspective === "published" &&
+          request.authenticated === (mode !== "public") &&
+          request.hasAuthorization === (mode !== "public"),
+      ),
     "Unexpected CMS transport configuration.",
   );
-  if (mode === "malformed" || mode === "malformed-gallery") {
+  assert.ok(
+    requests
+      .filter((request) => request.type === "media-kit-file")
+      .every((request) => request.hasAuthorization === false),
+    "CDN received a CMS token.",
+  );
+  if (
+    mode === "malformed" ||
+    mode === "malformed-gallery" ||
+    mode === "malformed-media-kit"
+  ) {
     assert.notEqual(result.status, 0);
     assert.match(
       result.stdout + result.stderr,
       mode === "malformed"
         ? /approved trainer profile has invalid required fields/
-        : /approved gallery album.*invalid content/,
+        : mode === "malformed-gallery"
+          ? /approved gallery album.*invalid content/
+          : /approved media-kit download is invalid/,
     );
     console.log(
       `${mode}: malformed approved content correctly rejected the build.`,
@@ -166,6 +182,43 @@ for (const mode of [
     "utf8",
   );
   const home = await readFile(resolve(folder, "index.html"), "utf8");
+  const downloads = await readFile(
+    resolve(folder, "medienkit/index.html"),
+    "utf8",
+  );
+  assert.ok(
+    requests.some((request) => request.type === "media-kit"),
+    "Media-kit CMS did not activate.",
+  );
+  if (mode === "empty") {
+    assert.match(downloads, /Downloads in Vorbereitung/);
+    assert.equal(downloads.includes('class="media-download"'), false);
+    assert.equal(downloads.includes("PK-Hockey-Academy-Logo.png"), false);
+  } else {
+    assert.match(downloads, /Technischer Testdownload A/);
+    assert.match(downloads, /Technischer Testdownload B/);
+    assert.match(downloads, /Technischer Nutzungshinweis/);
+    assert.match(downloads, /keine abgestimmten Nutzungshinweise/);
+    assert.match(
+      downloads,
+      /cdn\.sanity\.io\/files\/cmsqa123\/qa\/abc.pdf\?dl=Academy-Test.pdf/,
+    );
+    if (mode === "public") {
+      assert.ok(
+        downloads.indexOf("Testdownload B") <
+          downloads.indexOf("Testdownload A"),
+      );
+      assert.match(downloads, /Geänderter technischer Downloadtext/);
+      assert.match(downloads, /def.png\?dl=Academy-Test-Edited.png/);
+    } else {
+      assert.ok(
+        downloads.indexOf("Testdownload A") <
+          downloads.indexOf("Testdownload B"),
+      );
+      assert.match(downloads, /&lt;script&gt;window.__downloadXss/);
+      assert.equal(downloads.includes("<script>window.__downloadXss"), false);
+    }
+  }
   const socialPage = await readFile(
     resolve(folder, "galerie/index.html"),
     "utf8",

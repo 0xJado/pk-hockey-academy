@@ -1,6 +1,7 @@
 // Include withdrawals and deletions: filtering by current visibility leaves stale pages.
 export const CMS_PUBLICATION_FILTER = `
-  coalesce(after()._type, before()._type) in ["trainer", "galleryCamp", "socialPost"] &&
+  (coalesce(after()._type, before()._type) in ["trainer", "galleryCamp", "socialPost", "mediaKitDownload"] ||
+   (before()._type == "sanity.fileAsset" && !defined(after()._id))) &&
   !(coalesce(after()._id, before()._id) in path("drafts.**")) &&
   !(coalesce(after()._id, before()._id) in path("versions.**"))
 `.trim();
@@ -13,16 +14,26 @@ export const CMS_PUBLICATION_PROJECTION = `{
 }`;
 
 export function publicationWebhook(dataset: string, destination: string) {
-  if (!/^[a-z0-9_-]+$/.test(dataset)) throw new Error("Invalid webhook dataset.");
+  if (!/^[a-z0-9_-]+$/.test(dataset))
+    throw new Error("Invalid webhook dataset.");
   const url = new URL(destination);
   if (
-    url.origin !== "https://api.vercel.com" || url.username || url.password ||
-    url.search || url.hash ||
-    !/^\/v1\/integrations\/deploy\/prj_[A-Za-z0-9]+\/[A-Za-z0-9_-]+$/.test(url.pathname)
-  ) throw new Error("Use the exact Vercel deploy-hook URL, without extra parameters.");
+    url.origin !== "https://api.vercel.com" ||
+    url.username ||
+    url.password ||
+    url.search ||
+    url.hash ||
+    !/^\/v1\/integrations\/deploy\/prj_[A-Za-z0-9]+\/[A-Za-z0-9_-]+$/.test(
+      url.pathname,
+    )
+  )
+    throw new Error(
+      "Use the exact Vercel deploy-hook URL, without extra parameters.",
+    );
   return {
     name: "PK Hockey Academy · Website",
-    description: "Published trainers, camp albums and curated posts → static website rebuild.",
+    description:
+      "Published trainers, camp albums, curated posts and media-kit downloads → static website rebuild.",
     type: "document" as const,
     dataset,
     url: url.href,

@@ -1,21 +1,19 @@
 import logo from "../assets/brand/pk-hockey-crest.png";
+import type { MediaKitDownload } from "../types/media-kit.ts";
 
-interface MediaKitAsset {
-  id: string;
-  title: string;
-  description: string;
-  image: ImageMetadata;
-  downloadName: string;
-  format: string;
-  sizeBytes: number;
-}
-
-export const mediaKitAssets: readonly MediaKitAsset[] = [
+export const mediaKitAssets: readonly MediaKitDownload[] = [
   {
     id: "academy-logo",
     title: "PK Hockey Academy Logo",
-    description: "Das Academy-Wappen als Originaldatei mit transparentem Hintergrund.",
-    image: logo,
+    description:
+      "Das Academy-Wappen als Originaldatei mit transparentem Hintergrund.",
+    url: logo.src,
+    preview: {
+      image: logo,
+      alt: "Wappen der PK Hockey Academy",
+      width: logo.width,
+      height: logo.height,
+    },
     downloadName: "PK-Hockey-Academy-Logo.png",
     format: "PNG",
     sizeBytes: 1_558_622,

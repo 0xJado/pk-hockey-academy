@@ -2,42 +2,50 @@
 import { Image } from "astro:assets";
 import Base from "../layouts/Base.astro";
 import Arrow from "../components/Arrow.astro";
-import { mediaKitAssets } from "../data/media-kit";
+import { getMediaKitDownloads } from "../lib/media-kit-source";
+import { formatDownloadSize } from "../lib/media-kit";
+const downloads = await getMediaKitDownloads();
 ---
 
 <Base
-  title="Medienkit – Academy-Logo herunterladen"
-  description="Das Logo der PK Hockey Academy als transparente PNG-Originaldatei herunterladen."
+  title="Medienkit – freigegebene Academy-Dateien"
+  description="Freigegebene Dateien der PK Hockey Academy herunterladen: mit Dateiformat, Größe und Hinweisen zur Verwendung."
 >
   <section class="page-hero">
     <div class="wrap">
       <a href="/" class="breadcrumb">STARTSEITE <span aria-hidden="true">/</span> MEDIENKIT</a>
       <p class="eyebrow">DIE ACADEMY ZUM DOWNLOAD</p>
       <h1>UNSER ZEICHEN.<br /><span>DEIN DOWNLOAD.</span></h1>
-      <p class="page-intro">Hier findest du das Logo der PK Hockey Academy als Originaldatei zum Herunterladen.</p>
+      <p class="page-intro">Hier findest du freigegebene Dateien der PK Hockey Academy zum Herunterladen.</p>
     </div>
     <div class="page-hero-lines" aria-hidden="true"></div>
   </section>
   <section class="section light-section" aria-labelledby="downloads-heading">
     <div class="wrap">
       <p class="eyebrow">MEDIENKIT</p>
-      <h2 id="downloads-heading">DAS ACADEMY-LOGO.</h2>
-      {mediaKitAssets.map((asset) => (
+      <h2 id="downloads-heading">DIE ACADEMY ZUM MITNEHMEN.</h2>
+      {!downloads.length && <div class="media-download-empty"><h3>Downloads in Vorbereitung.</h3><p>Aktuell sind keine Dateien im Medienkit veröffentlicht. Freigegebene Downloads findest du künftig hier.</p></div>}
+      {downloads.map((asset, index) => (
         <article class="media-download" aria-labelledby={`${asset.id}-title`}>
           <div class="media-download-preview">
-            <Image src={asset.image} alt="Wappen der PK Hockey Academy" width={360} widths={[240, 360, 720]} sizes="(max-width: 600px) 70vw, 360px" format="webp" />
+            {asset.preview ? (typeof asset.preview.image === "string" ?
+              <img src={asset.preview.image} alt={asset.preview.alt} width={asset.preview.width} height={asset.preview.height} loading="lazy" decoding="async" /> :
+              <Image src={asset.preview.image} alt={asset.preview.alt} width={360} widths={[240, 360, 720]} sizes="(max-width: 600px) 70vw, 360px" format="webp" />
+            ) : <span class="media-download-file" aria-hidden="true">{asset.format}</span>}
           </div>
           <div class="media-download-details">
-            <p class="eyebrow">01 / ORIGINALDATEI</p>
+            <p class="eyebrow">{String(index + 1).padStart(2, "0")} / DOWNLOAD</p>
             <h3 id={`${asset.id}-title`}>{asset.title}</h3>
             <p>{asset.description}</p>
             <dl class="media-download-meta">
-              <div><dt>Format</dt><dd>{asset.format} · transparent</dd></div>
-              <div><dt>Auflösung</dt><dd>{asset.image.width} × {asset.image.height} px</dd></div>
-              <div><dt>Dateigröße</dt><dd>{new Intl.NumberFormat("de-DE", { maximumFractionDigits: 2 }).format(asset.sizeBytes / 1_000_000)} MB</dd></div>
+              <div><dt>Dateiname</dt><dd>{asset.downloadName}</dd></div>
+              <div><dt>Format</dt><dd>{asset.format}</dd></div>
+              <div><dt>Dateigröße</dt><dd>{formatDownloadSize(asset.sizeBytes)}</dd></div>
             </dl>
-            <a class="button button--primary" href={asset.image.src} download={asset.downloadName}>
-              <span>Logo herunterladen</span><Arrow />
+            <div class="media-download-usage"><h4>Hinweise zur Verwendung</h4><p>{asset.usageGuidance || "Für diese Datei liegen noch keine abgestimmten Nutzungshinweise vor."}</p></div>
+            {asset.preview?.credit && <p class="small media-download-credit">Bildnachweis: {asset.preview.credit}</p>}
+            <a class="button button--primary" href={asset.url} download={asset.downloadName}>
+              <span>{asset.title} herunterladen <span class="sr-only">({asset.format}, {formatDownloadSize(asset.sizeBytes)})</span></span><Arrow />
             </a>
           </div>
         </article>
@@ -53,6 +61,12 @@ import { mediaKitAssets } from "../data/media-kit";
   .media-download-details { padding: clamp(24px, 4vw, 56px); align-self: center; min-width: 0; }
   .media-download-details h3 { font-size: clamp(30px, 3vw, 42px); margin: 16px 0; }
   .media-download-details > p:not(.eyebrow) { color: #405a7b; }
+  .media-download-details { overflow-wrap: anywhere; }
+  .media-download-file { font-family: var(--font-display); font-size: clamp(64px, 9vw, 120px); font-weight: 700; color: var(--blue); }
+  .media-download-usage { margin: 24px 0; }
+  .media-download-usage h4 { margin: 0 0 8px; font-size: 20px; }
+  .media-download-usage p { white-space: pre-line; color: #405a7b; }
+  .media-download-empty { margin-top: 32px; padding: 32px; border-left: 4px solid var(--blue); background: #e8f1fc; }
   .media-download-meta { margin: 28px 0; font-size: 13px; }
   .media-download-meta > div { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; padding: 12px 0; border-bottom: 1px solid #c2d8f2; }
   dt { color: #405a7b; } dd { margin: 0; font-weight: 600; }

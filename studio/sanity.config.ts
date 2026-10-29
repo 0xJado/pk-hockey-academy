@@ -5,6 +5,7 @@ import { getStudioConfig } from "./config";
 import { galleryCamp, galleryPhoto, galleryVideo } from "./schemaTypes/gallery";
 import { trainer } from "./schemaTypes/trainer";
 import { socialPost } from "./schemaTypes/socialPost";
+import { mediaKitDownload } from "./schemaTypes/mediaKitDownload";
 import { TrainerPreview } from "./components/TrainerPreview";
 import { EditorialGuide } from "./components/EditorialGuide";
 import { getStudioAuthProvider, selectAuthProviders } from "./auth-policy";
@@ -88,6 +89,9 @@ export default defineConfig({
                   ]),
               ),
             S.divider(),
+            S.documentTypeListItem("mediaKitDownload").title(
+              "Medienkit-Downloads",
+            ),
             S.documentTypeListItem("galleryCamp").title("Alle Camp-Alben"),
             S.documentTypeListItem("socialPost").title(
               "Ausgewählte Social-Beiträge",
@@ -107,7 +111,14 @@ export default defineConfig({
     }),
   ],
   schema: {
-    types: [galleryCamp, galleryPhoto, galleryVideo, trainer, socialPost],
+    types: [
+      galleryCamp,
+      galleryPhoto,
+      galleryVideo,
+      trainer,
+      socialPost,
+      mediaKitDownload,
+    ],
     templates: (previous) => [
       ...previous,
       {

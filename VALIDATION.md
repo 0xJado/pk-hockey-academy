@@ -1,5 +1,15 @@
 # Validation record
 
+## Sanity media kit — 30 October 2026
+
+Implemented the omitted CMS scope of issue #2: native German download documents, shared publication/file/preview rules, approved published retrieval, safe attachment filenames, optional previews/usage guidance, ordering, missing-file omission and an authoritative empty state. Extended and read back the existing publishing hook for media-kit documents and file deletion without changing its destination or payload projection. Migrated only the checksum-verified original logo and published it through native Studio. Blank usage guidance is explicit; no licence/press content or ZIP was invented. Existing design/motion and trainer logo backdrop are retained.
+
+Passed website check (74 files, zero diagnostics), 44 website tests, Studio check and 20 Studio tests, configured real-CMS website build and hosted Studio/schema deployment. All seven isolated CMS builds passed, including edited/reordered/replaced files, empty/withdrawn content, missing/unresolved/404 files and malformed approved media-kit rejection. Public output scans excluded draft/hidden/unapproved/test-secret markers. CDN checks received no read token. A final size-label check uses B/kB/MB so small files never appear as a misleading zero MB.
+
+Edge passed populated, edited and empty states at 1440/768/375px, one h1/no overflow, actual PNG/PDF downloads, visible keyboard focus, repeated navigation and no-JavaScript phone downloading; zero page exceptions. Initial harness failures were an ambiguous header/footer logo locator and missing waits around Astro navigation; narrowing the locator and waiting for navigation resolved them without application changes. A downloaded PNG matched the original source hash. Native Studio blocked a whitespace-only title and accepted restoration/publication; existing-asset selection worked. The OS upload chooser was not exposed by browser automation, so that dialog is unverified; the real file upload succeeded through Sanity's native client API. Separate compiled fixtures verify distinct replacement URLs.
+
+Workflow, privacy limits, commands and ignored evidence paths are in [issue-2-media-kit.md](docs/issue-2-media-kit.md). Real media-kit withdrawal/restoration and final deployment verification are recorded there after release.
+
 ## Gallery validation repair and issue #4 acceptance — 29 October 2026
 
 Repaired the reproduced whitespace-only gallery-credit mismatch. Shared validators now align Studio publication and website normalization for trimmed text, real dates, slug limits, rights, media count/keys, sections, spotlights and file type/size. Studio errors block publication, including failed asset lookups. Invalid approved albums now fail the build with a corrective message instead of silently losing media/albums; duplicate routes fail too. Draft/withheld/unconfirmed content remains deliberately excluded.

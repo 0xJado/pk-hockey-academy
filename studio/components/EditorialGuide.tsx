@@ -55,19 +55,27 @@ export function EditorialGuideContent({
           statische Website übernimmt freigegebene, veröffentlichte Inhalte erst
           nach einem erfolgreichen Website-Build. Der automatische Build-Hook
           ist verbunden. Die Übernahme der Trainerprofile ist aktiviert;
-          Veröffentlichen und Zurückziehen starten automatisch einen neuen Build.
+          Veröffentlichen und Zurückziehen starten automatisch einen neuen
+          Build.
         </p>
       </aside>
       <p>
-        Dieses CMS enthält öffentliche Website-Inhalte. Veröffentlichte Dokumente
-        sind über Sanitys API lesbar, auch wenn „Zurückhalten“ sie von der
-        Website ausschließt. Unveröffentlichte Texte im Entwurf lassen.
+        Dieses CMS enthält öffentliche Website-Inhalte. Veröffentlichte
+        Dokumente sind über Sanitys API lesbar, auch wenn „Zurückhalten“ sie von
+        der Website ausschließt. Unveröffentlichte Texte im Entwurf lassen.
         Trainingsanmeldungen und Spielerangaben gehören in das separat
         vorgesehene private Google Sheet.
       </p>
       <section aria-labelledby="coach-guide">
         <h2 id="coach-guide">Trainerprofile</h2>
-        <p>Wenn „Website bearbeiten“ eingerichtet ist: Dort Profiltext oder Foto in der echten Website-Vorschau anklicken und rechts bearbeiten. Über „Trainer hinzufügen“ ein neues Profil anlegen. Unvollständige Profile zeigen einen Hinweis, bis die Pflichtfelder ergänzt sind. Die Entwurfsvorschau zeigt auch zurückgehaltene Profile; sie veröffentlicht nichts.</p>
+        <p>
+          Wenn „Website bearbeiten“ eingerichtet ist: Dort Profiltext oder Foto
+          in der echten Website-Vorschau anklicken und rechts bearbeiten. Über
+          „Trainer hinzufügen“ ein neues Profil anlegen. Unvollständige Profile
+          zeigen einen Hinweis, bis die Pflichtfelder ergänzt sind. Die
+          Entwurfsvorschau zeigt auch zurückgehaltene Profile; sie
+          veröffentlicht nichts.
+        </p>
         <ol>
           <li>
             Unter „Inhalte → Alle Trainerprofile“ ein Profil anlegen oder
@@ -100,6 +108,43 @@ export function EditorialGuideContent({
           </li>
         </ol>
       </section>
+      <section aria-labelledby="media-kit-guide">
+        <h2 id="media-kit-guide">Medienkit-Downloads</h2>
+        <ol>
+          <li>
+            Unter „Inhalte → Medienkit-Downloads“ eine Datei anlegen. Nur
+            bereits zur öffentlichen Weitergabe freigegebene Dateien hochladen.
+          </li>
+          <li>
+            Titel, Beschreibung und öffentlichen Download-Dateinamen eintragen.
+            Im Dateimenü die Datei hochladen, ersetzen oder entfernen. Format
+            und Größe übernimmt die Website aus der Datei.
+          </li>
+          <li>
+            Ein Vorschaubild und bestätigte Nutzungshinweise sind optional.
+            Keine Lizenzbedingungen erfinden; ohne abgestimmten Wortlaut zeigt
+            die Website einen entsprechenden Hinweis.
+          </li>
+          <li>
+            Reihenfolge festlegen, Datei und Angaben bestätigen, „Auf der
+            Website zeigen“ wählen und veröffentlichen. Fehler blockieren die
+            Veröffentlichung.
+          </li>
+          <li>
+            Nach erfolgreichem automatischem Build unter /medienkit den Download
+            prüfen. Zum Entfernen „Zurückhalten“ veröffentlichen oder die
+            Veröffentlichung aufheben. Eine leere Sammlung bleibt leer.
+          </li>
+        </ol>
+        <p>
+          PNG, JPEG, WebP und PDF bis 20 MB; ein optionales, vorab geprüftes ZIP
+          bis 50 MB. CDN-Dateien bleiben über bestehende URLs abrufbar, auch
+          wenn ein Download zurückgezogen wurde. Keine privaten Unterlagen
+          hochladen. Für eine tatsächliche Dateilöschung erst Verweise entfernen
+          und dann die native Asset-Verwaltung verwenden; CDN-Caches können
+          verzögert reagieren.
+        </p>
+      </section>
       <section aria-labelledby="gallery-guide">
         <h2 id="gallery-guide">Camp-Galerie</h2>
         <ol>
@@ -127,8 +172,20 @@ export function EditorialGuideContent({
       </section>
       <section aria-labelledby="social-guide">
         <h2 id="social-guide">Ausgewählte Social-Beiträge</h2>
-        <p>Unter „Inhalte → Ausgewählte Social-Beiträge“ bestätigte Academy-Beiträge als Linkkarten anlegen. Plattform, direkten Beitragslink, eigenen Begleittext und Reihenfolge eintragen. Angaben prüfen, Website-Freigabe wählen und veröffentlichen.</p>
-        <p>Die Website zeigt höchstens sechs Karten und lädt keine Plattform-Skripte. Ist ein Beitrag privat, gelöscht oder nicht mehr verfügbar, den Status ändern und einen Academy-Profillink als Alternative hinterlegen oder die Karte zurückziehen. Die Verfügbarkeit wird manuell geprüft. Academy-Social-Konten und die erste Aktivierung stehen noch aus.</p>
+        <p>
+          Unter „Inhalte → Ausgewählte Social-Beiträge“ bestätigte
+          Academy-Beiträge als Linkkarten anlegen. Plattform, direkten
+          Beitragslink, eigenen Begleittext und Reihenfolge eintragen. Angaben
+          prüfen, Website-Freigabe wählen und veröffentlichen.
+        </p>
+        <p>
+          Die Website zeigt höchstens sechs Karten und lädt keine
+          Plattform-Skripte. Ist ein Beitrag privat, gelöscht oder nicht mehr
+          verfügbar, den Status ändern und einen Academy-Profillink als
+          Alternative hinterlegen oder die Karte zurückziehen. Die Verfügbarkeit
+          wird manuell geprüft. Academy-Social-Konten und die erste Aktivierung
+          stehen noch aus.
+        </p>
       </section>
       <section aria-labelledby="access-guide">
         <h2 id="access-guide">Zugriff und Rollen</h2>
