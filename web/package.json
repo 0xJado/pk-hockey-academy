@@ -16,12 +16,26 @@
     "test:cms": "node tests/integration/cms-build.mjs"
   },
   "dependencies": {
+    "@astrojs/node": "11.1.9",
+    "@astrojs/vercel": "11.0.16",
     "@fontsource/barlow-condensed": "5.3.0",
     "@fontsource/inter": "5.3.0",
+    "@sanity/client": "8.11.0",
+    "@sanity/preview-url-secret": "4.1.5",
+    "@sanity/visual-editing": "6.2.0",
     "@tailwindcss/vite": "4.3.3",
     "astro": "7.4.0",
     "gsap": "3.15.0",
     "tailwindcss": "4.3.3"
+  },
+  "overrides": {
+    "@vercel/cli-config": {
+      "zod": "4.6.6"
+    },
+    "@vercel/routing-utils": {
+      "path-to-regexp": "6.3.0"
+    },
+    "fast-uri": "4.2.3"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",

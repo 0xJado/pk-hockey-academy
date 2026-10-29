@@ -39,6 +39,12 @@ const album = {
   rightsConfirmed: true,
   media: [{ _key: "fixture-photo", _type: "galleryPhoto", ...profile.portrait }],
 };
+const socialPost = {
+  _id: "fixture-social", _type: "socialPost", title: "Technischer Testbeitrag",
+  summary: "<script>window.__socialXss=true</script>", platform: "instagram",
+  sourceUrl: "https://www.instagram.com/p/fixture123/", sourceStatus: "available",
+  displayOrder: 10, visibility: "public", contentApproved: true,
+};
 
 globalThis.fetch = async (input, options) => {
   const url = new URL(
@@ -49,10 +55,11 @@ globalThis.fetch = async (input, options) => {
   const trainers = url.searchParams
     .get("query")
     ?.includes('_type == "trainer"');
+  const social = url.searchParams.get("query")?.includes('_type == "socialPost"');
   appendFileSync(
     process.env.PK_CMS_QA_TRACE,
     JSON.stringify({
-      type: trainers ? "trainers" : "gallery",
+      type: trainers ? "trainers" : social ? "social" : "gallery",
       perspective: url.searchParams.get("perspective"),
       authenticated:
         options?.headers?.Authorization === "Bearer test-token-never-real",
@@ -61,7 +68,11 @@ globalThis.fetch = async (input, options) => {
   );
   const mode = process.env.PK_CMS_QA_MODE;
   const result =
-    !trainers
+    social ? mode === "empty" ? [] : [socialPost,
+      { ...socialPost, _id: "drafts.social", title: "DRAFT_DO_NOT_EXPOSE" },
+      { ...socialPost, _id: "social-hidden", title: "HIDDEN_DO_NOT_EXPOSE", visibility: "hidden" },
+      { ...socialPost, _id: "social-unavailable", title: "Technischer Ersatzlink", summary: "OLD_SOCIAL_COPY_DO_NOT_EXPOSE", sourceUrl: "https://www.instagram.com/p/fixture456/", fallbackUrl: "https://www.instagram.com/fixtureacademy/", sourceStatus: "unavailable", displayOrder: 20 },
+    ] : !trainers
       ? mode === "public"
         ? [album, { ...album, _id: "drafts.fixture-album", title: "DRAFT_DO_NOT_EXPOSE" }]
         : []

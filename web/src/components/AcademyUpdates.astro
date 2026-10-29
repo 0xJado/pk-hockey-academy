@@ -1,13 +1,14 @@
 ---
 import Arrow from "./Arrow.astro";
 import { updatesNotices, type UpdatesNoticeState } from "../data/academy-updates";
+import type { SocialPost } from "../lib/social-posts";
 
 interface Props {
   state?: UpdatesNoticeState;
+  posts?: SocialPost[];
 }
 
-// No feed is connected yet, so the public page deliberately defaults to empty.
-const { state = "empty" } = Astro.props;
+const { state = "empty", posts = [] } = Astro.props;
 const notice = updatesNotices[state];
 ---
 
@@ -18,7 +19,22 @@ const notice = updatesNotices[state];
     <p>Die kleinen Momente neben den großen Camp-Alben.</p>
   </header>
 
-  <div class="updates-notice">
+  {posts.length > 0 ? (
+    <ol class="updates-posts" aria-label="Ausgewählte Academy-Beiträge">
+      {posts.map(post => (
+        <li class="updates-post">
+          <p class="updates-label">{post.platform === "instagram" ? "Instagram" : "Facebook"} · AUSGEWÄHLTER BEITRAG</p>
+          <h3>{post.title}</h3>
+          {post.sourceStatus === "available" ? (
+            post.summary && <p class="updates-description">{post.summary}</p>
+          ) : <p class="updates-description">Dieser Beitrag ist aktuell nicht verfügbar. Weitere Einblicke findest du im Academy-Profil.</p>}
+          <a class="updates-link" href={post.sourceStatus === "unavailable" ? post.fallbackUrl : post.sourceUrl} rel="noreferrer external">
+            {post.sourceStatus === "unavailable" ? "Academy-Profil öffnen" : `Beitrag auf ${post.platform === "instagram" ? "Instagram" : "Facebook"} ansehen`} <Arrow />
+          </a>
+        </li>
+      ))}
+    </ol>
+  ) : <div class="updates-notice">
     <div class="updates-icon" aria-hidden="true">
       <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
         <rect x="3" y="4" width="26" height="24" rx="2" />
@@ -32,7 +48,7 @@ const notice = updatesNotices[state];
     <a class="updates-link" href="/trainingstermine">
       Trainingstermine ansehen <Arrow />
     </a>
-  </div>
+  </div>}
 </aside>
 
 <style>
@@ -82,6 +98,9 @@ const notice = updatesNotices[state];
     font-weight: 600;
     letter-spacing: 0.1em;
   }
+  .updates-posts { list-style: none; margin: 24px 0 0; padding: 0; display: grid; gap: 18px; min-width: 0; }
+  .updates-post { padding: 20px; border: 1px solid #d4e0ed; background: #edf3fa; overflow-wrap: anywhere; min-width: 0; }
+  .updates-post h3 { margin-block: 10px 12px; font-size: 27px; }
   .updates-notice h3 {
     margin-block: 10px 12px;
     font-size: 28px;

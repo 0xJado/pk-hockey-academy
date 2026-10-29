@@ -12,7 +12,8 @@
     "test": "node --experimental-strip-types --test tests/*.test.mjs",
     "build": "sanity build",
     "schema:extract": "sanity schema extract",
-    "deploy": "sanity deploy"
+    "deploy": "sanity deploy",
+    "webhook:setup": "node --env-file-if-exists=.env --experimental-strip-types scripts/configure-publication-hook.mjs"
   },
   "dependencies": {
     "@sanity/locale-de-de": "1.1.37",

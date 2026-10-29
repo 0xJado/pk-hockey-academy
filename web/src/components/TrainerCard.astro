@@ -4,62 +4,143 @@ import { Image } from "astro:assets";
 import crest from "../assets/brand/pk-hockey-crest.png";
 import type { Trainer } from "../types/content";
 import { trainerImageUrl } from "../lib/trainers";
-interface Props { trainer: Trainer; teaser?: boolean; }
-const { trainer, teaser = false } = Astro.props;
+import { getStudioEditBaseUrl } from "../lib/admin";
+import { createDataAttribute } from "@sanity/visual-editing/create-data-attribute";
+interface Props {
+  trainer: Trainer;
+  teaser?: boolean;
+  editorPreview?: boolean;
+}
+const { trainer, teaser = false, editorPreview = false } = Astro.props;
+const field = (path: string) =>
+  editorPreview
+    ? createDataAttribute({
+        id: trainer.id,
+        type: "trainer",
+        path,
+        projectId: import.meta.env.SANITY_PROJECT_ID,
+        dataset: import.meta.env.SANITY_DATASET,
+        baseUrl: getStudioEditBaseUrl(import.meta.env.PUBLIC_SANITY_STUDIO_URL),
+      }).toString()
+    : undefined;
 const profileId = `trainer-${trainer.id}`;
 const profileUrl = `/trainerpool#${profileId}`;
 const paragraphs = trainer.biography.split(/\n\s*\n/).filter(Boolean);
 const portrait = trainer.portrait;
-const widths = portrait ? [...new Set([400, 800, 1200].map(width => Math.min(width, portrait.width)))] : [];
+const widths = portrait
+  ? [
+      ...new Set(
+        [400, 800, 1200].map((width) => Math.min(width, portrait.width)),
+      ),
+    ]
+  : [];
 ---
 
-<article id={teaser ? undefined : profileId} class="trainer-feature" data-reveal>
+<article
+  id={teaser ? undefined : profileId}
+  class="trainer-feature"
+  data-reveal
+>
   <a
     href={teaser ? profileUrl : "#" + profileId}
     class:list={["trainer-portrait", { "trainer-portrait--photo": !!portrait }]}
     aria-label={`${trainer.name} – Trainerprofil ansehen`}
+    data-sanity={field("portrait")}
   >
     {portrait ? (
-      <img src={trainerImageUrl(portrait, 800)}
-        srcset={widths.map(width => `${trainerImageUrl(portrait, width)} ${width}w`).join(", ")}
+      <img
+        src={trainerImageUrl(portrait, 800)}
+        srcset={widths
+          .map((width) => `${trainerImageUrl(portrait, width)} ${width}w`)
+          .join(", ")}
         sizes="(max-width: 600px) calc(100vw - 40px), (max-width: 900px) 40vw, 45vw"
-        width={portrait.width} height={portrait.height} alt={portrait.alt} loading="lazy" decoding="async" />
-    ) : <Image
-      src={crest}
-      width={500}
-      densities={[1, 2]}
-      format="webp"
-      quality={90}
-      alt="Wappen der PK Hockey Academy. Ein separates Trainerfoto folgt."
-      loading="lazy"
-    />}
-    <span class="image-label">{portrait ? trainer.name : "WAPPEN · TRAINERFOTO FOLGT"}</span>
+        width={portrait.width}
+        height={portrait.height}
+        alt={portrait.alt}
+        loading="lazy"
+        decoding="async"
+      />
+    ) : (
+      <Image
+        src={crest}
+        width={500}
+        densities={[1, 2]}
+        format="webp"
+        quality={90}
+        alt="Wappen der PK Hockey Academy. Ein separates Trainerfoto folgt."
+        loading="lazy"
+      />
+    )}
+    <span class="image-label">
+      {portrait ? trainer.name : "WAPPEN · TRAINERFOTO FOLGT"}
+    </span>
     <span class="portrait-overlay">
       Trainerprofil ansehen <span aria-hidden="true">↗</span>
     </span>
   </a>
   <div class="trainer-copy">
-    <p class="eyebrow">{teaser ? "PERSÖNLICH. AUFMERKSAM. ENGAGIERT." : "UNSER TRAINERPOOL"}</p>
+    <p class="eyebrow">
+      {teaser ? "PERSÖNLICH. AUFMERKSAM. ENGAGIERT." : "UNSER TRAINERPOOL"}
+    </p>
     <h2>
-      {teaser && <>DEIN TRAINER.<br /></>}
-      <span>{trainer.name.toLocaleUpperCase("de-DE")}.</span>
+      {teaser && (
+        <>
+          DEIN TRAINER.
+          <br />
+        </>
+      )}
+      <span data-sanity={field("name")}>
+        {trainer.name.toLocaleUpperCase("de-DE")}.
+      </span>
     </h2>
-    <p class="trainer-role">{trainer.role} · PK Hockey Academy</p>
-    {(teaser ? paragraphs.slice(0, 1) : paragraphs).map(paragraph => <p>{paragraph}</p>)}
-    {!teaser && <>
-      <h3 class="trainer-detail-heading">Hintergrund</h3>
-      <ul class="trainer-facts">{trainer.verifiedBackground.map(item => <li>{item}</li>)}</ul>
-      {trainer.qualifications.length > 0 && <>
-        <h3 class="trainer-detail-heading">Bestätigte Qualifikationen</h3>
-        <ul class="trainer-facts">{trainer.qualifications.map(item => <li>{item}</li>)}</ul>
-      </>}
-      {trainer.specialties.length > 0 && <>
-        <h3 class="trainer-detail-heading">Trainingsschwerpunkte</h3>
-        <ul class="trainer-facts">{trainer.specialties.map(item => <li>{item}</li>)}</ul>
-      </>}
-    </>}
-    {teaser && <Button href={profileUrl} variant="text">{trainer.name} kennenlernen</Button>}
-    {portrait && <p class="small muted">Bildnachweis: {portrait.credit}</p>}
-    {!portrait && <p class="small muted">Ein freigegebenes Trainerfoto folgt.</p>}
+    <p class="trainer-role" data-sanity={field("role")}>
+      {trainer.role} · PK Hockey Academy
+    </p>
+    {(teaser ? paragraphs.slice(0, 1) : paragraphs).map((paragraph) => (
+      <p data-sanity={field("biography")}>{paragraph}</p>
+    ))}
+    {!teaser && (
+      <>
+        <h3 class="trainer-detail-heading">Hintergrund</h3>
+        <ul class="trainer-facts" data-sanity={field("verifiedBackground")}>
+          {trainer.verifiedBackground.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+        {trainer.qualifications.length > 0 && (
+          <>
+            <h3 class="trainer-detail-heading">Bestätigte Qualifikationen</h3>
+            <ul class="trainer-facts" data-sanity={field("qualifications")}>
+              {trainer.qualifications.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </>
+        )}
+        {trainer.specialties.length > 0 && (
+          <>
+            <h3 class="trainer-detail-heading">Trainingsschwerpunkte</h3>
+            <ul class="trainer-facts" data-sanity={field("specialties")}>
+              {trainer.specialties.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </>
+        )}
+      </>
+    )}
+    {teaser && (
+      <Button href={profileUrl} variant="text">
+        {trainer.name} kennenlernen
+      </Button>
+    )}
+    {portrait && (
+      <p class="small muted" data-sanity={field("portrait.credit")}>
+        Bildnachweis: {portrait.credit}
+      </p>
+    )}
+    {!portrait && (
+      <p class="small muted">Ein freigegebenes Trainerfoto folgt.</p>
+    )}
   </div>
 </article>

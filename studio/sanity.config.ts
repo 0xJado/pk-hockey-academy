@@ -4,10 +4,20 @@ import { deDELocale } from "@sanity/locale-de-de";
 import { getStudioConfig } from "./config";
 import { galleryCamp, galleryPhoto, galleryVideo } from "./schemaTypes/gallery";
 import { trainer } from "./schemaTypes/trainer";
+import { socialPost } from "./schemaTypes/socialPost";
 import { TrainerPreview } from "./components/TrainerPreview";
 import { EditorialGuide } from "./components/EditorialGuide";
 import { getStudioAuthProvider, selectAuthProviders } from "./auth-policy";
 import { pierreProfile } from "../shared/pierre-profile.ts";
+import { presentationTool } from "sanity/presentation";
+import {
+  getPreviewUrl,
+  getTrainerPreviewOptions,
+  trainerLocations,
+} from "./lib/presentation";
+import { TrainerNavigator } from "./components/TrainerNavigator";
+
+const previewUrl = getPreviewUrl(process.env.SANITY_STUDIO_PREVIEW_URL);
 
 const authProvider = getStudioAuthProvider({
   SANITY_STUDIO_AUTH_PROVIDER: process.env.SANITY_STUDIO_AUTH_PROVIDER,
@@ -30,6 +40,24 @@ export default defineConfig({
   ],
   plugins: [
     deDELocale(),
+    ...(previewUrl
+      ? [
+          presentationTool({
+            name: "website",
+            title: "Website bearbeiten",
+            previewUrl: getTrainerPreviewOptions(previewUrl),
+            allowOrigins: [previewUrl],
+            resolve: trainerLocations,
+            components: {
+              unstable_navigator: {
+                component: TrainerNavigator,
+                minWidth: 220,
+                maxWidth: 300,
+              },
+            },
+          }),
+        ]
+      : []),
     structureTool({
       title: "Inhalte",
       defaultDocumentNode: (S, { schemaType }) =>
@@ -50,6 +78,7 @@ export default defineConfig({
               .child(
                 S.documentList()
                   .title("Freigegebene Trainer")
+                  .apiVersion("2025-02-19")
                   .filter(
                     '_type == "trainer" && visibility == "public" && contentApproved == true && active == true',
                   )
@@ -60,12 +89,16 @@ export default defineConfig({
               ),
             S.divider(),
             S.documentTypeListItem("galleryCamp").title("Alle Camp-Alben"),
+            S.documentTypeListItem("socialPost").title(
+              "Ausgewählte Social-Beiträge",
+            ),
             S.listItem()
               .id("public-albums")
               .title("Für die Website freigegeben")
               .child(
                 S.documentList()
                   .title("Freigegebene Alben")
+                  .apiVersion("2025-02-19")
                   .filter(
                     '_type == "galleryCamp" && visibility == "public" && rightsConfirmed == true',
                   ),
@@ -74,7 +107,7 @@ export default defineConfig({
     }),
   ],
   schema: {
-    types: [galleryCamp, galleryPhoto, galleryVideo, trainer],
+    types: [galleryCamp, galleryPhoto, galleryVideo, trainer, socialPost],
     templates: (previous) => [
       ...previous,
       {

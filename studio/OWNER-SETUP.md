@@ -1,8 +1,8 @@
 # Sanity-Ersteinrichtung für Pierre
 
-Stand: 25. Oktober 2026. Pierre soll das Sanity-Projekt der Academy selbst kontrollieren. Vorgesehen sind Sanity Free und ein öffentliches Dataset für Website-Inhalte. Konto, Projekt und technische Verbindung sind noch einzurichten. Trainingsanmeldungen und Spielerangaben gehören in das separat geplante private Google Sheet.
+Stand: 25. Oktober 2026. Das Sanity-Konto und das Projekt wurden vom Entwickler mit Pierres neuer Academy-E-Mail angelegt. Das öffentliche Dataset `production` ist bestätigt; Studio und Website sind lokal angeschlossen. Das Redaktionssystem ist unter [pk-hockey-academy.sanity.studio](https://pk-hockey-academy.sanity.studio/) bereitgestellt. Pierre bleibt der vorgesehene Verantwortliche. Trainingsanmeldungen und Spielerangaben gehören in das separat geplante private Google Sheet.
 
-Die folgende Anleitung beschreibt die noch ausstehenden Schritte zur Konto- und Projektanlage. Die Entwicklung übernimmt anschließend Studio, Website-Anbindung und die technische Prüfung; Inhalte werden erst nach Freigabe veröffentlicht.
+Die Schritte zur Konto- und Projektanlage unten sind bereits erledigt. Die CLI- und Browser-Anmeldung mit E-Mail/Passwort sind bestätigt; das Studio zeigt für das Academy-Konto die Rolle Administrator. Trainerbearbeitung, private Profilvorschau, Camp-Alben und deutsche Redaktionshilfe sind geprüft. Pierres bestätigtes Startprofil ist nach ausdrücklicher Freigabe veröffentlicht. Der automatische Build-Webhook und die Trainerübernahme sind aktiv. Veröffentlichung, Änderung, Rücknahme und Wiederherstellung wurden mit jeweils erfolgreichem Website-Build geprüft; anschließend wurden Pierres ursprüngliche Angaben wiederhergestellt. Echte Camp-Medien und Kontowiederherstellung bleiben gesondert zu prüfen.
 
 Die gemeinsame [Einrichtungsanleitung für Pierre](../docs/PIERRE-SETUP.md) enthält auch die Schritte zum Anlegen und Freigeben der privaten Google-Tabelle sowie die benötigte Rückmeldung an die Entwicklung.
 
@@ -46,7 +46,7 @@ Sanity verwaltet hier Website-Inhalte. Die geplanten Trainingsanmeldungen werden
 
 ## Technische Fortsetzung und Quellen
 
-Die vollständige technische Einrichtung steht in [README.md](README.md), die Zugriffs- und Abnahmeprüfungen in [ACCESS.md](ACCESS.md). Realer Kontozugriff, Veröffentlichungsabnahme und automatische Website-Aktualisierung sind noch ausstehend.
+Die vollständige technische Einrichtung steht in [README.md](README.md), die Zugriffs- und Abnahmeprüfungen in [ACCESS.md](ACCESS.md). Anmeldung, Redaktionsansichten und der automatische Veröffentlichungsablauf für Trainerprofile sind geprüft. Echte Camp-Medien sowie Kontozugriff, Wiederherstellung und zusätzliche Mitglieder bleiben gesonderte Abnahmepunkte.
 
 - [Sanity: Rollen und Berechtigungen](https://www.sanity.io/docs/content-lake/roles-concepts)
 - [Sanity: Aktuelle Tarife und Nutzerpreise](https://www.sanity.io/pricing)

@@ -1,6 +1,22 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { getStudioUrl } from "../src/lib/admin.ts";
+import { getStudioUrl, getStudioEditBaseUrl } from "../src/lib/admin.ts";
+import { createEditUrl } from "@sanity/client/csm";
+
+test("configured Studio URLs work with Sanity's actual overlay edit URL builder", () => {
+  const baseUrl = getStudioEditBaseUrl(
+    "https://pk-hockey-academy.sanity.studio/",
+  );
+  const url = createEditUrl({
+    baseUrl,
+    id: "technical-fixture",
+    type: "trainer",
+    path: "name",
+  });
+  assert.ok(url.startsWith("https://pk-hockey-academy.sanity.studio/"));
+  assert.ok(url.includes("name"));
+  assert.equal(getStudioEditBaseUrl(undefined), undefined);
+});
 
 test("admin entry has no destination until configured, and accepts a real HTTPS Studio subpath", () => {
   assert.equal(getStudioUrl({}), undefined);

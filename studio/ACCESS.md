@@ -4,11 +4,13 @@ The implementation uses native Sanity authentication and Content Lake grants. It
 
 ## Setup status
 
-This checkout has no `studio/.env` or `web/.env`, real project/member configuration, deployed Studio URL or build-hook destination. Compilation/fixtures use `cmsqa123/qa` solely as test identifiers. They are not academy configuration. Do not copy these values into a real environment. Neither GitHub issue is ready to close until the live acceptance checks below pass.
+The user created the academy account/project using Pierre's new academy email on 25 October 2026. Ignored `studio/.env` and `web/.env` now contain the real project/public `production` dataset configuration. Native CLI and browser email/password sign-in, authenticated project access, actual dataset visibility, schema deployment and creation/readback of Pierre's hidden draft are verified. The draft is excluded from anonymous queries. The deployed Studio is **https://pk-hockey-academy.sanity.studio/**. The authenticated editor shows Pierre's profile fields and private preview; the user subsequently approved publishing the verified starter content. The empty camp-album collection and German editorial guide load; the guide reports Administrator for the current academy account. Real native Studio publish/edit/unpublish/restore acceptance passed, with four successful protected deployments and profile/homepage verification. The local website's admin link uses this real URL. Vercel has the public CMS identifiers/admin URL and trainer migration enabled. The connected build hook delivered all four publication events successfully; editing the draft alone produced no delivery. Tests still use `cmsqa123/qa` only as synthetic identifiers. Neither issue is ready to close until the remaining live checks below pass.
+
+The project already permits **http://localhost:3333** with credentials. A proposed additional `http://127.0.0.1:3333` CORS origin was rejected by automatic approval review because the persistent access change lacked specific authorization; it was not added or retried. Use the existing localhost origin for local Studio access. No additional CORS grant is required for this workflow.
 
 ## Role assignment
 
-Direction, 25 October 2026: Pierre should control the academy project. Use Sanity Free with a public dataset holding public website content; player registrations remain in the separately planned private Google Sheet. One Pierre-owned account is sufficient; a separate developer account is optional. No real account, project or local credential has been configured by this preparation. Follow [OWNER-SETUP.md](OWNER-SETUP.md) for the owner handoff. No invitation or elevated grant is authorized by this documentation alone.
+Direction, 25 October 2026: Pierre should control the academy project. Use Sanity Free with a public dataset holding public website content; player registrations remain in the separately planned private Google Sheet. One Pierre-owned account is sufficient; a separate developer account is optional. The real account/project and CLI session are now available. Follow [OWNER-SETUP.md](OWNER-SETUP.md) for the owner handoff. No invitation or elevated grant is authorized by this documentation alone.
 
 | Person/service | Intended access | Setup decision |
 | --- | --- | --- |
@@ -46,7 +48,7 @@ No invitations or memberships were created, removed or modified during local imp
 
 Sources: [Sanity native authentication and SAML](https://www.sanity.io/docs/studio/custom-auth), [account management](https://www.sanity.io/docs/platform-management/manage-your-account).
 
-## Live acceptance checks (not executed locally)
+## Live acceptance checklist
 
 | Check | Required evidence |
 | --- | --- |
@@ -61,5 +63,7 @@ Sources: [Sanity native authentication and SAML](https://www.sanity.io/docs/stud
 | Build failure | Simulate a configured API failure in staging; build fails, existing deployment is not replaced with an empty fallback. If private-dataset compatibility is ever configured, also test read-token failure. |
 | Editor independence | Configure/test the native server-to-server build webhook once. Subsequent publishing, changes and withdrawal update the site after a successful build without developer action. |
 | Secrets/CORS | Public reads omit authorization. Build-hook destination and any optional service tokens stay server-only; exact Studio origins only, no wildcard credentialed CORS. |
+
+Executed: native owner sign-in, role display, anonymous draft exclusion and denied no-op mutation, native coach publish/edit/unpublish/restore, successful hook delivery/deployment, and profile/homepage rendering. Invitations, revocation, recovery, MFA, other-member roles and authentic media uploads remain unverified; do not revoke the only owner as a test.
 
 Use only approved academy content during real acceptance. Fixture accounts/documents in automated tests do not establish these checks.

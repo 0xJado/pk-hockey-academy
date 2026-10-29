@@ -2,6 +2,8 @@ import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import { loadEnv } from "vite";
 import localGalleryPlugin from "./local-gallery-plugin.mjs";
+import vercel from "@astrojs/vercel";
+import node from "@astrojs/node";
 
 const env = loadEnv(process.env.NODE_ENV || "production", process.cwd(), "");
 const configuredUrl = env.SITE_URL?.trim();
@@ -29,6 +31,10 @@ if (configuredUrl) {
 export default defineConfig({
   site,
   output: "static",
+  session: false,
+  // Public pages remain prerendered. Only the protected editor routes need a
+  // runtime. Node keeps local `astro preview` usable and hosting portable.
+  adapter: env.VERCEL === "1" ? vercel() : node({ mode: "standalone" }),
   trailingSlash: "never",
   vite: { plugins: [tailwindcss(), localGalleryPlugin()] },
   devToolbar: { enabled: false },

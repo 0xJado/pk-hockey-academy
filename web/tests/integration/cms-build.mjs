@@ -18,9 +18,14 @@ const env = {
   SANITY_PROJECT_ID: "",
   SANITY_DATASET: "",
   SANITY_READ_TOKEN: "",
+  SANITY_PREVIEW_READ_TOKEN: "",
   SANITY_TRAINERS_ENABLED: "false",
+  SANITY_SOCIAL_ENABLED: "false",
   PUBLIC_SANITY_STUDIO_URL: "",
   NODE_OPTIONS: "",
+  // Exercise the hosting adapter. Its bundled functions also let isolated
+  // artifacts live outside web/, without Node's external dependency lookup.
+  VERCEL: "1",
 };
 const build = (name, settings) => {
   const folder = resolve(output, name);
@@ -40,7 +45,9 @@ const build = (name, settings) => {
     },
   );
   if (result.error) throw result.error;
-  return { folder, result };
+  // The adapter keeps public prerendered output in client/, with private
+  // preview functions separate from the static artifacts scanned below.
+  return { folder: resolve(folder, "client"), result };
 };
 const files = async (directory) =>
   (
@@ -65,6 +72,7 @@ const scan = async (directory, starter) => {
       "HIDDEN_DO_NOT_EXPOSE",
       "INACTIVE_DO_NOT_EXPOSE",
       "UNAPPROVED_DO_NOT_EXPOSE",
+      "OLD_SOCIAL_COPY_DO_NOT_EXPOSE",
     ]) {
       assert.equal(
         content.includes(marker),
@@ -104,6 +112,7 @@ for (const mode of ["normal", "public", "empty", "malformed"]) {
     SANITY_DATASET: "qa",
     SANITY_READ_TOKEN: mode === "public" ? "" : "test-token-never-real",
     SANITY_TRAINERS_ENABLED: "true",
+    SANITY_SOCIAL_ENABLED: "true",
     PUBLIC_SANITY_STUDIO_URL: "https://pk-hockey-academy.sanity.studio/",
     NODE_OPTIONS: `--import=${fixture}`,
     PK_CMS_QA_TRACE: trace,
@@ -145,6 +154,20 @@ for (const mode of ["normal", "public", "empty", "malformed"]) {
     "utf8",
   );
   const home = await readFile(resolve(folder, "index.html"), "utf8");
+  const socialPage = await readFile(resolve(folder, "galerie/index.html"), "utf8");
+  assert.ok(requests.some(request => request.type === "social"), "Social CMS configuration did not activate.");
+  if (mode === "empty") {
+    assert.equal(socialPage.includes("Technischer Testbeitrag"), false);
+  } else {
+    assert.match(socialPage, /Technischer Testbeitrag/);
+    assert.match(socialPage, /href="https:\/\/www.instagram.com\/p\/fixture123\/"/);
+    assert.match(socialPage, /href="https:\/\/www.instagram.com\/fixtureacademy\/"/);
+    assert.match(socialPage, /Dieser Beitrag ist aktuell nicht verfügbar/);
+    assert.equal(socialPage.includes("<script>window.__socialXss"), false);
+    assert.match(socialPage, /&lt;script&gt;window.__socialXss/);
+    assert.equal(socialPage.includes("instagram.com/embed"), false);
+    assert.equal(socialPage.includes("connect.facebook.net"), false);
+  }
   if (mode === "normal" || mode === "public") {
     assert.match(pool, /Technisches Testprofil A/);
     assert.match(pool, /Technisches Testprofil B/);

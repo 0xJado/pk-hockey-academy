@@ -1,0 +1,224 @@
+---
+import Base from "../../layouts/Base.astro";
+import TrainerCard from "../../components/TrainerCard.astro";
+import { createDataAttribute } from "@sanity/visual-editing/create-data-attribute";
+import { getPreviewTrainers } from "../../lib/trainer-preview-source";
+import { getStudioEditBaseUrl } from "../../lib/admin";
+import {
+  previewCookie,
+  previewHeaders,
+  verifyPreviewSession,
+} from "../../lib/preview-auth";
+export const prerender = false;
+for (const [key, value] of Object.entries(previewHeaders))
+  Astro.response.headers.set(key, value);
+const studioUrl = import.meta.env.PUBLIC_SANITY_STUDIO_URL;
+const incompleteName = (id: string) =>
+  createDataAttribute({
+    id,
+    type: "trainer",
+    path: "name",
+    baseUrl: getStudioEditBaseUrl(studioUrl),
+    projectId: import.meta.env.SANITY_PROJECT_ID,
+    dataset: import.meta.env.SANITY_DATASET,
+  }).toString();
+if (studioUrl)
+  Astro.response.headers.set(
+    "Content-Security-Policy",
+    `frame-ancestors 'self' ${new URL(studioUrl).origin} http://localhost:3333`,
+  );
+const authenticated = verifyPreviewSession(
+  Astro.cookies.get(previewCookie)?.value,
+  import.meta.env.SANITY_PREVIEW_READ_TOKEN,
+);
+const requestedId = Astro.url.searchParams.get("id");
+const id =
+  requestedId && /^[a-zA-Z0-9_.-]{1,200}$/.test(requestedId)
+    ? requestedId.replace(/^drafts\./, "")
+    : null;
+const published = Astro.url.searchParams.get("perspective") === "published";
+let result: Awaited<ReturnType<typeof getPreviewTrainers>> = {
+  trainers: [],
+  incomplete: [],
+};
+let failed = false;
+if (!authenticated) Astro.response.status = 401;
+else {
+  try {
+    result = await getPreviewTrainers(id, published);
+  } catch {
+    failed = true;
+    Astro.response.status = 503;
+  }
+}
+---
+
+<Base
+  editorPreview
+  noindex
+  title="Website-Vorschau · Trainerpool"
+  description="Private Website-Vorschau der Trainerprofile für die Academy-Redaktion."
+>
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="eyebrow">REDAKTION · WEBSITE-VORSCHAU</p>
+      <h1>
+        UNSER TRAINERPOOL.
+        <br />
+        <span>DEINE VORSCHAU.</span>
+      </h1>
+      <p class="page-intro">
+        {authenticated
+          ? "Klicke auf Profiltext oder Trainerfoto, um das passende Feld im Studio zu bearbeiten."
+          : "Bitte die Website-Vorschau im angemeldeten Sanity Studio öffnen. Direkte Aufrufe zeigen keine Entwürfe."}
+      </p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap">
+      {!authenticated ? (
+        <div class="notice">
+          <h2>Anmeldung über Sanity erforderlich</h2>
+          {studioUrl && (
+            <a class="button" href={`${studioUrl.replace(/\/$/, "")}/website`}>
+              Website-Vorschau im Studio öffnen ↗
+            </a>
+          )}
+        </div>
+      ) : (
+        <>
+          <aside class="notice preview-notice">
+            <strong>
+              {published
+                ? "Veröffentlichter Bearbeitungsstand"
+                : "Entwurfsvorschau · nicht veröffentlicht"}
+            </strong>
+            <p>
+              Diese private Ansicht zeigt auch zurückgehaltene Profile. Die
+              öffentliche Website übernimmt ausschließlich aktive, geprüfte und
+              freigegebene Veröffentlichungen nach dem Website-Build.
+            </p>
+            <div class="preview-actions">
+              {studioUrl && (
+                <a
+                  href={`${studioUrl.replace(/\/$/, "")}/intent/create/type=trainer/`}
+                  target="_top"
+                >
+                  Trainer hinzufügen ↗
+                </a>
+              )}
+              <a href="/redaktion/trainerpool">Alle Profile in der Vorschau</a>
+              <a href="/redaktion/abmelden">Vorschau beenden</a>
+            </div>
+          </aside>
+          {failed ? (
+            <p role="alert">
+              Die Vorschau konnte nicht geladen werden. Bitte Verbindung und
+              Vorschau-Konfiguration prüfen.
+            </p>
+          ) : (
+            <>
+              <div class="trainer-list">
+                {result.trainers.map((trainer) => (
+                  <TrainerCard trainer={trainer} editorPreview />
+                ))}
+              </div>
+              {result.incomplete.map((profile) => (
+                <div class="notice">
+                  <h2 data-sanity={incompleteName(profile.id)}>
+                    {profile.name}
+                  </h2>
+                  <p>
+                    Dieses Profil ist noch unvollständig. Pflichtfelder und
+                    gegebenenfalls Bildbeschreibung sowie Bildnachweis im Studio
+                    ergänzen. Danach erscheint hier das Website-Layout.
+                  </p>
+                  {studioUrl && (
+                    <a
+                      href={`${studioUrl.replace(/\/$/, "")}/intent/edit/id=${encodeURIComponent(profile.id)};type=trainer/`}
+                      target="_top"
+                    >
+                      Profil vervollständigen ↗
+                    </a>
+                  )}
+                </div>
+              ))}
+              {!result.trainers.length && !result.incomplete.length && (
+                <p role="status">
+                  Noch kein Trainerprofil in dieser Perspektive. Über „Trainer
+                  hinzufügen“ ein Profil anlegen oder zur Entwurfsperspektive
+                  wechseln.
+                </p>
+              )}
+            </>
+          )}
+        </>
+      )}
+    </div>
+  </section>
+  {authenticated && !failed && <div id="pk-visual-editing" />}
+</Base>
+<style>
+  .preview-notice {
+    margin-bottom: 48px;
+  }
+  .preview-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 28px;
+  }
+  .preview-actions a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+</style>
+<script>
+  if (document.querySelector("#pk-visual-editing")) {
+    const { enableVisualEditing } =
+      await import("@sanity/visual-editing/enable-visual-editing");
+    const disable = enableVisualEditing({
+      history: {
+        subscribe(navigate) {
+          const update = () => navigate({ type: "pop", url: location.href });
+          update();
+          addEventListener("popstate", update);
+          addEventListener("hashchange", update);
+          return () => {
+            removeEventListener("popstate", update);
+            removeEventListener("hashchange", update);
+          };
+        },
+        update(update) {
+          const url = new URL(update.url, location.origin);
+          if (
+            url.origin !== location.origin ||
+            url.pathname !== "/redaktion/trainerpool" ||
+            url.href === location.href
+          )
+            return;
+          if (update.type === "replace") location.replace(url.href);
+          else location.assign(url.href);
+        },
+      },
+      onPerspectiveChange(perspective) {
+        const url = new URL(location.href);
+        const isPublished =
+          perspective === "published" ||
+          (Array.isArray(perspective) &&
+            perspective.length === 1 &&
+            perspective[0] === "published");
+        const value = isPublished ? "published" : "drafts";
+        if ((url.searchParams.get("perspective") || "drafts") === value) return;
+        url.searchParams.set("perspective", value);
+        location.replace(url.href);
+      },
+    });
+    addEventListener("pagehide", () => disable(), { once: true });
+    addEventListener("pageshow", (event) => {
+      if (event.persisted) location.reload();
+    });
+  }
+</script>

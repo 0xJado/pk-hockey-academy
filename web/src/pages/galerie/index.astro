@@ -5,8 +5,10 @@ import AcademyUpdates from "../../components/AcademyUpdates.astro";
 import FinalCTA from "../../components/FinalCTA.astro";
 import GalleryPreviewNotice from "../../components/GalleryPreviewNotice.astro";
 import { getGalleryAlbums } from "../../lib/gallery-source";
+import { getSocialPosts } from "../../lib/social-posts";
 import "../../styles/gallery.css";
 const albums = await getGalleryAlbums();
+const socialPosts = await getSocialPosts();
 ---
 
 <Base
@@ -39,7 +41,7 @@ const albums = await getGalleryAlbums();
         <section class="gallery-albums" aria-label="Camp-Alben">
           <GalleryAlbums albums={albums} />
         </section>
-        <AcademyUpdates />
+        <AcademyUpdates posts={socialPosts} />
       </div>
     </div>
   </div>

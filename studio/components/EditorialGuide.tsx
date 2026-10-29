@@ -53,8 +53,9 @@ export function EditorialGuideContent({
         <p>
           Vorschau und Bearbeitung erfolgen im angemeldeten Studio. Die
           statische Website übernimmt freigegebene, veröffentlichte Inhalte erst
-          nach einem erfolgreichen Website-Build. Eine automatische
-          Aktualisierung ist noch nicht eingerichtet.
+          nach einem erfolgreichen Website-Build. Der automatische Build-Hook
+          ist verbunden. Die Übernahme der Trainerprofile ist aktiviert;
+          Veröffentlichen und Zurückziehen starten automatisch einen neuen Build.
         </p>
       </aside>
       <p>
@@ -66,6 +67,7 @@ export function EditorialGuideContent({
       </p>
       <section aria-labelledby="coach-guide">
         <h2 id="coach-guide">Trainerprofile</h2>
+        <p>Wenn „Website bearbeiten“ eingerichtet ist: Dort Profiltext oder Foto in der echten Website-Vorschau anklicken und rechts bearbeiten. Über „Trainer hinzufügen“ ein neues Profil anlegen. Unvollständige Profile zeigen einen Hinweis, bis die Pflichtfelder ergänzt sind. Die Entwurfsvorschau zeigt auch zurückgehaltene Profile; sie veröffentlicht nichts.</p>
         <ol>
           <li>
             Unter „Inhalte → Alle Trainerprofile“ ein Profil anlegen oder
@@ -122,6 +124,11 @@ export function EditorialGuideContent({
           privaten Rohaufnahmen, Kinderdaten oder Einwilligungsdokumente
           hochladen.
         </p>
+      </section>
+      <section aria-labelledby="social-guide">
+        <h2 id="social-guide">Ausgewählte Social-Beiträge</h2>
+        <p>Unter „Inhalte → Ausgewählte Social-Beiträge“ bestätigte Academy-Beiträge als Linkkarten anlegen. Plattform, direkten Beitragslink, eigenen Begleittext und Reihenfolge eintragen. Angaben prüfen, Website-Freigabe wählen und veröffentlichen.</p>
+        <p>Die Website zeigt höchstens sechs Karten und lädt keine Plattform-Skripte. Ist ein Beitrag privat, gelöscht oder nicht mehr verfügbar, den Status ändern und einen Academy-Profillink als Alternative hinterlegen oder die Karte zurückziehen. Die Verfügbarkeit wird manuell geprüft. Academy-Social-Konten und die erste Aktivierung stehen noch aus.</p>
       </section>
       <section aria-labelledby="access-guide">
         <h2 id="access-guide">Zugriff und Rollen</h2>
