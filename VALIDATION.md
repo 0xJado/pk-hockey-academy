@@ -1,5 +1,15 @@
 # Validation record
 
+## Annual hosted preview credential — 30 October 2026
+
+The user requested a one-year token lifetime. Created a separate Sanity robot for hosted Visual Editing, preserving the existing local preview credential. Sanity API readback confirmed exactly one membership in the existing academy project, only the Viewer role, and expiration `2027-10-30T17:50:02.232Z`. The token successfully performed the trainer draft-perspective query. No write permission or human account was added.
+
+Automatic approval review initially blocked the separate transfer to Vercel. After the user explicitly approved that destination, stored the credential as `SANITY_PREVIEW_READ_TOKEN` on `driftwoodmedia/pk-hockey-academy`. Metadata readback confirmed a `sensitive` Secret scoped only to production. Deployment Protection remains enabled (`all_except_custom_domains`). A scan found no new credential value in tracked files, and both staging/metadata paths were Git-ignored. Removed the temporary credential staging file after installation and verification. No secret value was printed or committed.
+
+Documented fixed yearly expiration and manual replacement/redeploy/revocation steps in [VISUAL-EDITING.md](docs/VISUAL-EDITING.md). No automatic renewal or reminder was created. Credential rebuild `dpl_C6oREFB19u6Z6fGbg2jExvfrR9af` reached READY. Studio check and all 20 tests passed; deployed the existing Studio/schema with its preview origin set to the protected website. A direct browser visit without a Sanity preview session showed the sign-in-required state. The Vercel protected-fetch connector could not resolve either the stable alias or deployment URL despite successful project/deployment management; no HTTP response-status claim is inferred from those connector errors.
+
+Native hosted acceptance connected the Dashboard → Studio → website frame chain with editing enabled. Clicking the rendered role opened and focused the exact `trainer-pierre-klein/role` field. A fresh private snapshot confirmed no pre-existing draft; an equivalent role change saved only as a draft, left every published business field unchanged, and remained absent from anonymous CMS reads. The preview did not refresh automatically. The pinned overlay SDK only mounts its refresh listener when an explicit callback is supplied, despite its type comment mentioning default reload behavior. Added the callback for this server-rendered preview, following the official Astro integration pattern. All 45 website tests, Astro check (74 files, zero diagnostics) and the configured website build passed. Final hosted refresh/restoration acceptance remains pending deployment of that fix. Public design and motion are unchanged.
+
 ## Hosted Visual Editing readiness — 30 October 2026
 
 Read-only hosting inspection confirmed that the existing protected main-branch project had no server preview credential, while local Studio still targeted `http://localhost:4322`. No credential was created or rotated. Transfer of the existing Viewer token was rejected by automatic approval review pending specific user consent; no hosted secret was installed and Studio was not activated.

@@ -180,6 +180,10 @@ else {
     const { enableVisualEditing } =
       await import("@sanity/visual-editing/enable-visual-editing");
     const disable = enableVisualEditing({
+      async refresh() {
+        // Draft content is server-rendered; the overlay SDK does not refetch it.
+        location.reload();
+      },
       history: {
         subscribe(navigate) {
           const update = () => navigate({ type: "pop", url: location.href });
