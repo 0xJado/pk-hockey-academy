@@ -1,4 +1,5 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
+import { getStudioUrl } from "./admin.ts";
 
 export const previewCookie = "pk-editor-preview";
 export const previewPath = "/redaktion/trainerpool";
@@ -51,3 +52,19 @@ export const previewHeaders = {
   "X-Robots-Tag": "noindex, nofollow, noarchive",
   "Referrer-Policy": "no-referrer",
 };
+
+export function previewFrameAncestors(
+  studioUrl: string | undefined,
+  development = false,
+): string {
+  const studio = getStudioUrl({ PUBLIC_SANITY_STUDIO_URL: studioUrl });
+  const origins = new Set(["'self'"]);
+  if (studio) {
+    origins.add(new URL(studio).origin);
+    // Hosted Studio is itself framed by Sanity Dashboard. CSP checks every
+    // ancestor, not only the direct Studio iframe parent.
+    origins.add("https://www.sanity.io");
+  }
+  if (development) origins.add("http://localhost:3333");
+  return `frame-ancestors ${[...origins].join(" ")}`;
+}

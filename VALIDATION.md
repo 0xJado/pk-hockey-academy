@@ -1,5 +1,11 @@
 # Validation record
 
+## Hosted Visual Editing readiness — 30 October 2026
+
+Read-only hosting inspection confirmed that the existing protected main-branch project had no server preview credential, while local Studio still targeted `http://localhost:4322`. No credential was created or rotated. Transfer of the existing Viewer token was rejected by automatic approval review pending specific user consent; no hosted secret was installed and Studio was not activated.
+
+Prepared the hosted frame compatibility repair: the private trainer preview now permits both its configured Studio parent and the observed Sanity Dashboard ancestor (`https://www.sanity.io`); localhost framing is development-only, and an unconfigured Studio defaults to self-only. CSP evaluates every ancestor in the nested iframe chain. Signed session checks and public document filtering remain required. The focused framing regression plus all 45 website tests, Astro check (74 files, zero diagnostics) and the configured build passed. Browser click/edit/refresh and hosted draft denial still await activation and must not be claimed from these checks.
+
 ## Sanity media kit — 30 October 2026
 
 Implemented the omitted CMS scope of issue #2: native German download documents, shared publication/file/preview rules, approved published retrieval, safe attachment filenames, optional previews/usage guidance, ordering, missing-file omission and an authoritative empty state. Extended and read back the existing publishing hook for media-kit documents and file deletion without changing its destination or payload projection. Migrated only the checksum-verified original logo and published it through native Studio. Blank usage guidance is explicit; no licence/press content or ZIP was invented. Existing design/motion and trainer logo backdrop are retained.

@@ -4,7 +4,24 @@ import {
   signPreviewSession,
   verifyPreviewSession,
   safePreviewRedirect,
+  previewFrameAncestors,
 } from "../src/lib/preview-auth.ts";
+
+test("private preview framing permits the configured Studio and its Dashboard ancestor without production localhost access", () => {
+  assert.equal(previewFrameAncestors(undefined), "frame-ancestors 'self'");
+  assert.equal(
+    previewFrameAncestors("https://pk-hockey-academy.sanity.studio/"),
+    "frame-ancestors 'self' https://pk-hockey-academy.sanity.studio https://www.sanity.io",
+  );
+  assert.match(
+    previewFrameAncestors("https://pk-hockey-academy.sanity.studio/", true),
+    /http:\/\/localhost:3333$/,
+  );
+  assert.throws(() =>
+    previewFrameAncestors("https://user:password@example.org"),
+  );
+  assert.throws(() => previewFrameAncestors("javascript:alert(1)"));
+});
 
 test("draft access requires a valid unexpired signature, not a cookie flag", () => {
   const now = 1792965600000;

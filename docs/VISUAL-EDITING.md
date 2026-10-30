@@ -19,6 +19,7 @@ The optional navigator in Presentation also provides a native **Trainer hinzufü
 - `/redaktion/trainerpool` is rendered on demand. It reads drafts only after `/api/preview/enable` validates a native Sanity preview secret.
 - The server issues an HMAC-signed one-hour session in an HttpOnly, Secure, SameSite=None, Partitioned cookie scoped to `/redaktion`. Expired, forged and missing sessions receive HTTP 401 before any draft query.
 - Editor responses use `private, no-store`, noindex headers, a no-referrer policy, and frame-ancestor restrictions. Only the dedicated preview path and a safe document ID/perspective survive preview redirects.
+- The private preview permits the configured Studio origin and `https://www.sanity.io`, because hosted Studio is itself nested inside Sanity Dashboard. Every iframe ancestor must match CSP. Local Studio framing at `http://localhost:3333` is allowed only in development; no Studio configuration defaults to self-only framing. This does not grant a preview session or draft access.
 - `SANITY_PREVIEW_READ_TOKEN` is a dedicated **Viewer** robot token for this project. It is server-only and never prefixed `PUBLIC_` or `SANITY_STUDIO_`. The setup created this read-only robot and saved its credential in ignored `web/.env`; no additional human account or write permission was created. Rotating/revoking this token invalidates preview sessions. Published public reads remain tokenless.
 - The shared trainer renderer uses explicit Sanity data attributes. It does not alter the public validator or inject stega characters into content. The preview client has bounded requests and bypasses the CDN.
 - Visual Editing is loaded only in the private preview. Native page loads keep the Studio frame and its history in sync; back/forward restores the overlay runtime. Perspective changes switch between published and draft queries. Content edits use Sanity's built-in refresh protocol.
@@ -54,6 +55,8 @@ Presentation's `initial` URL must include the website origin, for example `http:
 
 At implementation time, the native Sanity preview secret → signed cookie → real CMS draft render was verified locally. Browser checks covered 1440/768/375 widths, focus, reduced motion, repeated back/forward navigation, no-JavaScript content and anonymous denial. Native signed-in Studio click/creation acceptance and hosted activation must be recorded separately; they must not be inferred from the type/build checks.
 
+Readiness check, 30 October 2026: the protected Vercel main-branch environment has no `SANITY_PREVIEW_READ_TOKEN`; local Studio still targets localhost. Hosted activation therefore remains incomplete. Reuse of the existing Viewer token as a server secret requires explicit approval for that transfer. Keeping it local preserves local draft preview, while the public website and native Studio publishing remain usable. The framing compatibility repair passed all 45 website tests, Astro check (74 files, no diagnostics) and the configured build; these checks do not establish hosted field clicking or draft refresh.
+
 ## Implementation files
 
 Implementation files: `studio/sanity.config.ts`, `studio/lib/presentation.ts` and `studio/components/TrainerNavigator.tsx` configure the editor. `web/src/pages/redaktion/`, `web/src/pages/api/preview/enable.ts`, `web/src/lib/preview-auth.ts` and `web/src/lib/trainer-preview-source.ts` provide authenticated drafts. `TrainerCard.astro` and `Base.astro` share the website layout and map fields. Adapter/dependency configuration, environment examples, editorial help, focused tests and validation notes are updated alongside them. The existing visual style and motion system are reused; this feature adds no new public animation sequence.
@@ -65,3 +68,4 @@ Implementation files: `studio/sanity.config.ts`, `studio/lib/presentation.ts` an
 - [Overlays and click-to-edit](https://www.sanity.io/docs/visual-editing/visual-editing-overlays)
 - [Presentation configuration](https://www.sanity.io/docs/visual-editing/configuring-the-presentation-tool)
 - [Sanity authentication and robot tokens](https://www.sanity.io/docs/content-lake/http-auth)
+- [CSP checks every iframe ancestor](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy/frame-ancestors)

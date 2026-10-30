@@ -7,6 +7,7 @@ import { getStudioEditBaseUrl } from "../../lib/admin";
 import {
   previewCookie,
   previewHeaders,
+  previewFrameAncestors,
   verifyPreviewSession,
 } from "../../lib/preview-auth";
 export const prerender = false;
@@ -22,11 +23,10 @@ const incompleteName = (id: string) =>
     projectId: import.meta.env.SANITY_PROJECT_ID,
     dataset: import.meta.env.SANITY_DATASET,
   }).toString();
-if (studioUrl)
-  Astro.response.headers.set(
-    "Content-Security-Policy",
-    `frame-ancestors 'self' ${new URL(studioUrl).origin} http://localhost:3333`,
-  );
+Astro.response.headers.set(
+  "Content-Security-Policy",
+  previewFrameAncestors(studioUrl, import.meta.env.DEV),
+);
 const authenticated = verifyPreviewSession(
   Astro.cookies.get(previewCookie)?.value,
   import.meta.env.SANITY_PREVIEW_READ_TOKEN,
