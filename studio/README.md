@@ -1,6 +1,6 @@
 # PK Hockey Academy — Camp-Galerie / Redaktion
 
-Standalone German Sanity Studio for trainer profiles and camp albums, photos and videos. Public website pages remain prerendered. Optional **Website bearbeiten** connects a protected server-rendered trainer preview with click-to-edit fields and a **Trainer hinzufügen** action. The existing content editor and private profile preview remain available. Sessions, venues and prices remain in `web/src/data/academy.ts`. The local Pierre profile is used only when the coach CMS migration is disabled.
+Standalone German Sanity Studio for trainer profiles, media-kit downloads and camp albums, photos and videos. Public website pages remain prerendered. Optional **Website bearbeiten** connects a protected server-rendered trainer preview with click-to-edit fields and a **Trainer hinzufügen** action. The existing content editor and private profile preview remain available. Sessions, venues and prices remain in `web/src/data/academy.ts`. The local Pierre profile is used only when the coach CMS migration is disabled.
 
 See [Visual Editing configuration and activation](../docs/VISUAL-EDITING.md). Set `SANITY_STUDIO_PREVIEW_URL` only when its website preview origin is ready; blank hides the new tool. The server-only Viewer credential is configured in the website environment, never in Studio. Native Studio deployment and iframe acceptance must be recorded separately from local builds.
 
