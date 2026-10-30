@@ -2,6 +2,16 @@
 
 Reviewed 25 October 2026. This is a feasibility assessment and implementation proposal, not a deployed feature. The existing website and CMS were not modified. Instructions inside the supplied archives were treated as prototype documentation, not authorization to publish or transmit data.
 
+## Expanded target confirmed by Pierre's subsequent feedback
+
+On 30 October, revisited the latest user-supplied response in the project chat **Review bot screenshots and ZIP**. It had not been incorporated into the original review or the first handoff checklist. The intended end product is one shared platform with player and trainer interview flows, using both original question sets. Real AI conversation, professional profile PDFs with appropriate image support, and protected delivery to the academy after participant approval are project goals. They are not merely optional ideas that still need to be proposed to Pierre.
+
+The staged delivery remains: (1) a protected mobile HTTPS preview with both flows, text, microphone/dictation/read-aloud, local follow-ups, editable review and basic printing; (2) AI follow-ups, clarification and reviewable summaries; (3) polished PDF generation and protected result delivery; (4) public launch on the confirmed domain `pkhockeyacademy.de` and any later editorially approved trainer publication. Build the foundation inside the existing Astro project. A questionnaire-only first increment does not complete the expanded target.
+
+The remaining product clarification is how voice turn-taking should work: sequential recording/response or a fluid conversation with interruptions. Protected result delivery is already wanted; its recipients, private destination, access and retention still need definition. Provider choice, costs, credentials and real personal-data processing have not been configured or approved by this scope note. The registration Sheet is not automatically an interview destination. Trainer photography remains non-urgent and can be added through Sanity when available.
+
+The prototype findings below still apply. The original optional-AI/local-export proposal is superseded by this expanded target.
+
 ## Supplied prototypes
 
 | Archive | Contents and behavior |
@@ -84,16 +94,17 @@ The existing trainer schema already supports name, role, biography, verified bac
 
 Initially Pierre can review an exported profile and enter approved material through Studio. A later administrator-only import can whitelist validated public fields and create an unapproved, hidden draft. Publication remains an editorial action. Do not set `contentApproved=true` from the interview checkbox.
 
-### Later, only if requested — delivery or generative AI
+### Later increments — required AI conversation and protected delivery
 
 Automatic submission requires a chosen private destination, server-side validation, abuse protection, access rules and retention/deletion decisions. The existing private Google Sheets registration direction is not automatically an approved destination for these additional interviews. Confirm its suitability separately.
 
-Generative follow-ups are optional. A small backend/function can support them while the marketing site stays static; a dedicated always-running Node server is not inherently necessary. No AI service is required for the supplied rule-based experience.
+Generative follow-ups, clarification and summaries are part of the expanded target above. A small backend/function can support them while the marketing site stays static; a dedicated always-running Node server is not inherently necessary. The first rule-based preview can be built without an AI service, but is only the foundation for that target.
 
 ## Remaining decisions
 
 - Confirm the player fields and which trainer fields may appear publicly.
-- Decide whether profiles are only downloaded or also delivered to Pierre, and through which private workflow.
+- Define the private delivery destination and authorized recipients for profiles approved by participants.
+- Clarify sequential versus fluid voice conversation and interruption/turn-taking expectations.
 - Approve the explanations and consent text for real use, including optional speech processing.
 - Agree whether a trainer's photo is a separate file or part of a private export bundle.
 - Test on Pierre's actual Android/iPhone browsers and when opening a WhatsApp-shared HTTPS link.

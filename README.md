@@ -179,7 +179,7 @@ Start with the German [setup guide for Pierre](docs/PIERRE-SETUP.md), covering S
 5. Real business contact details, WhatsApp destination and approved form delivery/privacy handling.
 6. Package conditions, payment and cancellation information; do not infer these from the supplied prices.
 7. Complete provider details, privacy/hosting information and legal review.
-8. Final public domain and explicit approval for the public academy launch. Vercel review hosting has been requested separately.
+8. The user confirmed the intended public domain as `pkhockeyacademy.de` on 30 October 2026. Domain/DNS connection and explicit public-launch approval remain separate from this confirmation; the current Vercel review host stays protected.
 
 ## Validation
 
