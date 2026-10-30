@@ -25,7 +25,7 @@ Termine/Trainingsstätten und Buchungs-/Zahlungs-/SpielerPlus-Abläufe werden au
 
 ## 1. Interviewbots: Inhalt und gewünschtes Ergebnis bestätigen
 
-Der nächste Entwicklungsschritt ist die gemeinsame Interviewgrundlage mit Spieler- und Trainerablauf. Die gelieferten Prototypen sind geprüft, aber noch keine Website-Funktion. Die folgende ursprüngliche Fragensammlung wird durch die aktuelle Auswahl oben und Pierres erweiterten Zielumfang ergänzt.
+Die gemeinsame Interviewgrundlage mit Spieler- und Trainerablauf ist als erste Testversion umgesetzt und geprüft: [aktueller Stand](INTERVIEWS.md). Für echte KI-Gespräche und geschützte Zustellung bleiben die genannten Entscheidungen offen. Die folgende ursprüngliche Fragensammlung wird durch die aktuelle Auswahl oben und Pierres erweiterten Zielumfang ergänzt.
 
 - [x] Beide ursprünglichen Fragensätze und beide Interviewabläufe gehören zum bestätigten Zielumfang.
 - [ ] Welche Antworten sind Pflicht, welche dürfen übersprungen werden? Beim Spielerbot insbesondere Name, Alter/Jahrgang, Verein, Größe und Gewicht ausdrücklich prüfen.

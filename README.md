@@ -77,6 +77,12 @@ web/
 
 The dynamic `[page].astro` file generates the nine fixed, static internal routes from `src/data/pages.ts`. It does not expose arbitrary content slugs. Main homepage components are reused on appropriate internal pages.
 
+## Interview preview
+
+`/interviews` now provides the shared player/trainer test portal. `/spieler-interview` and `/trainer-interview` reuse one typed engine with the original 15/14 questions, text input, optional browser dictation/read-aloud, bounded local follow-ups, back/skip, editable review, reset, JSON download and basic browser-print/PDF output. Voice results are bound to their question/session and are cancelled during navigation. No new package or credentials are needed.
+
+This is the first working increment of Pierre's expanded AI-interview project. Test with fictional answers on the protected review host. Inputs stay in memory, no result is sent to the academy, and real browser speech recognition can use an external vendor service only after explicit opt-in. The routes stay noindex/out of the sitemap; a launch-enabled build renders inactive pages instead of test forms. Real AI conversation, professional PDF/image generation and protected delivery remain required later increments with open provider/privacy/recipient/voice-turn-taking decisions. See [the implementation and acceptance record](docs/INTERVIEWS.md).
+
 ## Design and motion
 
 - The shared header stays at the top while scrolling on every page using CSS sticky positioning. Anchor targets leave space below the header, and the mobile menu scrolls within the remaining viewport height, including landscape screens. This works without JavaScript and adds no animation.

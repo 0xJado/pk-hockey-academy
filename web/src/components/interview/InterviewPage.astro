@@ -1,0 +1,14 @@
+---
+import Base from "../../layouts/Base.astro";
+import Interview from "./Interview.astro";
+import { interviewDefinitions, type InterviewKind } from "../../data/interviews";
+import "../../styles/interview.css";
+interface Props { kind: InterviewKind }
+const { kind } = Astro.props;
+const definition = interviewDefinitions[kind];
+const available = import.meta.env.PUBLIC_LAUNCH_READY !== "true";
+---
+<Base title={`${definition.label} – geschützte Testversion`} description={definition.description} noindex>
+  <section class="page-hero interview-page-hero"><div class="wrap"><a class="breadcrumb" href="/interviews">INTERVIEW-PORTAL <span aria-hidden="true">/</span> {definition.label.toUpperCase()}</a><p class="eyebrow">PK HOCKEY ACADEMY · INTERVIEWS</p><h1>{definition.title.split(". ")[0]}.<br /><span>{definition.title.split(". ").slice(1).join(". ")}</span></h1></div></section>
+  <section class="section interview-section"><div class="wrap">{available ? <Interview kind={kind} /> : <div class="notice"><h2>Interviewvorschau noch nicht freigeschaltet</h2><p>Die Interviews werden zunächst in einer geschützten Testumgebung erprobt. <a href="/kontakt">Zur Kontaktseite</a></p></div>}</div></section>
+</Base>

@@ -1,0 +1,76 @@
+---
+import { answerLimit, interviewDefinitions, type InterviewKind } from "../../data/interviews";
+interface Props { kind: InterviewKind }
+const { kind } = Astro.props;
+const definition = interviewDefinitions[kind];
+---
+<div class="interview-shell" data-interview={kind}>
+  <aside class="interview-guide" aria-label="So funktioniert die Vorschau">
+    <p class="eyebrow">DEIN PROFIL ENTSTEHT HIER</p>
+    <ol><li>Erzählen</li><li>Antworten prüfen</li><li>Testprofil speichern</li></ol>
+    <p>Du bestimmst das Tempo. Du kannst zurückgehen und deine Antworten ändern.</p>
+    <p class="interview-fine">Diese Testversion nutzt vorgegebene Rückfragen. KI-Gespräch und geschützter Ergebnisversand folgen in weiteren Schritten.</p>
+    <a href="/interviews">← Anderes Interview wählen</a>
+  </aside>
+
+  <div class="interview-workspace">
+    <div class="interview-preview-note" role="note"><strong>Geschützte Testversion · bitte nur erfundene Angaben</strong><p>Die Website versendet keine Ergebnisse an die Academy. Texteingaben bleiben für diesen Durchlauf im Browser und werden beim Verlassen oder Neuladen verworfen. Downloads speicherst du selbst. Die optionale Spracheingabe kann Audio an einen externen Erkennungsdienst deines Browsers übertragen.</p></div>
+    <noscript><div class="notice"><h2>Zum Testen bitte JavaScript aktivieren</h2><p>Der Interviewablauf benötigt JavaScript. Ohne JavaScript werden keine Angaben erfasst. <a href="/interviews">Zur Interview-Auswahl</a></p></div></noscript>
+
+    <section class="interview-panel" data-stage="welcome" aria-labelledby={`welcome-${kind}`}>
+      <p class="eyebrow">{definition.questions.length} FRAGEN · DEIN TEMPO</p>
+      <h2 id={`welcome-${kind}`}>Lass uns<br /><span>loslegen.</span></h2>
+      <p>{definition.description}</p>
+      <p>Du kannst Antworten tippen und später überarbeiten. Freiwillige Fragen und Rückfragen lassen sich überspringen.{kind === "trainer" && " Ein erfundener Name ist für das Trainer-Testprofil erforderlich."}</p>
+      <label class="interview-check"><input type="checkbox" data-test-confirmation autocomplete="off" /><span>{kind === "player" ? "Ich begleite diesen Test als erwachsene Person und verwende nur erfundene Angaben." : "Ich teste mit erfundenen Angaben und ohne echte Kontaktdaten."}</span></label>
+      <p class="interview-error" data-start-error role="alert" hidden></p>
+      <button class="button button--primary" type="button" data-action="start" disabled>Interview starten <span aria-hidden="true">↗</span></button>
+      <p class="interview-fine">Das Interview ist unabhängig von einer Trainingsanmeldung. Es bucht keinen Platz und veröffentlicht kein Trainerprofil.</p>
+    </section>
+
+    <section class="interview-panel" data-stage="question" aria-labelledby={`question-${kind}`} hidden>
+      <div class="interview-progress-label"><span data-progress-text></span><button type="button" class="interview-text-button" data-action="reset">Neu starten</button></div>
+      <progress data-progress max={definition.questions.length} value="0" aria-label="Interviewfortschritt"></progress>
+      <p class="eyebrow" data-section></p>
+      <h2 class="interview-question" id={`question-${kind}`} data-question tabindex="-1"></h2>
+      <p class="interview-question-help" id={`help-${kind}`} data-question-help></p>
+      <label class="interview-answer-label" for={`answer-${kind}`} data-answer-label>Deine Antwort</label>
+      <textarea id={`answer-${kind}`} data-answer rows="6" maxlength={answerLimit} autocomplete="off" aria-describedby={`help-${kind} error-${kind}`}></textarea>
+      <div class="interview-answer-meta"><span>Du kannst deinen Text jederzeit korrigieren.</span><span data-counter>0 / {answerLimit}</span></div>
+      <div class="interview-voice-actions"><button type="button" class="button button--outline" data-action="listen" aria-pressed="false" disabled>Antwort sprechen</button><button type="button" class="interview-text-button" data-action="read">Frage vorlesen</button></div>
+      <details class="interview-voice-settings"><summary>Optionale Sprachfunktionen</summary><p id={`speech-note-${kind}`}>Spracheingabe hängt vom Browser ab. Dabei kann Audio an den Spracherkennungsdienst deines Browsers übertragen werden. Bitte auch beim Sprechen nur erfundene Testangaben verwenden. Tippen funktioniert unabhängig davon.</p><label class="interview-check"><input type="checkbox" data-voice-consent aria-describedby={`speech-note-${kind}`} autocomplete="off" /><span>Ich möchte die optionale Browser-Spracheingabe nutzen.</span></label><label class="interview-check"><input type="checkbox" data-auto-read autocomplete="off" /><span>Neue Fragen automatisch vorlesen.</span></label><p data-speech-support class="interview-fine"></p></details>
+      <p class="interview-status" data-speech-status role="status" aria-live="polite"></p>
+      <p class="interview-error" id={`error-${kind}`} data-question-error role="alert" hidden></p>
+      <div class="interview-navigation"><button type="button" class="interview-text-button" data-action="back">← Zurück</button><button type="button" class="interview-text-button" data-action="skip">Überspringen</button><button type="button" class="button button--primary" data-action="next">Weiter →</button></div>
+    </section>
+
+    <section class="interview-panel" data-stage="review" aria-labelledby={`review-${kind}`} hidden>
+      <p class="eyebrow">DEIN ÜBERBLICK</p><h2 id={`review-${kind}`} data-review-heading tabindex="-1">Passt das<br /><span>so für dich?</span></h2>
+      <p>Hier kannst du alles korrigieren. Das Testprofil enthält deine Antworten, keine geprüfte Biografie oder KI-Zusammenfassung. Interne Angaben bleiben im eigenen Export und werden nicht veröffentlicht.</p>
+      <div class="interview-review-fields">
+        {definition.questions.map((question, index) => (
+          <fieldset class="interview-review-item" data-review-item={question.id}>
+            <legend>{question.label}{question.required ? " *" : ""}{question.internal ? " · intern" : ""}</legend>
+            <label for={`review-${kind}-${question.id}`}>Deine Antwort: {question.label}</label>
+            <textarea id={`review-${kind}-${question.id}`} data-review-id={question.id} data-part="answer" rows="3" maxlength={answerLimit} autocomplete="off" required={question.required}></textarea>
+            <div data-review-follow hidden><label for={`follow-${kind}-${question.id}`} data-follow-label>Deine Antwort auf die Rückfrage</label><textarea id={`follow-${kind}-${question.id}`} data-review-id={question.id} data-part="followUpAnswer" rows="3" maxlength={answerLimit} autocomplete="off"></textarea></div>
+            <button class="interview-text-button" type="button" data-edit-index={index}>Zur Frage zurück ↗</button>
+          </fieldset>
+        ))}
+      </div>
+      <p class="interview-error" data-review-error role="alert" hidden></p>
+      <div class="interview-export-actions"><button class="button button--primary" type="button" data-action="print">Drucken / als PDF speichern ↗</button><button class="button button--outline" type="button" data-action="download">Antworten als JSON speichern ↓</button></div>
+      <p class="interview-fine">PDF: Öffnet den Druckdialog deines Browsers. JSON: Speichert die Antworten als Datei. Beide Exporte können interne Angaben enthalten. Es gibt noch keinen Versand an Pierre und keine automatische Veröffentlichung.</p>
+      <p role="status" data-export-status></p><button class="interview-text-button" type="button" data-action="reset">Testdaten löschen und neu starten</button>
+    </section>
+  </div>
+
+  <dialog class="interview-reset-dialog" data-reset-dialog aria-labelledby={`reset-heading-${kind}`}>
+    <h2 id={`reset-heading-${kind}`}>Neu anfangen?</h2><p>Deine bisherigen Testantworten werden aus diesem Durchlauf gelöscht. Bereits heruntergeladene Dateien bleiben auf deinem Gerät.</p><div><button class="button button--outline" type="button" data-action="cancel-reset" autofocus>Abbrechen</button><button class="button button--primary" type="button" data-action="confirm-reset">Testdaten löschen</button></div>
+  </dialog>
+  <section class="interview-print-profile" data-print-profile aria-label="Testprofil zum Drucken" hidden></section>
+</div>
+<script>
+  import { installInterviews } from "../../lib/interview/controller";
+  installInterviews();
+</script>

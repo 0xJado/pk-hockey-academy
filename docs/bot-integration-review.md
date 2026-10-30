@@ -12,6 +12,10 @@ The remaining product clarification is how voice turn-taking should work: sequen
 
 The prototype findings below still apply. The original optional-AI/local-export proposal is superseded by this expanded target.
 
+## First implementation increment — 30 October 2026
+
+The shared portal and both original interview flows are now implemented in the Astro project. Text input, optional browser speech, local follow-ups, editable review, reset, JSON export and basic print/PDF output have passed local build/browser checks. The prototype's late-transcript and implicit-player-API-request defects are repaired in the shared implementation. The original prototype review below is historical evidence; current behavior, launch gating, executed acceptance and still-required AI/delivery work are recorded in [INTERVIEWS.md](INTERVIEWS.md). The open stakeholder questions remain open; no AI provider, paid service, private delivery destination or real-data collection has been enabled.
+
 ## Supplied prototypes
 
 | Archive | Contents and behavior |
