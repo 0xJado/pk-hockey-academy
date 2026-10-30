@@ -168,6 +168,8 @@ These environment flags do not constitute launch approval or legal review. Impre
 
 ## Required from Pierre before launch
 
+The current, shareable German [checklist for Pierre](docs/PIERRE-CHECKLIST.md) separates already supplied material from outstanding interview, registration, schedule, contact, legal and launch decisions. It excludes the shop and does not require trainer photography for the approved logo-backed presentation.
+
 Start with the German [setup guide for Pierre](docs/PIERRE-SETUP.md), covering Sanity Free, creation/sharing of the private Google Sheet and the handoff to development. Creating these resources does not activate online registration; server authentication, submission handling and process approvals remain pending.
 
 1. Further approved academy/player media and any training footage. The trainer section keeps its current logo backdrop as requested; no trainer photograph is required for the current scope. The supplied crest and Pierre's supplied hero photograph are already integrated. The registration v2 template is now supplied; live registration still needs the process and privacy decisions above.

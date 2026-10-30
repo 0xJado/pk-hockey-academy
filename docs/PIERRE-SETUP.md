@@ -2,6 +2,8 @@
 
 Stand: 25. Oktober 2026.
 
+Die aktualisierte [Checkliste vom 30. Oktober](PIERRE-CHECKLIST.md) nennt alle noch benötigten Entscheidungen und Inhalte. Sanity einschließlich Website-Klickbearbeitung ist inzwischen eingerichtet; dafür kein neues Konto oder Projekt erstellen. Die folgenden Einrichtungsschritte bleiben als Anleitung erhalten.
+
 Mit dieser Anleitung bereitest du die Website-Verwaltung und die private Tabelle für Trainingsanmeldungen vor. Du behältst die Kontrolle über beide Konten. Die technische Verbindung zur Website übernimmt anschließend die Entwicklung.
 
 **Aktueller Stand:** Die Academy-E-Mail-Adressen sowie das Sanity-Konto und -Projekt wurden vom Entwickler angelegt. Das öffentliche Dataset ist lokal mit Studio und Website verbunden; die Redaktion ist unter [pk-hockey-academy.sanity.studio](https://pk-hockey-academy.sanity.studio/) bereitgestellt. Anmeldung, Trainerbearbeitung, private Profilvorschau, Camp-Alben und deutsche Redaktionshilfe sind geprüft; das Academy-Konto hat laut Studio die Rolle Administrator. Pierres bestätigtes Startprofil ist freigegeben und veröffentlicht. Die Trainerübernahme und automatische Aktualisierung sind aktiv; Veröffentlichen, Ändern, Zurückziehen und Wiederherstellen wurden auf der geschützten Review-Website geprüft. Echte Camp-Medien und Kontowiederherstellung bleiben gesonderte Abnahmepunkte. Die private Google-Tabelle ist noch nicht verbunden; das Online-Anmeldeformular nimmt weiterhin keine Eingaben entgegen.
