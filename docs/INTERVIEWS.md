@@ -4,7 +4,7 @@ Implemented 30 October 2026. This completes the first questionnaire/voice-previe
 
 ## Try the preview
 
-Use the existing protected review website, then open `/interviews`. Choose `/spieler-interview` or `/trainer-interview`. Use fictional answers only. For local development run the existing website commands; no new dependency or credential is needed.
+Open [the protected interview portal](https://pk-hockey-academy.vercel.app/interviews). Choose `/spieler-interview` or `/trainer-interview`. Use fictional answers only. For local development run the existing website commands; no new dependency or credential is needed.
 
 1. Confirm the test-only notice. An adult accompanies the player test.
 2. Type an answer or opt into browser speech recognition under **Optionale Sprachfunktionen**, then choose **Antwort sprechen**. Recognition is not started automatically. **Frage vorlesen** reads the fixed question; automatic question reading is off by default.
@@ -37,6 +37,10 @@ Use the existing protected review website, then open `/interviews`. Choose `/spi
 - Visual inspection found inherited white-on-white outline controls; the scoped fix was rebuilt and responsive/keyboard checks repeated successfully. Existing Sanity vendor bundling warnings remain; no application build error remains.
 
 Ignored evidence: `output/playwright/interview-*.png`, `interview-*-answers.json`, `interview-*-profile.pdf`, `interview-pdf-checks.json`, `interview-layout-qa.log`; build logs under `output/`; task-owned harnesses under `.tools/`. No real personal answers or credentials are committed.
+
+## Hosted acceptance
+
+Deployment `dpl_3Ho6iwSoBwEzz9UWwMer5NvRVMbw` reached READY from `c1599c0`. Readback confirmed existing Deployment Protection remains enabled and `PUBLIC_LAUNCH_READY=false`. Native signed-in review-browser checks verified the portal, both interview start gates, player advance/back answer preservation, trainer-name error/disabled skip, optional skipping and the trainer role follow-up. All answers were fictional and were cleared by returning to the portal. The tab's error log was empty. Full local flow/export/voice-mock acceptance is recorded above; real microphone or AI behavior is not inferred from this hosted smoke test. Saved `output/playwright/interview-hosted-final.png` and retained the portal for review.
 
 ## Next increments and remaining inputs
 
