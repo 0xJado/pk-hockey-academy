@@ -2,7 +2,7 @@
 
 Standalone German Sanity Studio for trainer profiles, media-kit downloads and camp albums, photos and videos. Public website pages remain prerendered. Optional **Website bearbeiten** connects a protected server-rendered trainer preview with click-to-edit fields and a **Trainer hinzufügen** action. The existing content editor and private profile preview remain available. Sessions, venues and prices remain in `web/src/data/academy.ts`. The local Pierre profile is used only when the coach CMS migration is disabled.
 
-See [Visual Editing configuration and activation](../docs/VISUAL-EDITING.md). Set `SANITY_STUDIO_PREVIEW_URL` only when its website preview origin is ready; blank hides the new tool. The server-only Viewer credential is configured in the website environment, never in Studio. Native Studio deployment and iframe acceptance must be recorded separately from local builds.
+See [Visual Editing configuration, hosted acceptance and annual token renewal](../docs/VISUAL-EDITING.md). Hosted **Website bearbeiten** is active on the protected review website. Set `SANITY_STUDIO_PREVIEW_URL` only when its website preview origin is ready; blank hides the tool. When deploying the hosted Studio, explicitly set this variable to `https://pk-hockey-academy.vercel.app` in the deploying process before `npm run deploy -- --schema-required`; local development may retain its localhost origin. The separate annual Viewer credential is a production-only website Secret, never a Studio variable. Native Studio deployment and iframe acceptance are recorded separately from local builds.
 
 ## Ownership and first account setup
 

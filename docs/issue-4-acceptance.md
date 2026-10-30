@@ -39,6 +39,6 @@ The existing website design and motion system are preserved; this increment adds
 
 ## Separate follow-ups
 
-Hosted **Website bearbeiten** / Presentation iframe click-to-edit activation and its full edit/refresh sequence remain separate from the original ticket's native editable-profile requirement. Do not infer that acceptance from field attributes or private-preview tests. Real trainer-image upload acceptance can follow when approved photography exists. Real gallery upload/publication/withdrawal, account recovery/MFA/member lifecycle and legal/public launch checks also remain separate.
+Hosted **Website bearbeiten** was activated and verified separately on 30 October: the nested frame connected, clicking the website role focused the correct native field, and a draft edit/restoration automatically refreshed after repairing the missing refresh callback. The public original stayed unchanged, the restored test draft was cleared through normal publication, and responsive/sign-out/history denial checks passed. The [Visual Editing record](VISUAL-EDITING.md) includes deployment evidence, annual read-only token renewal and remaining HTTP-readback/vendor-console limitations. Real trainer-image upload acceptance can follow when approved photography exists. Real gallery upload/publication/withdrawal, account recovery/MFA/member lifecycle and legal/public launch checks remain separate.
 
 No GitHub issue comment or state change was made during this acceptance run.
