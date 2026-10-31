@@ -1,6 +1,9 @@
 .interview-section {
   padding-top: 64px;
 }
+.interview-print-profile {
+  display: none;
+}
 .interview-shell {
   display: grid;
   grid-template-columns: 240px minmax(0, 1fr);
@@ -65,6 +68,52 @@
 }
 .interview-panel > p {
   margin-block: 18px;
+}
+.interview-ai {
+  border: 1px solid #bacce0;
+  border-left: 3px solid var(--blue);
+  background: #f1f6fc;
+  padding: clamp(20px, 3vw, 32px);
+  margin-bottom: 28px;
+}
+.interview-ai h2 {
+  font-family: var(--font-body);
+  font-size: clamp(21px, 2vw, 27px);
+  line-height: 1.35;
+  margin: 14px 0;
+}
+.interview-ai > p {
+  margin-block: 12px;
+}
+.interview-ai-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+.interview-ai progress {
+  display: block;
+  width: 100%;
+  height: 6px;
+  accent-color: var(--blue);
+  margin-top: 20px;
+}
+.interview-ai-summary {
+  border-block: 1px solid #dbe4ef;
+  padding-block: 24px;
+  margin-block: 24px;
+}
+.interview-ai-summary h3 {
+  font-size: 30px;
+}
+.interview-ai-summary p {
+  margin-block: 12px;
+  font-size: 13px;
+}
+.interview-ai-summary label {
+  display: block;
+  margin: 20px 0 10px;
+  font-weight: 600;
 }
 .interview-panel [hidden],
 .interview-shell [hidden] {

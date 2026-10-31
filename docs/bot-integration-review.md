@@ -18,7 +18,7 @@ The shared portal and both original interview flows are now implemented in the A
 
 ## Browser AI direction — 31 October 2026
 
-The next-increment direction agreed on 31 October is optional browser AI, loaded while the original questions remain usable, starting with sub-1B model evaluation. Mobile excludes 4B; 2B is a possible later optional mode with a Wi-Fi recommendation and device testing. This supersedes the earlier assumption that AI necessarily requires a hosted inference provider. No browser AI is enabled yet; see [current direction and acceptance requirements](INTERVIEWS.md#browser-ai-direction--31-october-2026).
+The user selected Qwen3.5 0.8B with a Wi-Fi notice/confirmation before activation. The protected preview now implements lazy loading, constrained model selection of approved follow-ups and an editable model-written summary; no 2B/4B option or inference server is added. Live unrestricted small-model trials produced repetitions and awkward questions, so this increment deliberately constrains follow-up wording. Wider conversation, real-phone acceptance and protected delivery remain outstanding. This supersedes the assumption that AI necessarily requires a hosted provider; see [current behavior and executed acceptance](INTERVIEWS.md#browser-ai-direction--31-october-2026).
 
 ## Supplied prototypes
 

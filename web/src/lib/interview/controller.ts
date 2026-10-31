@@ -5,6 +5,13 @@ import {
 } from "../../data/interviews.ts";
 import { InterviewSession } from "./model.ts";
 import { SpeechCapture, type SpeechWindow } from "./speech.ts";
+import { BrowserInterviewAi, type AiUpdate } from "./ai-client.ts";
+import {
+  followUpTask,
+  summaryTask,
+  parseAiText,
+  parseFollowUp,
+} from "./ai-policy.ts";
 
 function mountInterview(root: HTMLElement): () => void {
   const kind = root.dataset.interview;
@@ -44,8 +51,68 @@ function mountInterview(root: HTMLElement): () => void {
   const downloads = new Map<string, number>();
   let readGeneration = 0;
   let disposed = false;
+  let actionEpoch = 0;
+  let pendingNext = false;
+  let aiUpdate: AiUpdate = { state: "idle", progress: 0 };
+  const wifi = find<HTMLInputElement>("[data-ai-wifi]");
+  const summary = find<HTMLTextAreaElement>("[data-ai-summary]");
+  const ai = new BrowserInterviewAi((update) => {
+    aiUpdate = update;
+    renderAi();
+  });
+
+  function renderAi() {
+    const { state, progress } = aiUpdate;
+    root.dataset.aiState = state;
+    find<HTMLElement>("[data-ai-panel]").hidden = false;
+    const active = ["loading", "ready", "busy"].includes(state);
+    wifi.disabled = active;
+    const load = find<HTMLButtonElement>('[data-action="ai-load"]');
+    load.hidden = active || session.stage === "welcome";
+    load.disabled = !wifi.checked || session.stage === "welcome";
+    find<HTMLButtonElement>('[data-action="ai-stop"]').hidden = !active;
+    const bar = find<HTMLProgressElement>("[data-ai-progress]");
+    bar.hidden = state !== "loading";
+    bar.value = progress;
+    const messages = {
+      idle: "Die normalen Fragen sind sofort bereit. Die KI lädt erst nach deiner Bestätigung.",
+      loading: `KI wird vorbereitet (${Math.round(progress * 100)} %). Du kannst die normalen Fragen weiter beantworten.`,
+      ready:
+        "KI bereit. Passende Rückfragen und ein Textentwurf sind jetzt auf deinem Gerät möglich.",
+      busy: "Die KI formuliert auf deinem Gerät. Du kannst die Verarbeitung jederzeit beenden.",
+      error:
+        "Die KI konnte nicht weiterarbeiten. Deine Antworten bleiben erhalten. Nutze die normalen Fragen oder versuche es erneut im WLAN.",
+      unsupported:
+        "Dieses Gerät oder dieser Browser unterstützt die lokale KI hier nicht. Du kannst das Interview mit den normalen Fragen fortsetzen.",
+    };
+    find<HTMLElement>("[data-ai-status]").textContent = messages[state];
+    find<HTMLButtonElement>('[data-action="next"]').disabled = pendingNext;
+    find<HTMLButtonElement>('[data-action="ai-fallback"]').hidden =
+      !pendingNext;
+    find<HTMLElement>("[data-ai-question-status]").textContent = pendingNext
+      ? "Eine kurze KI-Rückfrage entsteht. Du kannst stattdessen mit der vorgegebenen Rückfrage weitergehen."
+      : state === "loading"
+        ? "Die KI lädt im Hintergrund. Du kannst hier normal weitermachen."
+        : "";
+    find<HTMLButtonElement>('[data-action="ai-summary"]').disabled =
+      state !== "ready" || session.stage !== "review";
+  }
+  function renderSummary() {
+    find<HTMLElement>("[data-ai-summary-result]").hidden = !session.summary;
+    summary.value = session.summary;
+  }
+  function cancelAiAction() {
+    actionEpoch++;
+    if (ai.state === "busy" && !pendingNext)
+      find<HTMLElement>("[data-ai-summary-status]").textContent =
+        "Die Erstellung wurde beendet. Deine Antworten bleiben erhalten.";
+    pendingNext = false;
+    ai.cancelRequest();
+    renderAi();
+  }
 
   function stopMedia() {
+    cancelAiAction();
     speech.cancel();
     readGeneration++;
     window.speechSynthesis?.cancel();
@@ -92,6 +159,7 @@ function mountInterview(root: HTMLElement): () => void {
   function showStage() {
     for (const stage of stages)
       stage.hidden = stage.dataset.stage !== session.stage;
+    renderAi();
   }
   function focusStage(target: HTMLElement) {
     target.focus({ preventScroll: true });
@@ -111,7 +179,7 @@ function mountInterview(root: HTMLElement): () => void {
       `Frage ${session.index + 1} von ${session.questions.length}${session.following ? " · Rückfrage" : ""}`;
     find<HTMLProgressElement>("[data-progress]").value = session.index;
     find<HTMLElement>("[data-question-help]").textContent = session.following
-      ? "Freiwillige Rückfrage. Du kannst sie beantworten oder überspringen."
+      ? `${session.getAnswer(session.current.id).followUpSource === "browser-ai" ? "Freiwillige, von der KI gewählte Rückfrage" : "Freiwillige Rückfrage"}. Du kannst sie beantworten oder überspringen.`
       : session.current.required
         ? "Ein erfundener Name ist für dieses Testprofil erforderlich."
         : "Freiwillige Frage. Du kannst sie auch überspringen.";
@@ -138,6 +206,7 @@ function mountInterview(root: HTMLElement): () => void {
     stopMedia();
     showStage();
     error("[data-review-error]");
+    renderSummary();
     for (const item of session.questions) {
       const value = session.getAnswer(item.id);
       const fieldset = find<HTMLFieldSetElement>(
@@ -171,6 +240,76 @@ function mountInterview(root: HTMLElement): () => void {
     error("[data-review-error]");
     return session.export();
   }
+  function advance(value: string, skip = false, aiQuestion?: string) {
+    try {
+      session.advance(value, skip, aiQuestion);
+      if (session.stage === "review") renderReview();
+      else renderQuestion();
+    } catch (failure) {
+      error(
+        "[data-question-error]",
+        failure instanceof Error
+          ? failure.message
+          : "Bitte die Antwort prüfen.",
+      );
+      answer.setAttribute("aria-invalid", "true");
+      answer.focus();
+    }
+  }
+  async function next(skip: boolean) {
+    stopMedia();
+    const value = answer.value;
+    const previous = session.getAnswer(session.current.id);
+    const keepAi =
+      previous.followUpSource === "browser-ai" && previous.answer === value;
+    const task =
+      !skip && !session.following && !keepAi && ai.state === "ready"
+        ? followUpTask(kind as InterviewKind, session.current, value)
+        : undefined;
+    if (!task) {
+      advance(value, skip);
+      return;
+    }
+    const epoch = actionEpoch;
+    pendingNext = true;
+    renderAi();
+    try {
+      const text = parseFollowUp(await ai.generate(task), task);
+      if (disposed || epoch !== actionEpoch) return;
+      pendingNext = false;
+      advance(value, false, text);
+    } catch {
+      if (disposed || epoch !== actionEpoch) return;
+      pendingNext = false;
+      advance(value);
+    }
+  }
+  async function makeSummary() {
+    stopMedia();
+    const profile = checkedExport();
+    if (!profile) return;
+    const task = summaryTask(kind as InterviewKind, profile.answers);
+    const status = find<HTMLElement>("[data-ai-summary-status]");
+    if (!task) {
+      status.textContent =
+        "Bitte beantworte zuerst eine Frage zu deiner Hockeygeschichte oder deinem Trainingsprofil.";
+      return;
+    }
+    const epoch = actionEpoch;
+    status.textContent = "Dein Textentwurf entsteht auf deinem Gerät …";
+    try {
+      const text = parseAiText(await ai.generate(task), "summary");
+      if (disposed || epoch !== actionEpoch) return;
+      session.setSummary(text);
+      renderSummary();
+      status.textContent =
+        "Bitte prüfe den Entwurf und korrigiere alles, was nicht zu deinen Antworten passt.";
+    } catch {
+      if (!disposed && epoch === actionEpoch)
+        status.textContent =
+          "Der KI-Entwurf konnte nicht erstellt werden. Deine Antworten kannst du weiterhin prüfen und speichern.";
+    }
+  }
   function print() {
     stopMedia();
     const profile = checkedExport();
@@ -188,6 +327,10 @@ function mountInterview(root: HTMLElement): () => void {
       "p",
       `TESTPROFIL · ${new Date().toLocaleDateString("de-DE")} · Ungeprüfte Testantworten, keine Veröffentlichung und keine Trainingsbuchung.`,
     ).className = "interview-print-note";
+    if (profile.aiSummary) {
+      add(printProfile, "h3", "KI-Textentwurf · ungeprüft");
+      add(printProfile, "p", profile.aiSummary.text);
+    }
     let section = "";
     for (const item of profile.answers) {
       if (item.section !== section) {
@@ -258,24 +401,33 @@ function mountInterview(root: HTMLElement): () => void {
           error("[data-start-error]");
           session.start();
           renderQuestion();
+          if (wifi.checked) ai.start(true, true);
           break;
         case "next":
         case "skip":
+          void next(target.dataset.action === "skip");
+          break;
+        case "ai-load":
+          ai.start(
+            wifi.checked,
+            session.stage !== "welcome" &&
+              find<HTMLInputElement>("[data-test-confirmation]").checked,
+          );
+          break;
+        case "ai-stop":
           stopMedia();
-          try {
-            session.advance(answer.value, target.dataset.action === "skip");
-            if (session.stage === "review") renderReview();
-            else renderQuestion();
-          } catch (failure) {
-            error(
-              "[data-question-error]",
-              failure instanceof Error
-                ? failure.message
-                : "Bitte die Antwort prüfen.",
-            );
-            answer.setAttribute("aria-invalid", "true");
-            answer.focus();
-          }
+          ai.stop();
+          wifi.checked = false;
+          find<HTMLElement>("[data-ai-summary-status]").textContent =
+            "KI beendet. Bereits erstellte Entwürfe bleiben zum Prüfen erhalten.";
+          renderAi();
+          break;
+        case "ai-fallback":
+          stopMedia();
+          advance(answer.value);
+          break;
+        case "ai-summary":
+          void makeSummary();
           break;
         case "back":
           stopMedia();
@@ -283,6 +435,7 @@ function mountInterview(root: HTMLElement): () => void {
           renderQuestion();
           break;
         case "listen":
+          cancelAiAction();
           if (speech.active) speech.stop();
           else if (voiceConsent.checked) {
             window.speechSynthesis?.cancel();
@@ -305,6 +458,7 @@ function mountInterview(root: HTMLElement): () => void {
           break;
         case "confirm-reset":
           stopMedia();
+          ai.stop();
           session.reset();
           for (const field of root.querySelectorAll<
             HTMLInputElement | HTMLTextAreaElement
@@ -315,6 +469,8 @@ function mountInterview(root: HTMLElement): () => void {
           printProfile.replaceChildren();
           printProfile.hidden = true;
           find<HTMLElement>("[data-export-status]").textContent = "";
+          find<HTMLElement>("[data-ai-summary-status]").textContent = "";
+          renderSummary();
           dialog.close();
           showStage();
           error("[data-start-error]");
@@ -341,6 +497,7 @@ function mountInterview(root: HTMLElement): () => void {
         answer.removeAttribute("aria-invalid");
       }
       if (target instanceof HTMLTextAreaElement && target.dataset.reviewId) {
+        stopMedia();
         try {
           session.edit(
             target.dataset.reviewId,
@@ -350,6 +507,7 @@ function mountInterview(root: HTMLElement): () => void {
             target.value,
           );
           error("[data-review-error]");
+          renderSummary();
         } catch (failure) {
           error(
             "[data-review-error]",
@@ -359,9 +517,14 @@ function mountInterview(root: HTMLElement): () => void {
           );
         }
       }
+      if (target === summary) {
+        stopMedia();
+        session.setSummary(summary.value, true);
+      }
     },
     { signal },
   );
+  wifi.addEventListener("change", () => renderAi(), { signal });
   voiceConsent.addEventListener(
     "change",
     () => {
@@ -387,12 +550,14 @@ function mountInterview(root: HTMLElement): () => void {
   );
   start.disabled = false;
   root.dataset.interviewReady = "true";
+  renderAi();
   voiceAvailability();
 
   return () => {
     if (disposed) return;
     disposed = true;
     stopMedia();
+    ai.stop();
     lifecycle.abort();
     session.reset();
     for (const [url, timer] of downloads) {
@@ -412,6 +577,7 @@ function mountInterview(root: HTMLElement): () => void {
     dialog.close();
     showStage();
     delete root.dataset.interviewReady;
+    delete root.dataset.aiState;
   };
 }
 

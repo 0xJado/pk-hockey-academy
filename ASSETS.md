@@ -1,5 +1,11 @@
 # Asset provenance
 
+## Optional browser model — 31 October 2026
+
+- Runtime: `@mlc-ai/web-llm@0.2.87` (Apache-2.0), pinned in the website lockfile, with its matching versioned MLC WASM loaded only after the Wi-Fi/download opt-in.
+- Artifact: [MLC Qwen3.5-0.8B-q4f16_1-MLC](https://huggingface.co/mlc-ai/Qwen3.5-0.8B-q4f16_1-MLC), weights pinned to revision `0ec1389`, derived from [Qwen/Qwen3.5-0.8B](https://huggingface.co/Qwen/Qwen3.5-0.8B) (Apache-2.0). Externally served model artifacts are not committed to Git. The download origins and approximate size are disclosed before activation.
+- Experimental approved-question selection and unchecked text drafts are not verified academy facts. Model caching does not persist interview answers. See [runtime/data boundaries](docs/INTERVIEWS.md#browser-ai-direction--31-october-2026).
+
 No NHL/DEL assets or external video embeds are used. Existing branding and illustrative assets are served locally. The gallery is empty until real, approved camp albums are connected; those photos, video files and posters will be served by Sanity's CDN. Illustrative photographs do not document academy training or imply an affiliation.
 
 ## Camp gallery — 20 October 2026

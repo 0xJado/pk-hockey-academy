@@ -1,5 +1,13 @@
 # Validation record
 
+## Optional browser interview AI — 31 October 2026
+
+Implemented selected 0.8B WebLLM with visible Wi-Fi/download notice and confirmation before any worker, background loading/warm-up while fixed questions continue, bounded approved-question selection, preset fallback, editable unverified summary and version-2 provenance. No inference server, credentials, automatic delivery or CMS writes were added. Both flows remain protected fictional-data previews with their launch gate.
+
+64 website tests, Astro check (88 files, zero diagnostics) and configured CMS build passed. Simulated-worker browser checks passed both complete flows, gating, answer preservation, cancellation/stale callbacks, summary/edit/export/print/reset/history and unsupported-device continuation. Both welcome pages passed 1440/768/375px without overflow or page errors. Actual desktop Edge WebGPU loaded the model, selected an appropriate approved follow-up (~2.3 s), and produced a faithful editable summary (~1.4 s); cached loading/warm-up took ~15.9 s. Earlier unrestricted trials repeated/copied questions, motivating the approved pool. These desktop examples are not phone acceptance. Real phones/WhatsApp, wider German quality, real voice and protected delivery remain outstanding. See [implementation and evidence](docs/INTERVIEWS.md#browser-ai-direction--31-october-2026).
+
+Existing full interview browser regression passed, including voice mocks, long exports, keyboard, reduced motion, no-JavaScript and history. The active AI question passed all three widths; the actual summary appeared in the version-2 JSON and a visually checked two-page PDF. The print profile is restricted to print media. Isolated launch-enabled output kept all three routes inactive/noindex without interview inputs; existing deployment protection remains enabled.
+
 ## Shared interview preview — 30 October 2026
 
 Implemented `/interviews`, `/spieler-interview` and `/trainer-interview` in the existing Astro/TypeScript stack, reusing the academy design and both original question sets (15/14). One state engine and scoped controller handle test confirmation, optional voice/read-aloud, bounded local follow-ups, required trainer-name validation, back/skip, labelled editable review, reset, versioned JSON export and plain-text print/PDF output. Recognition callbacks are session-bound; navigation/typing/reset/disposal cancel speech, remove listeners and clear memory. No React island, dependency, AI service, application submission, persistence or CMS write was added. The open questions remain open. This completes the first preview foundation, not the expanded AI/profile/delivery scope.

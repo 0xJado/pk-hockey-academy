@@ -9,13 +9,24 @@ const definition = interviewDefinitions[kind];
     <p class="eyebrow">DEIN PROFIL ENTSTEHT HIER</p>
     <ol><li>Erzählen</li><li>Antworten prüfen</li><li>Testprofil speichern</li></ol>
     <p>Du bestimmst das Tempo. Du kannst zurückgehen und deine Antworten ändern.</p>
-    <p class="interview-fine">Diese Testversion nutzt vorgegebene Rückfragen. KI-Gespräch und geschützter Ergebnisversand folgen in weiteren Schritten.</p>
+    <p class="interview-fine">Die Originalfragen geben den Ablauf vor. Auf Wunsch wählt eine lokale KI passende Rückfragen aus und erstellt einen Textentwurf. Geschützter Ergebnisversand folgt später.</p>
     <a href="/interviews">← Anderes Interview wählen</a>
   </aside>
 
   <div class="interview-workspace">
     <div class="interview-preview-note" role="note"><strong>Geschützte Testversion · bitte nur erfundene Angaben</strong><p>Die Website versendet keine Ergebnisse an die Academy. Texteingaben bleiben für diesen Durchlauf im Browser und werden beim Verlassen oder Neuladen verworfen. Downloads speicherst du selbst. Die optionale Spracheingabe kann Audio an einen externen Erkennungsdienst deines Browsers übertragen.</p></div>
     <noscript><div class="notice"><h2>Zum Testen bitte JavaScript aktivieren</h2><p>Der Interviewablauf benötigt JavaScript. Ohne JavaScript werden keine Angaben erfasst. <a href="/interviews">Zur Interview-Auswahl</a></p></div></noscript>
+
+    <section class="interview-ai" data-ai-panel aria-labelledby={`ai-heading-${kind}`} hidden>
+      <p class="eyebrow">FREIWILLIGE KI-UNTERSTÜTZUNG · EXPERIMENTELLE TESTVERSION</p>
+      <h2 id={`ai-heading-${kind}`}>Erst ins WLAN, dann zur KI.</h2>
+      <p>Bitte verbinde dich vor dem KI-Chat mit einem WLAN. Beim ersten Laden werden ca. 450 MB auf dein Gerät heruntergeladen. Wenn du unten bestätigst, beginnt der Download mit dem Interviewstart. Währenddessen kannst du die normalen Fragen beantworten.</p>
+      <p class="interview-fine" id={`ai-note-${kind}`}>Das Modell wird von Hugging Face und MLC geladen und kann im Browser zwischengespeichert werden. Deine Texte werden für die KI auf deinem Gerät verarbeitet. Die optionale Browser-Spracheingabe ist davon unabhängig. Nicht jedes Gerät unterstützt die KI; das Interview funktioniert auch ohne sie. KI-Texte können Fehler enthalten.</p>
+      <label class="interview-check"><input type="checkbox" data-ai-wifi autocomplete="off" aria-describedby={`ai-note-${kind}`} /><span>Ich bin mit einem WLAN verbunden und möchte die optionale KI laden.</span></label>
+      <div class="interview-ai-actions"><button type="button" class="button button--outline" data-action="ai-load" disabled>KI im Hintergrund laden ↓</button><button type="button" class="interview-text-button" data-action="ai-stop" hidden>KI beenden</button></div>
+      <progress data-ai-progress max="1" value="0" aria-label="KI-Ladefortschritt" hidden></progress>
+      <p class="interview-status" data-ai-status role="status" aria-live="polite">Die normalen Fragen sind sofort bereit. Die KI lädt erst nach deiner Bestätigung.</p>
+    </section>
 
     <section class="interview-panel" data-stage="welcome" aria-labelledby={`welcome-${kind}`}>
       <p class="eyebrow">{definition.questions.length} FRAGEN · DEIN TEMPO</p>
@@ -42,11 +53,13 @@ const definition = interviewDefinitions[kind];
       <p class="interview-status" data-speech-status role="status" aria-live="polite"></p>
       <p class="interview-error" id={`error-${kind}`} data-question-error role="alert" hidden></p>
       <div class="interview-navigation"><button type="button" class="interview-text-button" data-action="back">← Zurück</button><button type="button" class="interview-text-button" data-action="skip">Überspringen</button><button type="button" class="button button--primary" data-action="next">Weiter →</button></div>
+      <button type="button" class="interview-text-button" data-action="ai-fallback" hidden>Mit vorgegebener Rückfrage weiter →</button>
+      <p class="interview-status" data-ai-question-status role="status" aria-live="polite"></p>
     </section>
 
     <section class="interview-panel" data-stage="review" aria-labelledby={`review-${kind}`} hidden>
       <p class="eyebrow">DEIN ÜBERBLICK</p><h2 id={`review-${kind}`} data-review-heading tabindex="-1">Passt das<br /><span>so für dich?</span></h2>
-      <p>Hier kannst du alles korrigieren. Das Testprofil enthält deine Antworten, keine geprüfte Biografie oder KI-Zusammenfassung. Interne Angaben bleiben im eigenen Export und werden nicht veröffentlicht.</p>
+      <p>Hier kannst du alles korrigieren. Das Testprofil enthält deine Antworten und auf Wunsch einen ungeprüften KI-Textentwurf. Interne Angaben bleiben im eigenen Export und werden nicht veröffentlicht.</p>
       <div class="interview-review-fields">
         {definition.questions.map((question, index) => (
           <fieldset class="interview-review-item" data-review-item={question.id}>
@@ -57,6 +70,12 @@ const definition = interviewDefinitions[kind];
             <button class="interview-text-button" type="button" data-edit-index={index}>Zur Frage zurück ↗</button>
           </fieldset>
         ))}
+      </div>
+      <div class="interview-ai-summary">
+        <h3>Dein Textentwurf</h3><p>Wenn die KI bereit ist, kannst du aus deinen Antworten einen kurzen Entwurf erstellen. Prüfe und korrigiere ihn bitte selbst. Kontaktdaten, Name, Geburtsjahr und Körpermaße werden dafür nicht verwendet. Wenn du Antworten änderst, wird der bisherige Entwurf verworfen.</p>
+        <button class="button button--outline" type="button" data-action="ai-summary" disabled>KI-Textentwurf erstellen</button>
+        <div data-ai-summary-result hidden><label for={`summary-${kind}`}>KI-Textentwurf prüfen und bearbeiten</label><textarea id={`summary-${kind}`} data-ai-summary rows="5" maxlength="1200" autocomplete="off"></textarea><p class="interview-fine">Ungeprüfter Entwurf · keine bestätigte Biografie und keine Freigabe zur Veröffentlichung.</p></div>
+        <p class="interview-status" data-ai-summary-status role="status" aria-live="polite"></p>
       </div>
       <p class="interview-error" data-review-error role="alert" hidden></p>
       <div class="interview-export-actions"><button class="button button--primary" type="button" data-action="print">Drucken / als PDF speichern ↗</button><button class="button button--outline" type="button" data-action="download">Antworten als JSON speichern ↓</button></div>
