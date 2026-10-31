@@ -16,6 +16,10 @@ The prototype findings below still apply. The original optional-AI/local-export 
 
 The shared portal and both original interview flows are now implemented in the Astro project. Text input, optional browser speech, local follow-ups, editable review, reset, JSON export and basic print/PDF output have passed local build/browser checks. The prototype's late-transcript and implicit-player-API-request defects are repaired in the shared implementation. The original prototype review below is historical evidence; current behavior, launch gating, executed acceptance and still-required AI/delivery work are recorded in [INTERVIEWS.md](INTERVIEWS.md). The open stakeholder questions remain open; no AI provider, paid service, private delivery destination or real-data collection has been enabled.
 
+## Browser AI direction — 31 October 2026
+
+The next-increment direction agreed on 31 October is optional browser AI, loaded while the original questions remain usable, starting with sub-1B model evaluation. Mobile excludes 4B; 2B is a possible later optional mode with a Wi-Fi recommendation and device testing. This supersedes the earlier assumption that AI necessarily requires a hosted inference provider. No browser AI is enabled yet; see [current direction and acceptance requirements](INTERVIEWS.md#browser-ai-direction--31-october-2026).
+
 ## Supplied prototypes
 
 | Archive | Contents and behavior |

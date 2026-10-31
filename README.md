@@ -83,6 +83,8 @@ The dynamic `[page].astro` file generates the nine fixed, static internal routes
 
 This is the first working increment of Pierre's expanded AI-interview project. Test with fictional answers on the protected review host. Inputs stay in memory, no result is sent to the academy, and real browser speech recognition can use an external vendor service only after explicit opt-in. The routes stay noindex/out of the sitemap; a launch-enabled build renders inactive pages instead of test forms. Real AI conversation, professional PDF/image generation and protected delivery remain required later increments with open provider/privacy/recipient/voice-turn-taking decisions. See [the implementation and acceptance record](docs/INTERVIEWS.md).
 
+Direction agreed 31 October: evaluate an optional sub-1B WebLLM model, loading after explicit opt-in while the original questions remain usable. Exclude 4B from the mobile flow; consider 2B only as a later optional mode with a Wi-Fi recommendation and device acceptance. Wi-Fi addresses download cost/speed, not runtime memory. This direction is documented in [the browser AI plan](docs/INTERVIEWS.md#browser-ai-direction--31-october-2026); no model package or AI behavior is enabled yet.
+
 ## Design and motion
 
 - The shared header stays at the top while scrolling on every page using CSS sticky positioning. Anchor targets leave space below the header, and the mobile menu scrolls within the remaining viewport height, including landscape screens. This works without JavaScript and adds no animation.

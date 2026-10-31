@@ -42,11 +42,21 @@ Ignored evidence: `output/playwright/interview-*.png`, `interview-*-answers.json
 
 Deployment `dpl_3Ho6iwSoBwEzz9UWwMer5NvRVMbw` reached READY from `c1599c0`. Readback confirmed existing Deployment Protection remains enabled and `PUBLIC_LAUNCH_READY=false`. Native signed-in review-browser checks verified the portal, both interview start gates, player advance/back answer preservation, trainer-name error/disabled skip, optional skipping and the trainer role follow-up. All answers were fictional and were cleared by returning to the portal. The tab's error log was empty. Full local flow/export/voice-mock acceptance is recorded above; real microphone or AI behavior is not inferred from this hosted smoke test. Saved `output/playwright/interview-hosted-final.png` and retained the portal for review.
 
+## Browser AI direction — 31 October 2026
+
+The user prefers lazy-loading browser AI while participants answer the original questions. Mobile devices are the baseline: exclude 4B from the mobile flow and evaluate a sub-1B model first. A 2B model is only a possible optional mode with a clear Wi-Fi recommendation, subject to device testing. This records the intended next increment; WebLLM, model downloads and AI responses are not implemented or enabled yet.
+
+- Keep the fixed questions immediately usable. Offer an explicit AI-loading action with the approximate download size before requesting model assets. After opt-in, load asynchronously while the participant continues answering; show progress without blocking the questionnaire.
+- Keep the original questions, requiredness, answer review and exports controlled by application code. Use the model for bounded contextual follow-ups and reviewable summaries. Pending, unsupported or failed AI must leave the existing local flow usable and preserve answers. Do not replace an active question or overwrite an answer when loading finishes.
+- Treat Qwen3.5-0.8B-q4f16_1-MLC as a candidate, not a selected or accepted model. Its published repository is approximately 447 MB; WebLLM's current configuration estimates 1,629 MB of model GPU memory at its configured context. Download size and runtime memory are different. Wi-Fi does not resolve GPU/memory limitations, and neither label proves phone compatibility.
+- Cache model artifacts where the browser permits it; do not infer persistent storage of interview answers from model caching. Keep voice processing and protected result delivery as separate reviewed data flows. Browser inference does not establish that existing browser dictation is local.
+- Before selecting a model, test German follow-ups and faithful summaries using fictional answers, first/cached loads, memory pressure, cancellation/navigation and unsupported-device fallback on actual Android/iPhone devices and WhatsApp-opened links. No phone timing or model-quality acceptance has been completed.
+
 ## Next increments and remaining inputs
 
 The rule-based preview is the starting point. Keep these as required follow-up work:
 
-1. Define sequential versus fluid voice turn-taking, then implement server-side AI clarification/follow-ups and participant-correctable summaries with a reviewed provider, budget and data flow.
+1. Prototype the browser AI direction above with fictional data, then implement bounded clarification/follow-ups and participant-correctable summaries after model/device acceptance. Define sequential versus fluid voice turn-taking separately. Any hosted-provider alternative still requires a reviewed budget and data flow, with credentials kept server-side.
 2. Add the professional PDF/profile generator and appropriate optional image support. The current browser-print export is a basic answer profile. Trainer portraits remain optional and can already be maintained in Sanity independently.
 3. Agree private recipients, storage/access, retention, approval and failure behavior, then implement protected delivery. Do not assume that the registration Sheet is an approved interview destination.
 4. Review player field requiredness, privacy/guardian wording and real processing before inviting families to supply actual data. Test real Android/iPhone microphones and a WhatsApp-opened protected HTTPS link.
@@ -57,3 +67,6 @@ The rule-based preview is the starting point. Keep these as required follow-up w
 - [Astro page transitions and lifecycle](https://docs.astro.build/en/guides/view-transitions/)
 - [SpeechRecognition support and service processing](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition)
 - [Aborting recognition](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition/abort)
+- [WebLLM asynchronous model loading](https://webllm.mlc.ai/docs/user/basic_usage.html)
+- [WebLLM workers and model caching](https://webllm.mlc.ai/docs/user/advanced_usage.html)
+- [Candidate model artifacts](https://huggingface.co/mlc-ai/Qwen3.5-0.8B-q4f16_1-MLC/tree/main) and [WebLLM model memory estimates](https://github.com/mlc-ai/web-llm/blob/main/src/config.ts), checked 31 October 2026
