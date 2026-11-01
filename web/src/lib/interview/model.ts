@@ -4,18 +4,15 @@ import {
   type InterviewKind,
   type InterviewQuestion,
 } from "../../data/interviews.ts";
-import { interviewAiModel } from "./ai-policy.ts";
 
 export interface InterviewAnswer {
   answer: string;
   followUpQuestion: string;
   followUpAnswer: string;
-  followUpSource: "local-rules" | "browser-ai" | null;
 }
 export type InterviewStage = "welcome" | "question" | "review";
 
-// Local fallback. Optional browser AI supplies a bounded question explicitly;
-// this state model never sends interview answers anywhere.
+// Fixed local follow-up rules; interview answers are never sent anywhere.
 export function localFollowUp(
   kind: InterviewKind,
   question: InterviewQuestion,
@@ -55,7 +52,6 @@ const emptyAnswer = (): InterviewAnswer => ({
   answer: "",
   followUpQuestion: "",
   followUpAnswer: "",
-  followUpSource: null,
 });
 
 export class InterviewSession {
@@ -64,8 +60,6 @@ export class InterviewSession {
   index = 0;
   following = false;
   private answers: Record<string, InterviewAnswer> = {};
-  summary = "";
-  summaryEdited = false;
 
   constructor(kind: InterviewKind) {
     this.kind = kind;
@@ -96,8 +90,6 @@ export class InterviewSession {
     this.following = false;
   }
   reset() {
-    this.summary = "";
-    this.summaryEdited = false;
     this.answers = Object.fromEntries(
       this.questions.map((question) => [question.id, emptyAnswer()]),
     );
@@ -111,14 +103,7 @@ export class InterviewSession {
     if (value.length > answerLimit)
       throw new Error(`Bitte höchstens ${answerLimit} Zeichen verwenden.`);
     const answer = this.answers[id]!;
-    if (answer[part] !== value) this.summary = "";
     answer[part] = value;
-  }
-  setSummary(text: string, edited = false) {
-    if (text.length > 1200)
-      throw new Error("Bitte höchstens 1200 Zeichen verwenden.");
-    this.summary = text;
-    this.summaryEdited = edited;
   }
   save(value: string) {
     this.edit(
@@ -127,43 +112,20 @@ export class InterviewSession {
       value,
     );
   }
-  advance(value: string, skip = false, aiQuestion?: string) {
+  advance(value: string, skip = false) {
     if (this.stage !== "question") return;
     if (!this.following && this.current.required && (skip || !value.trim()))
       throw new Error("Bitte gib einen Namen für das Testprofil ein.");
-    const previous = this.getAnswer(this.current.id);
-    if (
-      aiQuestion !== undefined &&
-      (!this.current.followUp ||
-        this.current.internal ||
-        !aiQuestion.endsWith("?") ||
-        aiQuestion.length > 180)
-    )
-      throw new Error("Ungültige KI-Rückfrage.");
     this.save(skip ? "" : value);
     if (!this.following && skip) {
       this.answers[this.current.id]!.followUpQuestion = "";
       this.answers[this.current.id]!.followUpAnswer = "";
-      this.answers[this.current.id]!.followUpSource = null;
     }
     if (!this.following && !skip) {
       const answer = this.answers[this.current.id]!;
-      const keepAi =
-        aiQuestion === undefined &&
-        previous.answer === value &&
-        previous.followUpSource === "browser-ai";
-      const prompt =
-        aiQuestion ??
-        (keepAi
-          ? previous.followUpQuestion
-          : localFollowUp(this.kind, this.current, value));
+      const prompt = localFollowUp(this.kind, this.current, value);
       if (prompt !== answer.followUpQuestion) answer.followUpAnswer = "";
       answer.followUpQuestion = prompt;
-      answer.followUpSource = prompt
-        ? aiQuestion !== undefined || keepAi
-          ? "browser-ai"
-          : "local-rules"
-        : null;
       if (answer.followUpQuestion) {
         this.following = true;
         return;
@@ -197,25 +159,11 @@ export class InterviewSession {
     if (this.validate())
       throw new Error("Bitte den Namen im Testprofil ergänzen.");
     return {
-      schemaVersion: 2,
+      schemaVersion: 1,
       kind: this.kind,
       createdAt: now.toISOString(),
       testOnly: true,
-      responseMode:
-        this.summary ||
-        Object.values(this.answers).some(
-          (a) => a.followUpSource === "browser-ai",
-        )
-          ? "browser-ai-with-local-fallback"
-          : "local-rules",
-      aiSummary: this.summary
-        ? {
-            text: this.summary,
-            model: interviewAiModel,
-            edited: this.summaryEdited,
-            verified: false,
-          }
-        : null,
+      responseMode: "local-rules",
       reviewedForPublication: false,
       containsInternalAnswers: this.questions.some(
         (question) =>

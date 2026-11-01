@@ -1,6 +1,6 @@
 # Was wir noch von Pierre brauchen
 
-Stand: 30. Oktober 2026. Diese Liste dient als Gesprächs- und Freigabegrundlage. Der Shop bleibt ausgeklammert. Antworten mit privaten Kontakt- oder Kontoinformationen bitte privat weitergeben; diese Checkliste liegt in einem öffentlichen Repository. Keine Passwörter, Tokens, ausgefüllten Anmeldungen oder Gesundheitsdaten hier eintragen.
+Stand: 1. November 2026. Diese Liste dient als Gesprächs- und Freigabegrundlage. Der Shop bleibt ausgeklammert. Antworten mit privaten Kontakt- oder Kontoinformationen bitte privat weitergeben; diese Checkliste liegt in einem öffentlichen Repository. Keine Passwörter, Tokens, ausgefüllten Anmeldungen oder Gesundheitsdaten hier eintragen.
 
 ## Bereits vorhanden – muss nicht erneut geliefert werden
 
@@ -16,7 +16,7 @@ Stand: 30. Oktober 2026. Diese Liste dient als Gesprächs- und Freigabegrundlage
 
 Die frühere umfassende Liste unten bleibt als späterer Projektbedarf erhalten. Für die jetzige Nachricht gilt die kürzere Auswahl:
 
-1. **Bots:** Pierres jüngste Antwort legt bereits eine gemeinsame Plattform für Spieler und Trainer, die Originalfragen, echten KI-Sprachdialog, professionelle Profil-PDFs und geschützte Ergebnisübermittlung fest. Noch klären: schrittweiser Sprachdialog oder flüssiges Gespräch mit Unterbrechungen, und wer die freigegebenen Ergebnisse erhalten/einsehen darf. Nicht erneut fragen, ob beide Abläufe, KI oder Zustellung überhaupt gewünscht sind.
+1. **Interviews:** Am 1. November wurde der KI-Teil verworfen. Die einfache Spieler- und Trainerversion bleibt mit Originalfragen, festen Rückfragen, optionaler Spracheingabe/Vorlesen, Antwortprüfung und manuellem JSON-/Druckexport bestehen. KI-Dialog und generierte Zusammenfassungen gehören nicht mehr zum Umfang. Vor echtem Einsatz die Spielerfelder und Datenschutzhinweise bestätigen; eine spätere geschützte Zustellung braucht weiterhin einen privaten Zielort und berechtigte Empfänger.
 2. **Anmeldung:** Pierre legt unter einem von ihm kontrollierten Academy-Google-Konto eine leere Tabelle **PK Hockey Academy – Anmeldungen** mit dem Reiter **Anmeldungen** an. Unter Freigabe bleibt **Allgemeiner Zugriff: Eingeschränkt**; einen privaten Ablageort ohne geerbte Freigaben verwenden. Den Link privat mitteilen und berechtigte Mitarbeiter benennen. Die Entwicklung nennt später die genaue Adresse für den technischen Schreibzugang und richtet Formular, Spalten, Validierung und Zustellung ein. Pierre muss weder Code noch API-Schlüssel erstellen. Für die Aktivierung außerdem Pflichtangaben, Zustimmungstexte und Aufbewahrung/Löschung festlegen. Eine angelegte Tabelle allein aktiviert das Formular nicht.
 3. **Kontakt:** Öffentliche Academy-E-Mail und WhatsApp-Nummer/-Link bestätigen; Empfänger für Kontaktanfragen nennen.
 4. **Rechtliches:** Vollständige Unternehmens-/Anbieterangaben sowie freigegebene Impressums- und Datenschutztexte anfordern.
@@ -25,13 +25,13 @@ Termine/Trainingsstätten und Buchungs-/Zahlungs-/SpielerPlus-Abläufe werden au
 
 ## 1. Interviewbots: Inhalt und gewünschtes Ergebnis bestätigen
 
-Die gemeinsame Interviewgrundlage mit Spieler- und Trainerablauf ist als erste Testversion umgesetzt und geprüft: [aktueller Stand](INTERVIEWS.md). Für echte KI-Gespräche und geschützte Zustellung bleiben die genannten Entscheidungen offen. Die folgende ursprüngliche Fragensammlung wird durch die aktuelle Auswahl oben und Pierres erweiterten Zielumfang ergänzt.
+Die einfache Interviewversion mit Spieler- und Trainerablauf bleibt bestehen: [aktueller Stand](INTERVIEWS.md). Die Entscheidung vom 1. November ersetzt die frühere Planung für KI-Gespräche und generierte Zusammenfassungen. Für echte Angaben und eine mögliche spätere geschützte Zustellung bleiben die folgenden Entscheidungen offen.
 
 - [x] Beide ursprünglichen Fragensätze und beide Interviewabläufe gehören zum bestätigten Zielumfang.
 - [ ] Welche Antworten sind Pflicht, welche dürfen übersprungen werden? Beim Spielerbot insbesondere Name, Alter/Jahrgang, Verein, Größe und Gewicht ausdrücklich prüfen.
 - [ ] Den privaten Zielort und berechtigte Empfänger der bereits gewünschten geschützten Ergebnisübermittlung festlegen. Die Anmeldungstabelle ist nicht automatisch auch für Interviews freigegeben.
 - [ ] Welche Trainerantworten dürfen nach redaktioneller Prüfung öffentlich werden, welche bleiben intern? Qualifikationen und biografische Aussagen müssen bestätigt werden.
-- [ ] Schrittweisen Sprachdialog oder flüssiges Gespräch mit Unterbrechungen klären. Text bleibt verfügbar. Vor echtem Einsatz die Erklärung zur Sprachverarbeitung und die vorgesehenen Einwilligungen freigeben.
+- [ ] Vor echtem Einsatz die Erklärung zur optionalen Browser-Spracheingabe und die vorgesehenen Einwilligungen freigeben. Texteingabe bleibt verfügbar.
 - [ ] Für die Abnahme einen vollständigen Probedurchlauf auf Pierres tatsächlichem Handy vereinbaren, auch über einen in WhatsApp geöffneten Link.
 
 Die erste geschützte Vorschau kann mit erfundenen Testantworten entstehen. Für die vorgegebenen Nachfragen wird kein KI-Anbieter benötigt. Es werden keine Trainerfotos vorausgesetzt und keine Interviewantworten automatisch als freigegebene Sanity-Inhalte veröffentlicht.

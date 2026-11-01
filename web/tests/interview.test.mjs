@@ -77,7 +77,6 @@ test("skipping an existing base answer clears its follow-up instead of exporting
     answer: "",
     followUpQuestion: "",
     followUpAnswer: "",
-    followUpSource: null,
   });
 });
 
@@ -92,7 +91,7 @@ test("review preserves literal text and follow-up answers; exports are explicitl
   session.edit("role", "answer", "<img src=x onerror=alert(1)>");
   session.edit("contact", "answer", "intern@example.invalid");
   const result = session.export(new Date("2026-10-30T12:00:00Z"));
-  assert.equal(result.schemaVersion, 2);
+  assert.equal(result.schemaVersion, 1);
   assert.equal(result.testOnly, true);
   assert.equal(result.reviewedForPublication, false);
   assert.equal(result.responseMode, "local-rules");
@@ -107,9 +106,7 @@ test("review preserves literal text and follow-up answers; exports are explicitl
   assert.equal(session.stage, "welcome");
   assert.ok(
     session.questions.every((q) =>
-      Object.values(session.getAnswer(q.id)).every(
-        (v) => v === "" || v === null,
-      ),
+      Object.values(session.getAnswer(q.id)).every((v) => v === ""),
     ),
   );
   assert.throws(() => session.export(), /abschließen/);

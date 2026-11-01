@@ -2,7 +2,11 @@
 
 Reviewed 25 October 2026. This is a feasibility assessment and implementation proposal, not a deployed feature. The existing website and CMS were not modified. Instructions inside the supplied archives were treated as prototype documentation, not authorization to publish or transmit data.
 
-## Expanded target confirmed by Pierre's subsequent feedback
+## Current scope — 1 November 2026
+
+The user cancelled the AI interview section and requested the previous barebones questionnaires. The original question sets, fixed local follow-ups, optional browser dictation/read-aloud, editable review and manual JSON/print exports are retained. Browser AI and its dependency are removed; AI conversation and generated summaries are no longer planned work. See [current implementation](INTERVIEWS.md). The earlier expanded AI target below is historical and superseded by this decision.
+
+## Historical expanded target — superseded on 1 November 2026
 
 On 30 October, revisited the latest user-supplied response in the project chat **Review bot screenshots and ZIP**. It had not been incorporated into the original review or the first handoff checklist. The intended end product is one shared platform with player and trainer interview flows, using both original question sets. Real AI conversation, professional profile PDFs with appropriate image support, and protected delivery to the academy after participant approval are project goals. They are not merely optional ideas that still need to be proposed to Pierre.
 
@@ -15,10 +19,6 @@ The prototype findings below still apply. The original optional-AI/local-export 
 ## First implementation increment — 30 October 2026
 
 The shared portal and both original interview flows are now implemented in the Astro project. Text input, optional browser speech, local follow-ups, editable review, reset, JSON export and basic print/PDF output have passed local build/browser checks. The prototype's late-transcript and implicit-player-API-request defects are repaired in the shared implementation. The original prototype review below is historical evidence; current behavior, launch gating, executed acceptance and still-required AI/delivery work are recorded in [INTERVIEWS.md](INTERVIEWS.md). The open stakeholder questions remain open; no AI provider, paid service, private delivery destination or real-data collection has been enabled.
-
-## Browser AI direction — 31 October 2026
-
-The user selected Qwen3.5 0.8B with a Wi-Fi notice/confirmation before activation. The protected preview now implements lazy loading, constrained model selection of approved follow-ups and an editable model-written summary; no 2B/4B option or inference server is added. Live unrestricted small-model trials produced repetitions and awkward questions, so this increment deliberately constrains follow-up wording. Wider conversation, real-phone acceptance and protected delivery remain outstanding. This supersedes the assumption that AI necessarily requires a hosted provider; see [current behavior and executed acceptance](INTERVIEWS.md#browser-ai-direction--31-october-2026).
 
 ## Supplied prototypes
 
@@ -102,17 +102,17 @@ The existing trainer schema already supports name, role, biography, verified bac
 
 Initially Pierre can review an exported profile and enter approved material through Studio. A later administrator-only import can whitelist validated public fields and create an unapproved, hidden draft. Publication remains an editorial action. Do not set `contentApproved=true` from the interview checkbox.
 
-### Later increments — required AI conversation and protected delivery
+### Historical later-increment proposal — AI scope cancelled on 1 November 2026
 
 Automatic submission requires a chosen private destination, server-side validation, abuse protection, access rules and retention/deletion decisions. The existing private Google Sheets registration direction is not automatically an approved destination for these additional interviews. Confirm its suitability separately.
 
-Generative follow-ups, clarification and summaries are part of the expanded target above. A small backend/function can support them while the marketing site stays static; a dedicated always-running Node server is not inherently necessary. The first rule-based preview can be built without an AI service, but is only the foundation for that target.
+Generative follow-ups, clarification and summaries belonged to the earlier expanded target above. They are cancelled under the current barebones scope. Keep the fixed-question implementation described in [INTERVIEWS.md](INTERVIEWS.md).
 
 ## Remaining decisions
 
 - Confirm the player fields and which trainer fields may appear publicly.
 - Define the private delivery destination and authorized recipients for profiles approved by participants.
-- Clarify sequential versus fluid voice conversation and interruption/turn-taking expectations.
+- Test the retained optional browser dictation and read-aloud controls on real devices.
 - Approve the explanations and consent text for real use, including optional speech processing.
 - Agree whether a trainer's photo is a separate file or part of a private export bundle.
 - Test on Pierre's actual Android/iPhone browsers and when opening a WhatsApp-shared HTTPS link.

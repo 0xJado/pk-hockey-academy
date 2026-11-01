@@ -1,6 +1,6 @@
-# Interview portal — first working increment
+# Interview portal — barebones questionnaires
 
-Implemented 30 October 2026. This completes the first questionnaire/voice-preview foundation, not Pierre's full AI-interview project. The [expanded target](bot-integration-review.md) still includes real AI conversation, professional profile generation/image support and protected delivery after participant approval. Voice turn-taking and delivery recipients remain open questions.
+Current scope, 1 November 2026: the user cancelled all interview AI work and requested the previous barebones version. The 30 October questionnaire implementation is restored: original questions, fixed local follow-ups, optional browser dictation/read-aloud, editable review and JSON/browser-print exports. Browser AI code, model loading, the Wi-Fi gate, generated text and the WebLLM dependency are removed. This decision supersedes the earlier AI targets in the [historical integration review](bot-integration-review.md). No AI integration remains planned.
 
 ## Try the preview
 
@@ -27,6 +27,8 @@ Open [the protected interview portal](https://pk-hockey-academy.vercel.app/inter
 
 ## Executed checks
 
+The 1 November rollback passed all 54 tests, Astro check, the configured build and the existing complete browser regression for both interviews. Final checks also confirmed the absence of AI controls/model code, schema-1 local exports and the preserved screen/print visibility fix. See [the rollback validation record](../VALIDATION.md#interview-ai-rollback--1-november-2026). The 30 October acceptance details below remain the baseline; hosted acceptance describes the earlier deployment, not a deployment of this local rollback.
+
 - Website: 54 tests (including nine new interview/state/voice regressions), Astro check (84 files, no diagnostics), and configured build passed.
 - Edge: portal and both welcome pages at 1440/768/375px; long active question at all three widths; one h1/no overflow, noindex, test gate, mandatory-name errors, all original questions, back/follow-up preservation, labelled editable review, real JSON downloads, literal HTML safety, print-dialog invocation and reset/cancel.
 - Mocked audio: no automatic microphone/speech activation, Next aborts capture, a delayed transcript is rejected, manual reading runs, and unsupported recognition leaves typing available. Unit regressions also cover permission denial, duplicate pending starts, stale errors/end callbacks and interim transcript replacement. Real microphone/provider/device behavior remains unverified.
@@ -42,39 +44,16 @@ Ignored evidence: `output/playwright/interview-*.png`, `interview-*-answers.json
 
 Deployment `dpl_3Ho6iwSoBwEzz9UWwMer5NvRVMbw` reached READY from `c1599c0`. Readback confirmed existing Deployment Protection remains enabled and `PUBLIC_LAUNCH_READY=false`. Native signed-in review-browser checks verified the portal, both interview start gates, player advance/back answer preservation, trainer-name error/disabled skip, optional skipping and the trainer role follow-up. All answers were fictional and were cleared by returning to the portal. The tab's error log was empty. Full local flow/export/voice-mock acceptance is recorded above; real microphone or AI behavior is not inferred from this hosted smoke test. Saved `output/playwright/interview-hosted-final.png` and retained the portal for review.
 
-## Browser AI direction — 31 October 2026
+## Remaining inputs for real use
 
-The user selected Qwen3.5 0.8B and requires a Wi-Fi notice before AI use. The protected preview now implements optional browser AI through pinned `@mlc-ai/web-llm@0.2.87`. There is no 2B/4B mode or hosted inference API. This experimental, bounded assistant does not complete Pierre's broader fluid-conversation/delivery project.
+The barebones preview remains available for fictional tests. Before real use:
 
-- Visible German Wi-Fi/450 MB notice and unchecked download confirmation. Both it and the fictional-data confirmation are required before any worker/model request. Wi-Fi is self-reported, not automatically detected. Opted-in loading and answer-free warm-up run while the fixed questions continue; AI can also be enabled later explicitly.
-- The model selects one contextual question from a small approved pool, constrained by JSON grammar and independently checked in the main thread. Earlier unrestricted live trials repeated the original question, copied an example or produced awkward wording. This is prompt/schema specialization, not fine-tuning or unrestricted conversation. Pending or failed AI never replaces the active answer; the preset fallback remains available.
-- The selected worker/model is `Qwen3.5-0.8B-q4f16_1-MLC`, with weights pinned to revision `0ec1389` and matching versioned WASM. Its repository is approximately 447 MB; WebLLM estimates 1,629 MB of GPU memory at its 4,096-token context, with browser/OS/loading overhead additional. Wi-Fi does not resolve device memory limits.
-- One Dedicated Worker, model-artifact caching, load progress and bounded timeouts (180 seconds loading, 30 follow-up, 45 summary). Reset/navigation terminate the worker and invalidate late callbacks. Cancelling active generation also terminates its worker; later activation reloads cached artifacts. Only model artifacts are cached; answers stay in session/worker memory. Chat state resets after generation.
-- Optional editable summaries use a small field whitelist excluding identity, internal contact/birth year, measurements and profile URLs. Editing source answers invalidates the draft. Version-2 JSON records follow-up provenance and an unverified/edited summary; print labels AI drafts. No publication approval, automatic delivery, CMS write or provider inference request is added. Browser dictation remains a separate potentially external service with its existing opt-in. Launch-enabled builds still disable all interview inputs.
-
-### Browser AI acceptance
-
-64 website tests, Astro check (88 files, zero diagnostics) and configured CMS build passed. Simulated-worker Edge checks passed both complete flows, Wi-Fi/test gating, readiness without answer replacement, late-result rejection, selection/source labels, editable summary, real JSON downloads/print content, invalidation/reset/history and unsupported-device continuation. Both welcome pages passed 1440/768/375px with one h1/no overflow; no page errors or external requests occurred in that simulated run.
-
-Actual local desktop Edge WebGPU (NVIDIA Ampere, not a phone) loaded the real model. Final cached loading/warm-up took ~15.9 seconds, an appropriate approved skating follow-up ~2.3 seconds, and a faithful editable summary ~1.4 seconds. These isolated examples are not a mobile benchmark or broader quality acceptance. Real Android/iPhone/WhatsApp compatibility, memory pressure, microphone behavior and wider German output evaluation remain unverified. Ignored evidence: `output/interview-ai-*.log`, `output/playwright/interview-ai-*`.
-
-The complete existing no-AI browser regression also passed both original question sets, voice mocks, long-answer JSON/PDF, reset/history, keyboard, reduced motion, no-JavaScript explanation and no application POSTs/external requests/page errors. The active real-AI follow-up passed 1440/768/375px overflow checks. A real-model version-2 export retained one AI follow-up and the unverified summary; its two-page A4 PDF was rasterized and visually checked. Fixed the print-only profile leaking into the ordinary screen after printing. An isolated launch-enabled build confirmed all three interview routes remain inactive, without input/textarea roots, and noindex. Existing deployment protection was read back enabled.
-
-## Next increments and remaining inputs
-
-The rule-based preview is the starting point. Keep these as required follow-up work:
-
-1. Evaluate the bounded 0.8B assistant on actual phones and broader fictional German interviews. Define sequential versus fluid voice turn-taking and any later free-form conversation increment separately. These constrained selections and isolated desktop examples do not complete the expanded conversational target. A hosted-provider alternative still needs a reviewed budget/data flow and server-only credentials.
-2. Add the professional PDF/profile generator and appropriate optional image support. The current browser-print export is a basic answer profile. Trainer portraits remain optional and can already be maintained in Sanity independently.
-3. Agree private recipients, storage/access, retention, approval and failure behavior, then implement protected delivery. Do not assume that the registration Sheet is an approved interview destination.
-4. Review player field requiredness, privacy/guardian wording and real processing before inviting families to supply actual data. Test real Android/iPhone microphones and a WhatsApp-opened protected HTTPS link.
-5. Add any later trainer-to-CMS import as an authorized, whitelisted hidden/unapproved draft workflow. Raw player interviews, internal trainer contacts and consent evidence must stay outside the public content dataset.
+1. Review player field requiredness, privacy/guardian wording and real processing before inviting families to supply actual data. Test real Android/iPhone microphones and a WhatsApp-opened protected HTTPS link.
+2. Exports remain manual JSON downloads and basic browser printing/PDF. Any future private delivery needs agreed recipients, storage/access, retention, approval and failure behavior. The registration Sheet is not an approved interview destination.
+3. Any later trainer-to-CMS import requires a separately authorized, whitelisted hidden/unapproved draft workflow. Raw player interviews, internal trainer contacts and consent evidence must stay outside the public content dataset. Trainer portraits remain optional and can be maintained independently in Sanity.
 
 ## References
 
 - [Astro page transitions and lifecycle](https://docs.astro.build/en/guides/view-transitions/)
 - [SpeechRecognition support and service processing](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition)
 - [Aborting recognition](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition/abort)
-- [WebLLM asynchronous model loading](https://webllm.mlc.ai/docs/user/basic_usage.html)
-- [WebLLM workers and model caching](https://webllm.mlc.ai/docs/user/advanced_usage.html)
-- [Candidate model artifacts](https://huggingface.co/mlc-ai/Qwen3.5-0.8B-q4f16_1-MLC/tree/main) and [WebLLM model memory estimates](https://github.com/mlc-ai/web-llm/blob/main/src/config.ts), checked 31 October 2026
