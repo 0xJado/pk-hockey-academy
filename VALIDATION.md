@@ -604,3 +604,7 @@ Pending: native signed-in Studio iframe click/creation/refresh acceptance and ho
 The signed-in Codex browser exposed two integration failures missed by the standalone preview checks: a relative Presentation `initial` URL embedded Studio recursively on port 3333, and the configured Studio URL's trailing slash crashed the overlay's actual `createEditUrl` call. Presentation now constructs an absolute website URL (local port 4322); trainer and incomplete-profile field metadata share a validated Studio base without the trailing slash. Added regression tests for cross-origin preview/enable routing and Sanity's real edit URL builder.
 
 Both project type checks and builds passed; all 39 website tests and 15 Studio tests passed. In the user's signed-in Codex tab, the website rendered inside Studio, the Bearbeiten control became enabled, and the document list detected Pierre's profile and opened its native editor route. No coach content was edited or published. Direct selection of fields through the iframe could not be confirmed with the browser automation, so full click/edit/refresh and new-profile acceptance remain separate from the verified connection repair. Hosted activation remains pending.
+
+## Local documentation, training CMS and browser checks — 2 November 2026
+
+See [local acceptance](docs/LOCAL-ACCEPTANCE.md) for the implementation, adversarial checks, measured public-script size and remaining live acceptance boundaries. See [current status](docs/STATUS.md) for the current backlog.

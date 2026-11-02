@@ -1,3 +1,5 @@
+> Historical assessment. Use [current status](STATUS.md) for the current backlog. Several findings below were subsequently completed.
+
 # Project assessment — 29 October 2026
 
 Follow-up, 30 October: the omitted Sanity media-kit scope from closed issue #2 is now implemented; see [the media-kit workflow and verification](issue-2-media-kit.md). The historical finding below describes the original assessment.
