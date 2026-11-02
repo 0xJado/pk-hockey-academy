@@ -96,6 +96,7 @@ globalThis.fetch = async (input, options) => {
   }
   if (url.hostname !== "cmsqa123.api.sanity.io")
     return originalFetch(input, options);
+  const training = url.searchParams.get("query")?.includes('_type == "trainingSession"');
   const trainers = url.searchParams
     .get("query")
     ?.includes('_type == "trainer"');
@@ -108,7 +109,7 @@ globalThis.fetch = async (input, options) => {
   appendFileSync(
     process.env.PK_CMS_QA_TRACE,
     JSON.stringify({
-      type: trainers
+      type: training ? "training" : trainers
         ? "trainers"
         : social
           ? "social"
@@ -122,6 +123,11 @@ globalThis.fetch = async (input, options) => {
     }) + "\n",
   );
   const mode = process.env.PK_CMS_QA_MODE;
+  if (training) {
+    const venue={_id:"fixture-venue",_type:"venue",city:"Technische Teststadt",details:"Technische Standortbeschreibung",rinkName:"Technische Testhalle",address:"Technische Testadresse",status:"active_city",visibility:"public",contentApproved:true};
+    const session={_id:"fixture-session",_type:"trainingSession",title:"Technischer Testtermin",startAt:"2099-10-01T10:00:00+02:00",endAt:"2099-10-01T12:00:00+02:00",group:"Technische Testgruppe",venue:{_ref:venue._id},status:"open",isDemo:false,visibility:"public",contentApproved:true};
+    return new Response(JSON.stringify({result: mode === "empty" ? {venues:[],sessions:[]} : {venues:[venue],sessions:[session,{...session,_id:"drafts.hidden",title:"DRAFT_DO_NOT_EXPOSE"}]}}));
+  }
   if (mediaKit) {
     const result =
       mode === "empty"

@@ -8,7 +8,7 @@ import Pricing from "../components/Pricing.astro";
 import FinalCTA from "../components/FinalCTA.astro";
 import { pages, principles, organisationSteps } from "../data/pages";
 import type { ContentPage } from "../data/pages";
-import { getAcademy } from "../lib/content";
+import { getTraining } from "../lib/training-source";
 import { getTrainers } from "../lib/trainer-source";
 
 export function getStaticPaths() {
@@ -16,7 +16,7 @@ export function getStaticPaths() {
 }
 const slug = Astro.params.page as ContentPage;
 const page = pages[slug];
-const { venues } = getAcademy();
+const { venues } = await getTraining();
 const trainers = slug === "trainerpool" ? await getTrainers() : [];
 const legal = slug === "impressum" || slug === "datenschutz";
 ---
@@ -164,7 +164,7 @@ const legal = slug === "impressum" || slug === "datenschutz";
                   <h2>{venue.city}</h2>
                   <p>{venue.details}</p>
                   <span class="small muted">
-                    Eishalle und Adresse: noch nicht veröffentlicht
+                    {venue.rinkName ?? "Eishalle: noch nicht veröffentlicht"}<br />{venue.address ?? "Adresse: noch nicht veröffentlicht"}
                   </span>
                 </div>
                 <Button href="/trainingstermine" variant="text">

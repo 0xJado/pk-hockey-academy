@@ -19,6 +19,7 @@ const env = {
   SANITY_DATASET: "",
   SANITY_READ_TOKEN: "",
   SANITY_PREVIEW_READ_TOKEN: "",
+  SANITY_TRAINING_ENABLED: "false",
   SANITY_TRAINERS_ENABLED: "false",
   SANITY_SOCIAL_ENABLED: "false",
   PUBLIC_SANITY_STUDIO_URL: "",
@@ -119,6 +120,7 @@ for (const mode of [
     SANITY_PROJECT_ID: "cmsqa123",
     SANITY_DATASET: "qa",
     SANITY_READ_TOKEN: mode === "public" ? "" : "test-token-never-real",
+    SANITY_TRAINING_ENABLED: "true",
     SANITY_TRAINERS_ENABLED: "true",
     SANITY_SOCIAL_ENABLED: "true",
     PUBLIC_SANITY_STUDIO_URL: "https://pk-hockey-academy.sanity.studio/",
@@ -177,6 +179,10 @@ for (const mode of [
     requests.some((request) => request.type === "gallery"),
     "Server-only gallery configuration was not activated.",
   );
+  const schedule = await readFile(resolve(folder,"trainingstermine/index.html"),"utf8");
+  const venuePage = await readFile(resolve(folder,"trainingsstaetten/index.html"),"utf8");
+  if (mode === "empty") { assert.equal(schedule.includes("Technischer Testtermin"),false); assert.equal(venuePage.includes("Technische Testhalle"),false); }
+  else { assert.match(schedule,/Technischer Testtermin/); assert.match(venuePage,/Technische Testhalle/); assert.match(venuePage,/Technische Testadresse/); assert.equal(schedule.includes("Bei SpielerPlus anmelden"),false); }
   const pool = await readFile(
     resolve(folder, "trainerpool/index.html"),
     "utf8",

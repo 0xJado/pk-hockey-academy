@@ -53,3 +53,6 @@ export const formatPrice = (price: number) =>
     currency: "EUR",
     maximumFractionDigits: 0,
   }).format(price);
+
+/** Static output changes only on rebuild; callers can inject time for deterministic checks. */
+export const getUpcomingSessions = (source: TrainingSession[], now = Date.now()) => getPublishedSessions(source).filter(session => Date.parse(session.endAt) > now);

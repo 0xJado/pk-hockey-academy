@@ -1,3 +1,4 @@
+import { venue, trainingSession } from "./schemaTypes/training";
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { deDELocale } from "@sanity/locale-de-de";
@@ -92,6 +93,8 @@ export default defineConfig({
             S.documentTypeListItem("mediaKitDownload").title(
               "Medienkit-Downloads",
             ),
+            S.documentTypeListItem("venue").title("Trainingsstätten"),
+            S.documentTypeListItem("trainingSession").title("Trainingstermine"),
             S.documentTypeListItem("galleryCamp").title("Alle Camp-Alben"),
             S.documentTypeListItem("socialPost").title(
               "Ausgewählte Social-Beiträge",
@@ -112,6 +115,7 @@ export default defineConfig({
   ],
   schema: {
     types: [
+      venue, trainingSession,
       galleryCamp,
       galleryPhoto,
       galleryVideo,

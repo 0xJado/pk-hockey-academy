@@ -1,7 +1,7 @@
 ---
-import { getAcademy } from "../lib/content";
+import { getTraining } from "../lib/training-source";
 import Arrow from "./Arrow.astro";
-const { venues } = getAcademy();
+const { venues } = await getTraining();
 ---
 
 <div class="venues-layout">

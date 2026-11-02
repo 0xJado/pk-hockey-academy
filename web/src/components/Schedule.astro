@@ -1,12 +1,13 @@
 ---
+import { getTraining } from "../lib/training-source";
 import Button from "./Button.astro";
 import {
-  getAcademy,
-  getPublishedSessions,
+  getUpcomingSessions,
   getRegistrationUrl,
 } from "../lib/content";
-const sessions = getPublishedSessions();
-const { venues } = getAcademy();
+const training = await getTraining();
+const sessions = getUpcomingSessions(training.sessions);
+const { venues } = training;
 const date = (value: string, options: Intl.DateTimeFormatOptions) =>
   new Intl.DateTimeFormat("de-DE", {
     timeZone: "Europe/Berlin",
@@ -47,6 +48,8 @@ const date = (value: string, options: Intl.DateTimeFormatOptions) =>
               <dd>
                 {venues.find((v) => v.id === session.venueId)?.city ??
                   "Wird bekannt gegeben"}
+                {venues.find(v => v.id === session.venueId)?.rinkName && <span class="schedule-venue-detail">{venues.find(v => v.id === session.venueId)?.rinkName}</span>}
+                {venues.find(v => v.id === session.venueId)?.address && <span class="schedule-venue-detail">{venues.find(v => v.id === session.venueId)?.address}</span>}
               </dd>
             </div>
             <div>
@@ -74,7 +77,7 @@ const date = (value: string, options: Intl.DateTimeFormatOptions) =>
               href={url}
               rel="noopener noreferrer"
             >
-              Bei SpielerPlus anmelden
+              Zum Anmeldeweg
             </a>
           ) : (
             <button class="button" disabled>
