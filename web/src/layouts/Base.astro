@@ -1,4 +1,5 @@
 ---
+import displayFont from "@fontsource/barlow-condensed/files/barlow-condensed-latin-800-normal.woff2?url";
 import { ClientRouter } from "astro:transitions";
 import { getImage } from "astro:assets";
 import crest from "../assets/brand/pk-hockey-crest.png";
@@ -34,6 +35,7 @@ const socialImage = Astro.site
 <html lang="de">
   <head>
     <meta charset="utf-8" />
+    <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#050B12" />
     <title>{title} | PK Hockey Academy</title>
@@ -72,7 +74,7 @@ const socialImage = Astro.site
       Zum Inhalt springen
     </a>
     <Header />
-    <main id="inhalt" transition:animate="fade">
+    <main id="inhalt" tabindex="-1" transition:animate="fade">
       <slot />
     </main>
     <Footer />

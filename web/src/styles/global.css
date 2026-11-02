@@ -2723,3 +2723,8 @@ p {
     animation: none !important;
   }
 }
+
+input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+.schedule-venue-detail { display: block; overflow-wrap: anywhere; }
