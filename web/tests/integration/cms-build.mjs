@@ -1,12 +1,16 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdir, mkdtemp, readFile, readdir } from "node:fs/promises";
-import { dirname, resolve } from "node:path";
+import { mkdir, mkdtemp, readFile, readdir, writeFile } from "node:fs/promises";
+import { dirname, resolve, relative } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const webRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const outputRoot = resolve(webRoot, "../output");
 await mkdir(outputRoot, { recursive: true });
+const manifest = resolve(outputRoot, "cms-integration-manifest.json");
+await writeFile(manifest, JSON.stringify({ complete: false }));
+const logs = resolve(outputRoot, "cms-build-logs");
+await mkdir(logs, { recursive: true });
 const output = await mkdtemp(resolve(outputRoot, "cms-integration-"));
 const fixture = pathToFileURL(
   resolve(webRoot, "tests/integration/sanity-fixture.mjs"),
@@ -28,7 +32,7 @@ const env = {
   // artifacts live outside web/, without Node's external dependency lookup.
   VERCEL: "1",
 };
-const build = (name, settings) => {
+const build = async (name, settings) => {
   const folder = resolve(output, name);
   const result = spawnSync(
     process.execPath,
@@ -44,6 +48,12 @@ const build = (name, settings) => {
       encoding: "utf8",
       timeout: 120000,
     },
+  );
+  await writeFile(
+    resolve(logs, `${name}.log`),
+    (result.stdout ?? "") +
+      (result.stderr ?? "") +
+      (result.error?.message ?? ""),
   );
   if (result.error) throw result.error;
   // The adapter keeps public prerendered output in client/, with private
@@ -93,7 +103,7 @@ const scan = async (directory, starter) => {
   return count;
 };
 
-const starter = build("starter", {});
+const starter = await build("starter", {});
 assert.equal(
   starter.result.status,
   0,
@@ -114,9 +124,10 @@ for (const mode of [
   "malformed",
   "malformed-gallery",
   "malformed-media-kit",
+  "malformed-training",
 ]) {
   const trace = resolve(output, `${mode}-requests.jsonl`);
-  const { folder, result } = build(mode, {
+  const { folder, result } = await build(mode, {
     SANITY_PROJECT_ID: "cmsqa123",
     SANITY_DATASET: "qa",
     SANITY_READ_TOKEN: mode === "public" ? "" : "test-token-never-real",
@@ -132,7 +143,11 @@ for (const mode of [
     .trim()
     .split("\n")
     .map((line) => JSON.parse(line));
-  if (mode !== "malformed-gallery" && mode !== "malformed-media-kit") {
+  if (
+    mode !== "malformed-gallery" &&
+    mode !== "malformed-media-kit" &&
+    mode !== "malformed-training"
+  ) {
     assert.ok(
       requests.some((request) => request.type === "trainers"),
       "Server-only coach configuration was not activated.",
@@ -158,7 +173,8 @@ for (const mode of [
   if (
     mode === "malformed" ||
     mode === "malformed-gallery" ||
-    mode === "malformed-media-kit"
+    mode === "malformed-media-kit" ||
+    mode === "malformed-training"
   ) {
     assert.notEqual(result.status, 0);
     assert.match(
@@ -167,7 +183,9 @@ for (const mode of [
         ? /approved trainer profile has invalid required fields/
         : mode === "malformed-gallery"
           ? /approved gallery album.*invalid content/
-          : /approved media-kit download is invalid/,
+          : mode === "malformed-training"
+            ? /Invalid approved session/
+            : /approved media-kit download is invalid/,
     );
     console.log(
       `${mode}: malformed approved content correctly rejected the build.`,
@@ -179,10 +197,23 @@ for (const mode of [
     requests.some((request) => request.type === "gallery"),
     "Server-only gallery configuration was not activated.",
   );
-  const schedule = await readFile(resolve(folder,"trainingstermine/index.html"),"utf8");
-  const venuePage = await readFile(resolve(folder,"trainingsstaetten/index.html"),"utf8");
-  if (mode === "empty") { assert.equal(schedule.includes("Technischer Testtermin"),false); assert.equal(venuePage.includes("Technische Testhalle"),false); }
-  else { assert.match(schedule,/Technischer Testtermin/); assert.match(venuePage,/Technische Testhalle/); assert.match(venuePage,/Technische Testadresse/); assert.equal(schedule.includes("Bei SpielerPlus anmelden"),false); }
+  const schedule = await readFile(
+    resolve(folder, "trainingstermine/index.html"),
+    "utf8",
+  );
+  const venuePage = await readFile(
+    resolve(folder, "trainingsstaetten/index.html"),
+    "utf8",
+  );
+  if (mode === "empty") {
+    assert.equal(schedule.includes("Technischer Testtermin"), false);
+    assert.equal(venuePage.includes("Technische Testhalle"), false);
+  } else {
+    assert.match(schedule, /Technischer Testtermin/);
+    assert.match(venuePage, /Technische Testhalle/);
+    assert.match(venuePage, /Technische Testadresse/);
+    assert.equal(schedule.includes("Bei SpielerPlus anmelden"), false);
+  }
   const pool = await readFile(
     resolve(folder, "trainerpool/index.html"),
     "utf8",
@@ -297,4 +328,17 @@ for (const mode of [
     `${mode}: CMS activation, rendering and ${await scan(folder, false)} public text artifacts passed.`,
   );
 }
-console.log(`CMS integration passed. Isolated artifacts retained at ${output}`);
+await writeFile(
+  manifest,
+  JSON.stringify(
+    {
+      schemaVersion: 1,
+      complete: true,
+      starter: relative(webRoot, starter.folder),
+      training: relative(webRoot, resolve(output, "public/client")),
+    },
+    null,
+    2,
+  ),
+);
+console.log(`CMS integration passed. Browser manifest: ${manifest}`);

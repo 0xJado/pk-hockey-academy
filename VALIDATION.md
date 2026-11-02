@@ -608,3 +608,13 @@ Both project type checks and builds passed; all 39 website tests and 15 Studio t
 ## Local documentation, training CMS and browser checks — 2 November 2026
 
 See [local acceptance](docs/LOCAL-ACCEPTANCE.md) for the implementation, adversarial checks, measured public-script size and remaining live acceptance boundaries. See [current status](docs/STATUS.md) for the current backlog.
+
+## Reproducible quality pipeline — 2 November 2026
+
+The preceding local work was committed as 7eb5d23, 307d3d9 and 05199eb, then pushed. Protected Vercel deployment dpl_8aKWWfpdXwmJiyeaArm7mdiD7xSq reached READY from 05199eb before CI implementation began. No training CMS activation, live Studio/schema/hook mutation or launch-setting change occurred.
+
+Pinned Playwright 1.64.1 and Node 24.22.1, removed ignored-tool browser resolution, added portable Chromium/optional Edge selection, an invalidated-until-complete fixture manifest, captured build logs, failure screenshots/traces and a least-privilege GitHub quality workflow with commit-pinned actions. See [testing guide](docs/TESTING.md).
+
+Local clean npm ci succeeded for both projects. Website check had zero diagnostics and all 59 tests passed; Studio check/build and all 21 tests passed using public test identifiers. Eight isolated CMS builds passed, including actual malformed approved session rejection. Disposable compiled overflow and broken-navigation mutations were rejected by the real browser suite for the expected reasons. Valid Chromium runs passed 51 starter and six populated training route/viewport checks, keyboard/no-script/history checks and stable 17/17/17 motion-trigger counts, with no runtime errors or external page requests. A native view-transition cancellation found on pinned Chromium was resolved by awaiting transition.finished in the harness before initiating further history navigation; no runtime errors were filtered out. Workflow YAML, read-only permissions and full action pins were checked.
+
+The workflow reports check results; existing Vercel Git deployments remain independent. Branch-protection/deployment-gate settings were not changed. Hosted CI acceptance follows the first push of this workflow.

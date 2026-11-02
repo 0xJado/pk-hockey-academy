@@ -1,0 +1,82 @@
+name: Quality checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      CI: 'true'
+      PUBLIC_LAUNCH_READY: 'false'
+      SITE_URL: ''
+      SANITY_PROJECT_ID: ''
+      SANITY_DATASET: ''
+      SANITY_READ_TOKEN: ''
+      SANITY_PREVIEW_READ_TOKEN: ''
+      SANITY_TRAINERS_ENABLED: 'false'
+      SANITY_TRAINING_ENABLED: 'false'
+      SANITY_SOCIAL_ENABLED: 'false'
+      PUBLIC_SANITY_STUDIO_URL: ''
+      SANITY_STUDIO_PROJECT_ID: cmsqa123
+      SANITY_STUDIO_DATASET: qa
+      SANITY_STUDIO_PREVIEW_URL: ''
+      SANITY_STUDIO_AUTH_PROVIDER: ''
+      SANITY_STUDIO_APP_ID: ''
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .node-version
+          cache: npm
+          cache-dependency-path: |
+            web/package-lock.json
+            studio/package-lock.json
+      - name: Install website dependencies
+        run: npm ci --prefix web
+      - name: Install Studio dependencies
+        run: npm ci --prefix studio
+      - name: Install pinned Chromium and system dependencies
+        run: npm run browser:install:ci --prefix web
+      - name: Check website types
+        run: npm run check --prefix web
+      - name: Test website
+        run: npm test --prefix web
+      - name: Check Studio types
+        run: npm run check --prefix studio
+      - name: Test Studio
+        run: npm test --prefix studio
+      - name: Build Studio with test configuration
+        run: npm run build --prefix studio
+      - name: Build and verify isolated CMS scenarios
+        run: npm run test:cms --prefix web
+      - name: Verify browser failure guards
+        run: npm run test:browser:guards --prefix web
+      - name: Browser checks on the starter site
+        run: npm run test:browser --prefix web
+      - name: Browser checks on populated training fixtures
+        run: npm run test:browser:training --prefix web
+      - name: Retain test diagnostics
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: quality-diagnostics-${{ github.run_attempt }}
+          path: |
+            output/playwright/
+            output/cms-build-logs/
+          if-no-files-found: ignore
+          retention-days: 7

@@ -23,4 +23,6 @@ Opt-in session/venue schemas and retrieval, shared validation, upcoming schedule
 
 [Pierre checklist](PIERRE-CHECKLIST.md) · [Publishing runbook](CMS-PUBLISHING.md)
 
-No live systems were changed during this increment.
+The original local increment was committed in 7eb5d23, 307d3d9 and 05199eb. The protected website deployment for 05199eb reached READY before reproducible testing work began. Training CMS activation and live schema/hook changes remain pending.
+
+The new [quality workflow and test guide](TESTING.md) covers clean installs, pinned tooling and isolated CI checks.

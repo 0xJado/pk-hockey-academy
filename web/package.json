@@ -14,7 +14,11 @@
     "preview": "astro preview --host 127.0.0.1",
     "test": "node --experimental-strip-types --test tests/*.test.mjs",
     "test:cms": "node tests/integration/cms-build.mjs",
-    "test:browser": "node tests/browser.mjs"
+    "test:browser": "node tests/browser.mjs",
+    "browser:install": "playwright install chromium",
+    "browser:install:ci": "playwright install --with-deps chromium",
+    "test:browser:training": "node tests/browser.mjs --training",
+    "test:browser:guards": "node tests/browser-guards.mjs"
   },
   "dependencies": {
     "@astrojs/node": "11.1.9",
@@ -41,6 +45,7 @@
   "devDependencies": {
     "@astrojs/check": "0.9.10",
     "@types/node": "24.19.2",
+    "playwright": "1.64.1",
     "typescript": "6.0.3"
   }
 }

@@ -197,10 +197,8 @@ See [`VALIDATION.md`](VALIDATION.md) for commands actually executed, viewport sc
 
 Source: public `0xJado/pk-hockey-academy`. Vercel review hosting is configured separately as described above; GitHub Pages is not used. Git history must preserve the original `AGENTS.md` and must never include `.env`, dependencies, build output or local test artifacts.
 
-## Local schedule development and browser regression
+## Local training development and quality checks
 
-[Training CMS workflow](docs/TRAINING-CMS.md) describes the new opt-in adapter. Keep `SANITY_TRAINING_ENABLED=false` until real deployment and content acceptance. Local session collections remain empty.
+[Training CMS workflow](docs/TRAINING-CMS.md) covers the opt-in session/venue adapter. Keep SANITY_TRAINING_ENABLED=false until genuine deployment and publishing acceptance.
 
-Run `npm run test:cms` in web for isolated CMS builds without a live service. Run `npm run test:browser` against `web/dist/client`, or set `PK_BROWSER_ROOT` to a compiled fixture client directory. The browser runner uses Playwright and installed Microsoft Edge. It resolves Playwright from the local package environment, `PK_PLAYWRIGHT_MODULE` (absolute module path), or this workstation’s ignored `.tools/browser/node_modules/playwright`. Missing tooling produces an error; it never installs packages automatically. Set `PK_TRAINING_FIXTURE=true` only for the populated CMS test fixture. Screenshots stay ignored under `output/playwright/local-acceptance/`.
-
-Checks cover desktop/tablet/phone, semantic landmarks and names, skip/menu keyboard behavior, reduced motion, no-JavaScript navigation, route lifecycle and a 400 kB decoded public-JavaScript regression budget. This is not a screen-reader, physical-device or complete WCAG audit.
+[Testing guide](docs/TESTING.md) contains clean-checkout commands, the pinned Node/Playwright versions, Chromium/Edge selection, fixture builds, browser failure guards and diagnostics. The GitHub Actions quality workflow checks both projects and compiled browser fixtures without academy credentials. Local browser packages in ignored .tools are no longer required.

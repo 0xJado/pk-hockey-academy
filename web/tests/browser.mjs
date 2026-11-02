@@ -3,19 +3,38 @@ import assert from "node:assert/strict";
 import { createServer } from "node:http";
 import { readFile, stat, mkdir } from "node:fs/promises";
 import { resolve, extname, sep } from "node:path";
-import { createRequire } from "node:module";
-const require = createRequire(import.meta.url);
-let chromium;
-try {
-  ({ chromium } = require("playwright"));
-} catch {
-  ({ chromium } = require(
-    process.env.PK_PLAYWRIGHT_MODULE ||
-      "../../.tools/browser/node_modules/playwright",
-  ));
+import { chromium } from "playwright";
+import { fileURLToPath } from "node:url";
+import { writeFile } from "node:fs/promises";
+const webRoot = fileURLToPath(new URL("..", import.meta.url));
+const training =
+  process.argv.includes("--training") ||
+  process.env.PK_TRAINING_FIXTURE === "true";
+let root;
+if (process.env.PK_BROWSER_ROOT)
+  root = resolve(webRoot, process.env.PK_BROWSER_ROOT);
+else {
+  let manifest;
+  try {
+    manifest = JSON.parse(
+      await readFile(
+        resolve(webRoot, "../output/cms-integration-manifest.json"),
+        "utf8",
+      ),
+    );
+  } catch {
+    throw new Error(
+      "Run npm run test:cms before browser checks, or supply PK_BROWSER_ROOT.",
+    );
+  }
+  if (manifest.schemaVersion !== 1 || manifest.complete !== true)
+    throw new Error("CMS checks did not complete. Run npm run test:cms again.");
+  root = resolve(webRoot, training ? manifest.training : manifest.starter);
 }
-const root = resolve(process.env.PK_BROWSER_ROOT || "dist/client");
-const output = resolve("../output/playwright/local-acceptance");
+await stat(resolve(root, "index.html"));
+const output = process.env.PK_BROWSER_OUTPUT
+  ? resolve(process.env.PK_BROWSER_OUTPUT)
+  : resolve(webRoot, "../output/playwright", training ? "training" : "starter");
 await mkdir(output, { recursive: true });
 const mime = {
   ".html": "text/html",
@@ -49,13 +68,38 @@ const server = createServer(async (req, res) => {
 });
 await new Promise((r) => server.listen(0, "127.0.0.1", r));
 const origin = `http://127.0.0.1:${server.address().port}`;
-let browser;
+let browser, context, page;
 const errors = [],
   checks = [];
 try {
-  browser = await chromium.launch({ channel: "msedge", headless: true });
-  const context = await browser.newContext({ reducedMotion: "reduce" });
-  const page = await context.newPage();
+  const channel = process.env.PK_BROWSER_CHANNEL;
+  if (channel && !["chromium", "msedge", "chrome"].includes(channel))
+    throw new Error("Unsupported PK_BROWSER_CHANNEL.");
+  browser = await chromium.launch({
+    ...(channel && channel !== "chromium" ? { channel } : {}),
+    headless: true,
+  });
+  context = await browser.newContext({ reducedMotion: "reduce" });
+  await context.addInitScript(() => {
+    window.__pendingTransitions = 0;
+    const start = document.startViewTransition?.bind(document);
+    if (start)
+      document.startViewTransition = (...args) => {
+        const transition = start(...args);
+        window.__pendingTransitions++;
+        transition.finished.then(
+          () => window.__pendingTransitions--,
+          () => window.__pendingTransitions--,
+        );
+        return transition;
+      };
+  });
+  await context.tracing.start({
+    screenshots: true,
+    snapshots: true,
+    sources: false,
+  });
+  page = await context.newPage();
   page.setDefaultTimeout(15000);
   page.on("pageerror", (e) => errors.push(e.message));
   page.on("console", (m) => {
@@ -69,7 +113,7 @@ try {
     }
     return route.continue();
   });
-  const routes = process.env.PK_TRAINING_FIXTURE
+  const routes = training
     ? ["/trainingstermine", "/trainingsstaetten"]
     : [
         "/",
@@ -149,7 +193,7 @@ try {
       }
     }
   }
-  if (process.env.PK_TRAINING_FIXTURE) {
+  if (training) {
     await page.goto(origin + "/trainingstermine");
     assert.equal(
       await page.getByText("Technischer Testtermin", { exact: true }).count(),
@@ -209,6 +253,10 @@ try {
         .map((r) => ({ name: r.name, bytes: r.decodedBodySize })),
     );
     assert.ok(
+      resources.length > 0 && resources.every((r) => r.bytes > 0),
+      "Missing public JavaScript resource measurements",
+    );
+    assert.ok(
       resources.reduce((sum, r) => sum + r.bytes, 0) < 400000,
       "Public JS exceeds 400 kB decoded budget",
     );
@@ -226,6 +274,7 @@ try {
           document.documentElement.dataset.motion === "ready" &&
           !document.querySelector("[data-hero]"),
       );
+      await page.waitForFunction(() => window.__pendingTransitions === 0);
       await page.goBack();
       await page.waitForURL(origin + "/");
       await page.locator("[data-hero]").waitFor({ state: "visible" });
@@ -243,6 +292,7 @@ try {
       await page.waitForFunction(
         () => Number(document.documentElement.dataset.motionTriggers) > 0,
       );
+      await page.waitForFunction(() => window.__pendingTransitions === 0);
       counts.push(
         await page.evaluate(
           () => document.documentElement.dataset.motionTriggers,
@@ -255,9 +305,11 @@ try {
       1,
       `Animation listeners accumulated: ${counts}`,
     );
+    await page.waitForFunction(() => window.__pendingTransitions === 0);
     await page.goForward();
     await page.waitForURL(origin + "/trainingstermine");
     await page.locator(".schedule-empty").waitFor({ state: "visible" });
+    await page.waitForFunction(() => window.__pendingTransitions === 0);
     await page.goBack();
     await page.waitForURL(origin + "/");
     await page.locator("[data-hero]").waitFor({ state: "visible" });
@@ -299,7 +351,38 @@ try {
       ),
     );
   }
+  await writeFile(
+    resolve(output, "result.json"),
+    JSON.stringify(
+      { passed: true, routeChecks: checks.length, errors },
+      null,
+      2,
+    ),
+  );
+  await context.tracing.stop();
+} catch (error) {
+  await page
+    ?.screenshot({ path: resolve(output, "failure.png"), fullPage: true })
+    .catch(() => {});
+  await context?.tracing
+    .stop({ path: resolve(output, "trace.zip") })
+    .catch(() => {});
+  await writeFile(
+    resolve(output, "result.json"),
+    JSON.stringify(
+      {
+        passed: false,
+        message: error.message,
+        routeChecks: checks.length,
+        errors,
+      },
+      null,
+      2,
+    ),
+  );
+  throw error;
 } finally {
   await browser?.close();
+  server.closeAllConnections();
   await new Promise((r) => server.close(r));
 }
