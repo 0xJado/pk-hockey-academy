@@ -58,9 +58,9 @@ export const pages = {
     title: "DER ERSTE SCHRITT:",
     accent: "INS GESPRÄCH KOMMEN.",
     description:
-      "Kontakt zur PK Hockey Academy. Die Kontaktmöglichkeiten und der Anfrageweg befinden sich noch in Vorbereitung. Aktuell werden keine Anfragen über die Website versendet.",
+      "Erreiche die PK Hockey Academy per E-Mail bei Fragen zum individuellen Eishockeytraining.",
     intro:
-      "Du möchtest mehr über das individuelle Eishockeytraining erfahren? Unsere direkten Kontaktmöglichkeiten folgen hier.",
+      "Du möchtest mehr über das individuelle Eishockeytraining erfahren? Hier erreichst du uns direkt.",
   },
   impressum: {
     label: "INTERNER ENTWURF · NICHT ZUR VERÖFFENTLICHUNG",

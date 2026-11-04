@@ -1413,6 +1413,11 @@ p {
 .contact-layout p:not(.eyebrow, .lead) {
   font-size: 13px;
 }
+.contact-email {
+  color: #0754db;
+  text-decoration: underline;
+  overflow-wrap: anywhere;
+}
 .contact-options article {
   background: #e1ebf2;
   padding: 30px;
