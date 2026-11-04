@@ -1,3 +1,4 @@
+import { runInterviewJourneys } from "./journeys.mjs";
 // Runs against compiled static public output. No live CMS, accounts or deployment.
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
@@ -106,6 +107,15 @@ try {
     if (m.type() === "error") errors.push(m.text());
   });
   const external = [];
+  const applicationPosts = [];
+  context.on("request", (request) => {
+    if (
+      request.method() !== "GET" &&
+      request.method() !== "HEAD" &&
+      new URL(request.url()).origin === origin
+    )
+      applicationPosts.push(request.url());
+  });
   await context.route("**/*", (route) => {
     if (new URL(route.request().url()).origin !== origin) {
       external.push(route.request().url());
@@ -326,7 +336,18 @@ try {
       .click();
     await plain.waitForURL(origin + "/trainingstermine");
     assert.equal(await plain.locator("h1").count(), 1);
+    await plain.goto(origin + "/kontakt");
+    const email = plain.getByRole("link", { name: "info@pkhockeyacademy.de", exact: true });
+    assert.equal(await email.getAttribute("href"), "mailto:info@pkhockeyacademy.de");
+    assert.equal(await plain.locator("main form").count(), 0);
+    assert.equal(await plain.locator('main a[href*="wa.me"], main a[href^="tel:"]').count(), 0);
     await noJS.close();
+    await runInterviewJourneys(page, context, origin, output);
+    assert.deepEqual(
+      applicationPosts,
+      [],
+      "Prototype/interview sent an application request",
+    );
     assert.deepEqual(
       external,
       [],
@@ -354,7 +375,12 @@ try {
   await writeFile(
     resolve(output, "result.json"),
     JSON.stringify(
-      { passed: true, routeChecks: checks.length, errors },
+      {
+        passed: true,
+        routeChecks: checks.length,
+        journeys: training ? [] : ["player", "trainer"],
+        errors,
+      },
       null,
       2,
     ),

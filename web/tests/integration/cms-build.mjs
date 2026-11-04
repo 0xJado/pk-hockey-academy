@@ -328,6 +328,43 @@ for (const mode of [
     `${mode}: CMS activation, rendering and ${await scan(folder, false)} public text artifacts passed.`,
   );
 }
+const launch = await build("launch-gates", {
+  PUBLIC_LAUNCH_READY: "true",
+  SITE_URL: "https://pkhockeyacademy.de",
+});
+assert.equal(
+  launch.result.status,
+  0,
+  launch.result.stdout + launch.result.stderr,
+);
+for (const route of [
+  "interviews",
+  "spieler-interview",
+  "trainer-interview",
+]) {
+  const html = await readFile(
+    resolve(launch.folder, route, "index.html"),
+    "utf8",
+  );
+  assert.equal(
+    /<(input|textarea|form)(?:\s|>)/i.test(html),
+    false,
+    route + " exposed test inputs at launch",
+  );
+}
+const launchSitemap = await readFile(
+  resolve(launch.folder, "sitemap.xml"),
+  "utf8",
+);
+for (const route of [
+  "interviews",
+  "spieler-interview",
+  "trainer-interview",
+])
+  assert.equal(launchSitemap.includes("/" + route), false);
+console.log(
+  "Launch gates passed: no interview test inputs or sitemap entries.",
+);
 await writeFile(
   manifest,
   JSON.stringify(
