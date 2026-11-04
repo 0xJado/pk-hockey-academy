@@ -2,6 +2,10 @@
 
 Current scope, 1 November 2026: the user cancelled all interview AI work and requested the previous barebones version. The 30 October questionnaire implementation is restored: original questions, fixed local follow-ups, optional browser dictation/read-aloud, editable review and JSON/browser-print exports. Browser AI code, model loading, the Wi-Fi gate, generated text and the WebLLM dependency are removed. This decision supersedes the earlier AI targets in the [historical integration review](bot-integration-review.md). No AI integration remains planned.
 
+## Automated complete journeys — 2 November 2026
+
+The maintained browser suite now completes both original questionnaires at phone width, including base/follow-up skipping, corrections, required-name errors, actual JSON downloads, print invocation/A4 PDF output, reset/cancel, history clearing and deliberately late mocked speech callbacks. No real microphone or speech provider is used. The same `test:browser` command is already part of the quality workflow. See [forms/journey notes](FORMS-FOUNDATION.md).
+
 ## Try the preview
 
 Open [the protected interview portal](https://pk-hockey-academy.vercel.app/interviews). Choose `/spieler-interview` or `/trainer-interview`. Use fictional answers only. For local development run the existing website commands; no new dependency or credential is needed.

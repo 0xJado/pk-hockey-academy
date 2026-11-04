@@ -1,5 +1,7 @@
 # Registration template — partial issue #3
 
+Update, 2 November 2026: a server-only processing foundation now exists with policy injection, request limits, duplicate protection and fake delivery tests. The public `/api/registration` route remains unconditionally inactive and does not read submitted bodies. No actual form, approved field policy or Google connection is activated. See [forms foundation](FORMS-FOUNDATION.md).
+
 The user supplied the blank v2 PDF on 23 October 2026. The website now offers the unchanged original for A4 printing and reproduces its eight sections at `/anmeldung`, using the existing site typography, colors and responsive layout. Source copy and download metadata are separate from presentation. No dependency or new visitor JavaScript was added. The page is independently noindex and remains outside the launch sitemap.
 
 ## Completed
@@ -23,7 +25,7 @@ Pierre's German [setup guide](PIERRE-SETUP.md) now covers creating an academy-co
 
 The existing branded website form will eventually send to a server-side handler that validates the agreed fields, applies spam/abuse protection, and appends one registration row to the private Sheet. Google Forms is not required, and neither browser code nor Sanity receives Google write credentials. Staff use the private Sheet through named Google accounts; the Sheet must not be published, publicly editable or embedded in the public website. The blank printable PDF remains available independently.
 
-Before implementation/activation, confirm the academy-owned Google account and Sheet, intended staff access and deletion process, Google authentication method, field/consent rules and privacy handling. Use the authenticated Sheets API's `spreadsheets.values.append` with `valueInputOption=RAW` so submitted strings are not interpreted as spreadsheet formulas. Submission success must mean that Google acknowledged the write; retries need duplicate protection and delivery failures must remain visible without claiming a booking succeeded. Sensitive values must stay out of URL parameters, logs, public build files and notifications. The currently disabled preview is unchanged; no handler or Google integration is claimed yet.
+Before implementation/activation, confirm the academy-owned Google account and Sheet, intended staff access and deletion process, Google authentication method, field/consent rules and privacy handling. Use the authenticated Sheets API's `spreadsheets.values.append` with `valueInputOption=RAW` so submitted strings are not interpreted as spreadsheet formulas. Submission success must mean that Google acknowledged the write; retries need duplicate protection and delivery failures must remain visible without claiming a booking succeeded. Sensitive values must stay out of URL parameters, logs, public build files and notifications. The currently disabled preview is unchanged; no live delivery handler or Google integration is activated.
 
 Primary references: [Google Sheets append API](https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets.values/append), [value interpretation](https://developers.google.com/workspace/sheets/api/reference/rest/v4/ValueInputOption).
 
@@ -38,6 +40,6 @@ Primary references: [Google Sheets append API](https://developers.google.com/wor
 
 ## Review and verification
 
-Adversarial self-review focused on accidental GET/POST submission without JavaScript, child/health-data storage, invented consent/requiredness, implicit signatures, inactive booking promises and PDF content drift. The implementation avoids a form element entirely, names no controls, keeps inputs disabled and leaves all choices blank. Native download links work without JavaScript. No active submission code or credentials exist. Unchanged PDF bytes plus 61 source-copy matches establish fidelity; no legal adequacy or source-policy approval is inferred from that check.
+Adversarial self-review focused on accidental GET/POST submission without JavaScript, child/health-data storage, invented consent/requiredness, implicit signatures, inactive booking promises and PDF content drift. The implementation avoids a form element entirely, names no controls, keeps inputs disabled and leaves all choices blank. Native download links work without JavaScript. The public submission route is inactive, and no delivery credentials exist. Unchanged PDF bytes plus 61 source-copy matches establish fidelity; no legal adequacy or source-policy approval is inferred from that check.
 
 See `VALIDATION.md` for executed build/browser/PDF checks. Source/download provenance is in `ASSETS.md`. Real submission, spam protection, legal/privacy review, paper hand-in and SpielerPlus acceptance remain open; issue #3 is not closed. No commit, push, deployment or account change is included in this increment.

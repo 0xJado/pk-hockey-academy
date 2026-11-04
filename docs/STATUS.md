@@ -8,13 +8,15 @@ German responsive website, supplied branding, reusable motion, trainer CMS, host
 
 ## Local increment — 2 November 2026
 
+Registration now has a server-only, policy-injected processing foundation with fake-delivery tests; the public endpoint still rejects submissions without reading them. The contact page lists the academy email and a placeholder for WhatsApp. Full mobile player/trainer journeys now run in the maintained browser suite. See [forms foundation](FORMS-FOUNDATION.md) for contracts and activation limits.
+
 Opt-in session/venue schemas and retrieval, shared validation, upcoming schedule handling, venue details and keyboard improvements. See [local acceptance](LOCAL-ACCEPTANCE.md) for checks and limits, and [training editing](TRAINING-CMS.md) for activation.
 
 ## Remaining dependencies
 
-- Registration: private Sheet, approved fields/consents/signatures/retention, secure server delivery and booking process.
+- Registration: private Sheet, approved fields/consents/signatures/retention, durable shared request state, production delivery activation and booking process.
 - Schedule: real dates, halls, groups and capacity. New CMS source stays disabled pending live deployment and publishing acceptance.
-- Contact: approved destinations and delivery.
+- Contact: WhatsApp number.
 - Launch: legal content, domain connection and explicit approval.
 - Admin/gallery: account recovery/MFA/member lifecycle and approved real-media acceptance.
 - Interviews: actual phone/voice/privacy acceptance; private delivery is separate. No AI work remains.

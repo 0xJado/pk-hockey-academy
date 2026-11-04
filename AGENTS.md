@@ -29,7 +29,7 @@ Treat only these facts as established:
 - Pricing provided: **50 € per single session; 200 € for a five-session package**. Do not invent package rules, payment methods, cancellation policies, or availability.
 - Pierre has an ice hockey and inline hockey background. **Inline hockey is biographical context ONLY, not a service/product offered by the academy**.
 - The training registration form covers single-session and multiple-session bookings. **SpielerPlus** becomes relevant only for participants who have booked multiple sessions, as clarified by the user on 23 October 2026. Do not present it as the default single-session registration path. Exact multi-session integration/link behavior is not yet verified.
-- Contact should ultimately offer a form and WhatsApp option; actual destinations and backend are not yet known.
+- Contact uses direct email at info@pkhockeyacademy.de and will list the WhatsApp number once supplied.
 - No approved logo, trainers' portraits, real venues, session dates, phone number, email, shop catalog, or training footage has yet been supplied.
 
 **Do not fabricate facts.**
@@ -118,7 +118,7 @@ Avoid unsupported booking policy claims.
 ### Kontakt
 `/kontakt`
 
-Contact section with safe placeholders until real destinations and submission service exist.
+Direct email link and a placeholder until the WhatsApp number is supplied.
 
 ### Legal Pages
 

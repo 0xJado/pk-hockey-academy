@@ -125,7 +125,7 @@ The live schedule and separate demo collection are intentionally empty. Publishe
 
 `getRegistrationUrl()` deliberately returns no functional registration URL in this milestone, including for a configured URL. The user clarified on 23 October 2026 that SpielerPlus is relevant only for participants who booked multiple sessions; it is not the default single-session registration path. Its destination, participant eligibility and multi-session workflow must be verified before enabling this boundary. No live synchronization is implied. The stable permanent QR destination is **`/trainingstermine`**.
 
-Contact options are visibly disabled, have no form or destination, and never collect or transmit data. No analytics, third-party video embeds or non-essential visitor cookies are configured. Once real albums are connected, gallery media is delivered by Sanity's CDN; document this in the reviewed privacy notice.
+The contact page links to info@pkhockeyacademy.de. The WhatsApp number is pending. No analytics, third-party video embeds or non-essential visitor cookies are configured. Once real albums are connected, gallery media is delivered by Sanity's CDN; document this in the reviewed privacy notice.
 
 ### Registration template — partial issue #3
 
@@ -184,7 +184,7 @@ Start with the German [setup guide for Pierre](docs/PIERRE-SETUP.md), covering S
 2. Full biography, verified qualifications and concrete coaching specialties.
 3. Confirmed training dates, start/end times, age groups, hall names, addresses, capacity/status.
 4. Verified SpielerPlus link format and workflow for participants with multiple-session bookings; single-session registrations do not default to SpielerPlus.
-5. Real business contact details, WhatsApp destination and approved form delivery/privacy handling.
+5. WhatsApp number for the contact page.
 6. Package conditions, payment and cancellation information; do not infer these from the supplied prices.
 7. Complete provider details, privacy/hosting information and legal review.
 8. The user confirmed the intended public domain as `pkhockeyacademy.de` on 30 October 2026. Domain/DNS connection and explicit public-launch approval remain separate from this confirmation; the current Vercel review host stays protected.
@@ -202,3 +202,9 @@ Source: public `0xJado/pk-hockey-academy`. Vercel review hosting is configured s
 [Training CMS workflow](docs/TRAINING-CMS.md) covers the opt-in session/venue adapter. Keep SANITY_TRAINING_ENABLED=false until genuine deployment and publishing acceptance.
 
 [Testing guide](docs/TESTING.md) contains clean-checkout commands, the pinned Node/Playwright versions, Chromium/Edge selection, fixture builds, browser failure guards and diagnostics. The GitHub Actions quality workflow checks both projects and compiled browser fixtures without academy credentials. Local browser packages in ignored .tools are no longer required.
+
+## Registration processing foundation
+
+See [forms foundation](docs/FORMS-FOUNDATION.md). Registration has a tested server-only processing core with injected policy and fake delivery; `/api/registration` always returns 503 without reading the request body. The PDF and disabled `/anmeldung` preview are preserved.
+
+The existing browser command now covers full player/trainer journeys, with fictional exports in ignored diagnostics.
