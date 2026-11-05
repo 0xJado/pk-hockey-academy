@@ -72,15 +72,14 @@ function portrait(
     typeof raw.alt !== "string" ||
     raw.alt.trim().length < 8 ||
     raw.alt.trim().length > 240 ||
-    typeof raw.credit !== "string" ||
-    !raw.credit.trim() ||
-    raw.credit.trim().length > 160
+    (raw.credit != null &&
+      (typeof raw.credit !== "string" || raw.credit.trim().length > 160))
   )
     return;
   return {
     url: url.href,
     alt: raw.alt.trim(),
-    credit: raw.credit.trim(),
+    credit: typeof raw.credit === "string" ? raw.credit.trim() : "",
     width: dimensions.width,
     height: dimensions.height,
   };

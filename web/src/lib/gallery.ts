@@ -199,7 +199,6 @@ export function normalizeGallery(
           poster &&
           videoTitle &&
           transcript.length >= 20 &&
-          credit &&
           (mimeType === "video/mp4" || mimeType === "video/webm") &&
           url.endsWith(mimeType === "video/mp4" ? ".mp4" : ".webm") &&
           validateAsset("video", asset) === true

@@ -242,11 +242,11 @@ test("untrusted or wrong-project assets and unsupported uploads cannot reach the
     /approved gallery album/,
   );
 });
-test("videos need valid files, posters, credits and accessible text alternatives", () => {
+test("videos need valid files, posters and accessible text alternatives", () => {
   for (const invalid of [
     { ...video, poster: undefined },
     { ...video, transcript: "" },
-    { ...video, credit: "" },
+    { ...video, credit: "x".repeat(161) },
     {
       ...video,
       file: { asset: { ...video.file.asset, mimeType: "application/pdf" } },
@@ -277,7 +277,7 @@ test("invalid approved album fields or any malformed media fail instead of silen
         _key: `p${i}`,
       })),
     },
-    { media: [photo, { ...photo, _key: "bad", credit: "   " }] },
+    { media: [photo, { ...photo, _key: "bad", credit: "x".repeat(161) }] },
     { media: [{ ...photo, spotlight: "middle" }] },
     { media: [{ ...photo, section: "unknown" }] },
     { media: [{ ...photo, section: ["on-ice"] }] },

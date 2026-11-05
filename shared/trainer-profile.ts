@@ -99,12 +99,13 @@ export function validateTrainerPublication(value: unknown): true | string {
   }
   if (raw.portrait !== undefined && raw.portrait !== null) {
     const portrait = asRecord(raw.portrait);
+    if (portrait.credit != null && plainText(portrait.credit, 0, 160) === undefined)
+      return "Der optionale Bildnachweis darf höchstens 160 Zeichen enthalten.";
     if (
       typeof asRecord(portrait.asset)._ref !== "string" ||
-      !plainText(portrait.alt, 8, 240) ||
-      !plainText(portrait.credit, 1, 160)
+      !plainText(portrait.alt, 8, 240)
     ) {
-      return "Trainerfoto vollständig hochladen und Bildbeschreibung (8–240 Zeichen) sowie Urhebernachweis (1–160 Zeichen) ergänzen; alternativ das Bildfeld entfernen.";
+      return "Trainerfoto vollständig hochladen und Bildbeschreibung (8–240 Zeichen) ergänzen; alternativ das Bildfeld entfernen.";
     }
   }
   return true;

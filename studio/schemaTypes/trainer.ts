@@ -109,7 +109,7 @@ export const trainer = defineType({
           name: "credit",
           title: "Urheber / Bildnachweis",
           type: "string",
-          validation: (Rule) => Rule.required().max(160),
+          validation: (Rule) => Rule.max(160),
         }),
       ],
       validation: (Rule) =>

@@ -294,7 +294,7 @@ globalThis.fetch = async (input, options) => {
             {
               ...album,
               ...(mode === "malformed-gallery"
-                ? { media: [{ ...album.media[0], credit: "   " }] }
+                ? { media: [{ ...album.media[0], credit: "x".repeat(161) }] }
                 : {}),
             },
             {

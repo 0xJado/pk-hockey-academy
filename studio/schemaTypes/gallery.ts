@@ -14,15 +14,7 @@ const credit = defineField({
   type: "string",
   description:
     "Nur den freigegebenen Urhebernachweis eintragen, keine Namen abgebildeter Kinder.",
-  validation: (Rule) =>
-    Rule.required()
-      .max(GALLERY_LIMITS.credit)
-      .custom(
-        (value) =>
-          galleryText(value, 1, GALLERY_LIMITS.credit) !== undefined ||
-          "Urhebernachweis ergänzen; Leerzeichen allein reichen nicht.",
-      )
-      .error(),
+  validation: (Rule) => Rule.max(GALLERY_LIMITS.credit),
 });
 const alt = defineField({
   name: "alt",

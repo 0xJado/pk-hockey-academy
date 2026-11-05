@@ -99,8 +99,10 @@ export function validateMediaKitPublication(value: unknown): true | string {
 export function validateMediaKitPreview(value: unknown): true | string {
   if (value == null) return true;
   const raw = record(value);
-  if (!text(raw.alt, 8, 240) || !text(raw.credit, 1, 160))
-    return "Vorschaubild beschreiben (8–240 Zeichen) und Urhebernachweis ergänzen.";
+  if (!text(raw.alt, 8, 240))
+    return "Bildbeschreibung für das Vorschaubild ergänzen (8–240 Zeichen).";
+  if (raw.credit != null && text(raw.credit, 0, 160) === undefined)
+    return "Der optionale Bildnachweis darf höchstens 160 Zeichen enthalten.";
   return true;
 }
 export { validateAsset };

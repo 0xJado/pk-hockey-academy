@@ -109,7 +109,7 @@ export const mediaKitDownload = defineType({
           name: "credit",
           title: "Urheber / Bildnachweis",
           type: "string",
-          validation: (R) => R.required().max(160),
+          validation: (R) => R.max(160),
         }),
       ],
       validation: (R) =>

@@ -166,6 +166,7 @@ test("invalid approved records fail the build rather than silently deleting publ
 test("portrait is optional but uploaded assets require trusted URLs and valid metadata", () => {
   const [result] = normalizeTrainers([{ ...coach, portrait }], config);
   assert.equal(result.portrait.alt, portrait.alt);
+  assert.equal(normalizeTrainers([{ ...coach, portrait: { ...portrait, credit: undefined } }], config)[0].portrait.credit, "");
   assert.equal(normalizeTrainers([coach], config)[0].portrait, undefined);
   for (const url of [
     "https://evil.invalid/x.webp",

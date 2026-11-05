@@ -57,8 +57,8 @@ const sizes = spotlight
   <figcaption class="gallery-sr-only">
     {item.type === "video" && <span>{item.title}</span>}
     {item.caption && <span>{item.caption}</span>}
-    <small>Aufnahme: {item.credit}</small>
-    {item.type === "video" && item.poster.credit !== item.credit && (
+    {item.credit && <small>Aufnahme: {item.credit}</small>}
+    {item.type === "video" && item.poster.credit && item.poster.credit !== item.credit && (
       <small>Vorschaubild: {item.poster.credit}</small>
     )}
     {item.type === "video" && (

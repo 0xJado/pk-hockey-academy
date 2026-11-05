@@ -57,6 +57,7 @@ test("native Sanity validation allows complete profiles with and without a portr
   for (const change of [
     {},
     { portrait },
+    { portrait: { ...portrait, credit: undefined } },
     { visibility: "hidden", contentApproved: false },
   ]) {
     const markers = await validate(change);
@@ -81,7 +82,7 @@ test("native publication checks are blocking errors, including whitespace and up
     { visibility: "invalid" },
     { portrait: {} },
     { portrait: { ...portrait, alt: " ".repeat(10) } },
-    { portrait: { ...portrait, credit: " " } },
+    { portrait: { ...portrait, credit: "x".repeat(161) } },
   ]) {
     const markers = await validate(change);
     assert.equal(

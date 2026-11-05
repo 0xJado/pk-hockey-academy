@@ -67,11 +67,9 @@ export function TrainerPreviewContent({
                     : "Trainerfoto in Bearbeitung"
                 }
               />
-              <figcaption>
-                {typeof portrait.credit === "string"
-                  ? portrait.credit
-                  : "Bildnachweis ergänzen"}
-              </figcaption>
+              {typeof portrait.credit === "string" && portrait.credit.trim() && (
+                <figcaption>{portrait.credit}</figcaption>
+              )}
             </figure>
           ) : (
             <div className="pk-preview-placeholder">

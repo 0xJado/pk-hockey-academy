@@ -118,7 +118,7 @@ export function normalizeMediaKit(
         preview = {
           image: imageUrl.href,
           alt: String(image.alt).trim(),
-          credit: String(image.credit).trim(),
+          credit: typeof image.credit === "string" ? image.credit.trim() || undefined : undefined,
           width,
           height,
         };

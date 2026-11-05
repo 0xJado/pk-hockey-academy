@@ -101,15 +101,15 @@ test("native gallery publication accepts complete content and blocks whitespace,
     },
     { media: [photo, { ...photo }] },
     { media: [{ ...photo, alt: " ".repeat(12) }] },
-    { media: [{ ...photo, credit: "   " }] },
+    { media: [{ ...photo, credit: "x".repeat(161) }] },
     { media: [{ ...photo, spotlight: "middle" }] },
     { media: [{ ...photo, section: "unexpected" }] },
     { media: [{ ...photo, section: ["on-ice"] }] },
     { media: [{ ...photo, spotlight: ["left"] }] },
     { media: [{ ...video, title: " " }] },
-    { media: [{ ...video, credit: " " }] },
+    { media: [{ ...video, credit: "x".repeat(161) }] },
     { media: [{ ...video, transcript: " ".repeat(25) }] },
-    { media: [{ ...video, poster: { ...photo, credit: " " } }] },
+    { media: [{ ...video, poster: { ...photo, credit: "x".repeat(161) } }] },
   ])
     assert.ok(
       (await validate(change)).some((marker) => marker.level === "error"),
@@ -136,7 +136,7 @@ test("native gallery asset validation rejects invalid uploads and reports failed
   );
 });
 
-test("whitespace-credit regression is rejected by both native publication and public retrieval", async () => {
+test("overlong-credit regression is rejected by both native publication and public retrieval", async () => {
   const publicPhoto = {
     ...photo,
     asset: {
@@ -151,15 +151,18 @@ test("whitespace-credit regression is rejected by both native publication and pu
   };
   const config = { projectId: "cmsqa123", dataset: "qa" };
   assert.equal(normalizeGallery([publicAlbum], config).length, 1);
+  const noCredit = { ...publicPhoto, credit: undefined };
+  assert.equal(normalizeGallery([{ ...publicAlbum, media: [noCredit] }], config)[0].media[0].credit, "");
+  assert.equal((await validate({ media: [{ ...photo, credit: undefined }] })).some(marker => marker.level === "error"), false);
   assert.ok(
-    (await validate({ media: [{ ...photo, credit: "   " }] })).some(
+    (await validate({ media: [{ ...photo, credit: "x".repeat(161) }] })).some(
       (marker) => marker.level === "error",
     ),
   );
   assert.throws(
     () =>
       normalizeGallery(
-        [{ ...publicAlbum, media: [{ ...publicPhoto, credit: "   " }] }],
+        [{ ...publicAlbum, media: [{ ...publicPhoto, credit: "x".repeat(161) }] }],
         config,
       ),
     /approved gallery album/,

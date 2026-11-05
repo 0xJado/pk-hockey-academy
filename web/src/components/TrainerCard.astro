@@ -134,7 +134,7 @@ const widths = portrait
         {trainer.name} kennenlernen
       </Button>
     )}
-    {portrait && (
+    {portrait?.credit && (
       <p class="small muted" data-sanity={field("portrait.credit")}>
         Bildnachweis: {portrait.credit}
       </p>

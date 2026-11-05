@@ -79,8 +79,8 @@ export function validateGalleryImageFields(value: unknown): true | string {
   const raw = record(value);
   if (!galleryText(raw.alt, 8, GALLERY_LIMITS.alt))
     return "Bildbeschreibung mit 8–240 Zeichen ergänzen; Leerzeichen allein reichen nicht.";
-  if (!galleryText(raw.credit, 1, GALLERY_LIMITS.credit))
-    return "Urhebernachweis mit 1–160 Zeichen ergänzen; Leerzeichen allein reichen nicht.";
+  if (raw.credit != null && galleryText(raw.credit, 0, GALLERY_LIMITS.credit) === undefined)
+    return "Der optionale Bildnachweis darf höchstens 160 Zeichen enthalten.";
   if (!captionValid(raw))
     return "Die optionale Bildunterschrift darf höchstens 240 Zeichen enthalten.";
   return true;
@@ -92,8 +92,8 @@ export function validateGalleryVideoFields(value: unknown): true | string {
     return "Videotitel mit 1–120 Zeichen ergänzen.";
   if (!galleryText(raw.transcript, 20, GALLERY_LIMITS.transcript))
     return "Textalternative mit 20–6000 Zeichen ergänzen; Leerzeichen allein reichen nicht.";
-  if (!galleryText(raw.credit, 1, GALLERY_LIMITS.credit))
-    return "Urhebernachweis mit 1–160 Zeichen ergänzen; Leerzeichen allein reichen nicht.";
+  if (raw.credit != null && galleryText(raw.credit, 0, GALLERY_LIMITS.credit) === undefined)
+    return "Der optionale Bildnachweis darf höchstens 160 Zeichen enthalten.";
   if (!captionValid(raw))
     return "Die optionale Bildunterschrift darf höchstens 240 Zeichen enthalten.";
   return validateGalleryImageFields(raw.poster);

@@ -124,8 +124,9 @@ test("optional media-kit previews require trusted raster files and complete desc
   };
   const result = normalizeMediaKit([{ ...entry, preview }], config);
   assert.match(result[0].preview.image, /w=720/);
+  assert.equal(normalizeMediaKit([{ ...entry, preview: { ...preview, credit: undefined } }], config)[0].preview.credit, undefined);
   for (const change of [
-    { ...preview, credit: " " },
+    { ...preview, credit: "x".repeat(161) },
     { ...preview, alt: " " },
     { ...preview, asset: { ...preview.asset, url: "https://evil.test/a.png" } },
     {
