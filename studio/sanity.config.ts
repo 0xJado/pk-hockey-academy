@@ -1,4 +1,5 @@
 import { venue, trainingSession } from "./schemaTypes/training";
+import { trainingImages } from "./schemaTypes/trainingImages";
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { deDELocale } from "@sanity/locale-de-de";
@@ -95,6 +96,10 @@ export default defineConfig({
             ),
             S.documentTypeListItem("venue").title("Trainingsstätten"),
             S.documentTypeListItem("trainingSession").title("Trainingstermine"),
+            S.listItem()
+              .id("trainingImages")
+              .title("Trainingsbilder")
+              .child(S.document().schemaType("trainingImages").documentId("trainingImages")),
             S.documentTypeListItem("galleryCamp").title("Alle Camp-Alben"),
             S.documentTypeListItem("socialPost").title(
               "Ausgewählte Social-Beiträge",
@@ -116,6 +121,7 @@ export default defineConfig({
   schema: {
     types: [
       venue, trainingSession,
+      trainingImages,
       galleryCamp,
       galleryPhoto,
       galleryVideo,
@@ -124,7 +130,9 @@ export default defineConfig({
       mediaKitDownload,
     ],
     templates: (previous) => [
-      ...previous,
+      ...previous.filter(
+        (template) => !["trainingImages"].includes(template.schemaType),
+      ),
       ...[1, 2, 3].map((number) => ({
         id: `trainer-blank-${number}`,
         title: `Weiteres Trainerprofil · Vorlage ${number}`,

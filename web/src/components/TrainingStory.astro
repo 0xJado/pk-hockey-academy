@@ -3,11 +3,17 @@ import { trainingPhases } from "../data/academy";
 import { Image } from "astro:assets";
 import onIcePractice from "../assets/on-ice-practice.png";
 import offIceRunning from "../assets/off-ice-running.png";
+import { getTrainingImages } from "../lib/training-images-source";
+import { imageUrl } from "../lib/gallery";
 
 const phaseImages = {
   "on-ice": onIcePractice,
   "off-ice": offIceRunning,
 };
+const replacements = await getTrainingImages();
+const imageWidths = [400, 640, 960, 1280];
+const imageSizes =
+  "(max-width: 600px) calc(100vw - 92px), (max-width: 900px) calc(100vw - 108px), (max-width: 1100px) calc((100vw - 238px) / 2), (max-width: 1392px) calc((100vw - 278px) / 2), 557px";
 ---
 
 <section
@@ -25,49 +31,71 @@ const phaseImages = {
       </h2>
       <p>
         Gezielte Arbeit auf dem Eis. Ergänzende Entwicklung daneben.
-        <br />{" "}
-        60 Minuten On-Ice. 60 Minuten Off-Ice.
+        <br /> 60 Minuten On-Ice. 60 Minuten Off-Ice.
       </p>
     </div>
     <div class="story-panels">
-      {trainingPhases.map((phase) => (
-        <article
-          class="story-panel"
-          data-story-panel
-          aria-labelledby={`phase-${phase.id}`}
-        >
-          <div class="phase-top">
-            <span class="eyebrow">
-              {phase.number} / {phase.kicker}
-            </span>
-          </div>
-          <div class="phase-time">
-            <strong aria-hidden="true">{phase.time}</strong>
-            <h3 id={`phase-${phase.id}`}>
-              <span class="sr-only">{phase.time} </span>MIN
-              <br />
-              {phase.title}
-            </h3>
-          </div>
-          <figure class="phase-photo">
-            <Image
-              src={phaseImages[phase.id]}
-              alt={phase.imageAlt}
-              widths={[400, 640, 960, 1280]}
-              sizes="(max-width: 600px) calc(100vw - 92px), (max-width: 900px) calc(100vw - 108px), (max-width: 1100px) calc((100vw - 238px) / 2), (max-width: 1392px) calc((100vw - 278px) / 2), 557px"
-              format="webp"
-              loading="lazy"
-              class="phase-photo-image"
-            />
-          </figure>
-          <p>{phase.text}</p>
-          <div class="phase-tags">
-            {phase.tags.map((tag) => (
-              <span>{tag}</span>
-            ))}
-          </div>
-        </article>
-      ))}
+      {trainingPhases.map((phase) => {
+        const photo = replacements[phase.id];
+        return (
+          <article
+            class="story-panel"
+            data-story-panel
+            aria-labelledby={`phase-${phase.id}`}
+          >
+            <div class="phase-top">
+              <span class="eyebrow">
+                {phase.number} / {phase.kicker}
+              </span>
+            </div>
+            <div class="phase-time">
+              <strong aria-hidden="true">{phase.time}</strong>
+              <h3 id={`phase-${phase.id}`}>
+                <span class="sr-only">{phase.time} </span>MIN
+                <br />
+                {phase.title}
+              </h3>
+            </div>
+            <figure class="phase-photo">
+              {photo ? (
+                <img
+                  src={imageUrl(photo, 640)}
+                  srcset={[
+                    ...new Set(
+                      imageWidths.map((width) => Math.min(width, photo.width)),
+                    ),
+                  ]
+                    .map((width) => `${imageUrl(photo, width)} ${width}w`)
+                    .join(", ")}
+                  width={photo.width}
+                  height={photo.height}
+                  alt={photo.alt}
+                  sizes={imageSizes}
+                  loading="lazy"
+                  decoding="async"
+                  class="phase-photo-image"
+                />
+              ) : (
+                <Image
+                  src={phaseImages[phase.id]}
+                  alt={phase.imageAlt}
+                  widths={imageWidths}
+                  sizes={imageSizes}
+                  format="webp"
+                  loading="lazy"
+                  class="phase-photo-image"
+                />
+              )}
+            </figure>
+            <p>{phase.text}</p>
+            <div class="phase-tags">
+              {phase.tags.map((tag) => (
+                <span>{tag}</span>
+              ))}
+            </div>
+          </article>
+        );
+      })}
     </div>
   </div>
 </section>

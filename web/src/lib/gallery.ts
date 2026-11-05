@@ -103,7 +103,7 @@ function assetUrl(
   }
 }
 
-function image(
+export function normalizeGalleryImage(
   value: unknown,
   id: string,
   config: Pick<GalleryConfig, "projectId" | "dataset">,
@@ -183,13 +183,13 @@ export function normalizeGallery(
       const item = record(entry);
       const key = text(item._key, 200);
       if (item._type === "galleryPhoto") {
-        const photo = image(item, key, config);
+        const photo = normalizeGalleryImage(item, key, config);
         if (!photo) invalid("invalid photo asset or metadata.");
         media.push(photo);
       } else if (item._type === "galleryVideo") {
         const asset = record(record(item.file).asset);
         const url = assetUrl(asset.url, "files", config);
-        const poster = image(item.poster, `${key}-poster`, config);
+        const poster = normalizeGalleryImage(item.poster, `${key}-poster`, config);
         const videoTitle = text(item.title, 120);
         const transcript = text(item.transcript, 6000);
         const credit = text(item.credit, 160);

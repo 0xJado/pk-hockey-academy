@@ -104,6 +104,7 @@ globalThis.fetch = async (input, options) => {
   const training = url.searchParams
     .get("query")
     ?.includes('_type == "trainingSession"');
+  const trainingImages = url.searchParams.get("query")?.includes('_type == "trainingImages"');
   const trainers = url.searchParams
     .get("query")
     ?.includes('_type == "trainer"');
@@ -114,7 +115,7 @@ globalThis.fetch = async (input, options) => {
     .get("query")
     ?.includes('_type == "mediaKitDownload"');
   if (
-    !training &&
+    !training && !trainingImages &&
     !trainers &&
     !social &&
     !mediaKit &&
@@ -124,7 +125,7 @@ globalThis.fetch = async (input, options) => {
   appendFileSync(
     process.env.PK_CMS_QA_TRACE,
     JSON.stringify({
-      type: training
+      type: trainingImages ? "training-images" : training
         ? "training"
         : trainers
           ? "trainers"
@@ -140,6 +141,13 @@ globalThis.fetch = async (input, options) => {
     }) + "\n",
   );
   const mode = process.env.PK_CMS_QA_MODE;
+  if (trainingImages) {
+    const result = mode === "public" ? {
+      onIce: { ...profile.portrait, alt: "Technisches On-Ice Ersatzbild" },
+      offIce: null,
+    } : null;
+    return new Response(JSON.stringify({ result }));
+  }
   if (training) {
     const venue = {
       _id: "fixture-venue",

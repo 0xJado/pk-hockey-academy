@@ -25,6 +25,7 @@ test("publication filter includes creates, edits, withdrawals and deletes for ea
     "mediaKitDownload",
     "venue",
     "trainingSession",
+    "trainingImages",
   ]) {
     const before = { ...doc, _type };
     assert.equal(await matches(null, before), true);

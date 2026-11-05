@@ -219,6 +219,16 @@ for (const mode of [
     "utf8",
   );
   const home = await readFile(resolve(folder, "index.html"), "utf8");
+  const trainingPage = await readFile(resolve(folder, "training/index.html"), "utf8");
+  for (const page of [home, trainingPage]) {
+    assert.match(page, /off-ice-running/);
+    if (mode === "public") {
+      assert.match(page, /alt="Technisches On-Ice Ersatzbild"/);
+      assert.doesNotMatch(page, /on-ice-practice/);
+    } else {
+      assert.match(page, /on-ice-practice/);
+    }
+  }
   const downloads = await readFile(
     resolve(folder, "medienkit/index.html"),
     "utf8",

@@ -63,6 +63,10 @@ Stand 29. Oktober 2026: Der native Ablauf wurde einschließlich Neuanlage, Pflic
 7. Nach Veröffentlichung oder Änderung die Website erfolgreich neu bauen. Erst dann aktualisieren sich `/trainerpool` und der Startseiten-Teaser. Ohne angebundenen Build-Webhook ist dies weiterhin ein manueller Betriebsschritt. Ein fehlgeschlagener Build lässt die vorherige veröffentlichte Website bestehen.
 8. Zum Zurückziehen **Zurückhalten** wählen und veröffentlichen, **Aktiver Trainer** deaktivieren und veröffentlichen oder die Veröffentlichung aufheben. Für die native Aktion oben **Veröffentlicht** auswählen, im Aktionsmenü **Unveröffentlichen** und danach **Jetzt zurückziehen** wählen. Der Entwurf bleibt erhalten. Zum Wiederherstellen auf **Entwurf** wechseln und **Veröffentlichen** wählen. Anschließend den erfolgreichen Website-Build abwarten und beide Seiten kontrollieren. Eine Datenänderung allein entfernt keine bereits gebauten Seiten oder CDN-Dateien.
 
+## Trainingsbilder
+
+Unter **Inhalte → Trainingsbilder** kannst du die Fotos für **60 Minuten On-Ice** und **60 Minuten Off-Ice** einzeln ersetzen. Lade ein Bild hoch, ergänze seine Bildbeschreibung, bestätige die Bildrechte und veröffentliche den Eintrag. Nach dem erfolgreichen Website-Build erscheint das Bild auf der Startseite und unter **Training**. Ein leeres Bildfeld verwendet das jeweilige Standardbild.
+
 ## Publishing workflow (für Pierre)
 
 The [automatic publishing runbook](../docs/CMS-PUBLISHING.md) records the Vercel connection and real acceptance sequence. Public hosting identifiers/admin URL and the build hook are configured. Coach migration and real publish/edit/unpublish/restore acceptance have passed. [Curated social link cards](../docs/issue-5-social-posts.md) are committed; accounts and activation remain pending.
