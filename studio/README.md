@@ -63,6 +63,14 @@ Stand 29. Oktober 2026: Der native Ablauf wurde einschließlich Neuanlage, Pflic
 7. Nach Veröffentlichung oder Änderung die Website erfolgreich neu bauen. Erst dann aktualisieren sich `/trainerpool` und der Startseiten-Teaser. Ohne angebundenen Build-Webhook ist dies weiterhin ein manueller Betriebsschritt. Ein fehlgeschlagener Build lässt die vorherige veröffentlichte Website bestehen.
 8. Zum Zurückziehen **Zurückhalten** wählen und veröffentlichen, **Aktiver Trainer** deaktivieren und veröffentlichen oder die Veröffentlichung aufheben. Für die native Aktion oben **Veröffentlicht** auswählen, im Aktionsmenü **Unveröffentlichen** und danach **Jetzt zurückziehen** wählen. Der Entwurf bleibt erhalten. Zum Wiederherstellen auf **Entwurf** wechseln und **Veröffentlichen** wählen. Anschließend den erfolgreichen Website-Build abwarten und beide Seiten kontrollieren. Eine Datenänderung allein entfernt keine bereits gebauten Seiten oder CDN-Dateien.
 
+## Website-Bilder
+
+Unter **Inhalte → Website-Bilder** lassen sich die Philosophie-Illustration mit der Schlittschuhkufe, die Eisflächen-Illustration bei den Trainingsstädten, das Academy-Wappen und die Torwart-Dekoration in der Camp-Galerie ersetzen. JPEG, PNG und WebP bis 12 MB sind möglich. Bildbeschreibung ergänzen, Rechte bestätigen und veröffentlichen. Ohne Ersatz bleiben die bisherigen Bilder sichtbar. Eigene Fotos erhalten keine automatische Kennzeichnung als Illustration.
+
+Das Wappen wird gemeinsam für Navigation, Footer, Trainer-Platzhalter, Browser-Symbol und Link-Vorschauen verwendet. Für Wappen und Torwart-Dekoration eignen sich transparente PNG- oder WebP-Dateien. Hero-Medien stehen unter **Startseiten-Hero**, die On-Ice-/Off-Ice-Fotos unter **Trainingsbilder**. Trainerporträts, Galerieinhalte und Medienkit-Vorschaubilder werden direkt bei ihren jeweiligen Inhalten bearbeitet.
+
+Nach einem erfolgreichen Website-Build werden veröffentlichte Änderungen sichtbar. Aktualisiere beim Rollout den bestehenden Build-Webhook mit `npm run webhook:setup -- --apply`, damit auch **Website-Bilder** einen Build auslösen.
+
 ## Startseiten-Hero
 
 Unter **Inhalte → Startseiten-Hero** kannst du das Bild, den Text über der Überschrift, die drei Überschriftenzeilen, den Leitsatz und die Kurzbeschreibung bearbeiten. Leere Textfelder verwenden den Standardtext. Bild und Video kommen aus Sanity. Ohne freigegebenes Bild bleibt die Medienfläche dunkel. Ergänze bei einem eigenen Foto die Bildbeschreibung und bestätige die Bildrechte. Nach der Veröffentlichung und einem erfolgreichen Website-Build werden die Änderungen sichtbar.

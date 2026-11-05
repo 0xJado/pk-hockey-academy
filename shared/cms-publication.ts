@@ -1,6 +1,6 @@
 // Include withdrawals and deletions: filtering by current visibility leaves stale pages.
 export const CMS_PUBLICATION_FILTER = `
-  (coalesce(after()._type, before()._type) in ["trainer", "galleryCamp", "socialPost", "mediaKitDownload", "venue", "trainingSession", "trainingImages", "homepageHero"] ||
+  (coalesce(after()._type, before()._type) in ["trainer", "galleryCamp", "socialPost", "mediaKitDownload", "venue", "trainingSession", "trainingImages", "homepageHero", "siteImages"] ||
    (before()._type == "sanity.fileAsset" && !defined(after()._id))) &&
   !(coalesce(after()._id, before()._id) in path("drafts.**")) &&
   !(coalesce(after()._id, before()._id) in path("versions.**"))

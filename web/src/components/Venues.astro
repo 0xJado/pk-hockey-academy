@@ -1,19 +1,23 @@
 ---
 import { getTraining } from "../lib/training-source";
 import Arrow from "./Arrow.astro";
-const { venues } = await getTraining();
+import SiteImage from "./SiteImage.astro";
+import { getSiteImages } from "../lib/site-images-source";
+const [{ venues }, siteImages] = await Promise.all([getTraining(), getSiteImages()]);
 ---
 
 <div class="venues-layout">
   <div class="venue-visual" data-venue-mask>
-    <img
-      src="/images/rink.svg"
+    <SiteImage
+      imageKey="venues"
+      fallback="/images/rink.svg"
       alt="Abstrakte Illustration einer Eisfläche; keine Darstellung einer konkreten Trainingsstätte."
-      width="800"
-      height="660"
+      width={800}
+      height={660}
       loading="lazy"
+      sizes="(max-width: 900px) 100vw, 45vw"
     />
-    <span class="image-label">DEINE REGION. DEIN EIS. · ILLUSTRATION</span>
+    {!siteImages.venues && <span class="image-label">DEINE REGION. DEIN EIS. · ILLUSTRATION</span>}
     <span class="venue-visual-text" aria-hidden="true">
       HEIMAT
       <br />

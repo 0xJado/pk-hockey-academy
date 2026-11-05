@@ -106,6 +106,7 @@ globalThis.fetch = async (input, options) => {
     ?.includes('_type == "trainingSession"');
   const trainingImages = url.searchParams.get("query")?.includes('_type == "trainingImages"');
   const homepageHero = url.searchParams.get("query")?.includes('_type == "homepageHero"');
+  const siteImages = url.searchParams.get("query")?.includes('_type == "siteImages"');
   const trainers = url.searchParams
     .get("query")
     ?.includes('_type == "trainer"');
@@ -116,7 +117,7 @@ globalThis.fetch = async (input, options) => {
     .get("query")
     ?.includes('_type == "mediaKitDownload"');
   if (
-    !training && !trainingImages && !homepageHero &&
+    !training && !trainingImages && !homepageHero && !siteImages &&
     !trainers &&
     !social &&
     !mediaKit &&
@@ -126,7 +127,7 @@ globalThis.fetch = async (input, options) => {
   appendFileSync(
     process.env.PK_CMS_QA_TRACE,
     JSON.stringify({
-      type: homepageHero ? "homepage-hero" : trainingImages ? "training-images" : training
+      type: siteImages ? "site-images" : homepageHero ? "homepage-hero" : trainingImages ? "training-images" : training
         ? "training"
         : trainers
           ? "trainers"
@@ -142,6 +143,15 @@ globalThis.fetch = async (input, options) => {
     }) + "\n",
   );
   const mode = process.env.PK_CMS_QA_MODE;
+  if (siteImages) {
+    const result = mode === "public" || mode === "malformed-site-images" ? {
+      philosophy: { ...profile.portrait, alt: mode === "malformed-site-images" ? " " : "Technisches Philosophie-Ersatzbild" },
+      venues: { ...profile.portrait, alt: "Technisches Standort-Ersatzbild" },
+      crest: { ...profile.portrait, alt: "Technisches Academy-Ersatzwappen" },
+      galleryGoalie: { ...profile.portrait, alt: "Technische Torwart-Ersatzgrafik" },
+    } : null;
+    return new Response(JSON.stringify({ result }));
+  }
   if (homepageHero) {
     const result = mode === "empty" ? null : {
       headlineFirst: "EISHOCKEY.",

@@ -1,7 +1,7 @@
 ---
 import GalleryTile from "./GalleryTile.astro";
 import VideoControls from "./VideoControls.astro";
-import { Image } from "astro:assets";
+import SiteImage from "./SiteImage.astro";
 import goalie from "../assets/gallery-goalie.png";
 import { groupGalleryMedia } from "../lib/gallery";
 import { layoutGalleryTiles } from "../lib/gallery-layout";
@@ -39,7 +39,7 @@ const sections = groupGalleryMedia(album.media).map((section) => ({
       </a>
     ))}
     <span class="gallery-goalie" data-gallery-goalie aria-hidden="true" hidden>
-      <Image src={goalie} width={176} alt="" loading="eager" />
+      <SiteImage imageKey="galleryGoalie" fallback={goalie} width={176} alt="" loading="eager" />
     </span>
   </nav>
   {sections.map((section, sectionIndex) => (

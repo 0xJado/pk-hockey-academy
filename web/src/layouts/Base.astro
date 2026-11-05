@@ -6,6 +6,8 @@ import crest from "../assets/brand/pk-hockey-crest.png";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import "../styles/global.css";
+import { getSiteImages } from "../lib/site-images-source";
+import { imageUrl } from "../lib/gallery";
 interface Props {
   title: string;
   description: string;
@@ -24,8 +26,21 @@ const canonical =
     : undefined;
 const launchReady =
   import.meta.env.PUBLIC_LAUNCH_READY === "true" && !!canonical && !noindex;
-const favicon = await getImage({ src: crest, width: 64, format: "png" });
-const socialCrest = await getImage({ src: crest, width: 512, format: "png" });
+const { crest: cmsCrest } = await getSiteImages();
+const favicon = cmsCrest
+  ? { src: imageUrl(cmsCrest, 64) }
+  : await getImage({ src: crest, width: 64, format: "png" });
+const socialCrest = cmsCrest
+  ? {
+      src: imageUrl(cmsCrest, 512),
+      width: Math.min(512, cmsCrest.width),
+      height: Math.round(Math.min(512, cmsCrest.width) * cmsCrest.height / cmsCrest.width),
+    }
+  : {
+      src: (await getImage({ src: crest, width: 512, format: "png" })).src,
+      width: 512,
+      height: 512,
+    };
 const socialImage = Astro.site
   ? new URL(socialCrest.src, Astro.site)
   : undefined;
@@ -54,11 +69,11 @@ const socialImage = Astro.site
     {socialImage && (
       <>
         <meta property="og:image" content={socialImage} />
-        <meta property="og:image:width" content="512" />
-        <meta property="og:image:height" content="512" />
+        <meta property="og:image:width" content={String(socialCrest.width)} />
+        <meta property="og:image:height" content={String(socialCrest.height)} />
         <meta
           property="og:image:alt"
-          content="PK Hockey Academy – Skills. Mindset. Zukunft."
+          content={cmsCrest?.alt ?? "PK Hockey Academy – Skills. Mindset. Zukunft."}
         />
         <meta name="twitter:image" content={socialImage} />
       </>
@@ -66,7 +81,7 @@ const socialImage = Astro.site
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <link rel="icon" type="image/png" href={favicon.src} />
+    <link rel="icon" href={favicon.src} />
     {!editorPreview && <ClientRouter fallback="none" />}
   </head>
   <body>

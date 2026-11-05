@@ -1,6 +1,6 @@
 ---
 import Button from "./Button.astro";
-import { Image } from "astro:assets";
+import SiteImage from "./SiteImage.astro";
 import crest from "../assets/brand/pk-hockey-crest.png";
 import type { Trainer } from "../types/content";
 import { trainerImageUrl } from "../lib/trainers";
@@ -61,12 +61,10 @@ const widths = portrait
         decoding="async"
       />
     ) : (
-      <Image
-        src={crest}
+      <SiteImage
+        imageKey="crest"
+        fallback={crest}
         width={500}
-        densities={[1, 2]}
-        format="webp"
-        quality={90}
         alt="Wappen der PK Hockey Academy. Ein separates Trainerfoto folgt."
         loading="lazy"
       />

@@ -16,6 +16,8 @@ npm run dev
 
 Open the URL printed by Astro, normally `http://127.0.0.1:4321`.
 
+Public images are editable through Sanity. Use **Inhalte → Website-Bilder** for the homepage illustrations, academy crest and gallery decoration, **Startseiten-Hero** for hero media, and **Trainingsbilder** for On-Ice/Off-Ice photos. Portraits, gallery media and media-kit previews belong to their respective documents. Published replacements appear after a successful website rebuild. See [Studio editing instructions](studio/README.md).
+
 ```powershell
 npm run check
 npm test
@@ -26,7 +28,7 @@ npm run preview
 
 Public static files are in `web/dist/client`. The private trainer preview needs a server runtime: the official Node adapter supports local `npm run preview`, and Vercel builds (`VERCEL=1`) use the official Vercel adapter. Public pages remain prerendered and can still be hosted as static files; that export alone does not include private Visual Editing. Vercel is the selected review host; no custom domain is connected. See [Visual Editing setup and acceptance](docs/VISUAL-EDITING.md).
 
-`npm run test:cms` builds seven isolated cases: starter, populated CMS with a token, populated public CMS with edited/reordered profiles and downloads, empty CMS, invalid trainer, invalid gallery and invalid media-kit content. It verifies real bundler environment substitution, publication filtering, escaping, ordering, withdrawal behavior, admin linking, tokenless public reads and absence of read tokens/withheld fixtures from website output. It uses no real project or token and retains its artifacts under ignored `output/cms-integration-*`; it never changes `web/dist` or deploys anything.
+`npm run test:cms` builds isolated starter, populated, public and empty CMS cases, plus invalid trainer, gallery, media-kit, training and website-image content. It verifies real bundler environment substitution, publication filtering, escaping, ordering, image replacements and defaults, withdrawal behavior, admin linking, tokenless public reads and absence of read tokens/withheld fixtures from website output. It uses no real project or token and retains its artifacts under ignored `output/cms-integration-*`; it never changes `web/dist` or deploys anything.
 
 ### Vercel review hosting
 

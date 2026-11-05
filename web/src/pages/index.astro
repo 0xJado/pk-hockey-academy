@@ -11,10 +11,13 @@ import "../styles/gallery.css";
 import { getTrainers } from "../lib/trainer-source";
 import { getHomepageHero } from "../lib/homepage-hero-source";
 import { imageUrl } from "../lib/gallery";
+import SiteImage from "../components/SiteImage.astro";
+import { getSiteImages } from "../lib/site-images-source";
 
-const [[featuredTrainer], { copy, photo, videoUrl }] = await Promise.all([
+const [[featuredTrainer], { copy, photo, videoUrl }, siteImages] = await Promise.all([
   getTrainers(),
   getHomepageHero(),
+  getSiteImages(),
 ]);
 const heroWidths = [480, 640, 960, 1280, 1445];
 const heroSizes = "(max-width: 900px) 100vw, (max-width: 2000px) 1100px, 54vw";
@@ -136,14 +139,16 @@ const heroSizes = "(max-width: 900px) 100vw, (max-width: 2000px) 1100px, 54vw";
   <section id="philosophie" class="section philosophy light-section">
     <div class="wrap philosophy-layout">
       <div class="philosophy-art" data-venue-mask>
-        <img
-          src="/images/blade.svg"
+        <SiteImage
+          imageKey="philosophy"
+          fallback="/images/blade.svg"
           alt="Grafische Studie einer Schlittschuhkufe auf dem Eis."
-          width="720"
-          height="820"
+          width={720}
+          height={820}
           loading="lazy"
+          sizes="(max-width: 900px) 100vw, 45vw"
         />
-        <span class="image-label">JEDER SCHRITT ZÄHLT. · ILLUSTRATION</span>
+        {!siteImages.philosophy && <span class="image-label">JEDER SCHRITT ZÄHLT. · ILLUSTRATION</span>}
         <span class="art-index" aria-hidden="true">
           01 / FOKUS
         </span>

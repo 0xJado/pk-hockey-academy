@@ -1,6 +1,7 @@
 import { venue, trainingSession } from "./schemaTypes/training";
 import { trainingImages } from "./schemaTypes/trainingImages";
 import { homepageHero } from "./schemaTypes/homepageHero";
+import { siteImages } from "./schemaTypes/siteImages";
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { deDELocale } from "@sanity/locale-de-de";
@@ -93,6 +94,10 @@ export default defineConfig({
               ),
             S.divider(),
             S.listItem()
+              .id("siteImages")
+              .title("Website-Bilder")
+              .child(S.document().schemaType("siteImages").documentId("siteImages")),
+            S.listItem()
               .id("homepageHero")
               .title("Startseiten-Hero")
               .child(S.document().schemaType("homepageHero").documentId("homepageHero")),
@@ -128,6 +133,7 @@ export default defineConfig({
       venue, trainingSession,
       trainingImages,
       homepageHero,
+      siteImages,
       galleryCamp,
       galleryPhoto,
       galleryVideo,
@@ -137,7 +143,7 @@ export default defineConfig({
     ],
     templates: (previous) => [
       ...previous.filter(
-        (template) => !["trainingImages", "homepageHero"].includes(template.schemaType),
+        (template) => !["trainingImages", "homepageHero", "siteImages"].includes(template.schemaType),
       ),
       ...[1, 2, 3].map((number) => ({
         id: `trainer-blank-${number}`,

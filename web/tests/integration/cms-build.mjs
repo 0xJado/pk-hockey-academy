@@ -125,6 +125,7 @@ for (const mode of [
   "malformed-gallery",
   "malformed-media-kit",
   "malformed-training",
+  "malformed-site-images",
 ]) {
   const trace = resolve(output, `${mode}-requests.jsonl`);
   const { folder, result } = await build(mode, {
@@ -146,7 +147,8 @@ for (const mode of [
   if (
     mode !== "malformed-gallery" &&
     mode !== "malformed-media-kit" &&
-    mode !== "malformed-training"
+    mode !== "malformed-training" &&
+    mode !== "malformed-site-images"
   ) {
     assert.ok(
       requests.some((request) => request.type === "trainers"),
@@ -174,7 +176,8 @@ for (const mode of [
     mode === "malformed" ||
     mode === "malformed-gallery" ||
     mode === "malformed-media-kit" ||
-    mode === "malformed-training"
+    mode === "malformed-training" ||
+    mode === "malformed-site-images"
   ) {
     assert.notEqual(result.status, 0);
     assert.match(
@@ -185,7 +188,9 @@ for (const mode of [
           ? /approved gallery album.*invalid content/
           : mode === "malformed-training"
             ? /Invalid approved session/
-            : /approved media-kit download is invalid/,
+            : mode === "malformed-site-images"
+              ? /Invalid approved website image/
+              : /approved media-kit download is invalid/,
     );
     console.log(
       `${mode}: malformed approved content correctly rejected the build.`,
@@ -219,6 +224,19 @@ for (const mode of [
     "utf8",
   );
   const home = await readFile(resolve(folder, "index.html"), "utf8");
+  assert.ok(requests.some((request) => request.type === "site-images"));
+  if (mode === "public") {
+    assert.match(home, /alt="Technisches Philosophie-Ersatzbild"/);
+    assert.match(home, /alt="Technisches Standort-Ersatzbild"/);
+    assert.doesNotMatch(home, /\/images\/(blade|rink)\.svg/);
+    assert.doesNotMatch(home, /JEDER SCHRITT ZÄHLT\. · ILLUSTRATION|DEINE REGION\. DEIN EIS\. · ILLUSTRATION/);
+    assert.match(home, /<link rel="icon" href="https:\/\/cdn\.sanity\.io\/images\/cmsqa123\/qa\//);
+    assert.doesNotMatch(home, /pk-hockey-crest/);
+  } else {
+    assert.match(home, /\/images\/blade\.svg/);
+    assert.match(home, /\/images\/rink\.svg/);
+    assert.doesNotMatch(home, /Technisches Philosophie-Ersatzbild|Technisches Standort-Ersatzbild/);
+  }
   assert.match(home, /data-hero-line>MINDSET\./);
   if (mode === "empty") {
     assert.match(home, /data-hero-line>SKILLS\./);
@@ -340,6 +358,7 @@ for (const mode of [
       );
       assert.match(gallery, /Technisches Testalbum/);
       assert.match(album, /Technisches Testalbum/);
+      assert.doesNotMatch(album, /gallery-goalie\./);
       assert.match(album, /https:\/\/cdn\.sanity\.io\/images\/cmsqa123\/qa\//);
     }
   } else {

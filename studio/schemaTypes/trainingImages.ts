@@ -1,5 +1,5 @@
 import { defineField, defineType } from "sanity";
-import { validateAsset } from "./validation";
+import { validateAsset } from "./validation.ts";
 import { validateGalleryImageFields } from "../../shared/gallery-content.ts";
 
 export const websitePhotoField = (

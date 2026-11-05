@@ -1,5 +1,5 @@
 ---
-import { Image } from "astro:assets";
+import SiteImage from "./SiteImage.astro";
 import crest from "../assets/brand/pk-hockey-crest.png";
 interface Props {
   footer?: boolean;
@@ -12,13 +12,11 @@ const { footer = false } = Astro.props;
   href="/"
   aria-label="PK Hockey Academy – Startseite"
 >
-  <Image
-    src={crest}
+  <SiteImage
+    imageKey="crest"
+    fallback={crest}
     width={footer ? 112 : 88}
     height={footer ? 112 : 88}
-    densities={[1, 2]}
-    format="webp"
-    quality={90}
     alt=""
     loading={footer ? "lazy" : "eager"}
     class="wordmark-crest"
