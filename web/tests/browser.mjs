@@ -107,6 +107,9 @@ try {
     if (m.type() === "error") errors.push(m.text());
   });
   const external = [];
+  const fixtureCrest = training
+    ? await readFile(resolve(webRoot, "src/assets/brand/pk-hockey-crest.png"))
+    : undefined;
   const applicationPosts = [];
   context.on("request", (request) => {
     if (
@@ -117,7 +120,15 @@ try {
       applicationPosts.push(request.url());
   });
   await context.route("**/*", (route) => {
-    if (new URL(route.request().url()).origin !== origin) {
+    const url = new URL(route.request().url());
+    if (
+      fixtureCrest &&
+      route.request().method() === "GET" &&
+      url.origin === "https://cdn.sanity.io" &&
+      url.pathname === "/images/cmsqa123/qa/abc-800x1000.webp"
+    )
+      return route.fulfill({ body: fixtureCrest, contentType: "image/png" });
+    if (url.origin !== origin) {
       external.push(route.request().url());
       return route.abort();
     }
