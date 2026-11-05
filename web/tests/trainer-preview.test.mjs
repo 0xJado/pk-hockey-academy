@@ -2,6 +2,39 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { normalizePreviewTrainers } from "../src/lib/trainer-preview-source.ts";
 import { normalizeTrainers } from "../src/lib/trainers.ts";
+import { createPreviewNavigation } from "../src/lib/preview-navigation.ts";
+
+test("trainer mutations coalesce into one preview refresh", (t) => {
+  t.mock.timers.enable({ apis: ["setTimeout"] });
+  let reloads = 0;
+  const navigation = createPreviewNavigation(() => reloads++, 100);
+  navigation.refresh("mutation");
+  t.mock.timers.tick(60);
+  navigation.refresh("mutation");
+  t.mock.timers.tick(99);
+  assert.equal(reloads, 0);
+  t.mock.timers.tick(1);
+  navigation.refresh("mutation");
+  t.mock.timers.tick(100);
+  assert.equal(reloads, 1);
+});
+
+test("switching preview pages cancels stale refreshes, and manual refresh runs immediately", (t) => {
+  t.mock.timers.enable({ apis: ["setTimeout"] });
+  let reloads = 0;
+  const leaving = createPreviewNavigation(() => reloads++, 100);
+  leaving.refresh("mutation");
+  leaving.leave();
+  leaving.refresh("manual");
+  t.mock.timers.tick(100);
+  assert.equal(reloads, 0);
+
+  const current = createPreviewNavigation(() => reloads++, 100);
+  current.refresh("mutation");
+  current.refresh("manual");
+  t.mock.timers.tick(100);
+  assert.equal(reloads, 1);
+});
 
 const config = { projectId: "cmsqa123", dataset: "qa" };
 const draft = {

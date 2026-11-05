@@ -13,6 +13,8 @@ Pierre can edit trainer profiles in the website layout through Sanity's **Websit
 
 The optional navigator in Presentation also provides a native **Trainer hinzufügen** link. The Studio's existing **Inhalte** tool and private **Profilvorschau** remain available.
 
+For gallery albums, training dates, and other content, switch to **Inhalte** in Studio. The trainer preview has its own profile navigation and a **Zur Redaktion** link.
+
 ## Runtime and security
 
 - Public routes remain prerendered and use the existing strict published-only adapter. No overlays, source attributes, draft content or preview credential are included in public HTML.
@@ -22,7 +24,7 @@ The optional navigator in Presentation also provides a native **Trainer hinzufü
 - The private preview permits the configured Studio origin and `https://www.sanity.io`, because hosted Studio is itself nested inside Sanity Dashboard. Every iframe ancestor must match CSP. Local Studio framing at `http://localhost:3333` is allowed only in development; no Studio configuration defaults to self-only framing. This does not grant a preview session or draft access.
 - `SANITY_PREVIEW_READ_TOKEN` is a dedicated **Viewer** robot token for this project. It is server-only and never prefixed `PUBLIC_` or `SANITY_STUDIO_`. Local preview retains its existing credential in ignored `web/.env`. Hosted preview has a separate annual token, stored as a production-only Secret on `driftwoodmedia/pk-hockey-academy` in Vercel after explicit owner approval. No additional human account or write permission was created. Viewer can read drafts throughout the project; the application's trainer-only query does not narrow the token's underlying permissions. Rotating/revoking the server credential removes preview access. Published public reads remain tokenless.
 - The shared trainer renderer uses explicit Sanity data attributes. It does not alter the public validator or inject stega characters into content. The preview client has bounded requests and bypasses the CDN.
-- Visual Editing is loaded only in the private preview. Native page loads keep the Studio frame and its history in sync; back/forward restores the overlay runtime. Perspective changes switch between published and draft queries. An explicit refresh callback reloads the server-rendered page when Sanity sends a content-change or manual-refresh message; overlays alone do not refetch server content in the pinned SDK.
+- Visual Editing loads in the private trainer preview. Native page loads keep the Studio frame and its history in sync. Profile switches retain the published perspective when selected. Trainer mutations relevant to the current view schedule one reload after a short pause. A page or perspective change cancels the queued reload. The manual refresh button reloads immediately.
 - Third-party frames/cookies can be restricted by a browser. Open the preview directly from Studio if needed; do not disable browser security globally. Vercel Deployment Protection stays enabled. Its login/bypass challenge is separate from Sanity draft authorization.
 - The public static files are in `web/dist/client`. Hosting only these files preserves the public website but cannot provide private Visual Editing. Full preview hosting needs the Node runtime or Vercel functions; no visitor authentication/database was added.
 

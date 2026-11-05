@@ -73,11 +73,11 @@ const socialImage = Astro.site
     <a class="skip-link" href="#inhalt">
       Zum Inhalt springen
     </a>
-    <Header />
+    {!editorPreview && <Header />}
     <main id="inhalt" tabindex="-1" transition:animate="fade">
       <slot />
     </main>
-    <Footer />
+    {!editorPreview && <Footer />}
     <script>
       import { installMotion } from "../lib/motion";
       installMotion();

@@ -107,8 +107,18 @@ else {
                   Trainer hinzufügen ↗
                 </a>
               )}
-              <a href="/redaktion/trainerpool">Alle Profile in der Vorschau</a>
-              <a href="/redaktion/abmelden">Vorschau beenden</a>
+              <a
+                href={published
+                  ? "/redaktion/trainerpool?perspective=published"
+                  : "/redaktion/trainerpool"}
+                data-preview-leave
+              >
+                Alle Profile in der Vorschau
+              </a>
+              {studioUrl && (
+                <a href={studioUrl} target="_top">Zur Redaktion ↗</a>
+              )}
+              <a href="/redaktion/abmelden" data-preview-leave>Vorschau beenden</a>
             </div>
           </aside>
           {failed ? (
@@ -156,7 +166,7 @@ else {
       )}
     </div>
   </section>
-  {authenticated && !failed && <div id="pk-visual-editing" />}
+  {authenticated && !failed && <div id="pk-visual-editing" data-profile-id={id} />}
 </Base>
 <style>
   .preview-notice {
@@ -176,13 +186,23 @@ else {
   }
 </style>
 <script>
-  if (document.querySelector("#pk-visual-editing")) {
+  import { createPreviewNavigation } from "../../lib/preview-navigation";
+  const preview = document.querySelector<HTMLElement>("#pk-visual-editing");
+  if (preview) {
     const { enableVisualEditing } =
       await import("@sanity/visual-editing/enable-visual-editing");
+    const navigation = createPreviewNavigation(() => location.reload());
     const disable = enableVisualEditing({
-      async refresh() {
-        // Draft content is server-rendered; the overlay SDK does not refetch it.
-        location.reload();
+      refresh(payload) {
+        if (payload.source === "mutation") {
+          const selected = preview.dataset.profileId;
+          if (
+            payload.document._type !== "trainer" ||
+            (selected && payload.document._id.replace(/^drafts\./, "") !== selected)
+          )
+            return false;
+        }
+        return navigation.refresh(payload.source);
       },
       history: {
         subscribe(navigate) {
@@ -199,10 +219,18 @@ else {
           const url = new URL(update.url, location.origin);
           if (
             url.origin !== location.origin ||
-            url.pathname !== "/redaktion/trainerpool" ||
-            url.href === location.href
+            url.pathname !== "/redaktion/trainerpool"
           )
             return;
+          const current = new URL(location.href);
+          if (
+            !url.searchParams.has("perspective") &&
+            current.searchParams.get("perspective") === "published"
+          )
+            url.searchParams.set("perspective", "published");
+          if (url.href === current.href) return;
+          // Hash jumps stay in this document and keep the editing connection.
+          if (url.search !== current.search && !navigation.leave()) return;
           if (update.type === "replace") location.replace(url.href);
           else location.assign(url.href);
         },
@@ -217,10 +245,23 @@ else {
         const value = isPublished ? "published" : "drafts";
         if ((url.searchParams.get("perspective") || "drafts") === value) return;
         url.searchParams.set("perspective", value);
-        location.replace(url.href);
+        if (navigation.leave()) location.replace(url.href);
       },
     });
-    addEventListener("pagehide", () => disable(), { once: true });
+    for (const link of document.querySelectorAll<HTMLAnchorElement>("[data-preview-leave]")) {
+      link.addEventListener("click", (event) => {
+        if (
+          event.defaultPrevented || event.button !== 0 ||
+          event.metaKey || event.ctrlKey || event.shiftKey || event.altKey
+        )
+          return;
+        if (link.href === location.href || !navigation.leave()) event.preventDefault();
+      });
+    }
+    addEventListener("pagehide", () => {
+      navigation.leave();
+      disable();
+    }, { once: true });
     addEventListener("pageshow", (event) => {
       if (event.persisted) location.reload();
     });

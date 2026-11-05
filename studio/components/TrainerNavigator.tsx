@@ -9,6 +9,7 @@ export function TrainerNavigator() {
         Profiltext oder Foto in der Website-Vorschau anklicken. Rechts öffnet
         sich das passende Feld.
       </p>
+      <p>Für Alben, Termine und weitere Inhalte im Studio „Inhalte“ öffnen.</p>
       <p>
         <IntentLink intent="create" params={{ type: "trainer" }}>
           Trainer hinzufügen ↗
