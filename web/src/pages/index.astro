@@ -7,59 +7,82 @@ import TrainerCard from "../components/TrainerCard.astro";
 import Venues from "../components/Venues.astro";
 import Schedule from "../components/Schedule.astro";
 import FinalCTA from "../components/FinalCTA.astro";
-import { Image } from "astro:assets";
-import heroHockey from "../assets/hero-academy-players-retouched.png";
 import "../styles/gallery.css";
 import { getTrainers } from "../lib/trainer-source";
-const [featuredTrainer] = await getTrainers();
+import { getHomepageHero } from "../lib/homepage-hero-source";
+import { imageUrl } from "../lib/gallery";
+
+const [[featuredTrainer], { copy, photo, videoUrl }] = await Promise.all([
+  getTrainers(),
+  getHomepageHero(),
+]);
+const heroWidths = [480, 640, 960, 1280, 1445];
+const heroSizes = "(max-width: 900px) 100vw, (max-width: 2000px) 1100px, 54vw";
 ---
 
 <Base
   title="Skills. Mindset. Zukunft."
   description="Individuelles Eishockeytraining für Kinder und Jugendliche bis U13. Kleine Gruppen, 60 Minuten On-Ice und 60 Minuten Off-Ice in Essen, Dinslaken und Duisburg."
 >
+  <Fragment slot="above-header">
+    {videoUrl && (
+      <div class="hero-motion-bar" data-hero-motion-bar hidden>
+        <div class="wrap">
+          <button type="button" data-hero-motion aria-pressed="false">
+            Videobewegung reduzieren
+          </button>
+        </div>
+      </div>
+    )}
+  </Fragment>
   <section class="hero" data-hero aria-labelledby="hero-title">
     <div class="hero-art" data-hero-art>
-      <Image
-        src={heroHockey}
-        format="webp"
-        quality={92}
-        widths={[480, 640, 960, 1280, 1445]}
-        sizes="(max-width: 900px) 100vw, (max-width: 2000px) 1100px, 54vw"
-        data-parallax
-        width={1445}
-        alt="Drei junge Eishockeyspieler in Trikots der PK Hockey Academy mit Helm und Gesichtsschutz auf dem Eis."
-        fetchpriority="high"
-        loading="eager"
-      />
+      {photo && (
+        <img
+          src={imageUrl(photo, 960)}
+          srcset={[...new Set(heroWidths.map((width) => Math.min(width, photo.width)))]
+            .map((width) => `${imageUrl(photo, width)} ${width}w`)
+            .join(", ")}
+          sizes={heroSizes}
+          data-parallax
+          width={photo.width}
+          height={photo.height}
+          alt={photo.alt}
+          fetchpriority="high"
+          loading="eager"
+        />
+      )}
+      {videoUrl && (
+        <video data-hero-video={videoUrl} muted loop playsinline preload="none" aria-hidden="true" hidden />
+      )}
+      {videoUrl && <div class="hero-video-fade" data-hero-video-fade aria-hidden="true" hidden />}
     </div>
     <div class="wrap hero-content">
       <div class="hero-copy">
         <p class="eyebrow" data-hero-copy>
-          INDIVIDUELLES EISHOCKEYTRAINING · BIS U13
+          {copy.eyebrow}
         </p>
         <h1 id="hero-title">
           <span class="line-mask">
-            <span data-hero-line>SKILLS.</span>
+            <span data-hero-line>{copy.headlineFirst}</span>
           </span>
           <span class="line-mask">
-            <span data-hero-line>MINDSET.</span>
+            <span data-hero-line>{copy.headlineSecond}</span>
           </span>
           <span class="line-mask">
             <span data-hero-line>
-              <em>ZUKUNFT.</em>
+              <em>{copy.headlineAccent}</em>
             </span>
           </span>
         </h1>
         <div class="hero-subrow" data-hero-copy>
           <p>
-            Gemeinsam besser werden –<br />
-            auf und neben dem Eis.
+            {copy.taglineFirst}<br />
+            {copy.taglineSecond}
           </p>
         </div>
         <p class="hero-description" data-hero-copy>
-          Kleine Gruppen. Persönliche Betreuung. Gezielte Entwicklung als
-          Ergänzung zum Vereinstraining.
+          {copy.description}
         </p>
         <div class="hero-actions" data-hero-copy>
           <Button href="/trainingstermine">Trainingstermine ansehen</Button>
@@ -223,3 +246,8 @@ const [featuredTrainer] = await getTrainers();
     </div>
   </section>
 </Base>
+
+<script>
+  import { installHeroVideo } from "../lib/hero-video";
+  installHeroVideo();
+</script>

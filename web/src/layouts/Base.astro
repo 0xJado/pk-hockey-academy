@@ -73,7 +73,7 @@ const socialImage = Astro.site
     <a class="skip-link" href="#inhalt">
       Zum Inhalt springen
     </a>
-    {!editorPreview && <Header />}
+    {!editorPreview && <><slot name="above-header" /><Header /></>}
     <main id="inhalt" tabindex="-1" transition:animate="fade">
       <slot />
     </main>

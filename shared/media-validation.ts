@@ -1,6 +1,14 @@
 export const MAX_IMAGE_BYTES = 12 * 1024 * 1024;
 export const MAX_VIDEO_BYTES = 100 * 1024 * 1024;
 
+export function validateHeroVideoAsset(value: unknown) {
+  const valid = validateAsset("video", value);
+  if (valid !== true) return valid;
+  return (value as { size: number }).size <= 12 * 1024 * 1024
+    ? true
+    : "Das Hero-Video darf höchstens 12 MB groß sein.";
+}
+
 export function validateAsset(kind: "image" | "video", value: unknown) {
   if (!value || typeof value !== "object" || Array.isArray(value))
     return "Die Datei wird noch hochgeladen oder fehlt.";

@@ -63,6 +63,14 @@ Stand 29. Oktober 2026: Der native Ablauf wurde einschließlich Neuanlage, Pflic
 7. Nach Veröffentlichung oder Änderung die Website erfolgreich neu bauen. Erst dann aktualisieren sich `/trainerpool` und der Startseiten-Teaser. Ohne angebundenen Build-Webhook ist dies weiterhin ein manueller Betriebsschritt. Ein fehlgeschlagener Build lässt die vorherige veröffentlichte Website bestehen.
 8. Zum Zurückziehen **Zurückhalten** wählen und veröffentlichen, **Aktiver Trainer** deaktivieren und veröffentlichen oder die Veröffentlichung aufheben. Für die native Aktion oben **Veröffentlicht** auswählen, im Aktionsmenü **Unveröffentlichen** und danach **Jetzt zurückziehen** wählen. Der Entwurf bleibt erhalten. Zum Wiederherstellen auf **Entwurf** wechseln und **Veröffentlichen** wählen. Anschließend den erfolgreichen Website-Build abwarten und beide Seiten kontrollieren. Eine Datenänderung allein entfernt keine bereits gebauten Seiten oder CDN-Dateien.
 
+## Startseiten-Hero
+
+Unter **Inhalte → Startseiten-Hero** kannst du das Bild, den Text über der Überschrift, die drei Überschriftenzeilen, den Leitsatz und die Kurzbeschreibung bearbeiten. Leere Textfelder verwenden den Standardtext. Bild und Video kommen aus Sanity. Ohne freigegebenes Bild bleibt die Medienfläche dunkel. Ergänze bei einem eigenen Foto die Bildbeschreibung und bestätige die Bildrechte. Nach der Veröffentlichung und einem erfolgreichen Website-Build werden die Änderungen sichtbar.
+
+Aktualisiere beim Rollout den bestehenden Build-Webhook mit `npm run webhook:setup -- --apply`, damit Änderungen am Hero automatisch einen Website-Build auslösen.
+
+Optional kannst du unter **Hero-Video** einen kurzen stummen MP4- oder WebM-Clip bis 12 MB hochladen und die Videorechte bestätigen. Lade dazu ein **Hero-Bild / Video-Standbild** hoch. Zuerst erscheint dieses Bild. Ist es zwei Sekunden lang mindestens zur Hälfte sichtbar, startet der Clip stumm. Auf Desktop löst das Bewegen des Mauszeigers über den Hero den Start direkt aus. Sobald das Video abspielt, erfolgt ein 500-ms-Übergang über Schwarz, mit je 250 ms Ein- und Ausblendung. Dort läuft der Clip in einer Schleife und lässt sich über dem Header ausschalten. Auf Mobilgeräten endet die Vorschau spätestens nach fünf Sekunden. Bei reduzierter Bewegung und Wiedergabefehlern bleibt das Standbild sichtbar.
+
 ## Trainingsbilder
 
 Unter **Inhalte → Trainingsbilder** kannst du die Fotos für **60 Minuten On-Ice** und **60 Minuten Off-Ice** einzeln ersetzen. Lade ein Bild hoch, ergänze seine Bildbeschreibung, bestätige die Bildrechte und veröffentliche den Eintrag. Nach dem erfolgreichen Website-Build erscheint das Bild auf der Startseite und unter **Training**. Ein leeres Bildfeld verwendet das jeweilige Standardbild.

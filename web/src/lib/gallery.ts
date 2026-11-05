@@ -73,7 +73,7 @@ export function groupGalleryMedia(media: GalleryMedia[]) {
     .filter((group) => group.media.length > 0);
 }
 
-function assetUrl(
+export function assetUrl(
   value: unknown,
   folder: "images" | "files",
   config: Pick<GalleryConfig, "projectId" | "dataset">,

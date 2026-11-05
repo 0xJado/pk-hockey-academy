@@ -105,6 +105,7 @@ globalThis.fetch = async (input, options) => {
     .get("query")
     ?.includes('_type == "trainingSession"');
   const trainingImages = url.searchParams.get("query")?.includes('_type == "trainingImages"');
+  const homepageHero = url.searchParams.get("query")?.includes('_type == "homepageHero"');
   const trainers = url.searchParams
     .get("query")
     ?.includes('_type == "trainer"');
@@ -115,7 +116,7 @@ globalThis.fetch = async (input, options) => {
     .get("query")
     ?.includes('_type == "mediaKitDownload"');
   if (
-    !training && !trainingImages &&
+    !training && !trainingImages && !homepageHero &&
     !trainers &&
     !social &&
     !mediaKit &&
@@ -125,7 +126,7 @@ globalThis.fetch = async (input, options) => {
   appendFileSync(
     process.env.PK_CMS_QA_TRACE,
     JSON.stringify({
-      type: trainingImages ? "training-images" : training
+      type: homepageHero ? "homepage-hero" : trainingImages ? "training-images" : training
         ? "training"
         : trainers
           ? "trainers"
@@ -141,6 +142,24 @@ globalThis.fetch = async (input, options) => {
     }) + "\n",
   );
   const mode = process.env.PK_CMS_QA_MODE;
+  if (homepageHero) {
+    const result = mode === "empty" ? null : {
+      headlineFirst: "EISHOCKEY.",
+      headlineSecond: " ",
+      description: "Technischer Testtext für die Startseite.",
+      imageApproved: mode === "public",
+      photo: { ...profile.portrait, alt: "Technisches Hero-Ersatzbild" },
+      videoApproved: mode === "public",
+      video: {
+        asset: {
+          url: "https://cdn.sanity.io/files/cmsqa123/qa/hero-fixture.mp4",
+          mimeType: "video/mp4",
+          size: 1024,
+        },
+      },
+    };
+    return new Response(JSON.stringify({ result }));
+  }
   if (trainingImages) {
     const result = mode === "public" ? {
       onIce: { ...profile.portrait, alt: "Technisches On-Ice Ersatzbild" },

@@ -391,13 +391,47 @@ p {
   background: #102640;
   clip-path: polygon(5% 0, 100% 0, 100% 100%, 0 100%);
 }
-.hero-art img {
+.hero-art :is(img, video) {
   width: 100%;
   height: calc(100% + 48px);
   object-fit: cover;
   object-position: 44% center;
   filter: none;
   opacity: 1;
+}
+.hero-art video {
+  position: absolute;
+  inset: 0;
+}
+.hero-video-fade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+}
+.hero-motion-bar {
+  background: #06173d;
+  color: #d9eaff;
+  text-align: right;
+}
+.hero-motion-bar button {
+  min-height: 32px;
+  padding: 4px 10px;
+  color: inherit;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.hero-motion-bar button[aria-pressed="true"] {
+  background: #d9eaff;
+  color: #06173d;
+}
+@media (max-width: 900px), (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .hero-motion-bar {
+    display: none;
+  }
 }
 .hero::after {
   display: none;
@@ -419,6 +453,7 @@ p {
 .hero-copy {
   width: 48%;
   max-width: 585px;
+  overflow-wrap: anywhere;
 }
 .hero .eyebrow {
   margin-bottom: 22px;
@@ -1518,7 +1553,7 @@ p {
   animation-duration: 0.18s;
 }
 @media (min-width: 1600px) {
-  .hero-art img {
+  .hero-art :is(img, video) {
     object-position: 35% center;
   }
 }
@@ -1642,7 +1677,7 @@ p {
     min-height: 740px;
     padding-block: 105px 150px;
   }
-  .hero-art img {
+  .hero-art :is(img, video) {
     object-position: 22% center;
   }
   .hero h1 {
@@ -1850,7 +1885,7 @@ p {
     height: 590px;
     mask-image: none;
   }
-  .hero-art img {
+  .hero-art :is(img, video) {
     height: 100%;
     object-position: 50% top;
     opacity: 1;
@@ -2343,7 +2378,7 @@ p {
 }
 
 @media (min-width: 1600px) {
-  .hero-art img {
+  .hero-art :is(img, video) {
     object-position: 44% center;
   }
 }
@@ -2433,7 +2468,7 @@ p {
   .hero-art {
     inset: 0 0 0 46%;
   }
-  .hero-art img {
+  .hero-art :is(img, video) {
     object-position: 44% center;
   }
   .hero::after {
@@ -2597,7 +2632,7 @@ p {
     clip-path: polygon(0 8%, 100% 0, 100% 100%, 0 100%);
     mask-image: none;
   }
-  .hero-art img {
+  .hero-art :is(img, video) {
     height: 100%;
     object-position: center top;
     opacity: 1;

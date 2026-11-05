@@ -219,6 +219,25 @@ for (const mode of [
     "utf8",
   );
   const home = await readFile(resolve(folder, "index.html"), "utf8");
+  assert.match(home, /data-hero-line>MINDSET\./);
+  if (mode === "empty") {
+    assert.match(home, /data-hero-line>SKILLS\./);
+  } else {
+    assert.match(home, /data-hero-line>EISHOCKEY\./);
+    assert.match(home, /Technischer Testtext für die Startseite\./);
+  }
+  if (mode === "public") {
+    assert.match(home, /alt="Technisches Hero-Ersatzbild"/);
+    assert.doesNotMatch(home, /hero-academy-players-retouched/);
+    assert.match(home, /data-hero-motion-bar[^>]*hidden[^>]*>[\s\S]*?<header/);
+    assert.match(home, /<video data-hero-video="https:\/\/cdn\.sanity\.io\/files\/cmsqa123\/qa\/hero-fixture\.mp4"[^>]*preload="none"/);
+    assert.doesNotMatch(home, /<video[^>]+\ssrc=/);
+  } else {
+    assert.doesNotMatch(home, /hero-academy-players-retouched/);
+    assert.match(home, /<div class="hero-art"[^>]*>\s*<\/div>/);
+    assert.doesNotMatch(home, /Technisches Hero-Ersatzbild/);
+    assert.doesNotMatch(home, /<div[^>]*data-hero-motion-bar|hero-fixture\.mp4/);
+  }
   const trainingPage = await readFile(resolve(folder, "training/index.html"), "utf8");
   for (const page of [home, trainingPage]) {
     assert.match(page, /off-ice-running/);
