@@ -125,6 +125,17 @@ export default defineConfig({
     ],
     templates: (previous) => [
       ...previous,
+      ...[1, 2, 3].map((number) => ({
+        id: `trainer-blank-${number}`,
+        title: `Weiteres Trainerprofil · Vorlage ${number}`,
+        schemaType: "trainer",
+        value: {
+          active: false,
+          visibility: "hidden",
+          contentApproved: false,
+          displayOrder: 100 + number,
+        },
+      })),
       {
         id: "trainer-pierre-klein",
         title: "Pierre Klein · geprüftes Startprofil",

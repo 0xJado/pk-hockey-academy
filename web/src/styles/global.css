@@ -881,11 +881,23 @@ p {
   font-size: 14px;
   list-style: disc;
 }
+.trainer-feature .trainer-portrait--photo {
+  aspect-ratio: auto;
+}
 .trainer-feature .trainer-portrait--photo img {
-  object-fit: cover;
+  height: auto;
+  max-height: 70vh;
+  object-fit: contain;
+  object-position: center;
   padding: 0;
+  transform: none;
+}
+.trainer-portrait--photo .portrait-overlay {
+  position: static;
 }
 .trainer-portrait--photo .image-label {
+  position: static;
+  display: block;
   padding: 4px 8px;
   background: #fff;
 }
