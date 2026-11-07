@@ -64,6 +64,8 @@ jobs:
         run: npm run build --prefix studio
       - name: Build and verify isolated CMS scenarios
         run: npm run test:cms --prefix web
+      - name: Build and verify the Node-free STRATO export
+        run: npm run build:strato --prefix web
       - name: Verify browser failure guards
         run: npm run test:browser:guards --prefix web
       - name: Browser checks on the starter site

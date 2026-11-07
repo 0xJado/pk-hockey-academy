@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { ALL } from "../src/pages/api/registration.ts";
+import { ALL } from "../src/runtime/api/registration.ts";
 import {
   createRegistrationProcessor,
   createMemoryControls,

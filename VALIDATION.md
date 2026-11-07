@@ -1,5 +1,21 @@
 # Validation record
 
+## STRATO restructuring foundation — 7 November 2026
+
+Moved the four existing Node routes from `web/src/pages/` to `web/src/runtime/`, retaining their URL patterns through a review-only Astro integration. `build:strato` omits the adapter and runtime routes, packages static output plus inactive PHP/Apache entry points, and validates the artifact. The default review build remains available. No design/motion changes, database provisioning, deployment, CMS mutation or domain changes were performed.
+
+Executed through the local npm shim (`node ../.tools/package/bin/npm-cli.js`, from `web/`):
+
+- `run check`: 115 files, zero errors/warnings/hints.
+- `test`: 74 passed, zero failed/skipped.
+- `run test:cms`: starter, populated, tokenless-public, empty, five invalid-content cases and launch gates passed using the retained review/Vercel build target.
+- `run build:strato`: isolated unconfigured starter export passed (134 files). Initial configured build failed because sandbox DNS could not reach Sanity; a subsequent network-enabled build with actual published CMS content passed (127 files). No silent content fallback was used.
+- `run test:strato`: current published-content export passed; source/server/editor files and configured private CMS tokens excluded by artifact checks.
+- `run test:browser` against the starter STRATO export using `PK_BROWSER_ROOT=../output/strato/public`, `PK_BROWSER_CHANNEL=msedge`: 51 route/viewport checks, both complete questionnaire journeys, keyboard, no-JS, history, footer links, reduced-motion and animation lifecycle checks passed; zero browser errors/unexpected external requests. Edge launch initially failed under the Windows sandbox; the permitted outside-sandbox retry passed. Screenshots at 1440/768/375px inspected under ignored `output/playwright/strato/`. The published-content artifact was built separately; the complete browser result is from the starter-content run.
+- `git diff --check`: passed (Git emitted line-ending normalization notices only).
+
+PHP is not installed in this local shell. PHP execution/status handling and Apache rewrite/Options support have **not** been runtime-tested. The browser test server serves static pages only and does not validate PHP or `.htaccess`. STRATO staging protection, HTTPS, backend processing, database/staff access, replacement publishing and full private Visual Editing remain unimplemented/unverified. Registration stays disabled; this is an initial restructuring increment, not cutover acceptance.
+
 ## Accepted redesign checkpoint and final skate refinement — 7 November 2026
 
 At the user's request, redrew the generic skate accent with a recognizable hockey boot, forward tongue/lacing, rounded toe cap, thin outsole, two mounting towers, blade holder and a continuous rockered steel runner. Inspected the enlarged saved outline. Website check passed (113 files, zero diagnostics), published-content build passed, and isolated headless location-page checks passed at 1440/974/375px with one h1, no overflow and no page exceptions. Logs: `output/skate-final-{check,build,visual}.log`; renders: `output/playwright/skate-final/` (ignored). Existing vendor/editor build warnings remain.

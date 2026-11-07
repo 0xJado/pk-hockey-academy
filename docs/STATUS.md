@@ -8,6 +8,8 @@ The user approved the homepage/subpage redesign and coach profile extension for 
 
 ## Completed foundation
 
+STRATO restructuring, 7 November 2026: separate review runtime source, a static-only `build:strato` target, checked deployment artifact, Apache extensionless-route configuration and inactive PHP entry points. No Node process is needed for this hosting target; local/CI Astro builds still use Node/npm. Private Visual Editing remains on the existing review host. PHP/Apache hosting acceptance, deployment automation, database and staff workflows remain pending. See [hosting instructions](../hosting/strato/README.md).
+
 German responsive website, supplied branding, reusable motion, trainer CMS, hosted Visual Editing, Sanity-managed media kit, printable registration PDF and simple player/trainer questionnaires. Interview AI was cancelled. Trainer photography is optional under the approved logo presentation.
 
 ## Local increment — 2 November 2026
@@ -17,6 +19,8 @@ Registration now has a server-only, policy-injected processing foundation with f
 Opt-in session/venue schemas and retrieval, shared validation, upcoming schedule handling, venue details and keyboard improvements. See [local acceptance](LOCAL-ACCEPTANCE.md) for checks and limits, and [training editing](TRAINING-CMS.md) for activation.
 
 ## Remaining dependencies
+
+- Environment decision, 7 November 2026: one STRATO production environment at `pkhockeyacademy.de`, initially password-protected for acceptance. Separate staging/QA hosting is not required. Temporary protection does not replace the remaining server, publishing, privacy and launch checks.
 
 - Coach profiles implemented locally, 7 November 2026: dedicated `/trainerpool/{document-id}` pages, biography, optional years as player/trainer, highest division, selected playing teams and an eight-image player gallery. Homepage and trainer-list links now open the profile. The Studio's new Laufbahn fields are built locally; hosted Studio deployment and Pierre's approved career facts/photos remain pending. No career facts or gallery records were fabricated or published.
 - Hosting decision, 6 November 2026: migrate production to Pierre's existing STRATO Hosting Basic package. Keep Astro static public pages and Sanity for public website content; use PHP and a private STRATO database for registrations. Google Sheets delivery is abandoned. The developer-owned Vercel site remains the protected review host until migration is implemented and verified. See [migration decision](STRATO-MIGRATION.md).

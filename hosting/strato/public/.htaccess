@@ -1,0 +1,22 @@
+Options -Indexes -MultiViews
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+
+RewriteEngine On
+
+# Deliberately inactive PHP endpoints; never fall through to public HTML.
+RewriteRule ^api/registration/?$ api/registration.php [END]
+RewriteRule ^(?:api/preview(?:/.*)?|redaktion(?:/.*)?)$ api/preview-unavailable.php [END]
+
+# Block accidental upload of secrets/source, including files in nested folders.
+RewriteRule (^|/)(?:\.[^/]+|node_modules|src|vendor)(?:/|$) - [F,END]
+
+# Existing files (assets, PHP, robots, sitemap) are served directly.
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [END]
+
+# Preserve extensionless public URLs without a DirectorySlash redirect.
+RewriteCond %{DOCUMENT_ROOT}/$1/index.html -f
+RewriteRule ^(.+?)/?$ $1/index.html [END]
+
+# No SPA catch-all: missing resources retain a genuine 404 response.

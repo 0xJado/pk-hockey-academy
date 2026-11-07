@@ -11,6 +11,8 @@
     "dev": "astro dev --host 127.0.0.1",
     "check": "astro check",
     "build": "astro build",
+    "build:strato": "node scripts/build-strato.mjs",
+    "test:strato": "node scripts/verify-strato.mjs",
     "preview": "astro preview --host 127.0.0.1",
     "test": "node --experimental-strip-types --test tests/*.test.mjs",
     "test:cms": "node tests/integration/cms-build.mjs",

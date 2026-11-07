@@ -2,10 +2,18 @@ import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import { loadEnv } from "vite";
 import localGalleryPlugin from "./local-gallery-plugin.mjs";
-import vercel from "@astrojs/vercel";
-import node from "@astrojs/node";
 
 const env = loadEnv(process.env.NODE_ENV || "production", process.cwd(), "");
+const target = env.DEPLOY_TARGET || "review";
+if (!["review", "strato"].includes(target)) {
+  throw new Error("DEPLOY_TARGET must be review or strato.");
+}
+const strato = target === "strato";
+const adapter = strato
+  ? undefined
+  : env.VERCEL === "1"
+    ? (await import("@astrojs/vercel")).default()
+    : (await import("@astrojs/node")).default({ mode: "standalone" });
 const configuredUrl = env.SITE_URL?.trim();
 let site;
 if (configuredUrl) {
@@ -32,9 +40,21 @@ export default defineConfig({
   site,
   output: "static",
   session: false,
-  // Public pages remain prerendered. Only the protected editor routes need a
-  // runtime. Node keeps local `astro preview` usable and hosting portable.
-  adapter: env.VERCEL === "1" ? vercel() : node({ mode: "standalone" }),
+  adapter,
+  // Runtime source is outside pages/: STRATO must never build or export drafts.
+  integrations: strato ? [] : [{
+    name: "review-runtime",
+    hooks: {
+      "astro:config:setup": ({ injectRoute }) => {
+        for (const [pattern, entrypoint] of [
+          ["/api/registration", "./src/runtime/api/registration.ts"],
+          ["/api/preview/enable", "./src/runtime/api/preview/enable.ts"],
+          ["/redaktion/trainerpool", "./src/runtime/redaktion/trainerpool.astro"],
+          ["/redaktion/abmelden", "./src/runtime/redaktion/abmelden.ts"],
+        ]) injectRoute({ pattern, entrypoint, prerender: false });
+      },
+    },
+  }],
   trailingSlash: "never",
   vite: { plugins: [tailwindcss(), localGalleryPlugin()] },
   devToolbar: { enabled: false },

@@ -2,7 +2,7 @@
 
 Start with [current status](docs/STATUS.md). Dated assessments and validation entries preserve historical evidence.
 
-Production direction confirmed on 6 November 2026: migrate to Pierre's existing STRATO hosting, retain Sanity for public content, and replace Google Sheets registration delivery with PHP and a private STRATO database. Migration and the protected staff interface are not implemented yet; Vercel remains the protected review host. Earlier Google Sheets setup references below are superseded: Pierre no longer needs to create or share a Sheet. See [migration decision and acceptance work](docs/STRATO-MIGRATION.md).
+Production direction confirmed on 6 November 2026: migrate to Pierre's existing STRATO hosting, retain Sanity for public content, and replace Google Sheets registration delivery with PHP and a private STRATO database. The first restructuring increment adds a Node-free hosting export (`cd web; npm run build:strato`), separate review runtime routes and inactive PHP entry points. Node/npm remain build tools only for this target. Private preview replacement, deployment automation, database processing and the protected staff interface remain pending; Vercel remains the protected review host. Earlier Google Sheets setup references below are superseded: Pierre no longer needs to create or share a Sheet. See [STRATO build/layout instructions](hosting/strato/README.md) and [migration acceptance work](docs/STRATO-MIGRATION.md).
 
 A German Astro marketing website with prerendered public pages, a cinematic homepage, training information, camp gallery and a separate Sanity administrator CMS. Private trainer Visual Editing adds on-demand editor routes. The academy's source instructions are preserved verbatim in [`AGENTS.md`](AGENTS.md).
 
@@ -77,6 +77,7 @@ web/
     components/          shared header, footer, buttons, schedule and content sections
     layouts/Base.astro   German document, metadata, ClientRouter, global shell
     pages/               homepage, typed static content routes, robots and sitemap
+    runtime/             review-only Node endpoints; excluded from STRATO builds
     data/                typed editable local academy content
     types/               CMS-independent content interfaces
     lib/content.ts       query/registration boundary
