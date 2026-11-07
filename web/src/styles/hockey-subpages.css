@@ -1,0 +1,112 @@
+/* Local SVG studies: no external assets, runtime or continuously moving decoration. */
+main[data-hockey-page] {
+  --hockey-gear: url("/images/accents/stick.svg");
+  --hockey-secondary: url("/images/accents/puck.svg");
+}
+main:is(
+  [data-hockey-page="training"],
+  [data-hockey-page="trainingstermine"],
+  [data-hockey-page="medienkit"]
+) {
+  --hockey-gear: url("/images/accents/puck.svg");
+  --hockey-secondary: url("/images/accents/stick.svg");
+}
+main:is([data-hockey-page="trainerpool"], [data-hockey-page="galerie"]) {
+  --hockey-gear: url("/images/accents/helmet.svg");
+  --hockey-secondary: url("/images/accents/glove.svg");
+}
+main[data-hockey-page="trainingsstaetten"] {
+  --hockey-gear: url("/images/accents/skate.svg");
+}
+main[data-hockey-page="organisation"] {
+  --hockey-gear: url("/images/accents/glove.svg");
+}
+main[data-hockey-page] :is(.page-hero, .coach-hero) {
+  position: relative;
+  isolation: isolate;
+}
+main[data-hockey-page] :is(.page-hero, .coach-hero)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--hockey-gear), url("/images/accents/contours.svg");
+  background-size:
+    min(56vw, 640px) 125%,
+    cover;
+  background-position:
+    right 2% center,
+    center;
+  background-repeat: no-repeat;
+  opacity: 0.32;
+  animation: hockey-accent-arrive 900ms ease-out both;
+}
+main[data-hockey-page] .page-hero-lines {
+  display: none;
+}
+main[data-hockey-page] > .section,
+main[data-hockey-page] .coach-details > .section {
+  position: relative;
+  isolation: isolate;
+}
+main[data-hockey-page] > .section::after,
+main[data-hockey-page] .coach-details > .section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: url("/images/accents/contours.svg") right center /
+    min(1100px, 130%) auto no-repeat;
+  opacity: 0.25;
+}
+main[data-hockey-page] > .section:nth-of-type(2n)::after,
+main[data-hockey-page] .coach-details > .section:nth-of-type(2n)::after {
+  background-image:
+    var(--hockey-secondary), url("/images/accents/contours.svg");
+  background-size:
+    min(36vw, 430px) 86%,
+    min(1100px, 130%) auto;
+  background-position:
+    left -140px bottom -60px,
+    right center;
+  opacity: 0.2;
+}
+@keyframes hockey-accent-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 0.32;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 700px) {
+  main[data-hockey-page] :is(.page-hero, .coach-hero)::after {
+    background-size:
+      85vw 100%,
+      auto 100%;
+    background-position:
+      right -90px center,
+      right center;
+    opacity: 0.18;
+    animation: none;
+  }
+  main[data-hockey-page] > .section:nth-of-type(2n)::after,
+  main[data-hockey-page] .coach-details > .section:nth-of-type(2n)::after {
+    background-size:
+      65vw 70%,
+      auto 100%;
+    background-position:
+      left -120px bottom,
+      right center;
+    opacity: 0.14;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  main[data-hockey-page] :is(.page-hero, .coach-hero)::after {
+    animation: none;
+  }
+}

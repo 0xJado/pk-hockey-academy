@@ -2,6 +2,10 @@
 
 This is the current entry point. Dated assessments and VALIDATION.md preserve historical evidence, not current task lists.
 
+## Approved design checkpoint — 7 November 2026
+
+The user approved the homepage/subpage redesign and coach profile extension for merging from `develop/strato-migration` into `main`, following the final skate-outline refinement. This is a design and CMS-schema checkpoint, not completion of the STRATO migration or public launch. Hosted Studio deployment, approved coach career content and the remaining dependencies below still apply.
+
 ## Completed foundation
 
 German responsive website, supplied branding, reusable motion, trainer CMS, hosted Visual Editing, Sanity-managed media kit, printable registration PDF and simple player/trainer questionnaires. Interview AI was cancelled. Trainer photography is optional under the approved logo presentation.
@@ -14,7 +18,9 @@ Opt-in session/venue schemas and retrieval, shared validation, upcoming schedule
 
 ## Remaining dependencies
 
-- Registration: private Sheet, approved fields/consents/signatures/retention, durable shared request state, production delivery activation and booking process.
+- Coach profiles implemented locally, 7 November 2026: dedicated `/trainerpool/{document-id}` pages, biography, optional years as player/trainer, highest division, selected playing teams and an eight-image player gallery. Homepage and trainer-list links now open the profile. The Studio's new Laufbahn fields are built locally; hosted Studio deployment and Pierre's approved career facts/photos remain pending. No career facts or gallery records were fabricated or published.
+- Hosting decision, 6 November 2026: migrate production to Pierre's existing STRATO Hosting Basic package. Keep Astro static public pages and Sanity for public website content; use PHP and a private STRATO database for registrations. Google Sheets delivery is abandoned. The developer-owned Vercel site remains the protected review host until migration is implemented and verified. See [migration decision](STRATO-MIGRATION.md).
+- Registration: private STRATO database, PHP processing and protected staff interface, approved fields/consents/signatures/retention, durable request state, production activation and booking process. No Google Sheet is needed.
 - Schedule: real dates, halls, groups and capacity. New CMS source stays disabled pending live deployment and publishing acceptance.
 - Contact: WhatsApp number.
 - Launch: legal content, domain connection and explicit approval.

@@ -43,6 +43,7 @@ export const trainer = defineType({
   groups: [
     { name: "profile", title: "Profil", default: true },
     { name: "portrait", title: "Trainerfoto" },
+    { name: "career", title: "Laufbahn" },
     { name: "publication", title: "Freigabe" },
   ],
   fields: [
@@ -86,6 +87,98 @@ export const trainer = defineType({
       "Trainingsschwerpunkte",
       "Nur bestätigte Eishockey-Schwerpunkte. Keine Leistungen erfinden.",
     ),
+    ...(["playingYears", "coachingYears"] as const).map((name) =>
+      defineField({
+        name,
+        title:
+          name === "playingYears"
+            ? "Spielerfahrung in Jahren"
+            : "Trainererfahrung in Jahren",
+        type: "number",
+        group: "career",
+        description:
+          "Optional. Bestätigte Gesamtdauer in vollen Jahren zum Zeitpunkt der Freigabe; wird nicht automatisch hochgezählt. Null ist ein gültiger Wert.",
+        validation: (Rule) => Rule.integer().min(0).max(100),
+      }),
+    ),
+    defineField({
+      name: "highestDivision",
+      title: "Höchste Spielklasse",
+      type: "string",
+      group: "career",
+      description:
+        "Optional. Sportart und Land bei Bedarf mit angeben, z. B. zur eindeutigen Einordnung. Nur bestätigte Angaben.",
+      validation: (Rule) => Rule.min(2).max(120),
+    }),
+    defineField({
+      name: "notableTeams",
+      title: "Stationen / Vereine",
+      type: "array",
+      group: "career",
+      description:
+        "Ausgewählte bestätigte Stationen als Spieler. Sportart und Zeitraum können im Eintrag ergänzt werden. Keine aktuelle Vereinszugehörigkeit oder Partnerschaft ableiten.",
+      of: [
+        defineArrayMember({
+          type: "string",
+          validation: (Rule) => Rule.min(2).max(200),
+        }),
+      ],
+      validation: (Rule) => Rule.max(12),
+    }),
+    defineField({
+      name: "playerGallery",
+      title: "Bilder aus der Spielerlaufbahn",
+      type: "array",
+      group: "career",
+      description:
+        "Bis zu acht freigegebene Bilder in gewünschter Reihenfolge. Nur bereits geklärte Bildrechte und Einwilligungen; CDN-Dateien sind öffentlich erreichbar. Keine Nachweisdokumente hochladen. GPS/EXIF vorher entfernen.",
+      validation: (Rule) => Rule.max(TRAINER_LIMITS.galleryImages),
+      of: [
+        defineArrayMember({
+          type: "image",
+          options: {
+            accept: "image/jpeg,image/png,image/webp",
+            storeOriginalFilename: false,
+            metadata: ["lqip"],
+          },
+          fields: [
+            defineField({
+              name: "alt",
+              title: "Bildbeschreibung",
+              type: "string",
+              validation: (Rule) => Rule.required().min(8).max(240),
+            }),
+            defineField({
+              name: "caption",
+              title: "Bildunterschrift / Saison",
+              type: "string",
+              validation: (Rule) => Rule.max(240),
+            }),
+            defineField({
+              name: "credit",
+              title: "Urheber / Bildnachweis",
+              type: "string",
+              validation: (Rule) => Rule.max(160),
+            }),
+          ],
+          validation: (Rule) =>
+            Rule.custom(async (value, context) => {
+              if (!value?.asset?._ref)
+                return "Eine Bilddatei hochladen oder den Eintrag entfernen.";
+              try {
+                const asset = await context
+                  .getClient({ apiVersion: "2026-10-01" })
+                  .fetch("*[_id == $id][0]{mimeType,size}", {
+                    id: value.asset._ref,
+                  });
+                return validateAsset("image", asset);
+              } catch {
+                return "Die Bilddatei konnte nicht geprüft werden.";
+              }
+            }).error(),
+        }),
+      ],
+    }),
     defineField({
       name: "portrait",
       title: "Trainerfoto",
@@ -154,7 +247,7 @@ export const trainer = defineType({
       type: "boolean",
       group: "publication",
       description:
-        "Biografie, Hintergrund, Qualifikationen und Schwerpunkte sind bestätigt; für ein verwendetes Porträt sind Rechte und erforderliche Einwilligungen geklärt. Keine Nachweis- oder Einwilligungsdokumente hier speichern.",
+        "Biografie, Laufbahn, Hintergrund, Qualifikationen und Schwerpunkte sind bestätigt; für Porträt und Galeriebilder sind Rechte und erforderliche Einwilligungen geklärt. Keine Nachweis- oder Einwilligungsdokumente hier speichern.",
       validation: (Rule) =>
         Rule.custom(
           (value, context) =>

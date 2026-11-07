@@ -1,5 +1,7 @@
 # PK Hockey Academy — Einrichtung für Pierre
 
+**Aktuelle Entscheidung vom 6. November 2026:** Keine Google-Tabelle mehr anlegen oder freigeben. Die Website soll auf Pierres bestehendes STRATO-Paket umziehen. Öffentliche Website-Inhalte bleiben in Sanity; private Trainingsanmeldungen sollen über PHP in einer privaten STRATO-Datenbank gespeichert werden. Die Entwicklung richtet Verarbeitung und geschützte Anmeldungsverwaltung ein. Noch ist nichts davon aktiviert. Pierre muss berechtigte Personen, Pflichtfelder, Einwilligungen/Unterschriften und Aufbewahrung/Löschung bestätigen. Die folgenden Google-Schritte dokumentieren ausschließlich die überholte Oktober-Planung. Maßgeblich sind die [aktuelle Checkliste](PIERRE-CHECKLIST.md) und die [Migrationsentscheidung](STRATO-MIGRATION.md).
+
 Stand: 25. Oktober 2026.
 
 Die aktualisierte [Checkliste vom 30. Oktober](PIERRE-CHECKLIST.md) nennt alle noch benötigten Entscheidungen und Inhalte. Sanity einschließlich Website-Klickbearbeitung ist inzwischen eingerichtet; dafür kein neues Konto oder Projekt erstellen. Die folgenden Einrichtungsschritte bleiben als Anleitung erhalten.

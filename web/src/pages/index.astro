@@ -3,7 +3,7 @@ import Base from "../layouts/Base.astro";
 import Button from "../components/Button.astro";
 import SectionHeading from "../components/SectionHeading.astro";
 import TrainingStory from "../components/TrainingStory.astro";
-import TrainerCard from "../components/TrainerCard.astro";
+import TrainerCarousel from "../components/TrainerCarousel.astro";
 import Venues from "../components/Venues.astro";
 import Schedule from "../components/Schedule.astro";
 import FinalCTA from "../components/FinalCTA.astro";
@@ -13,8 +13,11 @@ import { getHomepageHero } from "../lib/homepage-hero-source";
 import { imageUrl } from "../lib/gallery";
 import SiteImage from "../components/SiteImage.astro";
 import { getSiteImages } from "../lib/site-images-source";
+import RinkMarkings from "../components/RinkMarkings.astro";
+import IceSpray from "../components/IceSpray.astro";
+import "../styles/hockey-home.css";
 
-const [[featuredTrainer], { copy, photo, videoUrl }, siteImages] = await Promise.all([
+const [trainers, { copy, photo, videoUrl }, siteImages] = await Promise.all([
   getTrainers(),
   getHomepageHero(),
   getSiteImages(),
@@ -38,218 +41,286 @@ const heroSizes = "(max-width: 900px) 100vw, (max-width: 2000px) 1100px, 54vw";
       </div>
     )}
   </Fragment>
-  <section class="hero" data-hero aria-labelledby="hero-title">
-    <div class="hero-art" data-hero-art>
-      {photo && (
-        <img
-          src={imageUrl(photo, 960)}
-          srcset={[...new Set(heroWidths.map((width) => Math.min(width, photo.width)))]
-            .map((width) => `${imageUrl(photo, width)} ${width}w`)
-            .join(", ")}
-          sizes={heroSizes}
-          data-parallax
-          width={photo.width}
-          height={photo.height}
-          alt={photo.alt}
-          fetchpriority="high"
-          loading="eager"
-        />
-      )}
-      {videoUrl && (
-        <video data-hero-video={videoUrl} muted loop playsinline preload="none" aria-hidden="true" hidden />
-      )}
-      {videoUrl && <div class="hero-video-fade" data-hero-video-fade aria-hidden="true" hidden />}
-    </div>
-    <div class="wrap hero-content">
-      <div class="hero-copy">
-        <p class="eyebrow" data-hero-copy>
-          {copy.eyebrow}
-        </p>
-        <h1 id="hero-title">
-          <span class="line-mask">
-            <span data-hero-line>{copy.headlineFirst}</span>
-          </span>
-          <span class="line-mask">
-            <span data-hero-line>{copy.headlineSecond}</span>
-          </span>
-          <span class="line-mask">
-            <span data-hero-line>
-              <em>{copy.headlineAccent}</em>
+  <div class="hockey-home">
+    <IceSpray />
+    <section class="hero" data-hero aria-labelledby="hero-title">
+      <div class="hero-rink">
+        <RinkMarkings loop />
+      </div>
+      <span class="hero-edition" aria-hidden="true">
+        PK / INDIVIDUELLE ENTWICKLUNG
+      </span>
+      <div
+        class:list={["hero-art", { "hero-art--illustration": !photo }]}
+        data-hero-art
+      >
+        {photo && (
+          <img
+            src={imageUrl(photo, 960)}
+            srcset={[
+              ...new Set(
+                heroWidths.map((width) => Math.min(width, photo.width)),
+              ),
+            ]
+              .map((width) => `${imageUrl(photo, width)} ${width}w`)
+              .join(", ")}
+            sizes={heroSizes}
+            data-parallax
+            width={photo.width}
+            height={photo.height}
+            alt={photo.alt}
+            fetchpriority="high"
+            loading="eager"
+          />
+        )}
+        {!photo && (
+          <div class="hero-rink-study" aria-hidden="true">
+            <RinkMarkings loop />
+            <span class="rink-study-title">
+              DEIN EIS.
+              <br />
+              <i>DEIN SPIEL.</i>
             </span>
-          </span>
-        </h1>
-        <div class="hero-subrow" data-hero-copy>
-          <p>
-            {copy.taglineFirst}<br />
-            {copy.taglineSecond}
+            <span class="rink-study-label">EISFLÄCHE · GRAFISCHE STUDIE</span>
+          </div>
+        )}
+        {videoUrl && (
+          <video
+            data-hero-video={videoUrl}
+            muted
+            loop
+            playsinline
+            preload="none"
+            aria-hidden="true"
+            hidden
+          />
+        )}
+        {videoUrl && (
+          <div
+            class="hero-video-fade"
+            data-hero-video-fade
+            aria-hidden="true"
+            hidden
+          />
+        )}
+      </div>
+      <div class="ice-ticket">
+        <span class="ice-ticket-label">DEIN TRAININGSBLOCK</span>
+        <span class="ice-ticket-time">
+          60 <i>+</i> 60
+        </span>
+        <span class="ice-ticket-caption">MINUTEN ON-ICE + OFF-ICE</span>
+      </div>
+      <div class="wrap hero-content">
+        <div class="hero-copy">
+          <p class="eyebrow" data-hero-copy>
+            {copy.eyebrow}
           </p>
+          <h1 id="hero-title">
+            <span class="line-mask">
+              <span data-hero-line>{copy.headlineFirst}</span>
+            </span>
+            <span class="line-mask">
+              <span data-hero-line>{copy.headlineSecond}</span>
+            </span>
+            <span class="line-mask">
+              <span data-hero-line>
+                <em>{copy.headlineAccent}</em>
+              </span>
+            </span>
+          </h1>
+          <div class="hero-subrow" data-hero-copy>
+            <p>
+              {copy.taglineFirst}
+              <br />
+              {copy.taglineSecond}
+            </p>
+          </div>
+          <p class="hero-description" data-hero-copy>
+            {copy.description}
+          </p>
+          <div class="hero-actions" data-hero-copy>
+            <Button href="/trainingstermine">Trainingstermine ansehen</Button>
+            <Button href="/kontakt" variant="outline">
+              Training anfragen
+            </Button>
+          </div>
         </div>
-        <p class="hero-description" data-hero-copy>
-          {copy.description}
-        </p>
-        <div class="hero-actions" data-hero-copy>
-          <Button href="/trainingstermine">Trainingstermine ansehen</Button>
-          <Button href="/kontakt" variant="outline">
-            Training anfragen
+      </div>
+      <div class="hero-bottom wrap">
+        <div>
+          <span class="small muted">DEIN TRAINING. DEINE REGION.</span>
+          <span>
+            Essen <b> / </b> Dinslaken <b> / </b> Duisburg
+          </span>
+        </div>
+        <a href="#philosophie" class="scroll-cue">
+          UNSERE PHILOSOPHIE <span aria-hidden="true">↓</span>
+        </a>
+        <button
+          type="button"
+          class="rink-motion-toggle"
+          data-rink-toggle
+          hidden
+          aria-pressed="false"
+        >
+          Spielzüge pausieren
+        </button>
+      </div>
+    </section>
+    <div class="facts-strip">
+      <div class="wrap facts-inner">
+        <div>
+          <strong>
+            60<span>MIN</span>
+          </strong>
+          <span>ON-ICE TRAINING</span>
+        </div>
+        <span class="facts-plus" aria-hidden="true">
+          +
+        </span>
+        <div>
+          <strong>
+            60<span>MIN</span>
+          </strong>
+          <span>OFF-ICE TRAINING</span>
+        </div>
+        <div>
+          <strong>U13</strong>
+          <span>FÜR DEN NACHWUCHS</span>
+        </div>
+        <div class="fact-statement">
+          KLEINE GRUPPEN.
+          <br />
+          <span>PERSÖNLICHE ENTWICKLUNG.</span>
+        </div>
+      </div>
+    </div>
+    <TrainingStory />
+    <section id="philosophie" class="section philosophy light-section">
+      <div class="philosophy-rink">
+        <RinkMarkings loop />
+      </div>
+      <div class="wrap philosophy-layout" data-image-reveal>
+        <div class="philosophy-art" data-image-visual>
+          <SiteImage
+            imageKey="philosophy"
+            fallback="/images/blade.svg"
+            alt="Grafische Studie einer Schlittschuhkufe auf dem Eis."
+            width={720}
+            height={820}
+            loading="lazy"
+            sizes="(max-width: 900px) 100vw, 45vw"
+          />
+          {!siteImages.philosophy && (
+            <span class="image-label">JEDER SCHRITT ZÄHLT. · ILLUSTRATION</span>
+          )}
+          <span class="art-index" aria-hidden="true">
+            01 / FOKUS
+          </span>
+        </div>
+        <div data-image-copy>
+          <SectionHeading
+            label="UNSERE PHILOSOPHIE"
+            title="DEIN TEAM. DEINE BASIS. DEIN NÄCHSTER SCHRITT."
+            light
+            reveal={false}
+          />
+          <p class="lead">
+            Im Team wächst das Spiel.
+            <br />
+            Im Detail wächst dein Potenzial.
+          </p>
+          <p>
+            Vereinstraining ist die Grundlage. Wir ergänzen es dort, wo
+            persönliche Entwicklung Raum braucht: mit gezieltem Training,
+            individueller Aufmerksamkeit und einem klaren Blick für jeden
+            Spieler.
+          </p>
+          <p>
+            Für Kinder und Jugendliche bis U13. In kleinen Gruppen. Mit
+            Training, das zum jeweiligen Entwicklungsstand passt.
+          </p>
+          <Button href="/philosophie" variant="text">
+            Unsere Philosophie entdecken
           </Button>
         </div>
       </div>
-    </div>
-    <div class="hero-bottom wrap">
-      <div>
-        <span class="small muted">DEIN TRAINING. DEINE REGION.</span>
-        <span>
-          Essen <b> / </b> Dinslaken <b> / </b> Duisburg
-        </span>
+    </section>
+    <section class="target-section light-section section">
+      <div class="target-rink">
+        <RinkMarkings loop />
       </div>
-      <a href="#philosophie" class="scroll-cue">
-        UNSERE PHILOSOPHIE <span aria-hidden="true">↓</span>
-      </a>
-    </div>
-  </section>
-  <div class="facts-strip">
-    <div class="wrap facts-inner">
-      <div>
-        <strong>
-          60<span>MIN</span>
-        </strong>
-        <span>ON-ICE TRAINING</span>
+      <div class="wrap target-layout">
+        <div data-reveal>
+          <span class="target-number" aria-hidden="true">
+            U13
+          </span>
+          <p class="eyebrow">FÜR DEN NACHWUCHS. MIT PERSPEKTIVE.</p>
+          <h2>
+            KLEINE GRUPPE.
+            <br />
+            <span>DEIN FORTSCHRITT.</span>
+          </h2>
+        </div>
+        <div data-reveal>
+          <span class="target-age">
+            BIS <strong>U13</strong>
+          </span>
+          <p>
+            Jeder Spieler bringt andere Stärken mit. Unser individuelles
+            Entwicklungstraining richtet sich an Kinder und Jugendliche bis U13
+            und berücksichtigt den persönlichen Leistungsstand.
+          </p>
+          <Button href="/training#zielgruppe" variant="text">
+            Für wen ist das Training?
+          </Button>
+        </div>
       </div>
-      <span class="facts-plus" aria-hidden="true">
-        +
-      </span>
-      <div>
-        <strong>
-          60<span>MIN</span>
-        </strong>
-        <span>OFF-ICE TRAINING</span>
+    </section>
+    {trainers.length > 0 && <TrainerCarousel trainers={trainers} />}
+    <section class="section venues-section">
+      <div class="wrap">
+        <div class="section-top">
+          <SectionHeading
+            label="UNSERE TRAININGSSTÄDTE"
+            title="DEIN EIS. DEINE REGION."
+          />
+          <Button href="/trainingsstaetten" variant="text">
+            Alle Standorte
+          </Button>
+        </div>
+        <Venues />
       </div>
-      <div>
-        <strong>U13</strong>
-        <span>FÜR DEN NACHWUCHS</span>
+    </section>
+    <section class="section light-section schedule-section">
+      <div class="wrap">
+        <div class="section-top">
+          <SectionHeading
+            label="ZEIT FÜR DEN NÄCHSTEN SCHRITT"
+            title="DIE NÄCHSTE EISZEIT."
+            light
+          />
+          <Button href="/trainingstermine" variant="text">
+            Alle Trainingstermine
+          </Button>
+        </div>
+        <Schedule />
       </div>
-      <div class="fact-statement">
-        KLEINE GRUPPEN.
-        <br />
-        <span>PERSÖNLICHE ENTWICKLUNG.</span>
+    </section>
+    <FinalCTA />
+    <section class="gallery-teaser">
+      <div class="wrap">
+        <div data-reveal>
+          <p class="eyebrow">FOTOS & VIDEOS AUS DEN CAMPS</p>
+          <h2>AUF DEM EIS. MITTENDRIN.</h2>
+        </div>
+        <Button href="/galerie" variant="outline">
+          Zur Camp-Galerie
+        </Button>
       </div>
-    </div>
+    </section>
   </div>
-  <TrainingStory />
-  <section id="philosophie" class="section philosophy light-section">
-    <div class="wrap philosophy-layout">
-      <div class="philosophy-art" data-venue-mask>
-        <SiteImage
-          imageKey="philosophy"
-          fallback="/images/blade.svg"
-          alt="Grafische Studie einer Schlittschuhkufe auf dem Eis."
-          width={720}
-          height={820}
-          loading="lazy"
-          sizes="(max-width: 900px) 100vw, 45vw"
-        />
-        {!siteImages.philosophy && <span class="image-label">JEDER SCHRITT ZÄHLT. · ILLUSTRATION</span>}
-        <span class="art-index" aria-hidden="true">
-          01 / FOKUS
-        </span>
-      </div>
-      <div>
-        <SectionHeading
-          label="UNSERE PHILOSOPHIE"
-          title="DEIN TEAM. DEINE BASIS. DEIN NÄCHSTER SCHRITT."
-          light
-        />
-        <p class="lead" data-reveal>
-          Im Team wächst das Spiel.
-          <br />
-          Im Detail wächst dein Potenzial.
-        </p>
-        <p>
-          Vereinstraining ist die Grundlage. Wir ergänzen es dort, wo
-          persönliche Entwicklung Raum braucht: mit gezieltem Training,
-          individueller Aufmerksamkeit und einem klaren Blick für jeden Spieler.
-        </p>
-        <p>
-          Für Kinder und Jugendliche bis U13. In kleinen Gruppen. Mit Training,
-          das zum jeweiligen Entwicklungsstand passt.
-        </p>
-        <Button href="/philosophie" variant="text">
-          Unsere Philosophie entdecken
-        </Button>
-      </div>
-    </div>
-  </section>
-  <section class="target-section light-section section">
-    <div class="wrap target-layout">
-      <div data-reveal>
-        <p class="eyebrow">FÜR DEN NACHWUCHS. MIT PERSPEKTIVE.</p>
-        <h2>
-          KLEINE GRUPPE.
-          <br />
-          <span>DEIN FORTSCHRITT.</span>
-        </h2>
-      </div>
-      <div data-reveal>
-        <span class="target-age">
-          BIS <strong>U13</strong>
-        </span>
-        <p>
-          Jeder Spieler bringt andere Stärken mit. Unser individuelles
-          Entwicklungstraining richtet sich an Kinder und Jugendliche bis U13
-          und berücksichtigt den persönlichen Leistungsstand.
-        </p>
-        <Button href="/training#zielgruppe" variant="text">
-          Für wen ist das Training?
-        </Button>
-      </div>
-    </div>
-  </section>
-  {featuredTrainer && <section class="section trainer-section light-section">
-    <div class="wrap">
-      <TrainerCard trainer={featuredTrainer} teaser />
-    </div>
-  </section>}
-  <section class="section venues-section">
-    <div class="wrap">
-      <div class="section-top">
-        <SectionHeading
-          label="UNSERE TRAININGSSTÄDTE"
-          title="DEIN EIS. DEINE REGION."
-        />
-        <Button href="/trainingsstaetten" variant="text">
-          Alle Standorte
-        </Button>
-      </div>
-      <Venues />
-    </div>
-  </section>
-  <section class="section light-section schedule-section">
-    <div class="wrap">
-      <div class="section-top">
-        <SectionHeading
-          label="ZEIT FÜR DEN NÄCHSTEN SCHRITT"
-          title="DIE NÄCHSTE EISZEIT."
-          light
-        />
-        <Button href="/trainingstermine" variant="text">
-          Alle Trainingstermine
-        </Button>
-      </div>
-      <Schedule />
-    </div>
-  </section>
-  <FinalCTA />
-  <section class="gallery-teaser">
-    <div class="wrap">
-      <div data-reveal>
-        <p class="eyebrow">FOTOS & VIDEOS AUS DEN CAMPS</p>
-        <h2>AUF DEM EIS. MITTENDRIN.</h2>
-      </div>
-      <Button href="/galerie" variant="outline">
-        Zur Camp-Galerie
-      </Button>
-    </div>
-  </section>
 </Base>
 
 <script>

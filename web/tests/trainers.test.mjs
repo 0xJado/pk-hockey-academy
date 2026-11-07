@@ -44,6 +44,82 @@ const portrait = {
   },
 };
 
+test("optional coach career fields preserve zero, reject invalid facts and keep old profiles valid", () => {
+  const rich = {
+    ...coach,
+    playingYears: 18,
+    coachingYears: 0,
+    highestDivision: "Technische Testliga",
+    notableTeams: ["Testverein A", "Testverein B"],
+  };
+  const parsed = parseTrainerFields(rich);
+  assert.equal(parsed.playingYears, 18);
+  assert.equal(parsed.coachingYears, 0);
+  assert.deepEqual(parsed.notableTeams, rich.notableTeams);
+  assert.ok(parseTrainerFields(coach));
+  for (const change of [
+    { playingYears: -1 },
+    { coachingYears: 2.5 },
+    { playingYears: "18" },
+    { playingYears: 101 },
+    { highestDivision: 42 },
+    { notableTeams: [""] },
+  ]) {
+    assert.equal(parseTrainerFields({ ...coach, ...change }), undefined);
+  }
+});
+
+test("coach gallery uses trusted images, bounded captions and publication filtering", () => {
+  const source = {
+    ...coach,
+    playerGallery: [{ ...portrait, caption: "Technische Testsaison" }],
+  };
+  const [normalized] = normalizeTrainers([source], config);
+  assert.equal(normalized.playerGallery[0].caption, "Technische Testsaison");
+  assert.equal(normalized.playerGallery[0].width, 800);
+  for (const playerGallery of [
+    [
+      {
+        ...portrait,
+        asset: { ...portrait.asset, url: "https://evil.invalid/image.webp" },
+      },
+    ],
+    [{ ...portrait, alt: "" }],
+    Array(9).fill(portrait),
+    [{ ...portrait, caption: "x".repeat(241) }],
+  ]) {
+    assert.throws(() =>
+      normalizeTrainers([{ ...coach, playerGallery }], config),
+    );
+  }
+  assert.deepEqual(
+    normalizeTrainers([{ ...source, visibility: "hidden" }], config),
+    [],
+  );
+  assert.equal(
+    validateTrainerPublication({
+      ...coach,
+      playerGallery: [
+        {
+          asset: { _ref: "image-fixture-800x1000-webp" },
+          alt: "Technische Testaufnahme",
+          caption: "Testsaison",
+        },
+      ],
+    }),
+    true,
+  );
+  assert.notEqual(
+    validateTrainerPublication({
+      ...coach,
+      playerGallery: [
+        { asset: { _ref: "image-fixture-800x1000-webp" }, alt: "" },
+      ],
+    }),
+    true,
+  );
+});
+
 test("coach migration is opt-in and incomplete/invalid configuration fails closed", () => {
   assert.equal(getTrainerConfig({}), undefined);
   assert.equal(
@@ -166,7 +242,13 @@ test("invalid approved records fail the build rather than silently deleting publ
 test("portrait is optional but uploaded assets require trusted URLs and valid metadata", () => {
   const [result] = normalizeTrainers([{ ...coach, portrait }], config);
   assert.equal(result.portrait.alt, portrait.alt);
-  assert.equal(normalizeTrainers([{ ...coach, portrait: { ...portrait, credit: undefined } }], config)[0].portrait.credit, "");
+  assert.equal(
+    normalizeTrainers(
+      [{ ...coach, portrait: { ...portrait, credit: undefined } }],
+      config,
+    )[0].portrait.credit,
+    "",
+  );
   assert.equal(normalizeTrainers([coach], config)[0].portrait, undefined);
   for (const url of [
     "https://evil.invalid/x.webp",
@@ -266,16 +348,23 @@ test("public trainer transport needs no token and still excludes drafts and with
       assert.equal(new Headers(options.headers).has("Authorization"), false);
       assert.equal(url.searchParams.get("perspective"), "published");
       assert.equal(options.redirect, "error");
-      return new Response(JSON.stringify({ result: [
-        coach,
-        { ...coach, _id: "drafts.fixture" },
-        { ...coach, _id: "versions.release.fixture" },
-        { ...coach, _id: "hidden", visibility: "hidden" },
-        { ...coach, _id: "unapproved", contentApproved: false },
-      ] }));
+      return new Response(
+        JSON.stringify({
+          result: [
+            coach,
+            { ...coach, _id: "drafts.fixture" },
+            { ...coach, _id: "versions.release.fixture" },
+            { ...coach, _id: "hidden", visibility: "hidden" },
+            { ...coach, _id: "unapproved", contentApproved: false },
+          ],
+        }),
+      );
     },
   );
-  assert.deepEqual(result.map((item) => item.id), [coach._id]);
+  assert.deepEqual(
+    result.map((item) => item.id),
+    [coach._id],
+  );
 });
 
 test("build transport is published-only, fresh, bounded and keeps the read token server-side", async () => {

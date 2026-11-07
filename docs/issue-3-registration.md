@@ -1,5 +1,7 @@
 # Registration template — partial issue #3
 
+Current decision, 6 November 2026: replace the previously planned Google Sheet with a private STRATO database and PHP registration backend, plus a protected staff interface. No Google account/Sheet setup is required. Storage, processing, staff access and production acceptance remain unimplemented; registration stays disabled. The Google-specific sections below preserve the superseded October plan and must not be followed. See [current migration decision](STRATO-MIGRATION.md).
+
 Update, 2 November 2026: a server-only processing foundation now exists with policy injection, request limits, duplicate protection and fake delivery tests. The public `/api/registration` route remains unconditionally inactive and does not read submitted bodies. No actual form, approved field policy or Google connection is activated. See [forms foundation](FORMS-FOUNDATION.md).
 
 The user supplied the blank v2 PDF on 23 October 2026. The website now offers the unchanged original for A4 printing and reproduces its eight sections at `/anmeldung`, using the existing site typography, colors and responsive layout. Source copy and download metadata are separate from presentation. No dependency or new visitor JavaScript was added. The page is independently noindex and remains outside the launch sitemap.
@@ -19,7 +21,7 @@ The user supplied the blank v2 PDF on 23 October 2026. The website now offers th
 - The online pricing presentation consolidates package savings into the 5er card, as requested in a browser annotation. It shows the unchanged 200 EUR package total, 40 EUR per double session and 50 EUR total saving; the original PDF is unchanged. The savings figure is 50 EUR, not the per-session price of 40 EUR.
 - Keep Sanity as the website CMS; no Orchard Core migration or self-hosted server is planned. The user selected a **private Google Sheet, one row per registration**, outside Sanity, then explicitly deferred the connection until they speak with Pierre about setting up the Sheet. Account ownership, destination URL/ID, staff sharing and server authentication remain unconfigured. No Google file has been created or shared, and no registration was submitted.
 
-## Planned Google Sheets delivery
+## Superseded Google Sheets delivery — historical October plan
 
 Pierre's German [setup guide](PIERRE-SETUP.md) now covers creating an academy-controlled blank Sheet, the `Anmeldungen` tab, restricted sharing (including inherited folder access), optional named staff access and the private handoff of the Sheet URL. It also covers Sanity Free setup. These are owner preparation steps, not a completed API connection. Column mapping, server authentication, allowed fields and retention remain pending; no Sheet, sharing invitation or Google Cloud credential has been created.
 

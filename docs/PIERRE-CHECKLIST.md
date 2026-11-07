@@ -1,6 +1,6 @@
 # Was wir noch von Pierre brauchen
 
-Stand: 1. November 2026. Diese Liste dient als Gesprächs- und Freigabegrundlage. Der Shop bleibt ausgeklammert. Antworten mit privaten Kontakt- oder Kontoinformationen bitte privat weitergeben; diese Checkliste liegt in einem öffentlichen Repository. Keine Passwörter, Tokens, ausgefüllten Anmeldungen oder Gesundheitsdaten hier eintragen.
+Stand: 6. November 2026. Diese Liste dient als Gesprächs- und Freigabegrundlage. Der Shop bleibt ausgeklammert. Antworten mit privaten Kontakt- oder Kontoinformationen bitte privat weitergeben; diese Checkliste liegt in einem öffentlichen Repository. Keine Passwörter, Tokens, ausgefüllten Anmeldungen oder Gesundheitsdaten hier eintragen.
 
 ## Bereits vorhanden – muss nicht erneut geliefert werden
 
@@ -9,7 +9,7 @@ Stand: 1. November 2026. Diese Liste dient als Gesprächs- und Freigabegrundlage
 - Sanity, Medienkit und die Trainerbearbeitung einschließlich Website-Klickbearbeitung sind eingerichtet. Für diese Einrichtung wird kein neues CMS-Konto oder Projekt benötigt.
 - Das Angebot bis U13, die drei aktiven Städte Essen/Dinslaken/Duisburg und das 60-Minuten-On-Ice-/60-Minuten-Off-Ice-Konzept sind bekannt. Herne/Dorsten/Wesel bleiben als geplant gekennzeichnet.
 - Die Preise sind mit 50 € pro Einzeltermin und 200 € für fünf Einheiten hinterlegt. Noch offen sind die Bedingungen und Abläufe dazu.
-- Für Trainingsanmeldungen ist eine private Google-Tabelle vorgesehen. SpielerPlus betrifft nur Buchungen mehrerer Einheiten; der genaue Ablauf fehlt noch.
+- Für Trainingsanmeldungen ist jetzt eine private STRATO-Datenbank mit PHP-Verarbeitung vorgesehen; die Google-Tabelle entfällt. Sanity bleibt für öffentliche Website-Inhalte zuständig. SpielerPlus betrifft nur Buchungen mehrerer Einheiten; der genaue Ablauf fehlt noch.
 - Die öffentliche Domain ist bestätigt: **pkhockeyacademy.de**. Sie muss nicht erneut erfragt werden; die technische Verbindung und der öffentliche Start sind gesonderte Schritte.
 
 ## Aktuelle WhatsApp-Rückfragen nach gemeinsamer Überarbeitung
@@ -17,7 +17,7 @@ Stand: 1. November 2026. Diese Liste dient als Gesprächs- und Freigabegrundlage
 Die frühere umfassende Liste unten bleibt als späterer Projektbedarf erhalten. Für die jetzige Nachricht gilt die kürzere Auswahl:
 
 1. **Interviews:** Am 1. November wurde der KI-Teil verworfen. Die einfache Spieler- und Trainerversion bleibt mit Originalfragen, festen Rückfragen, optionaler Spracheingabe/Vorlesen, Antwortprüfung und manuellem JSON-/Druckexport bestehen. KI-Dialog und generierte Zusammenfassungen gehören nicht mehr zum Umfang. Vor echtem Einsatz die Spielerfelder und Datenschutzhinweise bestätigen; eine spätere geschützte Zustellung braucht weiterhin einen privaten Zielort und berechtigte Empfänger.
-2. **Anmeldung:** Pierre legt unter einem von ihm kontrollierten Academy-Google-Konto eine leere Tabelle **PK Hockey Academy – Anmeldungen** mit dem Reiter **Anmeldungen** an. Unter Freigabe bleibt **Allgemeiner Zugriff: Eingeschränkt**; einen privaten Ablageort ohne geerbte Freigaben verwenden. Den Link privat mitteilen und berechtigte Mitarbeiter benennen. Die Entwicklung nennt später die genaue Adresse für den technischen Schreibzugang und richtet Formular, Spalten, Validierung und Zustellung ein. Pierre muss weder Code noch API-Schlüssel erstellen. Für die Aktivierung außerdem Pflichtangaben, Zustimmungstexte und Aufbewahrung/Löschung festlegen. Eine angelegte Tabelle allein aktiviert das Formular nicht.
+2. **Anmeldung:** Keine Google-Tabelle mehr anlegen. Die Entwicklung plant die private STRATO-Datenbank, PHP-Verarbeitung und geschützte Anmeldungsverwaltung im bestehenden Paket. Pierre benennt berechtigte Personen und bestätigt Pflichtangaben, Zustimmungstexte, Unterschriften sowie Aufbewahrung/Löschung. Die technische Einrichtung und Abnahme stehen aus; das Formular bleibt deaktiviert.
 3. **Kontakt:** Öffentliche Academy-E-Mail und WhatsApp-Nummer/-Link bestätigen; Empfänger für Kontaktanfragen nennen.
 4. **Rechtliches:** Vollständige Unternehmens-/Anbieterangaben sowie freigegebene Impressums- und Datenschutztexte anfordern.
 
@@ -29,7 +29,7 @@ Die einfache Interviewversion mit Spieler- und Trainerablauf bleibt bestehen: [a
 
 - [x] Beide ursprünglichen Fragensätze und beide Interviewabläufe gehören zum bestätigten Zielumfang.
 - [ ] Welche Antworten sind Pflicht, welche dürfen übersprungen werden? Beim Spielerbot insbesondere Name, Alter/Jahrgang, Verein, Größe und Gewicht ausdrücklich prüfen.
-- [ ] Den privaten Zielort und berechtigte Empfänger der bereits gewünschten geschützten Ergebnisübermittlung festlegen. Die Anmeldungstabelle ist nicht automatisch auch für Interviews freigegeben.
+- [ ] Den privaten Zielort und berechtigte Empfänger der bereits gewünschten geschützten Ergebnisübermittlung festlegen. Die geplante Registrierungsspeicherung in STRATO ist nicht automatisch auch für Interviews freigegeben.
 - [ ] Welche Trainerantworten dürfen nach redaktioneller Prüfung öffentlich werden, welche bleiben intern? Qualifikationen und biografische Aussagen müssen bestätigt werden.
 - [ ] Vor echtem Einsatz die Erklärung zur optionalen Browser-Spracheingabe und die vorgesehenen Einwilligungen freigeben. Texteingabe bleibt verfügbar.
 - [ ] Für die Abnahme einen vollständigen Probedurchlauf auf Pierres tatsächlichem Handy vereinbaren, auch über einen in WhatsApp geöffneten Link.
@@ -40,7 +40,7 @@ Die erste geschützte Vorschau kann mit erfundenen Testantworten entstehen. Für
 
 Das PDF ist verfügbar. Die Online-Vorschau bleibt bis zur fertigen Verarbeitung und Freigabe deaktiviert.
 
-- [ ] Eine leere, Academy-kontrollierte Google-Tabelle vorbereiten: **PK Hockey Academy – Anmeldungen**, Tabellenreiter **Anmeldungen**, allgemeiner Zugriff **Eingeschränkt**. Den Link und das Inhaberkonto privat mitteilen. Noch keine echten Anmeldungen eintragen. Anleitung: [PIERRE-SETUP.md](PIERRE-SETUP.md).
+- [ ] Die Entwicklung richtet die private STRATO-Datenbank mit PHP-Verarbeitung und geschützter Anmeldungsverwaltung ein und prüft diese vor Aktivierung. Pierre muss keine Google-Tabelle erstellen oder freigeben. Siehe [Migrationsentscheidung](STRATO-MIGRATION.md).
 - [ ] Benennen, wer eingehende Anmeldungen ansehen und wer sie bearbeiten darf. Den technischen Schreibzugang richtet die Entwicklung anschließend ein; dafür keine Passwörter oder Schlüsseldateien verschicken.
 - [ ] Für jedes Formularfeld Pflicht/optional festlegen. Klären: Jahrgang oder vollständiges Geburtsdatum, ein oder zwei Erziehungsberechtigte und ob einzelne Gesundheitsangaben überhaupt online erfasst werden sollen.
 - [ ] Freigegebene Datenschutz-, Gesundheits-, Versicherungs- und Zustimmungstexte bereitstellen. Die drei Medienauswahlfelder der Papiervorlage einschließlich interner Videoanalyse eindeutig erklären; freiwillige Auswahl und Widerruf klären.
@@ -74,7 +74,7 @@ Für weitere Städte bitte ausdrücklich bestätigen, ob sie weiterhin geplant o
 - [ ] Vollständige Anbieter-/Unternehmensangaben für das Impressum liefern: offizieller Name, gegebenenfalls Rechtsform/Vertretung, ladungsfähige Geschäftsanschrift und freigegebene Kontaktdaten; Register-/Steuerangaben, soweit für die Academy zutreffend.
 - [ ] Geprüfte Texte für Impressum, Datenschutz und die anwendbaren Buchungs-/Stornobedingungen freigeben. Die vorhandenen Platzhalter sind keine fertigen Rechtstexte.
 - [x] Gewünschte öffentliche Domain: **pkhockeyacademy.de**. Die spätere technische Domain-Verbindung ist noch nicht geprüft.
-- [ ] Einen eigenen Sanity-Durchlauf vereinbaren: anmelden, einen Inhalt ändern, Vorschau öffnen und veröffentlichen. Kontozugriff, Wiederherstellung und gegebenenfalls weitere berechtigte Personen gemeinsam prüfen; MFA/Kontowiederherstellung sind noch nicht abgenommen.
+- [x] Pierre hat laut Rückmeldung des Nutzers vom 6. November einen eigenen erfolgreichen Sanity-Probedurchlauf durchgeführt. Der Einzelnutzerumfang ist erfüllt; zusätzliche Redaktionskonten können später folgen. MFA/Kontowiederherstellung und weitere Mitglieder sind damit nicht als separat geprüft ausgewiesen.
 - [ ] Den öffentlichen Start ausdrücklich freigeben, sobald Inhalte, Kontakt-/Anmeldeabläufe und Rechtstexte bereit sind. Die derzeit geschützte Review-Website ist noch kein öffentlicher Launch.
 
 ## 6. Weitere Inhalte – können anschließend folgen
@@ -88,7 +88,7 @@ Für weitere Städte bitte ausdrücklich bestätigen, ob sie weiterhin geplant o
 ## Für das nächste Gespräch reichen zunächst diese Punkte
 
 1. Die verbleibenden Bot-Details zu Sprachdialog und Ergebnisempfängern klären.
-2. Private Anmeldungstabelle vorbereiten und Pflichtfelder/Einwilligungen/Aufbewahrung klären.
+2. Berechtigte Personen und Pflichtfelder/Einwilligungen/Aufbewahrung für die geplante STRATO-Anmeldungsverwaltung klären; keine Google-Tabelle anlegen.
 3. Öffentliche Kontaktwege nennen.
 4. Unternehmensangaben und freigegebene Rechtstexte zusammentragen.
 

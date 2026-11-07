@@ -1,0 +1,67 @@
+---
+interface Props {
+  class?: string;
+  loop?: boolean;
+}
+const { class: className, loop = false } = Astro.props;
+---
+
+<svg
+  class:list={["rink-markings", className]}
+  viewBox="0 0 1000 640"
+  fill="none"
+  aria-hidden="true"
+  focusable="false"
+  data-rink-loop={loop || undefined}
+>
+  <g data-rink-ink>
+    <rect x="24" y="24" width="952" height="592" rx="190" />
+    <path d="M340 25v590M660 25v590" class="rink-blue" />
+    <path d="M500 25v590" class="rink-center" />
+    <circle cx="500" cy="320" r="105" />
+    <circle cx="500" cy="320" r="5" class="rink-dot" />
+    <g class="rink-faceoffs">
+      <circle cx="205" cy="180" r="71" />
+      <circle cx="205" cy="460" r="71" />
+      <circle cx="795" cy="180" r="71" />
+      <circle cx="795" cy="460" r="71" />
+      <path d="M190 180h30m-15-15v30m-15 265h30m-15-15v30M780 180h30m-15-15v30m-15 265h30m-15-15v30" />
+    </g>
+    <path d="M100 250v140m800-140v140M100 275a45 45 0 0 1 0 90m800-90a45 45 0 0 0 0 90" />
+    <path
+      class="rink-route"
+      data-rink-route
+      d="M178 508c140-8 81-229 260-248s153 168 267 107 10-160 121-199"
+    />
+    <path class="rink-route-arrow" d="M808 158 826 168 819 188" />
+  </g>
+</svg>
+
+<style>
+  .rink-markings {
+    width: 100%;
+    height: auto;
+    stroke: currentColor;
+    stroke-width: 1.2;
+  }
+  .rink-blue {
+    stroke-width: 4;
+  }
+  .rink-center {
+    stroke-dasharray: 8 6;
+    stroke-width: 3;
+  }
+  .rink-dot {
+    fill: currentColor;
+    stroke: none;
+  }
+  .rink-faceoffs {
+    opacity: 0.65;
+  }
+  .rink-route,
+  .rink-route-arrow {
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+</style>

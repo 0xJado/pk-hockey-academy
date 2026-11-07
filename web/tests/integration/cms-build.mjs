@@ -229,13 +229,22 @@ for (const mode of [
     assert.match(home, /alt="Technisches Philosophie-Ersatzbild"/);
     assert.match(home, /alt="Technisches Standort-Ersatzbild"/);
     assert.doesNotMatch(home, /\/images\/(blade|rink)\.svg/);
-    assert.doesNotMatch(home, /JEDER SCHRITT ZÄHLT\. · ILLUSTRATION|DEINE REGION\. DEIN EIS\. · ILLUSTRATION/);
-    assert.match(home, /<link rel="icon" href="https:\/\/cdn\.sanity\.io\/images\/cmsqa123\/qa\//);
+    assert.doesNotMatch(
+      home,
+      /JEDER SCHRITT ZÄHLT\. · ILLUSTRATION|DEINE REGION\. DEIN EIS\. · ILLUSTRATION/,
+    );
+    assert.match(
+      home,
+      /<link rel="icon" href="https:\/\/cdn\.sanity\.io\/images\/cmsqa123\/qa\//,
+    );
     assert.doesNotMatch(home, /pk-hockey-crest/);
   } else {
     assert.match(home, /\/images\/blade\.svg/);
     assert.match(home, /\/images\/rink\.svg/);
-    assert.doesNotMatch(home, /Technisches Philosophie-Ersatzbild|Technisches Standort-Ersatzbild/);
+    assert.doesNotMatch(
+      home,
+      /Technisches Philosophie-Ersatzbild|Technisches Standort-Ersatzbild/,
+    );
   }
   assert.match(home, /data-hero-line>MINDSET\./);
   if (mode === "empty") {
@@ -248,15 +257,25 @@ for (const mode of [
     assert.match(home, /alt="Technisches Hero-Ersatzbild"/);
     assert.doesNotMatch(home, /hero-academy-players-retouched/);
     assert.match(home, /data-hero-motion-bar[^>]*hidden[^>]*>[\s\S]*?<header/);
-    assert.match(home, /<video data-hero-video="https:\/\/cdn\.sanity\.io\/files\/cmsqa123\/qa\/hero-fixture\.mp4"[^>]*preload="none"/);
+    assert.match(
+      home,
+      /<video data-hero-video="https:\/\/cdn\.sanity\.io\/files\/cmsqa123\/qa\/hero-fixture\.mp4"[^>]*preload="none"/,
+    );
     assert.doesNotMatch(home, /<video[^>]+\ssrc=/);
   } else {
     assert.doesNotMatch(home, /hero-academy-players-retouched/);
-    assert.match(home, /<div class="hero-art"[^>]*>\s*<\/div>/);
+    assert.match(home, /hero-art--illustration/);
+    assert.match(home, /EISFLÄCHE · GRAFISCHE STUDIE/);
     assert.doesNotMatch(home, /Technisches Hero-Ersatzbild/);
-    assert.doesNotMatch(home, /<div[^>]*data-hero-motion-bar|hero-fixture\.mp4/);
+    assert.doesNotMatch(
+      home,
+      /<div[^>]*data-hero-motion-bar|hero-fixture\.mp4/,
+    );
   }
-  const trainingPage = await readFile(resolve(folder, "training/index.html"), "utf8");
+  const trainingPage = await readFile(
+    resolve(folder, "training/index.html"),
+    "utf8",
+  );
   for (const page of [home, trainingPage]) {
     assert.match(page, /off-ice-running/);
     if (mode === "public") {
@@ -330,6 +349,19 @@ for (const mode of [
     assert.equal(socialPage.includes("connect.facebook.net"), false);
   }
   if (mode === "normal" || mode === "public") {
+    const profilePage = await readFile(
+      resolve(folder, "trainerpool/fixture-coach/index.html"),
+      "utf8",
+    );
+    assert.match(home, /href="\/trainerpool\/fixture-coach"/);
+    assert.match(profilePage, /Jahre als Spieler/);
+    assert.match(profilePage, /Jahre als Trainer/);
+    assert.match(profilePage, /Technische Testliga/);
+    assert.match(profilePage, /Testverein A/);
+    assert.equal((profilePage.match(/<figcaption\b/g) ?? []).length, 6);
+    assert.match(profilePage, /Technische Testsaison/);
+    assert.equal(profilePage.includes("<script>window.__careerXss"), false);
+    assert.match(profilePage, /&lt;script&gt;window.__careerXss/);
     assert.match(pool, /Technisches Testprofil A/);
     assert.match(pool, /Technisches Testprofil B/);
     const firstName =
@@ -344,7 +376,12 @@ for (const mode of [
     assert.match(pool, /&lt;script&gt;/);
     assert.equal(pool.includes("<script>window.__coachXss"), false);
     assert.ok(home.includes(firstName));
-    assert.equal(home.includes(secondName), false);
+    assert.ok(home.includes(secondName));
+    assert.ok(home.indexOf(firstName) < home.indexOf(secondName));
+    assert.equal(
+      (home.match(/<article[^>]*data-trainer-template/g) ?? []).length,
+      1,
+    );
     if (mode === "public") {
       assert.match(pool, /Geänderte Testrolle/);
       assert.match(pool, /def-800x1000/);
@@ -362,6 +399,12 @@ for (const mode of [
       assert.match(album, /https:\/\/cdn\.sanity\.io\/images\/cmsqa123\/qa\//);
     }
   } else {
+    assert.equal(
+      (await files(folder)).some((file) =>
+        file.includes("fixture-coach/index.html"),
+      ),
+      false,
+    );
     assert.match(pool, /Aktuell sind keine Trainerprofile veröffentlicht/);
     assert.equal(pool.includes("Pierre Klein"), false);
     assert.equal(home.includes("trainer-feature"), false);
@@ -385,11 +428,7 @@ assert.equal(
   0,
   launch.result.stdout + launch.result.stderr,
 );
-for (const route of [
-  "interviews",
-  "spieler-interview",
-  "trainer-interview",
-]) {
+for (const route of ["interviews", "spieler-interview", "trainer-interview"]) {
   const html = await readFile(
     resolve(launch.folder, route, "index.html"),
     "utf8",
@@ -404,11 +443,7 @@ const launchSitemap = await readFile(
   resolve(launch.folder, "sitemap.xml"),
   "utf8",
 );
-for (const route of [
-  "interviews",
-  "spieler-interview",
-  "trainer-interview",
-])
+for (const route of ["interviews", "spieler-interview", "trainer-interview"])
   assert.equal(launchSitemap.includes("/" + route), false);
 console.log(
   "Launch gates passed: no interview test inputs or sitemap entries.",

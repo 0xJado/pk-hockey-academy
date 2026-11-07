@@ -3,7 +3,7 @@ import Button from "./Button.astro";
 import SiteImage from "./SiteImage.astro";
 import crest from "../assets/brand/pk-hockey-crest.png";
 import type { Trainer } from "../types/content";
-import { trainerImageUrl } from "../lib/trainers";
+import { trainerImageUrl, trainerProfileUrl } from "../lib/trainers";
 import { getStudioEditBaseUrl } from "../lib/admin";
 import { createDataAttribute } from "@sanity/visual-editing/create-data-attribute";
 interface Props {
@@ -24,7 +24,7 @@ const field = (path: string) =>
       }).toString()
     : undefined;
 const profileId = `trainer-${trainer.id}`;
-const profileUrl = `/trainerpool#${profileId}`;
+const profileUrl = trainerProfileUrl(trainer);
 const paragraphs = trainer.biography.split(/\n\s*\n/).filter(Boolean);
 const portrait = trainer.portrait;
 const widths = portrait
@@ -42,7 +42,7 @@ const widths = portrait
   data-reveal
 >
   <a
-    href={teaser ? profileUrl : "#" + profileId}
+    href={profileUrl}
     class:list={["trainer-portrait", { "trainer-portrait--photo": !!portrait }]}
     aria-label={`${trainer.name} – Trainerprofil ansehen`}
     data-sanity={field("portrait")}
@@ -127,11 +127,11 @@ const widths = portrait
         )}
       </>
     )}
-    {teaser && (
+    {
       <Button href={profileUrl} variant="text">
         {trainer.name} kennenlernen
       </Button>
-    )}
+    }
     {portrait?.credit && (
       <p class="small muted" data-sanity={field("portrait.credit")}>
         Bildnachweis: {portrait.credit}

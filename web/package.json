@@ -18,6 +18,7 @@
     "browser:install": "playwright install chromium",
     "browser:install:ci": "playwright install --with-deps chromium",
     "test:browser:training": "node tests/browser.mjs --training",
+    "test:browser:coaches": "node tests/coach-profiles.mjs",
     "test:browser:guards": "node tests/browser-guards.mjs"
   },
   "dependencies": {

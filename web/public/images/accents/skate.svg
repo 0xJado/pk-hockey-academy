@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 650 650" fill="none" stroke="#087ed5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <g transform="rotate(-8 325 320)">
+    <!-- Boot: ankle cuff, forward tongue, reinforced quarter and rounded toe cap. -->
+    <path d="m170 117 111-24 29 43 14 103c4 30 24 58 54 77l90 19c48 9 73 31 72 62l-9 24c-109 19-240 21-377 1l-15-32c-6-15-8-33-5-50l18-96Z"/>
+    <path d="m181 143 86-19 16 28-19 91c-5 32-3 69 16 105l-103 36-22-20 18-111Z"/>
+    <path d="m287 108 26-8c21 40 30 87 34 139 3 26 17 45 39 59l-8 18"/>
+    <path d="m267 153 56-11m-60 33 64-10m-69 33 72-10m-76 34 79-10m-80 35 82-10m-79 35 88-11m-80 36 96-12"/>
+    <path d="m282 322 38 49 113 26 91-5m-347-8 14 23 231 7 109-15M457 334c-17 20-22 47-14 67"/>
+    <path d="m195 183 45-10m-49 36 44-10m-47 39 44-11m-58 53 73-23m-80 52 87-28" stroke-width="1"/>
+    <!-- Thin outsole; two mounting towers connect the boot to the blade holder. -->
+    <path d="m154 422 4 14c133 19 261 17 371-1l2-14M182 439l-5 41 31 5 17-41m214-2 8 37 30-4 4-37"/>
+    <path d="m153 475 28 5c110 25 229 23 337-7l12 22c-120 36-254 38-388 7Z"/>
+    <path d="m225 451-8 29c65 12 126 12 189 4l-9-34" stroke-width="1"/>
+    <!-- Rockered steel runner: one continuous, slender edge under the holder. -->
+    <path d="m131 499 17 4c129 30 258 26 382-8l10-5-2 15c-126 40-264 44-400 13Z"/>
+    <path d="M146 512c129 29 257 25 383-10" stroke-width="1"/>
+    <circle cx="191" cy="465" r="3"/><circle cx="459" cy="463" r="3"/>
+  </g>
+  <path d="M100 98h40m-20-20v40M530 246h40m-20-20v40" stroke-width="1"/>
+</svg>

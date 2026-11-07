@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import TrainerCard from "../../components/TrainerCard.astro";
+import CoachDetails from "../../components/CoachDetails.astro";
 import { createDataAttribute } from "@sanity/visual-editing/create-data-attribute";
 import { getPreviewTrainers } from "../../lib/trainer-preview-source";
 import { getStudioEditBaseUrl } from "../../lib/admin";
@@ -108,17 +109,23 @@ else {
                 </a>
               )}
               <a
-                href={published
-                  ? "/redaktion/trainerpool?perspective=published"
-                  : "/redaktion/trainerpool"}
+                href={
+                  published
+                    ? "/redaktion/trainerpool?perspective=published"
+                    : "/redaktion/trainerpool"
+                }
                 data-preview-leave
               >
                 Alle Profile in der Vorschau
               </a>
               {studioUrl && (
-                <a href={studioUrl} target="_top">Zur Redaktion ↗</a>
+                <a href={studioUrl} target="_top">
+                  Zur Redaktion ↗
+                </a>
               )}
-              <a href="/redaktion/abmelden" data-preview-leave>Vorschau beenden</a>
+              <a href="/redaktion/abmelden" data-preview-leave>
+                Vorschau beenden
+              </a>
             </div>
           </aside>
           {failed ? (
@@ -130,7 +137,14 @@ else {
             <>
               <div class="trainer-list">
                 {result.trainers.map((trainer) => (
-                  <TrainerCard trainer={trainer} editorPreview />
+                  <div>
+                    <TrainerCard trainer={trainer} editorPreview />
+                    <CoachDetails
+                      trainer={trainer}
+                      editorPreview
+                      biography={false}
+                    />
+                  </div>
                 ))}
               </div>
               {result.incomplete.map((profile) => (
@@ -140,8 +154,8 @@ else {
                   </h2>
                   <p>
                     Dieses Profil ist noch unvollständig. Pflichtfelder und
-                    gegebenenfalls die Bildbeschreibung im Studio
-                    ergänzen. Danach erscheint hier das Website-Layout.
+                    gegebenenfalls die Bildbeschreibung im Studio ergänzen.
+                    Danach erscheint hier das Website-Layout.
                   </p>
                   {studioUrl && (
                     <a
@@ -166,7 +180,9 @@ else {
       )}
     </div>
   </section>
-  {authenticated && !failed && <div id="pk-visual-editing" data-profile-id={id} />}
+  {authenticated && !failed && (
+    <div id="pk-visual-editing" data-profile-id={id} />
+  )}
 </Base>
 <style>
   .preview-notice {
@@ -198,7 +214,8 @@ else {
           const selected = preview.dataset.profileId;
           if (
             payload.document._type !== "trainer" ||
-            (selected && payload.document._id.replace(/^drafts\./, "") !== selected)
+            (selected &&
+              payload.document._id.replace(/^drafts\./, "") !== selected)
           )
             return false;
         }
@@ -248,20 +265,31 @@ else {
         if (navigation.leave()) location.replace(url.href);
       },
     });
-    for (const link of document.querySelectorAll<HTMLAnchorElement>("[data-preview-leave]")) {
+    for (const link of document.querySelectorAll<HTMLAnchorElement>(
+      "[data-preview-leave]",
+    )) {
       link.addEventListener("click", (event) => {
         if (
-          event.defaultPrevented || event.button !== 0 ||
-          event.metaKey || event.ctrlKey || event.shiftKey || event.altKey
+          event.defaultPrevented ||
+          event.button !== 0 ||
+          event.metaKey ||
+          event.ctrlKey ||
+          event.shiftKey ||
+          event.altKey
         )
           return;
-        if (link.href === location.href || !navigation.leave()) event.preventDefault();
+        if (link.href === location.href || !navigation.leave())
+          event.preventDefault();
       });
     }
-    addEventListener("pagehide", () => {
-      navigation.leave();
-      disable();
-    }, { once: true });
+    addEventListener(
+      "pagehide",
+      () => {
+        navigation.leave();
+        disable();
+      },
+      { once: true },
+    );
     addEventListener("pageshow", (event) => {
       if (event.persisted) location.reload();
     });

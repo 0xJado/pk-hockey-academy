@@ -28,6 +28,16 @@ const profile = {
   },
 };
 
+// Rich career data exists only in isolated transport fixtures, never live CMS.
+profile.playingYears = 18;
+profile.coachingYears = 0;
+profile.highestDivision = "Technische Testliga";
+profile.notableTeams = ["Testverein A", "Testverein B"];
+profile.playerGallery = Array.from({ length: 5 }, (_, index) => ({
+  ...profile.portrait,
+  caption: `Technische Testsaison ${index + 1} <script>window.__careerXss=true</script>`,
+}));
+
 const album = {
   _id: "fixture-album",
   title: "Technisches Testalbum",
@@ -104,9 +114,15 @@ globalThis.fetch = async (input, options) => {
   const training = url.searchParams
     .get("query")
     ?.includes('_type == "trainingSession"');
-  const trainingImages = url.searchParams.get("query")?.includes('_type == "trainingImages"');
-  const homepageHero = url.searchParams.get("query")?.includes('_type == "homepageHero"');
-  const siteImages = url.searchParams.get("query")?.includes('_type == "siteImages"');
+  const trainingImages = url.searchParams
+    .get("query")
+    ?.includes('_type == "trainingImages"');
+  const homepageHero = url.searchParams
+    .get("query")
+    ?.includes('_type == "homepageHero"');
+  const siteImages = url.searchParams
+    .get("query")
+    ?.includes('_type == "siteImages"');
   const trainers = url.searchParams
     .get("query")
     ?.includes('_type == "trainer"');
@@ -117,7 +133,10 @@ globalThis.fetch = async (input, options) => {
     .get("query")
     ?.includes('_type == "mediaKitDownload"');
   if (
-    !training && !trainingImages && !homepageHero && !siteImages &&
+    !training &&
+    !trainingImages &&
+    !homepageHero &&
+    !siteImages &&
     !trainers &&
     !social &&
     !mediaKit &&
@@ -127,15 +146,21 @@ globalThis.fetch = async (input, options) => {
   appendFileSync(
     process.env.PK_CMS_QA_TRACE,
     JSON.stringify({
-      type: siteImages ? "site-images" : homepageHero ? "homepage-hero" : trainingImages ? "training-images" : training
-        ? "training"
-        : trainers
-          ? "trainers"
-          : social
-            ? "social"
-            : mediaKit
-              ? "media-kit"
-              : "gallery",
+      type: siteImages
+        ? "site-images"
+        : homepageHero
+          ? "homepage-hero"
+          : trainingImages
+            ? "training-images"
+            : training
+              ? "training"
+              : trainers
+                ? "trainers"
+                : social
+                  ? "social"
+                  : mediaKit
+                    ? "media-kit"
+                    : "gallery",
       perspective: url.searchParams.get("perspective"),
       authenticated:
         options?.headers?.Authorization === "Bearer test-token-never-real",
@@ -144,37 +169,64 @@ globalThis.fetch = async (input, options) => {
   );
   const mode = process.env.PK_CMS_QA_MODE;
   if (siteImages) {
-    const result = mode === "public" || mode === "malformed-site-images" ? {
-      philosophy: { ...profile.portrait, alt: mode === "malformed-site-images" ? " " : "Technisches Philosophie-Ersatzbild" },
-      venues: { ...profile.portrait, alt: "Technisches Standort-Ersatzbild" },
-      crest: { ...profile.portrait, alt: "Technisches Academy-Ersatzwappen" },
-      galleryGoalie: { ...profile.portrait, alt: "Technische Torwart-Ersatzgrafik" },
-    } : null;
+    const result =
+      mode === "public" || mode === "malformed-site-images"
+        ? {
+            philosophy: {
+              ...profile.portrait,
+              alt:
+                mode === "malformed-site-images"
+                  ? " "
+                  : "Technisches Philosophie-Ersatzbild",
+            },
+            venues: {
+              ...profile.portrait,
+              alt: "Technisches Standort-Ersatzbild",
+            },
+            crest: {
+              ...profile.portrait,
+              alt: "Technisches Academy-Ersatzwappen",
+            },
+            galleryGoalie: {
+              ...profile.portrait,
+              alt: "Technische Torwart-Ersatzgrafik",
+            },
+          }
+        : null;
     return new Response(JSON.stringify({ result }));
   }
   if (homepageHero) {
-    const result = mode === "empty" ? null : {
-      headlineFirst: "EISHOCKEY.",
-      headlineSecond: " ",
-      description: "Technischer Testtext für die Startseite.",
-      imageApproved: mode === "public",
-      photo: { ...profile.portrait, alt: "Technisches Hero-Ersatzbild" },
-      videoApproved: mode === "public",
-      video: {
-        asset: {
-          url: "https://cdn.sanity.io/files/cmsqa123/qa/hero-fixture.mp4",
-          mimeType: "video/mp4",
-          size: 1024,
-        },
-      },
-    };
+    const result =
+      mode === "empty"
+        ? null
+        : {
+            headlineFirst: "EISHOCKEY.",
+            headlineSecond: " ",
+            description: "Technischer Testtext für die Startseite.",
+            imageApproved: mode === "public",
+            photo: { ...profile.portrait, alt: "Technisches Hero-Ersatzbild" },
+            videoApproved: mode === "public",
+            video: {
+              asset: {
+                url: "https://cdn.sanity.io/files/cmsqa123/qa/hero-fixture.mp4",
+                mimeType: "video/mp4",
+                size: 1024,
+              },
+            },
+          };
     return new Response(JSON.stringify({ result }));
   }
   if (trainingImages) {
-    const result = mode === "public" ? {
-      onIce: { ...profile.portrait, alt: "Technisches On-Ice Ersatzbild" },
-      offIce: null,
-    } : null;
+    const result =
+      mode === "public"
+        ? {
+            onIce: {
+              ...profile.portrait,
+              alt: "Technisches On-Ice Ersatzbild",
+            },
+            offIce: null,
+          }
+        : null;
     return new Response(JSON.stringify({ result }));
   }
   if (training) {

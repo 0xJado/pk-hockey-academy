@@ -1,0 +1,622 @@
+/* Original rink geometry and skate traces: a hockey interpretation of the
+   supplied athlete-site reference, using the academy's existing brand system. */
+.hockey-home {
+  --rink-line: #087ed5;
+  --blade-ease: cubic-bezier(0.65, 0.05, 0, 1);
+}
+.hockey-home .hero {
+  min-height: 750px;
+  background: #f1f7fc;
+}
+.hero-rink {
+  position: absolute;
+  width: 940px;
+  left: -460px;
+  top: 30px;
+  color: #087ed5;
+  opacity: 0.12;
+  transform: rotate(-25deg);
+  pointer-events: none;
+}
+
+.hero-edition {
+  position: absolute;
+  top: 22px;
+  left: 28px;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  writing-mode: vertical-rl;
+  color: #476784;
+}
+.hockey-home .hero h1 {
+  font-size: clamp(90px, 9.6vw, 142px);
+  letter-spacing: -0.025em;
+}
+.hockey-home .hero h1 em {
+  font-style: italic;
+  padding-right: 0.08em;
+}
+.hockey-home .hero-art {
+  inset: 24px 24px 24px 47%;
+  clip-path: polygon(7% 0, 100% 0, 100% 94%, 94% 100%, 0 100%);
+}
+.hockey-home .hero-art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-top: 1px solid #ffffff60;
+  background: linear-gradient(0deg, #050b129c, transparent 36%);
+}
+.hero-rink-study {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  color: #76c5f5;
+  background: radial-gradient(ellipse at 75% 10%, #1d4362, #050b12 85%);
+}
+.hero-rink-study > svg {
+  position: absolute;
+  width: 145%;
+  max-width: none;
+  left: -12%;
+  top: 25%;
+  opacity: 0.38;
+  transform: rotate(-32deg);
+}
+.rink-study-title {
+  position: absolute;
+  top: 14%;
+  left: 13%;
+  color: #ddecf8;
+  font:
+    800 clamp(48px, 5.8vw, 84px)/0.9 "Barlow Condensed",
+    sans-serif;
+  letter-spacing: -0.02em;
+}
+.rink-study-title i {
+  color: #8ed2fc;
+}
+.rink-study-label {
+  position: absolute;
+  bottom: 25px;
+  left: 35px;
+  color: #a9c8dc;
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  z-index: 1;
+}
+.ice-ticket {
+  position: absolute;
+  z-index: 2;
+  right: 52px;
+  bottom: 61px;
+  display: grid;
+  gap: 8px;
+  padding: 18px 25px;
+  border: 1px solid #ddecf870;
+  border-left: 3px solid #66c5ff;
+  background: #050b12df;
+  color: #fff;
+  transform: rotate(-3deg);
+}
+.ice-ticket-label,
+.ice-ticket-caption {
+  font-size: 8px;
+  letter-spacing: 0.13em;
+}
+.ice-ticket-label {
+  color: #94d6ff;
+}
+.ice-ticket-time {
+  font:
+    700 58px/0.9 "Barlow Condensed",
+    sans-serif;
+  letter-spacing: -0.03em;
+}
+.ice-ticket-time i {
+  font-size: 30px;
+  font-style: normal;
+  color: #70ceff;
+}
+
+.hockey-home .hero-bottom {
+  max-width: 43%;
+  right: auto;
+  left: max(56px, calc((100% - 1280px) / 2));
+  margin: 0;
+  flex-wrap: wrap;
+  gap: 14px 25px;
+}
+.hockey-home .facts-strip {
+  position: relative;
+  background: #050b12;
+  border-bottom: 1px solid #34516d;
+}
+.hockey-home .facts-strip::before {
+  content: "";
+  position: absolute;
+  width: 140px;
+  height: 5px;
+  top: -5px;
+  left: 56px;
+  background: #087ed5;
+  transform: skewX(-32deg);
+}
+.hockey-home .facts-inner strong {
+  font-size: 64px;
+}
+.hockey-home .facts-inner .fact-statement {
+  font-style: italic;
+}
+.hockey-home .training-story {
+  background: #f7fbfe url("/images/skate-traces.svg") center / 1400px auto;
+  padding-bottom: 150px;
+  overflow: clip;
+}
+.hockey-home .story-heading {
+  margin-bottom: 54px;
+}
+.hockey-home .story-heading h2 {
+  font-size: clamp(52px, 6.2vw, 88px);
+}
+.hockey-home .story-heading h2 > span {
+  font-style: italic;
+}
+.hockey-home .story-panels {
+  gap: 5%;
+  align-items: start;
+}
+.hockey-home .story-panel {
+  background: #edf4fa;
+  border: 1px solid #b6cddd;
+  border-top: 3px solid #087ed5;
+  padding: 30px;
+  transition: border-color 0.35s;
+}
+.hockey-home .story-panel::after {
+  content: "";
+  position: absolute;
+  width: 34px;
+  height: 3px;
+  background: #087ed5;
+  right: 16px;
+  bottom: 15px;
+  transform: rotate(-45deg);
+}
+.hockey-home .story-panel:nth-child(2) {
+  margin-top: 76px;
+  background: #101d2e;
+  color: #ddecf8;
+  border-color: #3e5d76;
+}
+.hockey-home
+  .story-panel:nth-child(2)
+  :is(.phase-top, .phase-tags span, .phase-time h3) {
+  color: #91d1ff;
+}
+.hockey-home .story-panel:nth-child(2) p {
+  color: #c3d3df;
+}
+.hockey-home .phase-photo {
+  border: 0;
+  margin-inline: -14px;
+  aspect-ratio: 1.6;
+}
+.hockey-home .phase-photo-image {
+  transition: transform 0.75s var(--blade-ease);
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .hockey-home .story-panel:hover .phase-photo-image {
+    transform: scale(1.035);
+  }
+}
+.hockey-home .philosophy {
+  position: relative;
+  overflow: clip;
+  background: #050b12;
+}
+.hockey-home .philosophy-layout {
+  position: relative;
+  z-index: 1;
+  gap: 8%;
+}
+.philosophy-rink {
+  position: absolute;
+  right: -350px;
+  bottom: -170px;
+  width: 1000px;
+  color: #7acaff;
+  opacity: 0.12;
+  transform: rotate(-20deg);
+  pointer-events: none;
+}
+.hockey-home .philosophy-art {
+  transform: rotate(-3deg);
+  border: 1px solid #5b7288;
+  border-bottom: 4px solid #087ed5;
+}
+.hockey-home .philosophy-art .art-index {
+  padding: 8px 12px;
+  background: #050b12bf;
+}
+.hockey-home .philosophy h2 {
+  font-size: clamp(45px, 5.1vw, 72px);
+}
+.hockey-home :is(.philosophy, .target-section) .button--text {
+  padding-inline: 16px;
+}
+.hockey-home .target-section {
+  position: relative;
+  overflow: clip;
+  background: #087ed5;
+}
+.hockey-home .target-layout {
+  position: relative;
+  z-index: 1;
+  align-items: end;
+}
+.hockey-home .target-layout h2 {
+  font-size: clamp(52px, 6.1vw, 88px);
+}
+.hockey-home .target-layout h2 > span {
+  font-style: italic;
+}
+.hockey-home .target-layout > div:last-child {
+  position: relative;
+  padding-top: 105px;
+}
+.target-number {
+  position: absolute;
+  top: -70px;
+  right: 0;
+  font:
+    800 220px/1 "Barlow Condensed",
+    sans-serif;
+  color: transparent;
+  -webkit-text-stroke: 1px #ffffff75;
+  pointer-events: none;
+}
+.target-rink {
+  position: absolute;
+  width: 950px;
+  left: -440px;
+  top: -110px;
+  transform: rotate(15deg);
+  color: #fff;
+  opacity: 0.1;
+  pointer-events: none;
+}
+.hockey-home .trainer-section {
+  background: #f7fbfe url("/images/skate-traces.svg") center / 1400px auto;
+}
+.hockey-home .trainer-portrait {
+  border: 1px solid #9dbace;
+  border-bottom: 4px solid #087ed5;
+}
+.hockey-home .venues-section {
+  position: relative;
+  background: #050b12;
+}
+.hockey-home .schedule-section {
+  border-top: 4px solid #087ed5;
+}
+.hockey-home .final-cta {
+  margin: 22px;
+  background: #101d2e;
+  border-top: 1px solid #52718c;
+}
+.hockey-home .final-cta h2 span {
+  color: #8dd2ff;
+  font-style: italic;
+}
+.hockey-home .final-cta-inner {
+  width: min(1236px, calc(100% - 68px));
+}
+.hockey-home .final-cta .eyebrow {
+  color: #aed6f1;
+}
+.hockey-home .final-cta-actions .button--primary {
+  background: #087ed5;
+  color: white;
+  border-color: #087ed5;
+}
+.hockey-home .final-cta-actions .button--primary::before {
+  background: white;
+}
+.hockey-home .final-cta-actions .button--primary:hover {
+  color: #06173d;
+}
+.hockey-home .final-cta-actions p {
+  color: #bed0df;
+}
+
+@media (max-width: 1100px) {
+  .hockey-home .hero h1 {
+    font-size: 106px;
+  }
+  .hockey-home .hero-bottom {
+    left: 36px;
+  }
+  .hero-edition {
+    left: 12px;
+  }
+  .ice-ticket {
+    right: 40px;
+    padding: 15px;
+  }
+  .hockey-home .story-panel {
+    padding: 24px;
+  }
+  .hockey-home .facts-inner strong {
+    font-size: 56px;
+  }
+}
+@media (max-width: 900px) {
+  .hockey-home .hero {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    min-height: 0;
+    padding: 36px 0 0;
+  }
+  .hockey-home .hero h1 {
+    font-size: 96px;
+  }
+  .hockey-home .hero-copy {
+    width: 100%;
+    max-width: none;
+  }
+  .hockey-home .hero-art {
+    position: relative;
+    inset: auto;
+    width: calc(100% - 32px);
+    height: clamp(285px, 50vw, 410px);
+    margin: 30px 16px 0;
+  }
+  .hockey-home .hero-art :is(img, video) {
+    height: 100%;
+    object-position: center;
+  }
+  .rink-study-title {
+    top: 15%;
+    left: 8%;
+    font-size: 64px;
+  }
+  .hero-rink-study > svg {
+    top: -20%;
+    left: 12%;
+    width: 100%;
+  }
+  .hockey-home .hero-actions {
+    max-width: none;
+  }
+  .hockey-home .hero-actions .button {
+    width: auto;
+  }
+  .hockey-home .hero-bottom {
+    position: relative;
+    inset: auto;
+    width: calc(100% - 56px);
+    max-width: none;
+    margin: 0 auto;
+    padding-block: 20px;
+  }
+
+  .ice-ticket {
+    right: 35px;
+    bottom: 88px;
+  }
+  .ice-ticket-time {
+    font-size: 48px;
+  }
+  .ice-ticket-caption {
+    font-size: 7px;
+  }
+  .hero-edition {
+    display: none;
+  }
+  .hockey-home .story-panels {
+    gap: 24px;
+  }
+  .hockey-home .story-panel:nth-child(2) {
+    margin-top: 45px;
+  }
+  .hockey-home .story-heading h2 {
+    font-size: 64px;
+  }
+  .hockey-home .target-layout h2 {
+    font-size: 56px;
+  }
+  .target-number {
+    font-size: 180px;
+    top: -40px;
+  }
+  .hockey-home .philosophy-art {
+    transform: rotate(-2deg);
+  }
+  .hockey-home .facts-inner strong {
+    font-size: 50px;
+  }
+}
+@media (max-width: 600px) {
+  .hockey-home .hero {
+    padding-top: 27px;
+    padding-bottom: 0;
+  }
+  .hockey-home .hero-copy {
+    width: 100%;
+    max-width: none;
+  }
+  .hockey-home .hero h1 {
+    font-size: clamp(80px, 23vw, 120px);
+  }
+  .hockey-home .hero .eyebrow {
+    font-size: 8px;
+    max-width: none;
+    margin-bottom: 19px;
+  }
+  .hockey-home .hero-description {
+    max-width: 330px;
+  }
+  .hockey-home .hero-actions {
+    max-width: none;
+    gap: 10px;
+  }
+  .hockey-home .hero-actions .button {
+    width: auto;
+    flex: 1 1 160px;
+    padding-inline: 12px;
+  }
+  .hockey-home .hero-art {
+    inset: auto;
+    width: calc(100% - 24px);
+    margin: 30px 12px 0;
+    height: 285px;
+    clip-path: polygon(6% 0, 100% 0, 100% 92%, 94% 100%, 0 100%);
+  }
+  .hockey-home .hero-art :is(img, video) {
+    object-position: 50% center;
+  }
+  .rink-study-title {
+    font-size: 48px;
+    top: 25px;
+  }
+  .hero-rink-study > svg {
+    top: 20%;
+    left: -15%;
+    width: 150%;
+  }
+  .rink-study-label {
+    left: 20px;
+    bottom: 17px;
+    font-size: 6px;
+  }
+  .hero-rink {
+    width: 700px;
+    left: -430px;
+    top: -30px;
+    opacity: 0.1;
+  }
+
+  .ice-ticket {
+    right: 26px;
+    bottom: 78px;
+    padding: 12px 16px;
+    transform: rotate(-3deg);
+    gap: 5px;
+  }
+  .ice-ticket-time {
+    font-size: 39px;
+  }
+  .ice-ticket-label {
+    font-size: 7px;
+  }
+  .hockey-home .hero-bottom {
+    inset: auto;
+    width: calc(100% - 40px);
+    max-width: none;
+    padding-block: 20px;
+  }
+  .hockey-home .hero-bottom > div {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+  .hockey-home .hero-bottom .small {
+    font-size: 6px;
+  }
+  .hockey-home .hero-bottom > div > span:last-child {
+    font-size: 9px;
+  }
+  .hockey-home .hero-bottom b {
+    padding-inline: 3px;
+  }
+  .hockey-home .facts-inner strong {
+    font-size: 48px;
+  }
+  .hockey-home .facts-strip::before {
+    left: 20px;
+    width: 85px;
+  }
+  .hockey-home .training-story {
+    padding-bottom: 64px;
+    background-size: 900px auto;
+  }
+  .hockey-home .story-heading {
+    margin-bottom: 30px;
+  }
+  .hockey-home .story-heading h2 {
+    font-size: clamp(40px, 11.7vw, 62px);
+  }
+  .hockey-home .story-panels {
+    grid-template-columns: 1fr;
+    gap: 26px;
+  }
+  .hockey-home .story-panel {
+    padding: 24px;
+  }
+  .hockey-home .story-panel:nth-child(2) {
+    margin-top: 0;
+  }
+  .hockey-home .phase-photo {
+    margin-inline: -10px;
+  }
+  .hockey-home .philosophy-art {
+    width: calc(100% - 14px);
+    margin-inline: auto;
+    transform: rotate(-2deg);
+  }
+  .hockey-home .philosophy-layout {
+    gap: 40px;
+  }
+  .hockey-home .philosophy h2 {
+    font-size: 45px;
+  }
+  .hockey-home .target-layout h2 {
+    font-size: 54px;
+  }
+  .hockey-home .target-layout > div:last-child {
+    padding-top: 75px;
+  }
+  .target-number {
+    top: -39px;
+    font-size: 165px;
+  }
+  .hockey-home .final-cta {
+    margin: 12px;
+  }
+  .hockey-home .final-cta-inner {
+    width: calc(100% - 40px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hockey-home .phase-photo-image {
+    transform: none !important;
+  }
+}
+
+.rink-motion-toggle {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid #9ebbd1;
+  border-radius: 2px;
+  background: #f1f7fc;
+  color: #315877;
+  font-size: 10px;
+  cursor: pointer;
+}
+.rink-motion-toggle[hidden] {
+  display: none;
+}
+.rink-motion-toggle:hover {
+  background: #dcecf8;
+}
+@media (prefers-reduced-motion: reduce) {
+  .rink-motion-toggle {
+    display: none !important;
+  }
+}

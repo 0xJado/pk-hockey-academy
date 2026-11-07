@@ -1,0 +1,292 @@
+---
+import TrainerCard from "./TrainerCard.astro";
+import RinkMarkings from "./RinkMarkings.astro";
+import { trainerTemplateSlots } from "../data/trainer-templates";
+import type { Trainer } from "../types/content";
+interface Props {
+  trainers: Trainer[];
+}
+const { trainers } = Astro.props;
+const templates = trainerTemplateSlots.filter(
+  (_, index) => index + 2 > trainers.length,
+);
+const total = trainers.length + templates.length;
+---
+
+<section
+  class="section trainer-section light-section"
+  data-trainer-carousel
+  aria-label="Trainerpool"
+>
+  <div class="wrap">
+    <div class="trainer-carousel-top">
+      <p class="eyebrow">PERSÖNLICHES TRAINING. DEIN TRAINERPOOL.</p>
+      <div class="trainer-carousel-controls" data-carousel-controls hidden>
+        <span
+          class="trainer-carousel-status"
+          data-carousel-status
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          01 / {String(total).padStart(2, "0")}
+        </span>
+        <button
+          type="button"
+          data-carousel-prev
+          aria-label="Vorheriges Trainerprofil"
+          aria-controls="home-trainer-track"
+          disabled
+        >
+          ←
+        </button>
+        <button
+          type="button"
+          data-carousel-next
+          aria-label="Nächstes Trainerprofil"
+          aria-controls="home-trainer-track"
+        >
+          →
+        </button>
+      </div>
+    </div>
+    <div
+      id="home-trainer-track"
+      class="trainer-track"
+      data-carousel-track
+      tabindex="0"
+      role="group"
+      aria-label="Trainerprofile – horizontal scrollen"
+    >
+      {trainers.map((trainer, index) => (
+        <div
+          class="trainer-slide"
+          id={`home-trainer-slide-${index + 1}`}
+          role="group"
+          aria-roledescription="Folie"
+          aria-label={`${index + 1} von ${total}: ${trainer.name}`}
+        >
+          <TrainerCard trainer={trainer} teaser />
+        </div>
+      ))}
+      {templates.map((slot, index) => (
+        <div
+          class="trainer-slide"
+          id={`home-trainer-slide-${trainers.length + index + 1}`}
+          role="group"
+          aria-roledescription="Folie"
+          aria-label={`${trainers.length + index + 1} von ${total}: Leere Profilvorlage`}
+        >
+          <article
+            class="trainer-feature trainer-placeholder"
+            data-trainer-template
+            id={slot.id}
+          >
+            <div class="trainer-template-art" aria-hidden="true">
+              <RinkMarkings />
+              <span>{slot.number}</span>
+              <svg
+                viewBox="0 0 300 300"
+                fill="none"
+                class="trainer-template-jersey"
+              >
+                <path d="m104 52-44 26-33 77 46 22 22-43v116h110V134l22 43 46-22-33-77-44-26c-18 28-74 28-92 0Z" />
+                <path d="M116 58c10 18 58 18 68 0M97 211h106M97 224h106M37 143l42 20m142 0 42-20" />
+              </svg>
+              <small>LEERE PROFILVORLAGE</small>
+            </div>
+            <div class="trainer-copy">
+              <p class="eyebrow">PLATZHALTER · PROFIL {slot.number}</p>
+              <h2>
+                RAUM FÜR
+                <br />
+                <span>WEITERE TRAINER.</span>
+              </h2>
+              <p>
+                Hier ist Platz für ein weiteres freigegebenes Trainerprofil.
+                Aktuell sind für diese Vorlage keine Angaben veröffentlicht.
+              </p>
+              <p class="small muted">
+                Keine Person hinterlegt. Kein aktives Trainerprofil.
+              </p>
+            </div>
+          </article>
+        </div>
+      ))}
+    </div>
+    <div class="trainer-carousel-bottom">
+      <p class="trainer-scroll-hint">
+        Wischen, horizontal scrollen oder ein Profil auswählen.
+      </p>
+      <nav class="trainer-index" aria-label="Trainerprofil auswählen">
+        {Array.from({ length: total }, (_, index) => (
+          <a
+            href={`#home-trainer-slide-${index + 1}`}
+            data-carousel-jump={index}
+            aria-current={index === 0 ? "true" : undefined}
+            aria-label={
+              trainers[index]
+                ? `${trainers[index]!.name} anzeigen`
+                : `Leere Profilvorlage ${index + 1} anzeigen`
+            }
+          >
+            {String(index + 1).padStart(2, "0")}
+          </a>
+        ))}
+      </nav>
+    </div>
+  </div>
+</section>
+
+<style>
+  .trainer-carousel-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  .trainer-carousel-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .trainer-carousel-controls[hidden] {
+    display: none;
+  }
+  .trainer-carousel-controls button {
+    width: 46px;
+    height: 46px;
+    border: 1px solid #a7c1d6;
+    color: #0754db;
+    background: #fff;
+    cursor: pointer;
+    font-size: 24px;
+  }
+  .trainer-carousel-controls button:hover:not(:disabled) {
+    background: #0754db;
+    color: #fff;
+  }
+  .trainer-carousel-controls button:disabled {
+    opacity: 0.35;
+  }
+  .trainer-carousel-status {
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.12em;
+    margin-right: 12px;
+  }
+  .trainer-track {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 32px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #087ed5 #dce8f1;
+    padding-bottom: 24px;
+  }
+  .trainer-track:focus-visible {
+    outline: 2px solid #087ed5;
+    outline-offset: 6px;
+  }
+  .trainer-slide {
+    flex: 0 0 100%;
+    min-width: 0;
+    scroll-snap-align: start;
+  }
+  .trainer-placeholder {
+    align-content: start;
+  }
+  .trainer-template-art {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 0.95;
+    overflow: hidden;
+    border: 1px dashed #9ab5cc;
+    border-bottom: 4px solid #087ed5;
+    color: #35617e;
+    background: #e8f1f8;
+  }
+  .trainer-template-art > :global(.rink-markings) {
+    position: absolute;
+    width: 140%;
+    max-width: none;
+    opacity: 0.14;
+    transform: rotate(-25deg);
+  }
+  .trainer-template-art > span {
+    position: absolute;
+    top: 20px;
+    left: 24px;
+    font:
+      800 62px/1 "Barlow Condensed",
+      sans-serif;
+    color: #aac5d9;
+  }
+  .trainer-template-jersey {
+    width: 70%;
+    stroke: #739bb8;
+    stroke-width: 1.5;
+  }
+  .trainer-template-art small {
+    position: absolute;
+    bottom: 24px;
+    left: 24px;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+  }
+  .trainer-scroll-hint {
+    font-size: 10px !important;
+    margin-top: 16px;
+  }
+  .trainer-carousel-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .trainer-carousel-bottom .trainer-scroll-hint {
+    margin-top: 0;
+  }
+  .trainer-index {
+    display: flex;
+    gap: 8px;
+  }
+  .trainer-index a {
+    display: grid;
+    place-items: center;
+    min-width: 44px;
+    min-height: 44px;
+    border-bottom: 2px solid #9eb8cc;
+    color: #315877;
+    font-size: 11px;
+  }
+  .trainer-index a[aria-current] {
+    border-color: #087ed5;
+    color: #0754db;
+    background: #dcecf8;
+  }
+  @media (max-width: 900px) {
+    .trainer-template-art {
+      aspect-ratio: 0.75;
+    }
+  }
+  @media (max-width: 600px) {
+    .trainer-carousel-top > .eyebrow {
+      font-size: 8px;
+    }
+    .trainer-template-art {
+      aspect-ratio: 1.1;
+    }
+    .trainer-scroll-hint {
+      max-width: 250px;
+      line-height: 1.6;
+    }
+  }
+</style>
