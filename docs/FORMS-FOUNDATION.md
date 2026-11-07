@@ -1,5 +1,7 @@
 # Registration foundation
 
+Current direction, 6 November 2026: Google Sheets delivery is abandoned. Production registration will use PHP and a private STRATO database, with a protected staff interface. The processing core below remains the existing TypeScript foundation; it has not been ported or activated. See [migration decision](STRATO-MIGRATION.md).
+
 This increment adds processing infrastructure and fictional local previews, not live registration or contact delivery. No Google Sheet, messaging account, email service, database or CMS record is connected.
 
 ## Registration boundary

@@ -3,13 +3,14 @@ interface Props {
   label: string;
   title: string;
   light?: boolean;
+  reveal?: boolean;
 }
-const { label, title, light = false } = Astro.props;
+const { label, title, light = false, reveal = true } = Astro.props;
 ---
 
 <div
   class:list={["section-heading", { "section-heading--light": light }]}
-  data-reveal
+  data-reveal={reveal || undefined}
 >
   <p class="eyebrow">
     <span></span>

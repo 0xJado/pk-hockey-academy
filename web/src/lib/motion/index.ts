@@ -1,14 +1,31 @@
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { createIceSpray } from "./ice-spray";
+import { createTrainerCarousels } from "./trainer-carousel";
+import { createImageReveals } from "./image-reveal";
+import { createRinkPlays } from "./rink-plays";
 
 gsap.registerPlugin(ScrollTrigger);
 let dispose: (() => void) | undefined;
 let installed = false;
+let homepageEntrancePlayed = false;
 
 function initialize() {
   dispose?.();
+  // Astro has already restored this route's scroll position. Seed the animation
+  // scroller with that actual position instead of a cached position from the old page.
+  ScrollTrigger.clearScrollMemory();
+  ScrollTrigger.getScrollFunc(window)(window.scrollY);
   const root = document.querySelector<HTMLElement>("main");
   if (!root) return;
+  const hero = root.querySelector<HTMLElement>("[data-hero]");
+  let sprayPending = !!hero;
+  let entrancePending =
+    !!hero && !homepageEntrancePlayed && scrollY < 20 && !location.hash;
+  // Consume the headline entrance even with reduced motion. The spray has its
+  // own per-navigation flag; neither effect restarts on breakpoint changes.
+  if (hero) homepageEntrancePlayed = true;
+  const stopCarousels = createTrainerCarousels(root);
   const events = new AbortController();
   const menu = document.querySelector<HTMLDetailsElement>("[data-mobile-menu]");
   document.addEventListener(
@@ -43,30 +60,36 @@ function initialize() {
       },
       (m) => {
         const { desktop, reduce } = m.conditions!;
+        const enterHomepage = entrancePending;
+        entrancePending = false;
+        const playSpray = sprayPending;
+        sprayPending = false;
         if (reduce) return;
-        const hero = root.querySelector("[data-hero]");
+        const stopSpray = createIceSpray(root, playSpray);
+        const stopImages = createImageReveals(root);
+        const stopPlays = createRinkPlays(root);
         if (hero) {
-          const timeline = gsap.timeline({ defaults: { ease: "power3.out" } });
-          timeline
-            .from("[data-hero-art]", {
-              clipPath: "polygon(100% 0,100% 0,100% 100%,65% 100%)",
-              duration: desktop ? 1.05 : 0.65,
-            })
-            .from(
-              "[data-hero-line]",
-              {
-                yPercent: desktop ? 110 : 55,
-                opacity: 0,
-                duration: desktop ? 0.75 : 0.5,
-                stagger: 0.11,
-              },
-              0.12,
-            )
-            .from(
-              "[data-hero-copy]",
-              { y: 16, opacity: 0, duration: 0.6, stagger: 0.1 },
-              0.5,
-            );
+          // The image frame stays in its final CSS geometry throughout. Only the
+          // first entrance animates copy; subsequent routes use the page crossfade.
+          if (enterHomepage) {
+            gsap
+              .timeline({ defaults: { ease: "power3.out" } })
+              .from(
+                "[data-hero-line]",
+                {
+                  yPercent: desktop ? 110 : 55,
+                  opacity: 0,
+                  duration: desktop ? 0.75 : 0.5,
+                  stagger: 0.11,
+                },
+                0.12,
+              )
+              .from(
+                "[data-hero-copy]",
+                { y: 16, opacity: 0, duration: 0.6, stagger: 0.1 },
+                0.5,
+              );
+          }
           if (desktop)
             gsap.to("[data-parallax]", {
               y: -45,
@@ -130,6 +153,11 @@ function initialize() {
               "<",
             );
         }
+        return () => {
+          stopSpray();
+          stopImages();
+          stopPlays();
+        };
       },
     );
   }, root);
@@ -144,6 +172,7 @@ function initialize() {
   dispose = () => {
     cancelAnimationFrame(refresh);
     events.abort();
+    stopCarousels();
     media.revert();
     context.revert();
     if (menu) menu.open = false;

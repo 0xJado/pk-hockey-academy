@@ -1,5 +1,6 @@
 ---
 import Button from "./Button.astro";
+import PKOutline from "./PKOutline.astro";
 ---
 
 <section class="final-cta">
@@ -20,5 +21,29 @@ import Button from "./Button.astro";
       <p>Individuelles Training. Gemeinsame Entwicklung.</p>
     </div>
   </div>
-  <span class="cta-blade" aria-hidden="true"></span>
+  <PKOutline class="cta-pk" />
 </section>
+
+<style>
+  .final-cta > :global(.cta-pk) {
+    position: absolute;
+    width: min(700px, 76%);
+    height: 155%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #80ccff;
+    opacity: 0.22;
+    pointer-events: none;
+    z-index: -1;
+  }
+  @media (max-width: 600px) {
+    .final-cta > :global(.cta-pk) {
+      width: 120%;
+      max-width: none;
+      height: 100%;
+      left: 65%;
+      opacity: 0.16;
+    }
+  }
+</style>

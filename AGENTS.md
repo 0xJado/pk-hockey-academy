@@ -55,7 +55,7 @@ Preferred initial stack:
 - Minimum client JavaScript; no blanket React SPA. Introduce islands/components only if genuinely interactive.
 - **Sanity CMS** planned for trainers, venues, dates, and site settings. MVP data should live in typed modules with a clean retrieval boundary; do not build the CMS unless the active task asks for it.
 - **Shopify** may be added later for headless commerce and guest checkout. Do not add Shopify, authentication, database infrastructure, checkout UI that suggests purchases work, or payment integrations now.
-- Hosting target is undecided. Keep the initial project deployable as static files without relying on a particular hosting vendor.
+- Production direction confirmed on 6 November 2026: migrate to Pierre's existing STRATO Hosting Basic package. Keep Astro public pages static; use PHP for required production backend functions and a private STRATO MySQL/MariaDB database for registrations. Google Sheets registration delivery is abandoned. Sanity remains the public-content CMS. Vercel is the developer-owned review host pending migration, not the intended production owner. Migration, private-preview replacement and deployment automation require implementation and acceptance before switching the domain.
 - Use npm consistently unless the existing repository already establishes another package manager.
 
 If the repository already contains source or configuration, **inspect and preserve it**.
@@ -213,11 +213,15 @@ Prefer expressive motion in a few key moments over nonstop distractions.
 
 ### Animation 1 — The Ice Reveal
 
-On first homepage load:
+Homepage motion direction updated by the user on 7 November 2026:
 
-- A diagonal/angled wipe reveals the hero.
-- Animated headline lines slide/fade with a crisp stagger.
-- CTA appears after the headline.
+- A short procedural ice spray starts at the bottom right, against the navy hero, on every homepage load/logo return. No replay button. Respect reduced motion and allow immediate dismissal on input.
+- Keep the chamfered hero frame stable; do not restore the diagonal polygon morph/wipe.
+- Animated headline lines slide/fade with a crisp stagger only on the first homepage arrival; the CTA follows. Logo returns replay the spray, not the headline.
+- The homepage trainer section scrolls horizontally through published profiles and clearly labelled empty presentation templates (three slots initially). Templates are not real coaches or CMS publications.
+- Venue imagery and adjacent city text fade together after image preparation; late images must fade rather than pop into view.
+- The philosophy illustration uses the same coordinated image/text fade. Hero, philosophy and U13 rink diagrams trace for approximately five seconds, hold for five seconds, then fade and repeat while visible. Provide a pause control, pause offscreen/in hidden tabs and render statically with reduced motion or no JavaScript.
+- The final CTA uses an outlined PK lettering accent derived from the supplied crest, rather than the earlier filled blue stripe.
 
 Keep the intro short.
 
@@ -359,7 +363,7 @@ No brittle hardcoded JSX data.
 
 Prepare adapter/query boundaries to simplify a later Sanity migration.
 
-Do not add a database until requirements justify it.
+Registration requirements now justify a private STRATO database, as approved on 6 November 2026. Keep registration data separate from Sanity and public assets. Provision only what the active implementation needs; approval of this architecture is not evidence that storage, staff access, retention or registration delivery is already working.
 
 Keep all external secrets in environment variables and provide `.env.example` if needed.
 

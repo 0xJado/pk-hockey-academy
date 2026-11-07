@@ -1,6 +1,8 @@
 import type { APIRoute } from "astro";
 import { pages } from "../data/pages";
 import { getGalleryAlbums } from "../lib/gallery-source";
+import { getTrainers } from "../lib/trainer-source";
+import { trainerProfileUrl } from "../lib/trainers";
 export const GET: APIRoute = async ({ site }) => {
   const ready = import.meta.env.PUBLIC_LAUNCH_READY === "true" && site;
   const urls = ready
@@ -9,6 +11,7 @@ export const GET: APIRoute = async ({ site }) => {
         ...Object.keys(pages).map((page) => `/${page}`),
         "/galerie",
         "/medienkit",
+        ...(await getTrainers()).map(trainerProfileUrl),
         ...(await getGalleryAlbums()).map((album) => `/galerie/${album.slug}`),
       ]
     : [];

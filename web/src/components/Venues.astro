@@ -3,11 +3,14 @@ import { getTraining } from "../lib/training-source";
 import Arrow from "./Arrow.astro";
 import SiteImage from "./SiteImage.astro";
 import { getSiteImages } from "../lib/site-images-source";
-const [{ venues }, siteImages] = await Promise.all([getTraining(), getSiteImages()]);
+const [{ venues }, siteImages] = await Promise.all([
+  getTraining(),
+  getSiteImages(),
+]);
 ---
 
-<div class="venues-layout">
-  <div class="venue-visual" data-venue-mask>
+<div class="venues-layout" data-venue-reveal>
+  <div class="venue-visual" data-venue-visual>
     <SiteImage
       imageKey="venues"
       fallback="/images/rink.svg"
@@ -17,7 +20,9 @@ const [{ venues }, siteImages] = await Promise.all([getTraining(), getSiteImages
       loading="lazy"
       sizes="(max-width: 900px) 100vw, 45vw"
     />
-    {!siteImages.venues && <span class="image-label">DEINE REGION. DEIN EIS. · ILLUSTRATION</span>}
+    {!siteImages.venues && (
+      <span class="image-label">DEINE REGION. DEIN EIS. · ILLUSTRATION</span>
+    )}
     <span class="venue-visual-text" aria-hidden="true">
       HEIMAT
       <br />
@@ -28,7 +33,7 @@ const [{ venues }, siteImages] = await Promise.all([getTraining(), getSiteImages
       </b>
     </span>
   </div>
-  <div class="venue-list">
+  <div class="venue-list" data-venue-copy>
     {venues
       .filter((v) => v.status === "active_city")
       .map((venue, i) => (

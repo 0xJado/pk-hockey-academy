@@ -6,6 +6,7 @@ export const TRAINER_LIMITS = {
   listItems: 12,
   listItem: 200,
   displayOrder: 9999,
+  galleryImages: 8,
 } as const;
 
 export interface TrainerProfileFields {
@@ -16,6 +17,10 @@ export interface TrainerProfileFields {
   qualifications: string[];
   specialties: string[];
   displayOrder: number;
+  playingYears?: number;
+  coachingYears?: number;
+  highestDivision?: string;
+  notableTeams?: string[];
 }
 
 export function asRecord(value: unknown): Record<string, unknown> {
@@ -65,6 +70,31 @@ export function parseTrainerFields(
   const qualifications = list(raw.qualifications, false);
   const specialties = list(raw.specialties, false);
   const displayOrder = raw.displayOrder;
+  const career: Pick<
+    TrainerProfileFields,
+    "playingYears" | "coachingYears" | "highestDivision" | "notableTeams"
+  > = {};
+  for (const key of ["playingYears", "coachingYears"] as const) {
+    if (raw[key] == null) continue;
+    if (
+      typeof raw[key] !== "number" ||
+      !Number.isSafeInteger(raw[key]) ||
+      raw[key] < 0 ||
+      raw[key] > 100
+    )
+      return;
+    career[key] = raw[key];
+  }
+  if (raw.highestDivision != null && raw.highestDivision !== "") {
+    const division = plainText(raw.highestDivision, 2, 120);
+    if (!division) return;
+    career.highestDivision = division;
+  }
+  if (raw.notableTeams != null) {
+    const teams = list(raw.notableTeams, false);
+    if (!teams) return;
+    career.notableTeams = teams;
+  }
   if (
     !name ||
     !role ||
@@ -86,6 +116,7 @@ export function parseTrainerFields(
     qualifications,
     specialties,
     displayOrder,
+    ...career,
   };
 }
 
@@ -97,9 +128,31 @@ export function validateTrainerPublication(value: unknown): true | string {
   if (raw.visibility === "public" && raw.contentApproved !== true) {
     return "Vor der Website-Freigabe müssen Profilangaben und gegebenenfalls Bildrechte bestätigt sein.";
   }
+  if (raw.playerGallery != null) {
+    if (
+      !Array.isArray(raw.playerGallery) ||
+      raw.playerGallery.length > TRAINER_LIMITS.galleryImages
+    )
+      return "Die Spielerlaufbahn-Galerie darf höchstens acht Bilder enthalten.";
+    for (const value of raw.playerGallery) {
+      const image = asRecord(value);
+      if (
+        typeof asRecord(image.asset)._ref !== "string" ||
+        !plainText(image.alt, 8, 240) ||
+        (image.credit != null &&
+          plainText(image.credit, 0, 160) === undefined) ||
+        (image.caption != null &&
+          plainText(image.caption, 0, 240) === undefined)
+      )
+        return "Galeriebilder benötigen eine Datei und Bildbeschreibung (8–240 Zeichen); Bildnachweis maximal 160, Bildunterschrift maximal 240 Zeichen.";
+    }
+  }
   if (raw.portrait !== undefined && raw.portrait !== null) {
     const portrait = asRecord(raw.portrait);
-    if (portrait.credit != null && plainText(portrait.credit, 0, 160) === undefined)
+    if (
+      portrait.credit != null &&
+      plainText(portrait.credit, 0, 160) === undefined
+    )
       return "Der optionale Bildnachweis darf höchstens 160 Zeichen enthalten.";
     if (
       typeof asRecord(portrait.asset)._ref !== "string" ||

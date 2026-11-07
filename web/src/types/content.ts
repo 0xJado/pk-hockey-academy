@@ -15,6 +15,11 @@ export interface Trainer {
   name: string;
   role: string;
   biography: string;
+  playingYears?: number;
+  coachingYears?: number;
+  highestDivision?: string;
+  notableTeams?: string[];
+  playerGallery?: (NonNullable<Trainer["portrait"]> & { caption?: string })[];
   verifiedBackground: string[];
   qualifications: string[];
   specialties: string[];

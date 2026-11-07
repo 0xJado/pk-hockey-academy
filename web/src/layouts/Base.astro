@@ -6,6 +6,7 @@ import crest from "../assets/brand/pk-hockey-crest.png";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import "../styles/global.css";
+import "../styles/hockey-subpages.css";
 import { getSiteImages } from "../lib/site-images-source";
 import { imageUrl } from "../lib/gallery";
 interface Props {
@@ -26,6 +27,9 @@ const canonical =
     : undefined;
 const launchReady =
   import.meta.env.PUBLIC_LAUNCH_READY === "true" && !!canonical && !noindex;
+const hockeyPages = new Set(["philosophie", "training", "trainerpool", "trainingsstaetten", "trainingstermine", "organisation", "kontakt", "galerie", "medienkit"]);
+const sectionName = Astro.url.pathname.split("/")[1];
+const hockeyPage = !editorPreview && hockeyPages.has(sectionName) ? sectionName : undefined;
 const { crest: cmsCrest } = await getSiteImages();
 const favicon = cmsCrest
   ? { src: imageUrl(cmsCrest, 64) }
@@ -89,7 +93,7 @@ const socialImage = Astro.site
       Zum Inhalt springen
     </a>
     {!editorPreview && <><slot name="above-header" /><Header /></>}
-    <main id="inhalt" tabindex="-1" transition:animate="fade">
+    <main id="inhalt" tabindex="-1" data-hockey-page={hockeyPage}>
       <slot />
     </main>
     {!editorPreview && <Footer />}

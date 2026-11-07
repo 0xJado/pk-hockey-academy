@@ -2,6 +2,8 @@
 
 Start with [current status](docs/STATUS.md). Dated assessments and validation entries preserve historical evidence.
 
+Production direction confirmed on 6 November 2026: migrate to Pierre's existing STRATO hosting, retain Sanity for public content, and replace Google Sheets registration delivery with PHP and a private STRATO database. Migration and the protected staff interface are not implemented yet; Vercel remains the protected review host. Earlier Google Sheets setup references below are superseded: Pierre no longer needs to create or share a Sheet. See [migration decision and acceptance work](docs/STRATO-MIGRATION.md).
+
 A German Astro marketing website with prerendered public pages, a cinematic homepage, training information, camp gallery and a separate Sanity administrator CMS. Private trainer Visual Editing adds on-demand editor routes. The academy's source instructions are preserved verbatim in [`AGENTS.md`](AGENTS.md).
 
 ## Run locally
@@ -17,6 +19,10 @@ npm run dev
 Open the URL printed by Astro, normally `http://127.0.0.1:4321`.
 
 Public images are editable through Sanity. Use **Inhalte → Website-Bilder** for the homepage illustrations, academy crest and gallery decoration, **Startseiten-Hero** for hero media, and **Trainingsbilder** for On-Ice/Off-Ice photos. Portraits, gallery media and media-kit previews belong to their respective documents. Published replacements appear after a successful website rebuild. See [Studio editing instructions](studio/README.md).
+
+Coach profiles have dedicated static pages at `/trainerpool/{document-id}`, linked from both homepage and trainer pool. Each includes the existing biography/background plus optional playing/coaching years, highest division, selected teams and a horizontal, keyboard-accessible player gallery (up to eight cleared images with descriptions, captions and credits). Missing career facts/gallery sections are omitted; existing profiles need no migration. Edit through **Trainerprofil → Laufbahn** after deploying the updated Studio. This branch builds both website and Studio locally; it does not deploy them or invent Pierre's career facts. Run `npm run test:browser:coaches` after `npm run test:cms` for isolated populated-profile/gallery coverage.
+
+Marketing subpages share subtle abstract contour lines and original hockey-equipment outlines (sticks, pucks, skates, gloves and helmets), selected by route in `Base.astro` and styled in `styles/hockey-subpages.css`. Assets are local SVGs in `public/images/accents/`. A short header fade adds no client JavaScript; reduced motion and phone layouts stay static. Legal, registration and staff pages retain their existing presentation. The homepage and PK CTA are unchanged by this layer.
 
 ```powershell
 npm run check
@@ -192,6 +198,12 @@ Start with the German [setup guide for Pierre](docs/PIERRE-SETUP.md), covering S
 8. The user confirmed the intended public domain as `pkhockeyacademy.de` on 30 October 2026. Domain/DNS connection and explicit public-launch approval remain separate from this confirmation; the current Vercel review host stays protected.
 
 ## Validation
+
+Latest homepage refinements: philosophy and venue illustrations share `lib/motion/image-reveal.ts`, which prepares images before a coordinated image/text fade. Selected rink diagrams trace for five seconds, hold for five seconds, then fade/repeat while visible; a single **Spielzüge pausieren** control stops the loops. Coaching routes use measured SVG lengths for continuous start-to-end tracing, with arrowheads appearing after completion; `tests/rink-routes.mjs` verifies partially rendered strokes. Hidden tabs/offscreen diagrams pause, and reduced motion/no-JS retain static artwork. The final CTA uses separate, touching stroke-only P and K outlines derived from the supplied crest. Philosophy and target-group text buttons have 16px side padding. Page transitions now use the viewport crossfade without a separate tall-main morph, and animation scroll caches are seeded from the actual post-navigation position. `tests/footer-navigation.mjs` covers all footer destinations and history restoration.
+
+Homepage refinements, 7 November 2026: the chamfered hero frame remains stable and headline motion runs only on first arrival. At the user's request, the ice spray starts at the bottom right on every homepage load/logo return; the replay button is removed. Breakpoint and reduced-motion changes do not restart the spray. The homepage trainer carousel uses all published profiles and clearly labelled empty templates to fill three initial slots, with native swipe/scroll, keyboard controls and enhanced arrow buttons. A decoded-image-aware reveal fades venue illustration and adjacent city text together, with a bounded fallback and a fade for late media.
+
+Homepage exploration on `develop/strato-migration` (7 November 2026): inset hero framing, italic condensed display accents, rink geometry/skate traces, asymmetric On-Ice/Off-Ice panels and a jersey-style U13 detail. The original palette, content boundaries and navigation remain the basis. Homepage-specific styles live in `web/src/styles/hockey-home.css`; reusable SVG components and the canvas ice-stop integrate with the existing GSAP lifecycle. The entrance lasts at most 1.4 seconds (1.1 on phone), plays on each homepage navigation and stops immediately on interaction. Reduced motion hides it in CSS and skips it in JS. No-JavaScript rendering remains complete. Missing hero photography shows a labelled graphic study; CMS withdrawal remains authoritative. This is local branch work, not a deployed redesign or completed STRATO migration.
 
 See [`VALIDATION.md`](VALIDATION.md) for commands actually executed, viewport screenshots, navigation/motion evidence and remaining limitations. The flyer comparison and final design review are recorded in [`design-qa.md`](design-qa.md). Browser artifacts are intentionally ignored under `output/playwright/` and `output/design/`.
 

@@ -1,4 +1,6 @@
 import { runInterviewJourneys } from "./journeys.mjs";
+import { runFooterNavigation } from "./footer-navigation.mjs";
+import { runRinkRouteChecks } from "./rink-routes.mjs";
 // Runs against compiled static public output. No live CMS, accounts or deployment.
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
@@ -189,6 +191,19 @@ try {
       assert.equal(state.lang, "de");
       assert.ok(state.description);
       assert.deepEqual(state.missing, []);
+      if (route === "/" && width <= 900) {
+        const hero = await page.evaluate(() => ({
+          actions: document
+            .querySelector(".hero-actions")
+            .getBoundingClientRect().bottom,
+          photo: document.querySelector(".hero-art").getBoundingClientRect()
+            .top,
+        }));
+        assert.ok(
+          hero.actions <= hero.photo,
+          `Hero photo covers/precedes CTAs at ${width}`,
+        );
+      }
       assert.equal(state.editor, 0);
       assert.equal(state.scroll, "auto");
       checks.push({ route, width, ...state });
@@ -201,6 +216,11 @@ try {
           }
           scrollTo(0, 0);
         });
+        for (const image of await page.locator('img[loading="lazy"]').all()) {
+          await image.scrollIntoViewIfNeeded();
+          await image.evaluate((element) => element.decode());
+        }
+        await page.evaluate(() => scrollTo(0, 0));
         await page.waitForFunction(() =>
           [...document.images].every((i) => i.complete && i.naturalWidth > 0),
         );
@@ -237,6 +257,46 @@ try {
       }),
     );
   } else {
+    for (const width of [1440, 768, 375]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(origin);
+      const track = page.locator("[data-carousel-track]");
+      const status = page.locator("[data-carousel-status]");
+      assert.equal(await page.locator(".trainer-slide").count(), 3);
+      assert.equal(await page.locator("[data-trainer-template]").count(), 2);
+      assert.equal(await page.locator("[data-trainer-template] a").count(), 0);
+      await track.focus();
+      await page.keyboard.press("ArrowRight");
+      await page.waitForFunction(
+        () =>
+          document
+            .querySelector("[data-carousel-status]")
+            ?.textContent?.trim() === "02 / 03",
+      );
+      await page.keyboard.press("End");
+      await page.waitForFunction(
+        () => document.querySelector("[data-carousel-next]")?.disabled,
+      );
+      assert.equal((await status.textContent()).trim(), "03 / 03");
+      await page.locator("[data-carousel-prev]").click();
+      await page.waitForFunction(
+        () =>
+          document
+            .querySelector("[data-carousel-status]")
+            ?.textContent?.trim() === "02 / 03",
+      );
+      await track.focus();
+      await page.keyboard.press("Home");
+      await page.waitForFunction(
+        () => document.querySelector("[data-carousel-prev]")?.disabled,
+      );
+      assert.equal(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth > innerWidth,
+        ),
+        false,
+      );
+    }
     await page.goto(origin);
     const summary = page.locator("[data-mobile-menu] summary");
     await summary.focus();
@@ -285,6 +345,88 @@ try {
       resources.every((r) => !/(sanity|visual-editing|framer)/i.test(r.name)),
       "Editor runtime loaded on public homepage",
     );
+    await runRinkRouteChecks(page, origin);
+    // Spray replays on homepage navigation, but never on preference changes.
+    const spray = page.locator("[data-ice-spray]");
+    assert.equal(await page.locator("[data-ice-replay]").count(), 0);
+    await page.goto(origin);
+    await page.waitForFunction(
+      () => !document.querySelector("[data-ice-spray]")?.hidden,
+    );
+    await page.keyboard.press("Escape");
+    assert.equal(await spray.evaluate((element) => element.hidden), true);
+    await page.goto(origin);
+    await page.waitForFunction(
+      () => !document.querySelector("[data-ice-spray]")?.hidden,
+    );
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.waitForFunction(
+      () => document.querySelector("[data-ice-spray]")?.hidden,
+    );
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    assert.equal(await spray.evaluate((element) => element.hidden), true);
+    await page.goto(origin);
+    await page.waitForFunction(
+      () => document.querySelector("[data-ice-spray]")?.hidden,
+      undefined,
+      { timeout: 3000 },
+    );
+    // Sample the actual logo-return animation, not only its final screenshot.
+    // The hero's chamfered frame must never morph or pan during navigation.
+    for (const width of [1440, 768, 375]) {
+      await page.setViewportSize({ width, height: 900 });
+      const frameShape = await page
+        .locator("[data-hero-art]")
+        .evaluate((element) => getComputedStyle(element).clipPath);
+      await page.evaluate(() => {
+        window.__heroReturn = null;
+        document.addEventListener(
+          "astro:page-load",
+          () => {
+            const samples = [];
+            const started = performance.now();
+            const sample = () => {
+              const art = document.querySelector("[data-hero-art]");
+              const line = document.querySelector("[data-hero-line]");
+              samples.push({
+                clip: getComputedStyle(art).clipPath,
+                transform: getComputedStyle(art).transform,
+                headlineOpacity: getComputedStyle(line).opacity,
+                sprayHidden: document.querySelector("[data-ice-spray]").hidden,
+              });
+              if (performance.now() - started < 800)
+                requestAnimationFrame(sample);
+              else window.__heroReturn = samples;
+            };
+            requestAnimationFrame(sample);
+          },
+          { once: true },
+        );
+      });
+      await page.locator(".site-header .wordmark").click();
+      await page.waitForFunction(() => window.__heroReturn?.length > 0);
+      const frames = await page.evaluate(() => window.__heroReturn);
+      assert.ok(
+        frames.every((frame) => frame.clip === frameShape),
+        `Hero frame morphed on logo return at ${width}`,
+      );
+      assert.ok(
+        frames.every((frame) => frame.transform === "none"),
+        `Hero frame panned at ${width}`,
+      );
+      assert.ok(
+        frames.every((frame) => frame.headlineOpacity === "1"),
+        `Headline entrance replayed at ${width}`,
+      );
+      assert.ok(
+        frames.some((frame) => !frame.sprayHidden),
+        "Logo return did not play spray",
+      );
+      await page.waitForFunction(
+        () => document.querySelector("[data-ice-spray]")?.hidden,
+      );
+    }
+    await page.setViewportSize({ width: 1440, height: 900 });
     const counts = [];
     for (let i = 0; i < 3; i++) {
       await page.locator(".header-cta").click();
@@ -314,6 +456,9 @@ try {
         () => Number(document.documentElement.dataset.motionTriggers) > 0,
       );
       await page.waitForFunction(() => window.__pendingTransitions === 0);
+      await page.waitForFunction(
+        () => document.querySelector("[data-ice-spray]")?.hidden,
+      );
       counts.push(
         await page.evaluate(
           () => document.documentElement.dataset.motionTriggers,
@@ -334,6 +479,7 @@ try {
     await page.goBack();
     await page.waitForURL(origin + "/");
     await page.locator("[data-hero]").waitFor({ state: "visible" });
+    await runFooterNavigation(page, origin);
     const noJS = await browser.newContext({
       javaScriptEnabled: false,
       viewport: { width: 375, height: 812 },
@@ -341,6 +487,12 @@ try {
     const plain = await noJS.newPage();
     await plain.goto(origin);
     assert.ok(await plain.locator("h1").isVisible());
+    assert.equal(await plain.locator("[data-ice-spray]").isVisible(), false);
+    assert.equal(await plain.locator("[data-ice-replay]").isVisible(), false);
+    await plain.locator('[data-carousel-jump="1"]').click();
+    await plain.waitForFunction(
+      () => document.querySelector("[data-carousel-track]").scrollLeft > 0,
+    );
     await plain.locator("[data-mobile-menu] summary").click();
     await plain
       .locator('[data-mobile-menu] a[href="/trainingstermine"]')
@@ -348,10 +500,21 @@ try {
     await plain.waitForURL(origin + "/trainingstermine");
     assert.equal(await plain.locator("h1").count(), 1);
     await plain.goto(origin + "/kontakt");
-    const email = plain.getByRole("link", { name: "info@pkhockeyacademy.de", exact: true });
-    assert.equal(await email.getAttribute("href"), "mailto:info@pkhockeyacademy.de");
+    const email = plain.getByRole("link", {
+      name: "info@pkhockeyacademy.de",
+      exact: true,
+    });
+    assert.equal(
+      await email.getAttribute("href"),
+      "mailto:info@pkhockeyacademy.de",
+    );
     assert.equal(await plain.locator("main form").count(), 0);
-    assert.equal(await plain.locator('main a[href*="wa.me"], main a[href^="tel:"]').count(), 0);
+    assert.equal(
+      await plain
+        .locator('main a[href*="wa.me"], main a[href^="tel:"]')
+        .count(),
+      0,
+    );
     await noJS.close();
     await runInterviewJourneys(page, context, origin, output);
     assert.deepEqual(
@@ -398,6 +561,15 @@ try {
   );
   await context.tracing.stop();
 } catch (error) {
+  const images = await page
+    ?.evaluate(() =>
+      [...document.images].map((image) => ({
+        src: image.currentSrc || image.src,
+        complete: image.complete,
+        width: image.naturalWidth,
+      })),
+    )
+    .catch(() => []);
   await page
     ?.screenshot({ path: resolve(output, "failure.png"), fullPage: true })
     .catch(() => {});
@@ -410,6 +582,7 @@ try {
       {
         passed: false,
         message: error.message,
+        images,
         routeChecks: checks.length,
         errors,
       },

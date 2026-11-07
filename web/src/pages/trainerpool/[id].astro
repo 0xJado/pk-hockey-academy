@@ -1,0 +1,186 @@
+---
+import Base from "../../layouts/Base.astro";
+import Button from "../../components/Button.astro";
+import CoachDetails from "../../components/CoachDetails.astro";
+import FinalCTA from "../../components/FinalCTA.astro";
+import SiteImage from "../../components/SiteImage.astro";
+import crest from "../../assets/brand/pk-hockey-crest.png";
+import { getTrainers } from "../../lib/trainer-source";
+import { trainerImageUrl } from "../../lib/trainers";
+import type { Trainer } from "../../types/content";
+export async function getStaticPaths() {
+  return (await getTrainers()).map((trainer) => ({
+    params: { id: trainer.id },
+    props: { trainer },
+  }));
+}
+interface Props {
+  trainer: Trainer;
+}
+const { trainer } = Astro.props;
+const portrait = trainer.portrait;
+---
+
+<Base
+  title={`${trainer.name} – Trainerprofil`}
+  description={`${trainer.name}, ${trainer.role} bei PK Hockey Academy. Biografie, sportlicher Hintergrund und Einblicke in die Laufbahn.`}
+>
+  <section class="coach-hero">
+    <div class="wrap">
+      <a href="/trainerpool" class="breadcrumb">
+        ← ZUM TRAINERPOOL
+      </a>
+      <div class="coach-hero-grid">
+        <div class="coach-hero-copy">
+          <p class="eyebrow">DEIN TRAINER · PK HOCKEY ACADEMY</p>
+          <h1>
+            {trainer.name.toLocaleUpperCase("de-DE")}
+            <span aria-hidden="true">.</span>
+          </h1>
+          <p class="coach-role">{trainer.role}</p>
+          <p class="coach-intro">
+            Persönlich kennenlernen. Den sportlichen Weg entdecken. Gemeinsam
+            den nächsten Schritt machen.
+          </p>
+          <div class="coach-hero-actions">
+            <Button href="/trainingstermine">Trainingstermine ansehen</Button>
+            {!!trainer.playerGallery?.length && (
+              <Button href={`#laufbahn-${trainer.id}`} variant="outline">
+                Einblicke in die Spielerzeit ↓
+              </Button>
+            )}
+          </div>
+        </div>
+        <figure
+          class:list={[
+            "coach-portrait",
+            { "coach-portrait--crest": !portrait },
+          ]}
+        >
+          {portrait ? (
+            <img
+              src={trainerImageUrl(portrait, 1200)}
+              srcset={`${trainerImageUrl(portrait, 400)} 400w, ${trainerImageUrl(portrait, 800)} 800w, ${trainerImageUrl(portrait, 1200)} 1200w`}
+              sizes="(max-width: 700px) calc(100vw - 40px), 45vw"
+              width={portrait.width}
+              height={portrait.height}
+              alt={portrait.alt}
+              loading="eager"
+              fetchpriority="high"
+            />
+          ) : (
+            <SiteImage
+              imageKey="crest"
+              fallback={crest}
+              width={600}
+              alt="Wappen der PK Hockey Academy"
+              loading="eager"
+            />
+          )}
+          {(!portrait || portrait.credit) && <figcaption>
+            {!portrait && "PK HOCKEY ACADEMY · TRAINERFOTO FOLGT"}
+            {portrait?.credit && <small>Bildnachweis: {portrait.credit}</small>}
+          </figcaption>}
+        </figure>
+      </div>
+    </div>
+  </section>
+  <CoachDetails trainer={trainer} />
+  <FinalCTA />
+</Base>
+<style>
+  .coach-hero {
+    color: #ddecf8;
+    padding: 36px 0 80px;
+    background: linear-gradient(125deg, #050b12, #101d2e 70%);
+    overflow: hidden;
+  }
+  .coach-hero-grid {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    align-items: center;
+    gap: clamp(32px, 6vw, 90px);
+    margin-top: 36px;
+  }
+  .coach-hero h1 {
+    font-size: clamp(64px, 8vw, 124px);
+    line-height: 0.9;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    margin: 24px 0;
+  }
+  .coach-hero h1 span {
+    color: #087ed5;
+  }
+  .coach-hero .eyebrow,
+  .coach-hero .breadcrumb {
+    color: #80ccff;
+  }
+  .coach-role {
+    color: #80ccff;
+    font-size: 18px;
+  }
+  .coach-intro {
+    max-width: 40ch;
+    color: #bed5e8;
+    line-height: 1.8;
+    margin: 24px 0 32px;
+  }
+  .coach-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .coach-portrait {
+    margin: 0;
+    transform: rotate(1.5deg);
+    border-bottom: 4px solid #087ed5;
+  }
+  .coach-portrait img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 650px;
+    object-fit: cover;
+    object-position: top;
+  }
+  .coach-portrait--crest {
+    padding: 32px;
+    background: #101d2e;
+  }
+  .coach-portrait--crest :global(img) {
+    object-fit: contain;
+  }
+  .coach-portrait figcaption {
+    padding: 12px 16px;
+    background: #101d2e;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+  }
+  .coach-portrait small {
+    display: block;
+    margin-top: 0;
+    color: #a6c8e0;
+  }
+  @media (max-width: 700px) {
+    .coach-hero {
+      padding-bottom: 48px;
+    }
+    .coach-hero-grid {
+      grid-template-columns: 1fr;
+      margin-top: 24px;
+    }
+    .coach-hero h1 {
+      font-size: clamp(64px, 17vw, 100px);
+    }
+    .coach-portrait {
+      transform: none;
+      max-width: 500px;
+    }
+    .coach-portrait img {
+      max-height: 520px;
+      object-fit: contain;
+      background: #101d2e;
+    }
+  }
+</style>

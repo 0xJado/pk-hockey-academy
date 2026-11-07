@@ -27,7 +27,9 @@
   box-sizing: border-box;
 }
 html {
-  scroll-behavior: smooth;
+  /* Route/history restoration must be instant; local interactive controls
+     such as the trainer carousel choose their own scrolling behavior. */
+  scroll-behavior: auto;
   scroll-padding-top: calc(var(--site-header-height) + 16px);
 }
 body {
@@ -1132,16 +1134,7 @@ p {
   text-align: center;
   margin-top: 7px;
 }
-.cta-blade {
-  position: absolute;
-  top: -50%;
-  left: 45%;
-  width: 210px;
-  height: 220%;
-  background: #ffffff05;
-  transform: skewX(-28deg);
-  z-index: -1;
-}
+
 .site-footer {
   padding-top: 65px;
   background: #050b12;

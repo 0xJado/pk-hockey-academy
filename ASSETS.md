@@ -1,5 +1,27 @@
 # Asset provenance
 
+## Subpage contour and hockey equipment accents — 7 November 2026
+
+The final skate revision uses a side-on hockey boot with a forward tongue, reinforced quarter, rounded toe cap, thin outsole, two mounting towers, blade holder and rockered steel runner. It is original generic vector artwork, with no product branding or third-party tracing.
+
+`web/public/images/accents/` contains six original local SVG drawings: `contours.svg`, `stick.svg`, `puck.svg`, `skate.svg`, `glove.svg` and `helmet.svg`. The flowing contours are abstract decorative linework, not a map of real locations. Equipment is generic, unbranded outline artwork made for the website; no third-party product drawing, team mark or photo was traced. No raster generation, external asset download or new font was used.
+
+`web/src/styles/hockey-subpages.css` places these assets behind text in marketing-page headers and selected content-section margins. They are CSS decoration with no accessibility-tree content or pointer interaction. A finite header fade respects reduced motion; mobile uses lighter static decoration. The homepage and approved PK CTA remain outside these rules.
+
+## Hockey motion and rink graphics — 7 November 2026
+
+- `web/src/components/PKOutline.astro` is a manually traced, stroke-only decorative study of the supplied crest's italic PK lettering, used behind the final CTA. The user's supplied 262×177px logo close-up informed the revised individual contours: P has a sharp lower cut-in, and K's slimmed stem descends directly from P's outer bowl corner rather than extending beneath the bowl. K's top also meets P's sloped edge, eliminating the intermediate gap. Both letters retain their own outlines. It is not a replacement master logo. No new font, third-party mark, raster edit or AI portrait was created.
+- The hero, philosophy and U13 rink diagrams now use five-second stroke tracing, a five-second hold and a short fade. The loops pause offscreen, when the tab is hidden, or through the shared pause control. Reduced-motion/no-JS rendering retains the static drawings.
+
+- Follow-up: the coach carousel's jersey outlines are original local SVG presentation placeholders, explicitly labelled as empty templates. They do not depict coaches or imply academy staffing. The spray now originates at the bottom right on each homepage navigation; its separate replay control was removed at the user's request.
+
+- `web/src/components/RinkMarkings.astro` and `web/public/images/skate-traces.svg` are original vector drawings created for this website: rink geometry, faceoff circles, a coaching route and paired skate traces. No club marks or third-party artwork were copied.
+- `web/src/lib/motion/ice-spray.ts` draws the finite ice-stop entrance procedurally in canvas. It uses no footage, sound, downloaded animation, external runtime or generated raster asset.
+- The user supplied a textual Lando Norris website style reference. Its editorial scale, asymmetric framing and technical linework informed this interpretation; the academy retains its own palette, typography, branding and content. No Norris/McLaren logos, fonts, photographs, code or 3D assets were imported.
+- The missing-CMS-hero state is explicitly labelled as a graphic study. This work does not restore withdrawn/unapproved photography or assert that the rink drawing depicts a real venue.
+
+The PK accent's final junction includes a short outward ledge aligned with P's lower bowl edge, connecting it to the narrow K stem without widening the stem below the junction.
+
 No NHL/DEL assets or external video embeds are used. Existing branding and illustrative assets are served locally. The gallery is empty until real, approved camp albums are connected; those photos, video files and posters will be served by Sanity's CDN. Illustrative photographs do not document academy training or imply an affiliation.
 
 ## Camp gallery — 20 October 2026

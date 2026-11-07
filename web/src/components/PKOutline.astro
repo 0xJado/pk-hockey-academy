@@ -1,0 +1,46 @@
+---
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+// Coordinates follow the supplied close-up, including the P's cut-in heel.
+const pOutline =
+  "M42 22 147 20 165 39 149 77 128 89 73 92 61 115 72 130 9 143 33 120 59 48Z";
+const kOutline =
+  "M156.158 60 181 58 169 88 205 59 245 54 176 111 202.443 160.25 171.793 167 152 126 139 149 103 160 142.797 88.193 128 89 149 77Z";
+---
+
+<!-- Decorative outline study traced from the supplied crest's italic PK lettering. -->
+<svg
+  class:list={["pk-outline", className]}
+  viewBox="0 12 254 160"
+  fill="none"
+  aria-hidden="true"
+  focusable="false"
+>
+  <defs>
+    <mask
+      id="cta-pk-p-overlap"
+      maskUnits="userSpaceOnUse"
+      x="0"
+      y="0"
+      width="254"
+      height="177"
+    >
+      <rect width="254" height="177" fill="white" />
+      <path d={pOutline} fill="black" stroke="none" />
+    </mask>
+  </defs>
+  <!-- A short ledge continues P's lower edge into K; the stem below stays narrow. -->
+  <path data-pk-letter="k" d={kOutline} mask="url(#cta-pk-p-overlap)" />
+  <path data-pk-letter="p" d={pOutline} />
+  <path d="M87 48 120 47 113 66 80 70Z" />
+</svg>
+<style>
+  .pk-outline {
+    stroke: currentColor;
+    stroke-width: 0.56;
+    stroke-linejoin: miter;
+    stroke-linecap: square;
+  }
+</style>

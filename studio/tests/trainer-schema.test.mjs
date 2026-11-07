@@ -58,6 +58,15 @@ test("native Sanity validation allows complete profiles with and without a portr
     {},
     { portrait },
     { portrait: { ...portrait, credit: undefined } },
+    {
+      playingYears: 18,
+      coachingYears: 0,
+      highestDivision: "Technische Testliga",
+      notableTeams: ["Testverein"],
+      playerGallery: [
+        { ...portrait, _key: "test-image", caption: "Testsaison" },
+      ],
+    },
     { visibility: "hidden", contentApproved: false },
   ]) {
     const markers = await validate(change);
@@ -83,6 +92,15 @@ test("native publication checks are blocking errors, including whitespace and up
     { portrait: {} },
     { portrait: { ...portrait, alt: " ".repeat(10) } },
     { portrait: { ...portrait, credit: "x".repeat(161) } },
+    { playingYears: -1 },
+    { coachingYears: 1.5 },
+    { playerGallery: [{ ...portrait, _key: "invalid-image", alt: "" }] },
+    {
+      playerGallery: Array.from({ length: 9 }, (_, index) => ({
+        ...portrait,
+        _key: String(index),
+      })),
+    },
   ]) {
     const markers = await validate(change);
     assert.equal(

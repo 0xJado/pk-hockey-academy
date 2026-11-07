@@ -1,0 +1,352 @@
+---
+import type { Trainer } from "../types/content";
+import { trainerImageUrl } from "../lib/trainers";
+import { createDataAttribute } from "@sanity/visual-editing/create-data-attribute";
+import { getStudioEditBaseUrl } from "../lib/admin";
+interface Props {
+  trainer: Trainer;
+  editorPreview?: boolean;
+  biography?: boolean;
+}
+const { trainer, editorPreview = false, biography = true } = Astro.props;
+const field = (path: string) =>
+  editorPreview
+    ? createDataAttribute({
+        id: trainer.id,
+        type: "trainer",
+        path,
+        projectId: import.meta.env.SANITY_PROJECT_ID,
+        dataset: import.meta.env.SANITY_DATASET,
+        baseUrl: getStudioEditBaseUrl(import.meta.env.PUBLIC_SANITY_STUDIO_URL),
+      }).toString()
+    : undefined;
+const facts = [
+  {
+    label: "Jahre als Spieler",
+    value: trainer.playingYears,
+    path: "playingYears",
+  },
+  {
+    label: "Jahre als Trainer",
+    value: trainer.coachingYears,
+    path: "coachingYears",
+  },
+].filter((item) => item.value !== undefined);
+const gallery = trainer.playerGallery ?? [];
+const sections = [
+  {
+    title: "Hintergrund",
+    values: trainer.verifiedBackground,
+    path: "verifiedBackground",
+  },
+  {
+    title: "Qualifikationen",
+    values: trainer.qualifications,
+    path: "qualifications",
+  },
+  {
+    title: "Trainingsschwerpunkte",
+    values: trainer.specialties,
+    path: "specialties",
+  },
+];
+---
+
+<div class="coach-details">
+  {biography && (
+    <section class="section light-section coach-bio">
+      <div class="wrap coach-editorial">
+        <div>
+          <p class="eyebrow">DER MENSCH HINTER DEM TRAINING</p>
+          <h2>
+            MEIN WEG.
+            <br />
+            <span>MEIN ANTRIEB.</span>
+          </h2>
+        </div>
+        <div class="coach-prose" data-sanity={field("biography")}>
+          {trainer.biography
+            .split(/\n\s*\n/)
+            .filter(Boolean)
+            .map((paragraph) => (
+              <p>{paragraph}</p>
+            ))}
+        </div>
+      </div>
+    </section>
+  )}
+  {(facts.length > 0 ||
+    trainer.highestDivision ||
+    trainer.notableTeams?.length) && (
+    <section class="section coach-career" aria-label="Sportliche Laufbahn">
+      <div class="wrap">
+        <p class="eyebrow">ERFAHRUNG, DIE INS TRAINING EINFLIESST</p>
+        <h2>
+          MEINE <span>LAUFBAHN.</span>
+        </h2>
+        <dl class="coach-stats">
+          {facts.map((fact) => (
+            <div data-sanity={field(fact.path)}>
+              <dt>{fact.label}</dt>
+              <dd>{fact.value}</dd>
+            </div>
+          ))}
+          {trainer.highestDivision && (
+            <div class="coach-division" data-sanity={field("highestDivision")}>
+              <dt>Höchste Spielklasse als Spieler</dt>
+              <dd>{trainer.highestDivision}</dd>
+            </div>
+          )}
+        </dl>
+        {!!trainer.notableTeams?.length && (
+          <div class="coach-stations" data-sanity={field("notableTeams")}>
+            <h3>Ausgewählte Stationen als Spieler</h3>
+            <ul>
+              {trainer.notableTeams.map((team) => (
+                <li>{team}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </section>
+  )}
+  {gallery.length > 0 && (
+    <section
+      class="section light-section coach-gallery"
+      id={`laufbahn-${trainer.id}`}
+    >
+      <div class="wrap">
+        <p class="eyebrow">MOMENTE AUS DER SPIELERZEIT</p>
+        <h2>
+          AUF DEM EIS.
+          <br />
+          <span>TEIL MEINES WEGES.</span>
+        </h2>
+        <p class="muted small">
+          Bilder horizontal durchsehen – wischen oder mit den Pfeiltasten
+          scrollen.
+        </p>
+        <ul
+          class="coach-gallery-track"
+          tabindex="0"
+          aria-label={`Bilder aus der Spielerlaufbahn von ${trainer.name}`}
+        >
+          {gallery.map((image, i) => (
+            <li>
+              <figure data-sanity={field(`playerGallery[${i}]`)}>
+                <img
+                  src={trainerImageUrl(image, 800)}
+                  srcset={`${trainerImageUrl(image, 400)} 400w, ${trainerImageUrl(image, 800)} 800w`}
+                  sizes="(max-width: 600px) 78vw, 380px"
+                  width={image.width}
+                  height={image.height}
+                  alt={image.alt}
+                  loading="lazy"
+                  decoding="async"
+                />
+                <figcaption>
+                  <span class="coach-frame-number" aria-hidden="true">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div>
+                    {image.caption && <p>{image.caption}</p>}
+                    {image.credit && (
+                      <small>Bildnachweis: {image.credit}</small>
+                    )}
+                  </div>
+                </figcaption>
+              </figure>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+  {biography && (
+    <section class="section coach-background">
+      <div class="wrap coach-background-grid">
+        {sections
+          .filter((section) => section.values.length)
+          .map((section) => (
+            <div data-sanity={field(section.path)}>
+              <p class="eyebrow">PK HOCKEY ACADEMY</p>
+              <h2>{section.title}</h2>
+              <ul>
+                {section.values.map((value) => (
+                  <li>{value}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+      </div>
+    </section>
+  )}
+</div>
+<style>
+  .coach-career {
+    background: #101d2e;
+    color: #ddecf8;
+  }
+  .coach-background {
+    background: #050b12;
+    color: #ddecf8;
+  }
+  .coach-career .eyebrow,
+  .coach-background .eyebrow {
+    color: #80ccff;
+  }
+  .coach-career h2 span {
+    color: #80ccff;
+  }
+  .coach-editorial {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: clamp(32px, 6vw, 100px);
+  }
+  .coach-prose {
+    max-width: 65ch;
+    font-size: clamp(16px, 1.5vw, 19px);
+    line-height: 1.85;
+    white-space: pre-line;
+  }
+  .coach-prose p:first-child {
+    margin-top: 0;
+  }
+  .coach-prose p + p {
+    margin-top: 24px;
+  }
+  .coach-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px 64px;
+    margin: 40px 0;
+  }
+  .coach-stats > div {
+    border-top: 1px solid #80ccff55;
+    padding-top: 20px;
+    min-width: 150px;
+    flex: 1;
+  }
+  .coach-stats dt {
+    color: #a6c8e0;
+    font-size: 13px;
+  }
+  .coach-stats dd {
+    margin: 8px 0 0;
+    font-family: var(--font-display, "Barlow Condensed", sans-serif);
+    font-weight: 800;
+    font-size: 72px;
+    line-height: 1.1;
+  }
+  .coach-stats .coach-division {
+    flex: 2;
+    min-width: min(100%, 280px);
+  }
+  .coach-division dd {
+    font-size: clamp(30px, 4vw, 48px);
+    overflow-wrap: anywhere;
+  }
+  .coach-stations {
+    border-top: 1px solid #80ccff33;
+    padding-top: 28px;
+  }
+  .coach-stations h3 {
+    font-size: 24px;
+  }
+  .coach-stations ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+  }
+  .coach-stations li {
+    padding: 12px 18px;
+    border: 1px solid #80ccff55;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+  .coach-gallery-track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: min(78vw, 380px);
+    gap: 24px;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    padding: 0 0 24px;
+    list-style: none;
+    margin: 28px 0 0;
+    scrollbar-color: #087ed5 #ddecf8;
+    scrollbar-width: auto;
+  }
+  .coach-gallery-track:focus-visible {
+    outline: 3px solid #087ed5;
+    outline-offset: 6px;
+  }
+  .coach-gallery-track li {
+    scroll-snap-align: start;
+    min-width: 0;
+  }
+  figure {
+    margin: 0;
+  }
+  figure img {
+    width: 100%;
+    height: 300px;
+    object-fit: contain;
+    background: #101d2e;
+    display: block;
+  }
+  figcaption {
+    display: flex;
+    gap: 16px;
+    border-top: 3px solid #087ed5;
+    padding: 18px 0;
+    font-size: 14px;
+  }
+  figcaption p {
+    margin: 0 0 8px;
+    line-height: 1.6;
+  }
+  figcaption small {
+    color: #496279;
+  }
+  .coach-frame-number {
+    color: #087ed5;
+    font-size: 12px;
+    padding-top: 4px;
+  }
+  .coach-background-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    gap: 40px;
+  }
+  .coach-background h2 {
+    font-size: 32px;
+    text-transform: uppercase;
+  }
+  .coach-background ul {
+    padding-left: 20px;
+    line-height: 1.9;
+    color: #bed5e8;
+  }
+  @media (max-width: 700px) {
+    .coach-editorial {
+      grid-template-columns: 1fr;
+    }
+    .coach-stats {
+      gap: 28px;
+    }
+    .coach-stats dd {
+      font-size: 56px;
+    }
+    .coach-division dd {
+      font-size: 32px;
+    }
+    figure img {
+      height: 260px;
+    }
+  }
+</style>

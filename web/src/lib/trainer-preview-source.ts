@@ -31,6 +31,8 @@ export async function getPreviewTrainers(
     `*[_type == "trainer" && (!defined($id) || _id == $id)] | order(displayOrder asc, _id asc) {
     _id, _type, name, role, biography, verifiedBackground, qualifications, specialties,
     displayOrder, active, visibility, contentApproved,
+    playingYears, coachingYears, highestDivision, notableTeams,
+    playerGallery[]{alt,credit,caption,asset->{url,mimeType,size,metadata{dimensions{width,height}}}},
     portrait{alt,credit,asset->{url,mimeType,size,metadata{dimensions{width,height}}}}
   }`,
     { id },

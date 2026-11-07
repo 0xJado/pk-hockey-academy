@@ -1,6 +1,7 @@
 import {
   asRecord,
   parseTrainerFields,
+  TRAINER_LIMITS,
 } from "../../../shared/trainer-profile.ts";
 import type { Trainer } from "../types/content.ts";
 import { getGalleryConfig, type GalleryConfig } from "./gallery.ts";
@@ -26,6 +27,8 @@ export const TRAINERS_QUERY = `*[
 ] | order(displayOrder asc, _id asc) {
   _id, _type, name, role, biography, verifiedBackground, qualifications, specialties,
   displayOrder, active, visibility, contentApproved,
+  playingYears, coachingYears, highestDivision, notableTeams,
+  playerGallery[]{alt,credit,caption,asset->{url,mimeType,size,metadata{dimensions{width,height}}}},
   portrait{alt,credit,asset->{url,mimeType,size,metadata{dimensions{width,height}}}}
 }`;
 
@@ -120,8 +123,45 @@ export function normalizeTrainers(
       throw new Error(
         "An approved trainer portrait has invalid metadata or an untrusted asset URL.",
       );
+    let playerGallery: Trainer["playerGallery"];
+    if (raw.playerGallery != null) {
+      if (
+        !Array.isArray(raw.playerGallery) ||
+        raw.playerGallery.length > TRAINER_LIMITS.galleryImages
+      )
+        throw new Error(
+          "An approved trainer gallery must contain at most eight images.",
+        );
+      playerGallery = raw.playerGallery.map((value: unknown) => {
+        const rawImage = asRecord(value);
+        const normalized = portrait(value, config);
+        if (
+          !normalized ||
+          (rawImage.caption != null &&
+            (typeof rawImage.caption !== "string" ||
+              rawImage.caption.length > 240 ||
+              /[\u0000-\u001f\u007f]/.test(rawImage.caption)))
+        )
+          throw new Error(
+            "An approved trainer gallery image has invalid metadata or an untrusted asset URL.",
+          );
+        return {
+          ...normalized,
+          caption:
+            typeof rawImage.caption === "string"
+              ? rawImage.caption.trim()
+              : undefined,
+        };
+      });
+    }
     ids.add(raw._id);
-    trainers.push({ id: raw._id, ...fields, active: true, portrait: image });
+    trainers.push({
+      id: raw._id,
+      ...fields,
+      active: true,
+      portrait: image,
+      ...(playerGallery ? { playerGallery } : {}),
+    });
   }
   return trainers.sort(
     (a, b) =>
@@ -142,7 +182,9 @@ export async function fetchTrainers(
   let response: Response;
   try {
     response = await request(url, {
-      headers: config.token ? { Authorization: `Bearer ${config.token}` } : undefined,
+      headers: config.token
+        ? { Authorization: `Bearer ${config.token}` }
+        : undefined,
       signal: AbortSignal.timeout(15000),
       redirect: "error",
     });
@@ -174,4 +216,8 @@ export function trainerImageUrl(
   url.searchParams.set("q", "82");
   url.searchParams.set("fit", "max");
   return url.href;
+}
+
+export function trainerProfileUrl(trainer: Pick<Trainer, "id">): string {
+  return `/trainerpool/${encodeURIComponent(trainer.id)}`;
 }

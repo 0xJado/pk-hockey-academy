@@ -1,5 +1,13 @@
 # PK Hockey Academy — Camp-Galerie / Redaktion
 
+## Coach profiles — local extension, 7 November 2026
+
+The updated schema adds **Trainerprofil → Laufbahn**. Enter optional **Spielerfahrung in Jahren**, **Trainererfahrung in Jahren**, **Höchste Spielklasse**, **Stationen / Vereine** and **Bilder aus der Spielerlaufbahn**. Years are whole, confirmed durations (0–100), not automatically increasing counters. Teams can include sport and period as plain text. The existing **Profil → Biografie** supports paragraphs separated by a blank line.
+
+Drag gallery images into the desired order; maximum eight. Every image needs an 8–240-character description. Optional caption/season and credit appear underneath. Confirm rights/consents before upload, remove GPS/EXIF first, and reaffirm **Profilangaben und Bildrechte geprüft** before publication. No supporting identity/consent documents belong here. Empty optional fields produce no public placeholders. The private website preview also shows the new career/gallery sections with click-to-edit attributes.
+
+After publishing approved content, rebuild the website. Profile URLs use the stable document ID, so editing a coach's name does not change their link. This extension is built locally on `develop/strato-migration`; the hosted Studio still needs deployment before its new fields appear. Existing documents remain compatible and were not modified by this implementation.
+
 Standalone German Sanity Studio for trainer profiles, media-kit downloads and camp albums, photos and videos. Public website pages remain prerendered. Optional **Website bearbeiten** connects a protected server-rendered trainer preview with click-to-edit fields and a **Trainer hinzufügen** action. The existing content editor and private profile preview remain available. Sessions, venues and prices remain in `web/src/data/academy.ts`. The local Pierre profile is used only when the coach CMS migration is disabled.
 
 See [Visual Editing configuration, hosted acceptance and annual token renewal](../docs/VISUAL-EDITING.md). Hosted **Website bearbeiten** is active on the protected review website. Set `SANITY_STUDIO_PREVIEW_URL` only when its website preview origin is ready; blank hides the tool. When deploying the hosted Studio, explicitly set this variable to `https://pk-hockey-academy.vercel.app` in the deploying process before `npm run deploy -- --schema-required`; local development may retain its localhost origin. The separate annual Viewer credential is a production-only website Secret, never a Studio variable. Native Studio deployment and iframe acceptance are recorded separately from local builds.
