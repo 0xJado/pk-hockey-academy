@@ -2,6 +2,8 @@
 
 Confirmed by the user on 6 November 2026. This supersedes earlier Google Sheets registration plans and the undecided production hosting direction. It records an approved direction, not a completed migration.
 
+Execution tracker: [STRATO migration and webapp launch #7](https://github.com/0xJado/pk-hockey-academy/issues/7). Native sub-issues #8–#19 cover hosting, first deployment, automated publishing, private preview, registration policy/backend/staff/form, editorial acceptance, legal/content/SEO, interview scope and final launch. Their checklists distinguish implementation from evidence and owner approvals. First step: [configure protected production hosting #8](https://github.com/0xJado/pk-hockey-academy/issues/8).
+
 ## Ownership and boundaries
 
 - Updated decision, 7 November 2026: use **one STRATO production environment at `pkhockeyacademy.de`**, temporarily password-protected for server acceptance. No separate staging domain, QA subdomain or wildcard upgrade is required. Remove temporary protection only after explicit launch acceptance. Astro/npm stay as local/CI build tools and Sanity stays the existing CMS.

@@ -2,6 +2,8 @@
 
 This is the current entry point. Dated assessments and VALIDATION.md preserve historical evidence, not current task lists.
 
+Launch work is tracked in [STRATO migration and webapp launch #7](https://github.com/0xJado/pk-hockey-academy/issues/7), with twelve native sub-issues (#8–#19) covering dependencies and acceptance. Start with [protected production hosting #8](https://github.com/0xJado/pk-hockey-academy/issues/8). Existing feature issues remain referenced; optional social/shop work is not silently added to the launch scope.
+
 ## Approved design checkpoint — 7 November 2026
 
 The user approved the homepage/subpage redesign and coach profile extension for merging from `develop/strato-migration` into `main`, following the final skate-outline refinement. This is a design and CMS-schema checkpoint, not completion of the STRATO migration or public launch. Hosted Studio deployment, approved coach career content and the remaining dependencies below still apply.
