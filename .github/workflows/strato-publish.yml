@@ -1,0 +1,68 @@
+name: STRATO protected publishing
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# A running deployment finishes. Multiple pending publications coalesce into
+# the newest build, which fetches the current published CMS snapshot.
+concurrency:
+  group: strato-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main' && vars.STRATO_PUBLISH_ENABLED == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      PUBLIC_LAUNCH_READY: 'false'
+      SITE_URL: https://pkhockeyacademy.de
+      SANITY_PROJECT_ID: ${{ vars.SANITY_PROJECT_ID }}
+      SANITY_DATASET: ${{ vars.SANITY_DATASET }}
+      SANITY_TRAINERS_ENABLED: ${{ vars.SANITY_TRAINERS_ENABLED }}
+      SANITY_TRAINING_ENABLED: ${{ vars.SANITY_TRAINING_ENABLED }}
+      SANITY_SOCIAL_ENABLED: ${{ vars.SANITY_SOCIAL_ENABLED }}
+      PUBLIC_SANITY_STUDIO_URL: ${{ vars.PUBLIC_SANITY_STUDIO_URL }}
+      STRATO_PRIVATE_PREVIEW_ENABLED: ${{ vars.STRATO_PRIVATE_PREVIEW_ENABLED }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .node-version
+          cache: npm
+          cache-dependency-path: |
+            web/package-lock.json
+            hosting/strato/package-lock.json
+      - name: Validate public build configuration
+        run: |
+          node --input-type=module -e "if(!process.env.SANITY_PROJECT_ID||!process.env.SANITY_DATASET||!['true','false'].includes(process.env.SANITY_TRAINERS_ENABLED))throw Error('Missing approved CMS build variables')"
+      - run: npm ci --prefix web
+      - run: npm ci --ignore-scripts --prefix hosting/strato
+      - run: npm run check --prefix web
+      - run: npm test --prefix web
+      - run: npm test --prefix hosting/strato
+      - run: npm run test:strato:downloads --prefix web
+      - name: Build and verify complete static artifact
+        run: npm run build:strato --prefix web
+      - name: Activate complete release and verify delivery
+        env:
+          STRATO_SFTP_HOST: ${{ secrets.STRATO_SFTP_HOST }}
+          STRATO_SFTP_PORT: ${{ secrets.STRATO_SFTP_PORT }}
+          STRATO_SFTP_USERNAME: ${{ secrets.STRATO_SFTP_USERNAME }}
+          STRATO_SFTP_PASSWORD: ${{ secrets.STRATO_SFTP_PASSWORD }}
+          STRATO_SFTP_HOST_KEY: ${{ secrets.STRATO_SFTP_HOST_KEY }}
+          STRATO_PREVIEW_USERNAME: ${{ secrets.STRATO_PREVIEW_USERNAME }}
+          STRATO_PREVIEW_PASSWORD: ${{ secrets.STRATO_PREVIEW_PASSWORD }}
+        run: npm run deploy --prefix hosting/strato
+      - name: Report delivery result
+        if: always()
+        env:
+          RESULT: ${{ job.status }}
+        run: |
+          echo "STRATO delivery: $RESULT. A successful build alone does not confirm delivery. Review the activation step and protected site." >> "$GITHUB_STEP_SUMMARY"
