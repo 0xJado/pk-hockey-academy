@@ -4,6 +4,7 @@ import Base from "../layouts/Base.astro";
 import Arrow from "../components/Arrow.astro";
 import { getMediaKitDownloads } from "../lib/media-kit-source";
 import { formatDownloadSize } from "../lib/media-kit";
+import { stratoDownloadPath } from "../lib/strato-downloads";
 const downloads = await getMediaKitDownloads();
 ---
 
@@ -44,7 +45,7 @@ const downloads = await getMediaKitDownloads();
             </dl>
             <div class="media-download-usage"><h4>Hinweise zur Verwendung</h4><p>{asset.usageGuidance || "Für diese Datei liegen noch keine abgestimmten Nutzungshinweise vor."}</p></div>
             {asset.preview?.credit && <p class="small media-download-credit">Bildnachweis: {asset.preview.credit}</p>}
-            <a class="button button--primary" href={asset.url} download={asset.downloadName}>
+            <a class="button button--primary" href={import.meta.env.DEPLOY_TARGET === 'strato' ? stratoDownloadPath(asset) : asset.url} download={asset.downloadName}>
               <span>{asset.title} herunterladen <span class="sr-only">({asset.format}, {formatDownloadSize(asset.sizeBytes)})</span></span><Arrow />
             </a>
           </div>
