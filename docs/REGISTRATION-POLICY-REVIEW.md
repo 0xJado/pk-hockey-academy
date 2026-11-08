@@ -2,9 +2,12 @@
 
 **Entwurf zur Entscheidung, keine Freigabe und keine fertigen Rechtstexte.** Onlineeingabe und Versand bleiben deaktiviert. Dieses Dokument enthält ausschließlich Fragen und bekannte Projektentscheidungen, keine privaten Antworten oder ausgefüllten Anmeldungen.
 
-Review-Version: `registration-v2-review-2026-11-08`  
-Review-Prüfsumme: `3e1d74396a4f3749d103532fbd51885e908bf7f7ddbc969a7011796f4795b556`  
-Quelle: [unveränderte Anmeldung v2](../web/public/downloads/PK-Hockey-Academy-Anmeldung-v2.pdf), 2 Seiten, 203522 Bytes.  
+Review-Version: `registration-v2-review-2026-11-08`
+
+Review-Prüfsumme: `3e1d74396a4f3749d103532fbd51885e908bf7f7ddbc969a7011796f4795b556`
+
+Quelle: [unveränderte Anmeldung v2](../web/public/downloads/PK-Hockey-Academy-Anmeldung-v2.pdf), 2 Seiten, 203522 Bytes.
+
 PDF-SHA-256: `5ad3b2845008b09213280653fda49d6fb15882a4ddbfcb0ca975dc664162bff9`
 
 ## Was bereits feststeht

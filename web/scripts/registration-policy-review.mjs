@@ -68,9 +68,12 @@ const markdown=`# Anmeldung v2: Freigabeunterlage für Pierre
 
 **Entwurf zur Entscheidung, keine Freigabe und keine fertigen Rechtstexte.** Onlineeingabe und Versand bleiben deaktiviert. Dieses Dokument enthält ausschließlich Fragen und bekannte Projektentscheidungen, keine privaten Antworten oder ausgefüllten Anmeldungen.
 
-Review-Version: \`${review.reviewVersion}\`  
-Review-Prüfsumme: \`${digest}\`  
-Quelle: [unveränderte Anmeldung v2](../web/public${paper.downloadUrl}), ${paper.pages} Seiten, ${paper.sizeBytes} Bytes.  
+Review-Version: \`${review.reviewVersion}\`
+
+Review-Prüfsumme: \`${digest}\`
+
+Quelle: [unveränderte Anmeldung v2](../web/public${paper.downloadUrl}), ${paper.pages} Seiten, ${paper.sizeBytes} Bytes.
+
 PDF-SHA-256: \`${paper.sha256}\`
 
 ## Was bereits feststeht
@@ -127,7 +130,7 @@ Keine realen Anmeldungen, Gesundheitsangaben, Passwörter oder Einladungslinks i
 Vor Abschluss von [Ticket #12](https://github.com/0xJado/pk-hockey-academy/issues/12) sind geschäftliche Freigabe, erforderliche fachliche/rechtliche Prüfung und die verbindlichen Text-/Prozessversionen privat nachzuweisen. Erst danach können #13 bis #15 die freigegebene Datenverarbeitung und Bedienung umsetzen und abnehmen. Hosting, ein ausgefülltes Arbeitsblatt oder ein erfolgreicher HTTP-Request sind dafür keine Freigabe.
 `;
 if(args.includes('--write'))await writeFile(document,markdown);
-assert.equal(await readFile(document,'utf8'),markdown,'Review document is stale; regenerate with --write');
+assert.equal((await readFile(document,'utf8')).replaceAll('\r\n','\n'),markdown,'Review document is stale; regenerate with --write');
 
 const under=(file,directory)=>{
   const normalize=value=>process.platform==='win32'?value.toLowerCase():value;
