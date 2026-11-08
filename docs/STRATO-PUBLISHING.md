@@ -14,7 +14,7 @@ HTTP verification checks the protection, static bytes and removed URLs. Failure 
 
 ## One-time activation inputs
 
-1. Push the reviewed local checkpoint commits and workflow to `main`.
+1. The reviewed checkpoint series and workflow through `688918f` are pushed to `main`. Confirm the intended revision before activation.
 2. Add repository Actions secrets: `STRATO_SFTP_HOST`, `STRATO_SFTP_PORT`, `STRATO_SFTP_USERNAME`, `STRATO_SFTP_PASSWORD`, `STRATO_SFTP_HOST_KEY`, `STRATO_PREVIEW_USERNAME`, `STRATO_PREVIEW_PASSWORD`. Copy the existing pinned raw key value from the ignored private host-key record. Never turn off pinning or print credentials. The account is restricted to the website root. This does not grant access to the outside-root password file or future database credentials.
 3. Add approved public repository variables matching the existing website build: `SANITY_PROJECT_ID`, `SANITY_DATASET`, `SANITY_TRAINERS_ENABLED`, `SANITY_TRAINING_ENABLED`, `SANITY_SOCIAL_ENABLED`, `PUBLIC_SANITY_STUDIO_URL`. Also set `STRATO_PRIVATE_PREVIEW_ENABLED=true` to retain the PHP preview candidate deployed during #11; its credentials stay outside the public root on STRATO and are not passed to CI. Do not enable a previously disabled content feature. No draft/read token is needed for the existing public published-content build.
 4. Set `STRATO_PUBLISH_ENABLED=true` only when credentials/configuration are ready. Dispatch once manually and inspect delivery, not just the build result.

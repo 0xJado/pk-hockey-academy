@@ -1,6 +1,6 @@
 # PHP private Visual Editing — issue #11
 
-The PHP candidate is deployed behind the existing STRATO website protection. It passed native Sanity capability/session checks and standalone browser checks at 1440, 768 and 375px. **Hosted Studio still points to the existing Vercel preview.** In-Studio field selection, mutation refresh, iframe cookies and the user’s acceptance remain open before changing that destination or retiring Vercel. Implementation is committed locally; the checkpoint series has not been pushed.
+The PHP candidate is deployed behind the existing STRATO website protection. It passed native Sanity capability/session checks and standalone browser checks at 1440, 768 and 375px. **Hosted Studio still points to the existing Vercel preview.** In-Studio field selection, mutation refresh, iframe cookies and the user’s acceptance remain open before changing that destination or retiring Vercel. The implementation checkpoint series through `688918f` is pushed to main.
 
 ## Existing workflow inventory
 
