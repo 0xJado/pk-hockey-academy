@@ -56,6 +56,8 @@ jobs:
         run: npm run check --prefix web
       - name: Test website
         run: npm test --prefix web
+      - name: Test STRATO release failure and rollback guards
+        run: node --test hosting/strato/tests/*.test.mjs
       - name: Check Studio types
         run: npm run check --prefix studio
       - name: Test Studio
@@ -66,6 +68,17 @@ jobs:
         run: npm run test:cms --prefix web
       - name: Build and verify the Node-free STRATO export
         run: npm run build:strato --prefix web
+      - name: Verify STRATO download publication and withdrawal
+        run: npm run test:strato:downloads --prefix web
+      - name: Check PHP private-preview security
+        run: php -n hosting/strato/tests/preview.php
+      - name: Build and verify optional PHP preview package
+        run: npm run test:strato:preview:package --prefix web
+      - name: Test isolated PHP preview browser flow
+        env:
+          PK_PHP_EXECUTABLE: php
+          PK_BROWSER_CHANNEL: ''
+        run: npm run test:strato:preview:browser --prefix web
       - name: Verify browser failure guards
         run: npm run test:browser:guards --prefix web
       - name: Browser checks on the starter site
