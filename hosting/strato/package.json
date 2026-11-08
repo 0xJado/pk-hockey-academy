@@ -1,0 +1,9 @@
+{
+  "name": "pk-strato-acceptance-tools",
+  "private": true,
+  "type": "module",
+  "description": "Local-only STRATO acceptance tools; never deployed to the web root.",
+  "dependencies": {
+    "ssh2": "1.17.0"
+  }
+}
