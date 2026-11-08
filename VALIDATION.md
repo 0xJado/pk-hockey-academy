@@ -1,5 +1,69 @@
 # Validation record
 
+## Local commit checkpoints — 8 November 2026
+
+At the user's request, the pending STRATO hosting, releases, media-kit downloads, PHP preview, Studio resolver, CI wiring and operating documentation were split into small local commits by responsibility. Earlier entries saying the work was uncommitted preserve its state when those checks ran. Real environment files, generated artifacts, private credentials and acceptance captures remain ignored; this checkpoint does not activate publishing or change hosted Studio settings. Remote publication remains pending.
+
+## STRATO PHP private-preview candidate — 8 November 2026, issue #11 in progress
+
+Inventoried the existing private trainer website preview and retained its scope: native capability validation, selected profiles, drafts/published, incomplete notices, field markers, mutation/manual refresh and sign-out. Extracted the existing normalizer and native editing/navigation controller for reuse; the review-host route keeps using them. The new PHP gateway reads the existing project server-side and the existing Astro `TrainerCard`/`CoachDetails` generate inert templates for authenticated browser population. The in-Studio card is not substituted.
+
+Private configuration was provisioned outside the public root through a guarded one-use installer, with removal verified. The scoped SFTP root is unchanged. The optional 144-file PHP candidate was checksum-verified and delivered through the atomic release engine. Hosted Studio, CORS settings, existing publication hook and trainer records were not changed. Registration is still inactive; no database was provisioned.
+
+Executed and passed:
+
+- PHP 8.4.27 lint and 46 security assertions: session signatures, expiry/maximum lifetime/key rotation, redirect allowlist, private configuration isolation/locator checks, unauthenticated and invalid-cookie rejection, fixed perspectives/selection, cross-origin denial, cookie attributes, native secret expiry/Studio binding, no-store/noindex and sign-out.
+- Ten release tests, including optional PHP routing, direct template guards and incomplete-package rejection.
+- Website check: 130 files, zero diagnostics; 76 website unit tests. Studio type check and all 25 Studio tests passed, including fragment-only native-secret resolution. A local Studio build with synthetic project configuration and the PHP resolver enabled passed; no hosted Studio deploy occurred.
+- Isolated PHP candidate/package build: complete hashed artifact, private-template guard, self-hosted executable scripts under strict CSP and no private configuration in output. The standard build with the flag disabled still produced the 128-file static export and excluded preview runtime assets.
+- Local PHP/Edge integration: fragment handshake; authenticated JSON; no draft-read token in page output; escaping; field metadata; selected navigation; refreshed draft and published view; incomplete/missing-portrait handling; keyboard access; no-JavaScript private fallback; sign-out; no page runtime errors. Inspected synthetic 1440/375 screenshots. The installer rejected missing credentials/oversized input, handled identical setup idempotently and refused a differing existing configuration.
+- Live `verify-preview.mjs`: native Sanity secret exchange, invalid links/origins and unauthenticated/tampered sessions rejected, selected draft/published reads, no-store/noindex, cookie attributes and sign-out. Each uniquely owned native secret was removed with a revision guard; no trainer content or other users' secret records were edited/deleted.
+- Live standalone Edge handoff through the real HTTPS domain and temporary protection: published trainer layout rendered at 1440/768/375px, no overflow, field metadata present, no page runtime errors and sign-out revoked browser access. Inspected all three live screenshots, kept under ignored `output/strato-private/` rather than public artifacts.
+- `verify-host.mjs` passed 127 HTTP cases for the PHP candidate. Five additional direct/encoded private-path probes were denied: direct/private-library cases returned 403, while STRATO rejected encoded dot paths with 400 before Apache. The probe was adjusted to distinguish these fail-closed responses rather than requiring 403 for every encoded request.
+- The existing isolated CMS/Vercel-adapter build scenarios passed after the shared preview-code extraction, including empty/public/invalid publication and launch gates. A scan of 276 tracked/unignored source files found none of the configured private credential values; no values were printed. Workflow YAML parsing, PHP/Node syntax and `git diff --check` passed. Remote Actions have not been activated or run for these uncommitted changes.
+
+The first standalone live browser attempt hit a test-harness Playwright import error; corrected and rerun successfully. Temporary secret cleanup completed on both failure and success. Diagnostics now persist phases only, avoiding raw SDK/browser errors that could include bearer URLs. Existing vendor editing-library directive/chunk warnings remain in ignored build logs.
+
+Remaining acceptance: actual signed-in Studio iframe connection, field-to-editor selection, automatic mutation refresh, iframe cookie/browser behavior, repeated Studio navigation and the user's acceptance of the private client-rendered template/fragment handoff. The current Studio destination remains Vercel; no claim of completed Visual Editing cutover or public launch. Source changes remain uncommitted. See [preview runbook](docs/STRATO-PRIVATE-PREVIEW.md).
+
+## STRATO atomic release foundation — 8 November 2026, issue #10 in progress
+
+Parent #7 synchronized with closed hosting/deployment stages #8/#9. Added versioned SFTP releases, remote locking, a single atomic Apache routing switch, checksum readback, post-activation verification of all served static bytes, withdrawn-route checks, failure recovery and rollback preserving current authentication. The manual deployment command now uses the same release engine as the guarded, not-yet-activated GitHub workflow. A separate Sanity dispatch-hook setup preserves the current review-host hook and draft exclusion.
+
+Executed and passed:
+
+- Nine release tests: complete versions, stale paths, rotated-auth rollback, interrupted staging, simultaneous/crash-held locks, modified/duplicate inventory, immutable asset collisions, duplicate publication coalescing, health-check recovery and competing operator changes.
+- Studio type check and all 24 Studio tests, including the fixed `main` dispatch projection and existing publication/draft filters.
+- Website check: 120 files, zero errors/warnings/hints; all 76 website unit tests.
+- Existing isolated CMS integration builds, including malformed approved trainer/gallery/media-kit/training/site-image rejection, public/empty CMS behavior and launch gates. Repeated after adding the download route; passed.
+- Three isolated STRATO download builds: published file and same-origin link generated; withdrawn file/link absent; incomplete bytes reject the build. Download unit checks also reject redirects, foreign sources, wrong MIME and size mismatches.
+- Real published-content `build:strato`: 128 verified files, including the existing approved academy-logo media-kit file at its release-owned URL. No CMS records were created or changed.
+- Protected-host atomic deployment and live drill: labelled technical route delivered; injected transport interruption retained the working router; withdrawal returned direct 404; rollback restored the complete version; a second rollback removed the route. The academy-only version was restored. Both rollback directions retained authentication/noindex and inactive PHP guards. Ignored evidence: `output/strato-private/atomic-release-acceptance.json`.
+- Updated release delivered successfully; final `verify-host.mjs` passed all 112 HTTP checks, including the website-owned logo download, protected routes/MIME, genuine 404s, indexing guards and inactive registration/preview PHP. The temporary technical route is absent from the final artifact.
+
+The new media-kit URL changes delivery only on STRATO; Sanity remains the CMS and review-host download behavior is retained. External Sanity CDN URLs/caches are not revoked by a website withdrawal. No visual or motion behavior changed in this increment; the earlier maintained desktop/tablet/phone browser acceptance remains recorded below. Physical-device acceptance was not repeated.
+
+Source remains uncommitted. CI secrets/variables, the scoped dispatch token, workflow activation, real Sanity publish/edit/unpublish/restore and invalid-publication delivery checks, operator notification receipt and Pierre's representative update remain pending. Issue #10 stays open. Operations and recovery: [STRATO publishing runbook](docs/STRATO-PUBLISHING.md).
+
+## STRATO protected hosting and first website delivery — 8 November 2026
+
+Issue #8 hosting acceptance passed and was closed with the user's explicit approval. The user entered credentials privately. Real SFTP tests verified the restricted root and unavailable private/sibling paths. PHP 8.4.27, PDO MySQL/JSON/OpenSSL/session/mbstring/fileinfo/sodium, private read/write/removal, Apache options/rewrite, anonymous/wrong/correct login and temporary-helper cleanup passed. Fifteen final HTTP cases verified root/www HTTPS, redirects, configuration denial and alternate-host placeholder behavior. The provider master hostname lacks a working TLS service; no certificate checks were bypassed. Its unauthenticated HTTP aliases serve only the provider placeholder. SSH host key is first-observed/pinned, not independently verified against a provider fingerprint.
+
+Issue #9 delivered the current published-content Astro export to the protected host. Build flags: real approved SITE_URL and PUBLIC_LAUNCH_READY=false. Local release records contain the exact artifact/deployed inventories, previous-file backups and release identity. All 127 files were read back and checksum-verified; the live login layer was retained and staging removed. Host checks exposed an extensionless-route 301; the Apache directory/rewrite configuration was corrected and verified without changing the design or page content.
+
+Executed:
+
+- `npm run check` through the local npm shim: 115 files, zero diagnostics.
+- `npm test`: 74 passed, zero failures/skips.
+- `npm run build:strato` plus final `verify-strato.mjs`: 127 files, published Sanity content and no Node server; hashed inventory verified.
+- Local protected deployment tool and routing amendment: exact remote checksums, authentication preserved, private backups and cleanup confirmed.
+- `node hosting/strato/verify-host.mjs`: **111 HTTP checks passed**, including exported routes/nested coach URL, assets/MIME, real 404s, metadata/indexing gates, anonymous denial, and inactive PHP registration GET/POST/OPTIONS/preview behavior.
+- Maintained browser suite targeting `https://pkhockeyacademy.de` with origin-scoped local credentials: **51 route/viewport checks passed** at 1440/768/375px; keyboard, no-JS, history, 13 footer destinations, carousel/spray/rink checks, both fictional interview journeys, and stable 15/15/15 animation triggers. Zero browser errors/unexpected external requests. Remote tracing disabled to avoid retaining Authorization headers; only the existing Sanity CDN is additionally allowed for published media.
+- Published nested coach profile accepted at phone width; screenshots inspected under ignored `output/playwright/strato-live/`. A screenshot was initially saved into an incorrectly URL-encoded sibling directory; the file was moved into the intended output directory and the verified empty accidental folders removed.
+- `node --check` on new deployment/connection/host-check and updated browser scripts, and `git diff --check`: passed.
+
+No real registrations were submitted. Gallery album/video acceptance is limited by the absence of a published album/video. Automated Sanity deployment, deliberately interrupted-release/recovery drills, complete release switching and private Visual Editing replacement remain #10/#11/#16; these checks do not constitute public-launch acceptance. No database, email/DNS or Sanity/Vercel integration was changed. The source changes/notes are local and uncommitted. The separate parent #7 body update was blocked by automatic approval review pending more specific user approval.
+
 ## STRATO restructuring foundation — 7 November 2026
 
 Moved the four existing Node routes from `web/src/pages/` to `web/src/runtime/`, retaining their URL patterns through a review-only Astro integration. `build:strato` omits the adapter and runtime routes, packages static output plus inactive PHP/Apache entry points, and validates the artifact. The default review build remains available. No design/motion changes, database provisioning, deployment, CMS mutation or domain changes were performed.
