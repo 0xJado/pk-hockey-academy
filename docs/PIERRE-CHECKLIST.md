@@ -38,6 +38,8 @@ Die erste geschützte Vorschau kann mit erfundenen Testantworten entstehen. Für
 
 ## 2. Online-Anmeldung: Entscheidungen für die Aktivierung
 
+Für Ticket #12 liegt eine [Freigabeunterlage zur vorhandenen Anmeldung v2](REGISTRATION-POLICY-REVIEW.md) vor. Sie enthält die 28 Feld-/Auswahlentscheidungen und acht Prozessbereiche mit offenen Fragen. Antworten bitte privat in normalem Deutsch geben; keine ausgefüllten Kinderanmeldungen oder Gesundheitsdaten als Beispiele schicken. Die Entwicklung dokumentiert den freigegebenen Stand separat. Onlineeingabe und Versand bleiben bis zur vollständigen Umsetzung und Abnahme deaktiviert.
+
 Das PDF ist verfügbar. Die Online-Vorschau bleibt bis zur fertigen Verarbeitung und Freigabe deaktiviert.
 
 - [ ] Die Entwicklung richtet die private STRATO-Datenbank mit PHP-Verarbeitung und geschützter Anmeldungsverwaltung ein und prüft diese vor Aktivierung. Pierre muss keine Google-Tabelle erstellen oder freigeben. Siehe [Migrationsentscheidung](STRATO-MIGRATION.md).

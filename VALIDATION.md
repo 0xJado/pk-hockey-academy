@@ -1,8 +1,16 @@
 # Validation record
 
+## Registration policy preparation — 8 November 2026, issue #12 in progress
+
+Prepared a German review packet with 28 field/choice decisions and eight process groups from the existing two-page registration PDF. Both pages were rendered with `pdftoppm` and visually inspected. The PDF is unchanged: 203522 bytes, SHA-256 `5ad3b2845008b09213280653fda49d6fb15882a4ddbfcb0ca975dc664162bff9`. No owner answers, required-field rules, consent approval, retention periods or booking terms were invented.
+
+Executed offline review consistency/status checks, all 78 website unit tests and Astro check (132 files; zero errors, warnings or hints). The two new tests cover unchanged source integrity, preservation of existing private worksheets, counts-only output, stale versions, malformed private JSON and rejected paths outside the ignored worksheet directory. Even synthetic complete answers report `humanApprovalVerified:false` and `activatesRegistration:false`. The actual blank worksheet reports 28 pending fields, eight pending process decisions and zero approval references. Private answers and generated fixtures remain Git-ignored. CI now includes the packet consistency check; hosted CI for this increment has not been run.
+
+Commands used this session from `web/`: `node --experimental-strip-types scripts/registration-policy-review.mjs --check`, the same tool with `--status` and the ignored worksheet path, `node --experimental-strip-types --test tests/*.test.mjs`, and `node node_modules/@astrojs/check/bin/astro-check.js`. npm was unavailable on this shell's PATH, so its underlying Node entry points were used. No website layout, motion, PHP endpoint or database changed; no browser UI acceptance is claimed for this documentation/offline-tool increment. Registration remains inactive pending the approved policy and later implementation/acceptance.
+
 ## Local commit checkpoints — 8 November 2026
 
-At the user's request, the pending STRATO hosting, releases, media-kit downloads, PHP preview, Studio resolver, CI wiring and operating documentation were split into small local commits by responsibility. Earlier entries saying the work was uncommitted preserve its state when those checks ran. Real environment files, generated artifacts, private credentials and acceptance captures remain ignored; this checkpoint does not activate publishing or change hosted Studio settings. Remote publication remains pending.
+At the user's request, the pending STRATO hosting, releases, media-kit downloads, PHP preview, Studio resolver, CI wiring and operating documentation were split into small local commits by responsibility. Earlier entries saying the work was uncommitted preserve its state when those checks ran. Real environment files, generated artifacts, private credentials and acceptance captures remain ignored; this checkpoint does not activate publishing or change hosted Studio settings. The 36-commit series through `688918f` was subsequently pushed and verified against remote main.
 
 ## STRATO PHP private-preview candidate — 8 November 2026, issue #11 in progress
 

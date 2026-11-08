@@ -228,4 +228,6 @@ Source: public `0xJado/pk-hockey-academy`. Vercel review hosting is configured s
 
 See [forms foundation](docs/FORMS-FOUNDATION.md). Registration has a tested server-only processing core with injected policy and fake delivery; `/api/registration` always returns 503 without reading the request body. The PDF and disabled `/anmeldung` preview are preserved.
 
+Issue #12's [German review packet](docs/REGISTRATION-POLICY-REVIEW.md) prepares the outstanding field, consent, booking and retention decisions. Run `npm run review:registration --prefix web -- --check` to verify it against the unchanged supplied PDF. Owner/legal approval remains pending; the checker cannot activate registration.
+
 The existing browser command now covers full player/trainer journeys, with fictional exports in ignored diagnostics.

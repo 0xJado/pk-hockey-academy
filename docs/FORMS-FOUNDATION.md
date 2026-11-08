@@ -4,6 +4,8 @@ Current direction, 6 November 2026: Google Sheets delivery is abandoned. Product
 
 This increment adds processing infrastructure and fictional local previews, not live registration or contact delivery. No Google Sheet, messaging account, email service, database or CMS record is connected.
 
+Issue #12 now has a [German source-based review packet](REGISTRATION-POLICY-REVIEW.md): 28 field/choice decisions and eight process decisions, all unapproved. `npm run review:registration -- --check` in `web/` checks PDF integrity and packet consistency. Private worksheets stay under ignored `output/registration-private/`; completeness is not approval and is never consumed by a runtime endpoint.
+
 ## Registration boundary
 
 `/api/registration` always returns HTTP 503 with a German inactive message, `Cache-Control: no-store` and no body parsing. This is unconditional, not an environment switch. `/anmeldung` and its original PDF remain unchanged and disabled for data entry.
