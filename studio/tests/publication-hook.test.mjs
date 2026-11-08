@@ -5,9 +5,19 @@ import {
   CMS_PUBLICATION_FILTER,
   CMS_PUBLICATION_PROJECTION,
   publicationWebhook,
+  stratoPublicationWebhook,
 } from "../../shared/cms-publication.ts";
 
 const filter = parse(CMS_PUBLICATION_FILTER, { mode: "delta" });
+test('STRATO dispatch contains only the fixed trusted branch and excludes drafts',async()=>{
+  const hook=stratoPublicationWebhook('production','github_pat_'+'a'.repeat(30));
+  assert.deepEqual(await (await evaluate(parse(hook.rule.projection,{mode:'delta'}),{before:null,after:{_id:'private',name:'not sent'}})).get(),{ref:'main'});
+  assert.equal(hook.rule.filter,CMS_PUBLICATION_FILTER);
+  assert.equal(hook.includeDrafts,false);assert.equal(hook.includeAllVersions,false);
+  assert.equal(hook.headers.Authorization,'Bearer github_pat_'+'a'.repeat(30));
+  assert.throws(()=>stratoPublicationWebhook('*','github_pat_'+'a'.repeat(30)));
+  assert.throws(()=>stratoPublicationWebhook('production','unsafe\r\nheader'));
+});
 const matches = async (before, after) =>
   (await evaluate(filter, { before, after })).get();
 const doc = {

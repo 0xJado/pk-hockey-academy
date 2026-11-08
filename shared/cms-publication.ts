@@ -13,6 +13,25 @@ export const CMS_PUBLICATION_PROJECTION = `{
   "operation": delta::operation()
 }`;
 
+// Separate hook during acceptance: the existing review-host hook stays intact.
+export function stratoPublicationWebhook(dataset: string, token: string) {
+  if (!/^[a-z0-9_-]+$/.test(dataset) || !/^github_pat_[A-Za-z0-9_]{20,240}$/.test(token))
+    throw new Error('Use the approved dataset and a repository-scoped fine-grained token.');
+  return {
+    name: 'PK Hockey Academy · STRATO',
+    type: 'document' as const,
+    dataset,
+    url: 'https://api.github.com/repos/0xJado/pk-hockey-academy/actions/workflows/strato-publish.yml/dispatches',
+    apiVersion: 'v2025-02-19',
+    httpMethod: 'POST',
+    headers: {Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2026-03-10'},
+    includeDrafts: false,
+    includeAllVersions: false,
+    isDisabledByUser: false,
+    rule: {on: ['create','update','delete'],filter: CMS_PUBLICATION_FILTER,projection: '{"ref": "main"}'},
+  };
+}
+
 export function publicationWebhook(dataset: string, destination: string) {
   if (!/^[a-z0-9_-]+$/.test(dataset))
     throw new Error("Invalid webhook dataset.");
