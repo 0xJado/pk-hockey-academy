@@ -28,7 +28,8 @@ export async function verifyStrato(output=new URL('../../output/strato/',import.
       assert.ok(!bytes.includes(Buffer.from(token)), "Private CMS token in STRATO output");
     if(!/\.(html|js|json|css|txt|xml)$/.test(file))continue;
     const content=bytes.toString('utf8');
-    assert.ok(!content.includes('id="pk-visual-editing"'), "Draft preview exported");
+    const privateTemplate=relative(root,file).replaceAll('\\','/')==='api/preview-lib/preview-shell.html';
+    assert.ok(privateTemplate||!content.includes('id="pk-visual-editing"'), "Draft preview exported");
   }
   const inventory = await Promise.all(files.map(async (file) => {
     const bytes = await readFile(file);
@@ -40,7 +41,7 @@ export async function verifyStrato(output=new URL('../../output/strato/',import.
     schemaVersion: 1, target: "strato", files: files.length, inventory,
     contentHash: createHash("sha256").update(JSON.stringify(inventory)).digest("hex"),
     verifiedAt: new Date().toISOString(),
-    registration: "inactive", privatePreview: 'unavailable', hostingVerified: false,
+    registration: "inactive", privatePreview: names.includes('api/editor.php') ? 'php-candidate' : 'unavailable', hostingVerified: false,
   }, null, 2) + "\n");
   console.log(`Verified ${files.length} STRATO files; no Node server. This artifact check does not replace host acceptance.`);
 }
