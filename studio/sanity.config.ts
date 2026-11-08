@@ -18,11 +18,15 @@ import { presentationTool } from "sanity/presentation";
 import {
   getPreviewUrl,
   getTrainerPreviewOptions,
+  getPhpTrainerPreviewResolver,
   trainerLocations,
 } from "./lib/presentation";
 import { TrainerNavigator } from "./components/TrainerNavigator";
 
 const previewUrl = getPreviewUrl(process.env.SANITY_STUDIO_PREVIEW_URL);
+const previewTransport = process.env.SANITY_STUDIO_PREVIEW_TRANSPORT?.trim();
+if (previewTransport && previewTransport !== 'php-fragment')
+  throw new Error('Unknown preview transport. Leave blank for the existing host or use php-fragment after acceptance.');
 
 const authProvider = getStudioAuthProvider({
   SANITY_STUDIO_AUTH_PROVIDER: process.env.SANITY_STUDIO_AUTH_PROVIDER,
@@ -50,7 +54,7 @@ export default defineConfig({
           presentationTool({
             name: "website",
             title: "Website bearbeiten",
-            previewUrl: getTrainerPreviewOptions(previewUrl),
+            previewUrl: previewTransport === 'php-fragment' ? getPhpTrainerPreviewResolver(previewUrl) : getTrainerPreviewOptions(previewUrl),
             allowOrigins: [previewUrl],
             resolve: trainerLocations,
             components: {

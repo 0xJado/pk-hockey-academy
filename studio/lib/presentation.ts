@@ -30,6 +30,27 @@ export function getTrainerPreviewOptions(origin: string) {
   };
 }
 
+// Opt-in PHP handoff: fragments never reach the host's access-log request URL.
+// The iframe exchanges the native Sanity secret through a same-origin POST.
+export function getPhpTrainerPreviewResolver(origin: string) {
+  const approved = getPreviewUrl(origin);
+  if (!approved || !approved.startsWith('https://'))
+    throw new Error('PHP preview requires an approved HTTPS origin.');
+  return async (context: {
+    previewUrlSecret: string;
+    studioPreviewPerspective: string;
+    previewSearchParam?: string | null;
+  }) => {
+    const url = new URL('/redaktion/verbinden', approved);
+    url.hash = new URLSearchParams({
+      'sanity-preview-secret': context.previewUrlSecret,
+      'sanity-preview-pathname': context.previewSearchParam || '/redaktion/trainerpool',
+      'sanity-preview-perspective': context.studioPreviewPerspective,
+    }).toString();
+    return url.href;
+  };
+}
+
 export const trainerLocations: PresentationPluginOptions["resolve"] = {
   locations: {
     trainer: defineLocations({
