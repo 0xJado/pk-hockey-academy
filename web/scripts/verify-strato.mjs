@@ -3,10 +3,11 @@ import { readdir, readFile, writeFile, rm } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { resolve, relative } from "node:path";
 import { loadEnv } from "vite";
+import { createHash } from "node:crypto";
 
-export async function verifyStrato() {
-  await rm(new URL("../../output/strato/READY.json", import.meta.url), { force: true });
-  const root = fileURLToPath(new URL("../../output/strato/public/", import.meta.url));
+export async function verifyStrato(output=new URL('../../output/strato/',import.meta.url)) {
+  await rm(new URL('READY.json',output), { force: true });
+  const root = fileURLToPath(new URL('public/',output));
   const walk = async (folder) => (await Promise.all(
     (await readdir(folder, { withFileTypes: true })).map((entry) =>
       entry.isDirectory() ? walk(resolve(folder, entry.name)) : resolve(folder, entry.name)),
@@ -21,17 +22,27 @@ export async function verifyStrato() {
   }
   const env = loadEnv("production", fileURLToPath(new URL("../", import.meta.url)), "");
   const privateTokens = [env.SANITY_PREVIEW_READ_TOKEN, env.SANITY_READ_TOKEN].filter(Boolean);
-  for (const file of files.filter((file) => /\.(html|js|json|css|txt|xml)$/.test(file))) {
-    const content = await readFile(file, "utf8");
+  for (const file of files) {
+    const bytes = await readFile(file);
     for (const token of privateTokens)
-      assert.ok(!content.includes(token), "Private CMS token in STRATO output");
+      assert.ok(!bytes.includes(Buffer.from(token)), "Private CMS token in STRATO output");
+    if(!/\.(html|js|json|css|txt|xml)$/.test(file))continue;
+    const content=bytes.toString('utf8');
     assert.ok(!content.includes('id="pk-visual-editing"'), "Draft preview exported");
   }
-  await writeFile(new URL("../../output/strato/READY.json", import.meta.url), JSON.stringify({
-    target: "strato", files: files.length, verifiedAt: new Date().toISOString(),
-    registration: "inactive", privatePreview: "unavailable", hostingVerified: false,
+  const inventory = await Promise.all(files.map(async (file) => {
+    const bytes = await readFile(file);
+    return { path: relative(root, file).replaceAll("\\", "/"), size: bytes.length,
+      sha256: createHash("sha256").update(bytes).digest("hex") };
+  }));
+  inventory.sort((a, b) => a.path.localeCompare(b.path, "en"));
+  await writeFile(new URL('READY.json',output), JSON.stringify({
+    schemaVersion: 1, target: "strato", files: files.length, inventory,
+    contentHash: createHash("sha256").update(JSON.stringify(inventory)).digest("hex"),
+    verifiedAt: new Date().toISOString(),
+    registration: "inactive", privatePreview: 'unavailable', hostingVerified: false,
   }, null, 2) + "\n");
-  console.log(`Verified ${files.length} STRATO files; no Node server. Hosting/PHP acceptance remains pending.`);
+  console.log(`Verified ${files.length} STRATO files; no Node server. This artifact check does not replace host acceptance.`);
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await verifyStrato();
