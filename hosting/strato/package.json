@@ -3,6 +3,12 @@
   "private": true,
   "type": "module",
   "description": "Local-only STRATO acceptance tools; never deployed to the web root.",
+  "scripts": {
+    "deploy:review": "node deploy-review.mjs",
+    "deploy": "node release.mjs",
+    "rollback": "node release.mjs --rollback",
+    "test": "node --test tests/*.test.mjs"
+  },
   "dependencies": {
     "ssh2": "1.17.0"
   }
