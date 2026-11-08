@@ -6,6 +6,8 @@ Production direction confirmed on 6 November 2026: migrate to Pierre's existing 
 
 A German Astro marketing website with prerendered public pages, a cinematic homepage, training information, camp gallery and a separate Sanity administrator CMS. Private trainer Visual Editing adds on-demand editor routes. The academy's source instructions are preserved verbatim in [`AGENTS.md`](AGENTS.md).
 
+Protected STRATO delivery, 8 November 2026: the public Astro export is deployed behind temporary review authentication at the approved academy domain. Node remains a build tool only; PHP endpoints still reject registration and private website-preview requests. Manual protected deployment and host checks live under [`hosting/strato`](hosting/strato/README.md). Vercel/Sanity automatic publishing and Visual Editing have not yet been switched. This is a protected acceptance environment, not the public launch.
+
 ## Run locally
 
 Requires Node.js **22.22+** (Node 24 LTS recommended) and npm 9.6.5+. From this repository:
@@ -209,6 +211,10 @@ Homepage exploration on `develop/strato-migration` (7 November 2026): inset hero
 See [`VALIDATION.md`](VALIDATION.md) for commands actually executed, viewport screenshots, navigation/motion evidence and remaining limitations. The flyer comparison and final design review are recorded in [`design-qa.md`](design-qa.md). Browser artifacts are intentionally ignored under `output/playwright/` and `output/design/`.
 
 ## GitHub
+
+Protected STRATO publishing is being implemented in issue #10. See the [release and rollback runbook](docs/STRATO-PUBLISHING.md) for the guarded workflow, credential setup and acceptance still required before switching Sanity publishing.
+
+Issue #11 now has a deployed PHP private-preview candidate using the existing Astro trainer components. [Preview operations](docs/STRATO-PRIVATE-PREVIEW.md) distinguish passed standalone checks from the signed-in Studio acceptance still required. The current Studio destination remains unchanged.
 
 Source: public `0xJado/pk-hockey-academy`. Vercel review hosting is configured separately as described above; GitHub Pages is not used. Git history must preserve the original `AGENTS.md` and must never include `.env`, dependencies, build output or local test artifacts.
 
