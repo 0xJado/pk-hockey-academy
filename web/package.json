@@ -17,6 +17,7 @@
     "test:strato:preview:build": "node tests/integration/strato-preview-build.mjs",
     "test:strato:preview:browser": "node tests/strato-preview-browser.mjs",
     "test:strato:preview:package": "node tests/integration/strato-preview-package.mjs",
+    "review:registration": "node --experimental-strip-types scripts/registration-policy-review.mjs",
     "preview": "astro preview --host 127.0.0.1",
     "test": "node --experimental-strip-types --test tests/*.test.mjs",
     "test:cms": "node tests/integration/cms-build.mjs",

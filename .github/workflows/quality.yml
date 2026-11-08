@@ -56,6 +56,8 @@ jobs:
         run: npm run check --prefix web
       - name: Test website
         run: npm test --prefix web
+      - name: Check registration review against supplied PDF
+        run: npm run review:registration --prefix web -- --check
       - name: Test STRATO release failure and rollback guards
         run: node --test hosting/strato/tests/*.test.mjs
       - name: Check Studio types
