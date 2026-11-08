@@ -1,0 +1,36 @@
+<?php
+declare(strict_types=1);
+// One-use helper, uploaded under a release lock and removed in finally.
+ini_set('display_errors','0');
+header('Content-Type: application/json; charset=utf-8');
+header('Cache-Control: private, no-store, max-age=0');
+header('X-Robots-Tag: noindex, nofollow, noarchive');
+header('X-Content-Type-Options: nosniff');
+header('Referrer-Policy: no-referrer');
+function respond(int $status,array $body): never {http_response_code($status);echo json_encode($body,JSON_THROW_ON_ERROR);exit;}
+if (($_SERVER['REQUEST_METHOD']??'')!=='POST' || !hash_equals('__SETUP_SHA256__',hash('sha256',$_SERVER['HTTP_X_PK_SETUP_TOKEN']??'')))respond(403,['code'=>'setup_denied']);
+if ((int)($_SERVER['CONTENT_LENGTH']??0)>8192)respond(413,['code'=>'too_large']);
+try {
+    $paths=json_decode(base64_decode('__PATHS_BASE64__',true),true,8,JSON_THROW_ON_ERROR);
+    $public=realpath($paths['publicPath']);$private=realpath($paths['privatePath']);
+    if(!$public||!$private||$public!==$paths['publicPath']||$private!==$paths['privatePath']||str_starts_with($private.'/',$public.'/')||!is_writable($private))respond(503,['code'=>'private_directory_unavailable']);
+    $bytes=file_get_contents('php://input',false,null,0,8193);
+    if($bytes===false||strlen($bytes)>8192)respond(400,['code'=>'invalid_config']);
+    $config=json_decode($bytes,true,8,JSON_THROW_ON_ERROR);
+    if(!is_array($config)||!is_string($config['projectId']??null)||!preg_match('/\A[a-z0-9]+\z/',$config['projectId'])
+        ||!is_string($config['dataset']??null)||!preg_match('/\A[a-z0-9_-]+\z/',$config['dataset'])
+        ||!is_string($config['readToken']??null)||strlen($config['readToken'])<20||strlen($config['readToken'])>1024||preg_match('/[\r\n]/',$config['readToken'])
+        ||!is_string($config['sessionKey']??null)||strlen($config['sessionKey'])<32||($config['siteOrigin']??'')!=='https://pkhockeyacademy.de'
+        ||!is_string($config['studioUrl']??null)||!str_starts_with($config['studioUrl'],'https://'))respond(400,['code'=>'invalid_config']);
+    $target=$private.'/preview-config.json';
+    if(file_exists($target)) {
+        if(!hash_equals(hash('sha256',$bytes),hash_file('sha256',$target)))respond(409,['code'=>'existing_config_differs']);
+        respond(200,['installed'=>true]);
+    }
+    $handle=fopen($target,'x');if(!$handle)respond(503,['code'=>'private_write_failed']);
+    try {
+        if(!chmod($target,0600)||fwrite($handle,$bytes)!==strlen($bytes))throw new RuntimeException('private_write');
+    }catch(Throwable $error){fclose($handle);unlink($target);throw $error;}
+    fclose($handle);
+    respond(201,['installed'=>true]);
+}catch(Throwable){respond(503,['code'=>'private_setup_unavailable']);}
