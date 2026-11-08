@@ -9,7 +9,19 @@ import { resolve, extname, sep } from "node:path";
 import { chromium } from "playwright";
 import { fileURLToPath } from "node:url";
 import { writeFile } from "node:fs/promises";
+import { parseEnv } from "node:util";
 const webRoot = fileURLToPath(new URL("..", import.meta.url));
+const remoteOrigin = process.env.PK_BROWSER_ORIGIN;
+if (remoteOrigin && remoteOrigin !== "https://pkhockeyacademy.de")
+  throw new Error("Remote acceptance is restricted to the approved academy origin.");
+const credentials = remoteOrigin
+  ? parseEnv(await readFile(resolve(webRoot, "../hosting/strato/.env.local"), "utf8"))
+  : undefined;
+const authentication = credentials ? { httpCredentials: {
+  username: credentials.STRATO_PREVIEW_USERNAME,
+  password: credentials.STRATO_PREVIEW_PASSWORD,
+  origin: remoteOrigin,
+} } : {};
 const training =
   process.argv.includes("--training") ||
   process.env.PK_TRAINING_FIXTURE === "true";
@@ -69,8 +81,8 @@ const server = createServer(async (req, res) => {
     res.writeHead(404).end("Not found");
   }
 });
-await new Promise((r) => server.listen(0, "127.0.0.1", r));
-const origin = `http://127.0.0.1:${server.address().port}`;
+if (!remoteOrigin) await new Promise((r) => server.listen(0, "127.0.0.1", r));
+const origin = remoteOrigin || `http://127.0.0.1:${server.address().port}`;
 let browser, context, page;
 const errors = [],
   checks = [];
@@ -82,7 +94,7 @@ try {
     ...(channel && channel !== "chromium" ? { channel } : {}),
     headless: true,
   });
-  context = await browser.newContext({ reducedMotion: "reduce" });
+  context = await browser.newContext({ reducedMotion: "reduce", ...authentication });
   await context.addInitScript(() => {
     window.__pendingTransitions = 0;
     const start = document.startViewTransition?.bind(document);
@@ -97,7 +109,8 @@ try {
         return transition;
       };
   });
-  await context.tracing.start({
+  // Remote traces can retain Authorization headers. Keep only screenshots/results.
+  if (!remoteOrigin) await context.tracing.start({
     screenshots: true,
     snapshots: true,
     sources: false,
@@ -123,6 +136,8 @@ try {
   });
   await context.route("**/*", (route) => {
     const url = new URL(route.request().url());
+    if (remoteOrigin && url.origin === "https://cdn.sanity.io")
+      return route.continue();
     if (
       fixtureCrest &&
       route.request().method() === "GET" &&
@@ -481,6 +496,7 @@ try {
     await page.locator("[data-hero]").waitFor({ state: "visible" });
     await runFooterNavigation(page, origin);
     const noJS = await browser.newContext({
+      ...authentication,
       javaScriptEnabled: false,
       viewport: { width: 375, height: 812 },
     });
@@ -559,7 +575,7 @@ try {
       2,
     ),
   );
-  await context.tracing.stop();
+  if (!remoteOrigin) await context.tracing.stop();
 } catch (error) {
   const images = await page
     ?.evaluate(() =>
@@ -573,7 +589,7 @@ try {
   await page
     ?.screenshot({ path: resolve(output, "failure.png"), fullPage: true })
     .catch(() => {});
-  await context?.tracing
+  if (!remoteOrigin) await context?.tracing
     .stop({ path: resolve(output, "trace.zip") })
     .catch(() => {});
   await writeFile(
@@ -593,6 +609,8 @@ try {
   throw error;
 } finally {
   await browser?.close();
-  server.closeAllConnections();
-  await new Promise((r) => server.close(r));
+  if (!remoteOrigin) {
+    server.closeAllConnections();
+    await new Promise((r) => server.close(r));
+  }
 }
