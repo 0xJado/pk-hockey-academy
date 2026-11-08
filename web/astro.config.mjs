@@ -42,7 +42,13 @@ export default defineConfig({
   session: false,
   adapter,
   // Runtime source is outside pages/: STRATO must never build or export drafts.
-  integrations: strato ? [] : [{
+  integrations: strato ? (env.PK_STRATO_PREVIEW_CANDIDATE === 'true' ? [{
+    name: 'isolated-private-preview-template',
+    hooks: {'astro:config:setup':({injectRoute})=>{
+      injectRoute({pattern:'/__private-preview-template',entrypoint:'./src/runtime/strato/preview-template.astro',prerender:true});
+      injectRoute({pattern:'/__private-preview-connect',entrypoint:'./src/runtime/strato/preview-connect.astro',prerender:true});
+    }},
+  }] : []) : [{
     name: "review-runtime",
     hooks: {
       "astro:config:setup": ({ injectRoute }) => {

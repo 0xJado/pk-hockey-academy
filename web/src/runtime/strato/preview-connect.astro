@@ -1,0 +1,23 @@
+---
+// The secret stays in the browser fragment, never an HTTP request URL.
+---
+<!doctype html><html lang="de"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="robots" content="noindex,nofollow"/><meta name="referrer" content="no-referrer"/><title>Private Website-Vorschau verbinden</title></head>
+<body><main><h1>Private Website-Vorschau</h1><p id="connect-status" role="status">Die sichere Vorschau wird verbunden.</p><noscript>Zum Verbinden der privaten Vorschau ist JavaScript erforderlich.</noscript></main></body></html>
+<script>
+  const fragment=new URLSearchParams(location.hash.slice(1));
+  history.replaceState(null,'','/redaktion/verbinden');
+  const status=document.querySelector('#connect-status')!;
+  try {
+    const secret=fragment.get('sanity-preview-secret');
+    fragment.delete('sanity-preview-secret');
+    if(!secret)throw Error('Missing preview link');
+    const response=await fetch('/api/preview/enable',{method:'POST',credentials:'same-origin',cache:'no-store',redirect:'error',headers:{'Content-Type':'application/json'},body:JSON.stringify({'sanity-preview-secret':secret,'sanity-preview-pathname':fragment.get('sanity-preview-pathname'), 'sanity-preview-perspective':fragment.get('sanity-preview-perspective')})});
+    if(!response.ok)throw Error('Preview link rejected');
+    const data=await response.json();
+    if(typeof data.redirectTo!=='string'||!/^\/redaktion\/trainerpool(?:\?|$)/.test(data.redirectTo))throw Error('Invalid preview redirect');
+    location.replace(data.redirectTo);
+  }catch{
+    status.textContent='Der Vorschau-Link ist ungültig, abgelaufen oder die Verbindung ist nicht verfügbar. Bitte die Vorschau im angemeldeten Studio neu öffnen.';
+    status.setAttribute('role','alert');
+  }
+</script>

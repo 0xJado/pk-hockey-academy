@@ -1,0 +1,44 @@
+---
+import Base from '../../layouts/Base.astro';
+import TrainerCard from '../../components/TrainerCard.astro';
+import CoachDetails from '../../components/CoachDetails.astro';
+import type {Trainer} from '../../types/content';
+// Inert presentation templates only. Never a coach record or CMS publication.
+const image={url:'https://cdn.sanity.io/images/cmsqa123/qa/template-1x1.png',alt:'Technische Vorschauvorlage',credit:'Vorlagenfeld',width:1,height:1};
+const template:Trainer={id:'pk-preview-template',name:'Vorschauvorlage',role:'Vorlagenfeld',biography:'Vorlagenfeld',verifiedBackground:['Vorlagenfeld'],qualifications:['Vorlagenfeld'],specialties:['Vorlagenfeld'],playingYears:1,coachingYears:1,highestDivision:'Vorlagenfeld',notableTeams:['Vorlagenfeld'],playerGallery:[{...image,caption:'Vorlagenfeld'}],displayOrder:0,active:false};
+---
+<Base editorPreview noindex title="Website-Vorschau · Trainerpool" description="Private Website-Vorschau der Trainerprofile für die Academy-Redaktion.">
+  <section class="page-hero"><div class="wrap">
+    <p class="eyebrow">REDAKTION · WEBSITE-VORSCHAU</p>
+    <h1>UNSER TRAINERPOOL.<br/><span>DEINE VORSCHAU.</span></h1>
+    <p class="page-intro">Klicke auf Profiltext oder Trainerfoto, um das passende Feld im Studio zu bearbeiten.</p>
+  </div></section>
+  <section class="section"><div class="wrap">
+    <aside class="notice preview-notice">
+      <strong id="preview-perspective">Private Website-Vorschau</strong>
+      <p>Diese private Ansicht zeigt auch zurückgehaltene Profile. Die öffentliche Website übernimmt ausschließlich aktive, geprüfte und freigegebene Veröffentlichungen nach dem Website-Build.</p>
+      <div class="preview-actions">
+        <a id="preview-add" target="_top" hidden>Trainer hinzufügen ↗</a>
+        <a href="/redaktion/trainerpool" data-preview-leave>Alle Profile in der Vorschau</a>
+        <a id="preview-studio" target="_top" hidden>Zur Redaktion ↗</a>
+        <a href="/redaktion/abmelden" data-preview-leave>Vorschau beenden</a>
+      </div>
+    </aside>
+    <p id="preview-status" role="status">Vorschau wird geladen.</p>
+    <noscript><p>Für die private Website-Vorschau ist JavaScript erforderlich. Die öffentliche Website bleibt ohne JavaScript nutzbar.</p></noscript>
+    <div id="preview-profiles" class="trainer-list"></div>
+    <div id="preview-incomplete"></div>
+    <template id="preview-no-photo"><div class="preview-profile"><TrainerCard trainer={template} editorPreview/><CoachDetails trainer={template} editorPreview biography={false}/></div></template>
+    <template id="preview-photo"><div class="preview-profile"><TrainerCard trainer={{...template,portrait:image}} editorPreview/><CoachDetails trainer={template} editorPreview biography={false}/></div></template>
+    <div id="pk-visual-editing"></div>
+  </div></section>
+</Base>
+<style>
+  .preview-notice{margin-bottom:48px}
+  .preview-actions{display:flex;flex-wrap:wrap;gap:16px 28px}
+  .preview-actions a{min-height:44px;display:inline-flex;align-items:center;text-decoration:underline;text-underline-offset:4px}
+</style>
+<script>
+  import {loadStratoPreview} from '../../lib/strato-preview-client';
+  await loadStratoPreview();
+</script>
