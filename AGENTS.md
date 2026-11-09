@@ -32,6 +32,8 @@ Treat only these facts as established:
 - Contact uses direct email at info@pkhockeyacademy.de and will list the WhatsApp number once supplied.
 - No approved logo, trainers' portraits, real venues, session dates, phone number, email, shop catalog, or training footage has yet been supplied.
 
+Impressum update approved on 10 November 2026: Pierre supplied PK Hockey Academy as an Einzelunternehmen, Inhaber Pierre Klein, Verbindungsweg 8, 46562 Voerde, Deutschland; telephone +49 163 80 63 741; email info@pkhockeyacademy.de; website https://www.pkhockeyacademy.de. These details supersede the earlier missing legal-contact placeholders. The telephone has not been confirmed as a WhatsApp destination. Tax-identification details and final legal approval remain outstanding; the privacy text has not yet been supplied in Codex.
+
 **Do not fabricate facts.**
 
 Never invent testimonials, trainer credentials, registrations, free-place counts, exact venue addresses, legal contact details, real booking links, sponsor relationships, or team affiliations.

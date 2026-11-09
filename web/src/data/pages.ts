@@ -63,13 +63,13 @@ export const pages = {
       "Du möchtest mehr über das individuelle Eishockeytraining erfahren? Hier erreichst du uns direkt.",
   },
   impressum: {
-    label: "INTERNER ENTWURF · NICHT ZUR VERÖFFENTLICHUNG",
+    label: "ANBIETERANGABEN · FREIGABE AUSSTEHEND",
     title: "IMPRESSUM",
-    accent: "ANGABEN FOLGEN.",
+    accent: "PK HOCKEY ACADEMY.",
     description:
-      "Interner Platzhalter für das Impressum der PK Hockey Academy. Rechtliche Pflichtangaben müssen vor einer Veröffentlichung ergänzt und geprüft werden.",
+      "Anbieter- und Kontaktangaben der PK Hockey Academy, Inhaber Pierre Klein in Voerde. Die abschließende rechtliche Freigabe steht noch aus.",
     intro:
-      "Diese Seite ist ein interner Arbeitsstand und kein vollständiges oder gültig geprüftes Impressum.",
+      "Angaben gemäß § 5 Digitale-Dienste-Gesetz (DDG)",
   },
   datenschutz: {
     label: "INTERNER ENTWURF · NICHT ZUR VERÖFFENTLICHUNG",

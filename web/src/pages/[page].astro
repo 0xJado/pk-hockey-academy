@@ -8,6 +8,7 @@ import Pricing from "../components/Pricing.astro";
 import FinalCTA from "../components/FinalCTA.astro";
 import { pages, principles, organisationSteps } from "../data/pages";
 import type { ContentPage } from "../data/pages";
+import { legalProvider } from "../data/legal";
 import { getTraining } from "../lib/training-source";
 import { getTrainers } from "../lib/trainer-source";
 
@@ -320,25 +321,32 @@ const legal = slug === "impressum" || slug === "datenschutz";
         <div class="legal-warning">
           <strong>NICHT ZUR VERÖFFENTLICHUNG FREIGEGEBEN</strong>
           <p>
-            Pflichtangaben und rechtliche Prüfung stehen aus. Dieser Platzhalter
-            ist keine rechtliche Freigabe für den Website-Start.
+            {slug === "impressum"
+              ? "Die Anbieterangaben wurden ergänzt. Ob eine USt-IdNr. oder W-IdNr. vorliegt und weitere Pflichtangaben erforderlich sind, muss noch bestätigt werden. Die abschließende rechtliche Prüfung und Freigabe für den Website-Start stehen aus."
+              : "Pflichtangaben und rechtliche Prüfung stehen aus. Dieser Platzhalter ist keine rechtliche Freigabe für den Website-Start."}
           </p>
         </div>
         {slug === "impressum" ? (
           <>
-            <h2>OFFENE ANGABEN</h2>
-            <ul class="todo-list">
-              <li>Verantwortlicher Anbieter und Rechtsform bestätigen</li>
-              <li>
-                Ladungsfähige Anschrift und verbindliche Kontaktdaten ergänzen
-              </li>
-              <li>
-                Vertretungsberechtigung sowie weitere zutreffende Pflichtangaben
-                prüfen
-              </li>
-              <li>Gegebenenfalls Register- und steuerliche Angaben ergänzen</li>
-              <li>Inhalt fachlich prüfen und vor Veröffentlichung freigeben</li>
-            </ul>
+            <h2>ANBIETER</h2>
+            <p>
+              {legalProvider.brandName}<br />
+              Inhaber: {legalProvider.owner}<br />
+              {legalProvider.street}<br />
+              {legalProvider.postalCode} {legalProvider.city}<br />
+              {legalProvider.country}
+            </p>
+            <h2>KONTAKT</h2>
+            <p>
+              Telefon: <a href={legalProvider.phoneHref}>{legalProvider.phone}</a><br />
+              E-Mail: <a href={`mailto:${legalProvider.email}`}>{legalProvider.email}</a><br />
+              Website: <a href={legalProvider.website}>{legalProvider.website}</a>
+            </p>
+            <h2>UNTERNEHMENSFORM</h2>
+            <p>
+              {legalProvider.businessForm}<br />
+              Inhaber: {legalProvider.owner}
+            </p>
           </>
         ) : (
           <>

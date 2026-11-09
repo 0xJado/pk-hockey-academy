@@ -183,7 +183,7 @@ Copy `web/.env.example` to `web/.env` only when needed:
 - `SITE_URL`: real HTTPS origin. Optional for previews; without it no canonical or absolute social URL is emitted. Invalid origins fail the build.
 - `PUBLIC_LAUNCH_READY`: keep `false` until launch is approved and real content/legal information is complete. It enables indexing/sitemap only together with a configured site origin.
 
-These environment flags do not constitute launch approval or legal review. Impressum and privacy routes visibly state they are incomplete internal drafts.
+These environment flags do not constitute launch approval or legal review. The Impressum now contains Pierre's supplied provider address, telephone, email, website and sole-proprietor details (approved for insertion on 10 November 2026), stored in `web/src/data/legal.ts`. Its notice retains the outstanding tax-identification/additional-disclosure check and final legal approval. The telephone is not verified as a WhatsApp destination. The privacy route remains an incomplete internal draft pending the supplied privacy text.
 
 ## Required from Pierre before launch
 
