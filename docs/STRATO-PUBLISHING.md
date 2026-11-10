@@ -1,6 +1,6 @@
 # Protected STRATO publishing — issue #10
 
-Implementation in progress. The GitHub workflow and new Sanity hook are not activated yet. The existing Vercel publication hook and private Visual Editing remain intact. Registration stays inactive and indexing stays disabled.
+Protected publishing is enabled, 10 November 2026. The GitHub workflow and separate Sanity hook passed real approved-download edit, withdrawal, restoration and deliberately invalid-publication checks; the final rollback round trip also passed. Issue #10 remains open for actual operator alert receipt and Pierre's representative update. The existing Vercel publication hook and private Visual Editing remain intact. Registration stays inactive and indexing stays disabled.
 
 ## Delivery model
 
@@ -14,6 +14,12 @@ HTTP verification checks the protection, static bytes and removed URLs. Failure 
 
 ## One-time activation inputs
 
+Configured on 10 November 2026: all seven repository Actions secrets and the existing public CMS build variables, with trainers enabled, training/social disabled, and the optional PHP private-preview package retained. The user explicitly authorized copying the scoped SFTP credentials, pinned host key and preview login into this repository's encrypted Actions secrets. The dedicated dispatch token is stored privately in the separate Sanity hook's Authorization header, not in build variables or on STRATO. The first accepted CI run used the previously pushed `688918f` source; uncommitted legal/privacy work was not deployed.
+
+The dispatch token expires at 00:00 Europe/Berlin on 10 November 2027 (API expiry: 9 November 2027, 23:00 UTC). The repository operator `0xJado` owns renewal. Before expiry, create a replacement with the same repository/Actions scope, update the ignored local setting and the STRATO hook's Authorization header privately in Sanity, verify a protected publication, then revoke the old token. Never paste the header into issues or logs. The creation script intentionally refuses to overwrite an existing hook; use the authenticated Sanity hook settings for renewal.
+
+The following steps remain the repeatable setup/recovery reference; their configuration work above is complete. Acceptance and retirement of the old publishing hook still require the checks below.
+
 1. The reviewed checkpoint series and workflow through `688918f` are pushed to `main`. Confirm the intended revision before activation.
 2. Add repository Actions secrets: `STRATO_SFTP_HOST`, `STRATO_SFTP_PORT`, `STRATO_SFTP_USERNAME`, `STRATO_SFTP_PASSWORD`, `STRATO_SFTP_HOST_KEY`, `STRATO_PREVIEW_USERNAME`, `STRATO_PREVIEW_PASSWORD`. Copy the existing pinned raw key value from the ignored private host-key record. Never turn off pinning or print credentials. The account is restricted to the website root. This does not grant access to the outside-root password file or future database credentials.
 3. Add approved public repository variables matching the existing website build: `SANITY_PROJECT_ID`, `SANITY_DATASET`, `SANITY_TRAINERS_ENABLED`, `SANITY_TRAINING_ENABLED`, `SANITY_SOCIAL_ENABLED`, `PUBLIC_SANITY_STUDIO_URL`. Also set `STRATO_PRIVATE_PREVIEW_ENABLED=true` to retain the PHP preview candidate deployed during #11; its credentials stay outside the public root on STRATO and are not passed to CI. Do not enable a previously disabled content feature. No draft/read token is needed for the existing public published-content build.
@@ -22,6 +28,8 @@ HTTP verification checks the protection, static bytes and removed URLs. Failure 
 6. Run real publish/edit/unpublish/restore acceptance on approved content, checking direct withdrawn profile/gallery/download URLs, an invalid publication, build failure, delivery failure and rollback. Restore content using revision guards; do not manufacture trainer identities or sessions. Have Pierre perform a representative update. Only then retire the old public publishing hook; retain review-host Visual Editing until issue #11 is accepted.
 
 GitHub Actions job results and step summaries distinguish build success from verified delivery. The repository operator must enable Actions failure notifications and confirm receipt before claiming the failure-notification acceptance criterion. A webhook accepted by GitHub does not mean the website has been delivered.
+
+For the alert check, the token-owning operator opens [GitHub notification settings](https://github.com/settings/notifications), then System → Actions, enables Email and/or On GitHub, selects Only notify for failed workflows, and saves. Follow [GitHub's Actions notification instructions](https://docs.github.com/en/subscriptions-and-notifications/how-tos/managing-github-actions-notifications). Confirm the deliberately failed STRATO run actually arrives through the chosen channel; an Actions-tab failure alone does not establish notification receipt. Changing the trigger-token owner requires checking the recipient again.
 
 ## Operator commands and recovery
 
@@ -32,6 +40,20 @@ Do not remove a busy lock. After a failed/cancelled run, confirm that no GitHub/
 Configuration/state paths contain operational details and stay off public issues/logs. Local errors are saved only in ignored `output/strato-private/release-error.json`. CI prints a generic failure; inspect operational state privately. No credentials, traces or private artifacts are uploaded as Actions artifacts.
 
 ## Evidence and limits
+
+### Live CI setup — 10 November 2026
+
+The [first protected CI delivery](https://github.com/0xJado/pk-hockey-academy/actions/runs/42895600748) passed: Astro check on 130 files, 76 website tests, 10 release tests, isolated download lifecycle builds, complete export, SFTP activation and served-byte verification. A separate six-case host check confirmed anonymous authentication, noindex, private-path denial, inactive registration and the PHP preview guard.
+
+The [Sanity-triggered title update](https://github.com/0xJado/pk-hockey-academy/actions/runs/42896698825) also passed delivery. The existing approved academy logo entry was privately backed up and temporarily labelled as a technical migration check; the changed title appeared on STRATO while the downloaded file retained its exact approved SHA-256. A temporary draft of this same entry was created and removed with revision guards; neither action created a production workflow. No trainer identities, sessions or gallery publications were fabricated.
+
+The [withdrawal run](https://github.com/0xJado/pk-hockey-academy/actions/runs/42897710199) passed delivery: the media-kit link disappeared and the former STRATO-owned download URL returned 404. A restored entry with an absent file was treated as withdrawn by the existing adapter; [that run](https://github.com/0xJado/pk-hockey-academy/actions/runs/42897984183) correctly reused the identical release and is not failed-build evidence.
+
+The [deliberately invalid required-title run](https://github.com/0xJado/pk-hockey-academy/actions/runs/42899258491) failed with the expected approved-media-kit metadata error before activation. The active release did not change; served page/download-response hashes matched the preceding working withdrawal. The original approved entry was then restored with a revision guard and its business fields compared exactly against the private backup. [Restoration delivery](https://github.com/0xJado/pk-hockey-academy/actions/runs/42899538498) passed; the original title and approved download bytes were independently checked on STRATO.
+
+The operator reports Actions failure notifications enabled; actual receipt of the intentional failed-run alert remains unconfirmed. Keep this issue open until alert receipt and Pierre's representative update are accepted. Keep the old publishing hook and current Studio preview destination available during this acceptance.
+
+The final local rollback round trip passed retained-file checksums, served-byte checks and authentication-directive comparisons in both directions, ending on the accepted restored release. Its first verification attempt had compared harmless blank-line formatting and triggered recovery; after correcting that local assertion, the full round trip passed. No production rollback implementation was changed. Final host guards, original CMS content and restored download bytes were rechecked; the deployment lock is clear.
 
 Local automated tests cover complete versions, withdrawal routing, rollback with rotated authentication, corrupt artifacts, immutable asset collisions, interrupted staging, lock contention, duplicate publication coalescing, health-check failure recovery and competing operator changes. Studio tests evaluate the fixed dispatch projection and existing document/draft filters. These tests do not prove live webhook delivery, GitHub secret configuration, operator notifications or Pierre's acceptance; issue #10 stays open until those checks pass.
 
