@@ -1,6 +1,6 @@
 # Protected STRATO publishing — issue #10
 
-Protected publishing is enabled, 10 November 2026. The GitHub workflow and separate Sanity hook passed real approved-download edit, withdrawal, restoration and deliberately invalid-publication checks; the final rollback round trip also passed. Issue #10 remains open for actual operator alert receipt and Pierre's representative update. The existing Vercel publication hook and private Visual Editing remain intact. Registration stays inactive and indexing stays disabled.
+Protected publishing is enabled, 10 November 2026. The GitHub workflow and separate Sanity hook passed real approved-download edit, withdrawal, restoration and deliberately invalid-publication checks; the final rollback round trip also passed. Issue #10 remains open for Pierre's representative update; operator failure-alert receipt was confirmed on 10 November 2026. The existing Vercel publication hook and private Visual Editing remain intact. Registration stays inactive and indexing stays disabled.
 
 ## Delivery model
 
@@ -51,7 +51,7 @@ The [withdrawal run](https://github.com/0xJado/pk-hockey-academy/actions/runs/42
 
 The [deliberately invalid required-title run](https://github.com/0xJado/pk-hockey-academy/actions/runs/42899258491) failed with the expected approved-media-kit metadata error before activation. The active release did not change; served page/download-response hashes matched the preceding working withdrawal. The original approved entry was then restored with a revision guard and its business fields compared exactly against the private backup. [Restoration delivery](https://github.com/0xJado/pk-hockey-academy/actions/runs/42899538498) passed; the original title and approved download bytes were independently checked on STRATO.
 
-The operator reports Actions failure notifications enabled; actual receipt of the intentional failed-run alert remains unconfirmed. Keep this issue open until alert receipt and Pierre's representative update are accepted. Keep the old publishing hook and current Studio preview destination available during this acceptance.
+On 10 November 2026 the operator confirmed receipt of the notification for intentional failed run 42899258491. Failure-alert delivery is accepted. Keep this issue open until Pierre's representative update is accepted. Keep the old publishing hook and current Studio preview destination available during this acceptance.
 
 The final local rollback round trip passed retained-file checksums, served-byte checks and authentication-directive comparisons in both directions, ending on the accepted restored release. Its first verification attempt had compared harmless blank-line formatting and triggered recovery; after correcting that local assertion, the full round trip passed. No production rollback implementation was changed. Final host guards, original CMS content and restored download bytes were rechecked; the deployment lock is clear.
 
