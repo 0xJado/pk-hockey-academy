@@ -38,9 +38,8 @@ export function getRegistrationUrl(
     return;
   try {
     const url = new URL(session.spielerPlusUrl);
-    // SpielerPlus applies only to participants with multiple-session bookings.
-    // Activate only after that participant-specific workflow is verified.
-    // The entire integration stays disabled for this milestone.
+    // SpielerPlus is handled separately; this legacy data field never enables registration.
+    // Preserve the legacy schema without offering a website integration.
     if (url.protocol !== "https:") return;
     return undefined;
   } catch {
