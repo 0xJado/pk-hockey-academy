@@ -9,7 +9,7 @@ Stand: 6. November 2026. Diese Liste dient als Gesprächs- und Freigabegrundlage
 - Sanity, Medienkit und die Trainerbearbeitung einschließlich Website-Klickbearbeitung sind eingerichtet. Für diese Einrichtung wird kein neues CMS-Konto oder Projekt benötigt.
 - Das Angebot bis U13, die drei aktiven Städte Essen/Dinslaken/Duisburg und das 60-Minuten-On-Ice-/60-Minuten-Off-Ice-Konzept sind bekannt. Herne/Dorsten/Wesel bleiben als geplant gekennzeichnet.
 - Die Preise sind mit 50 € pro Einzeltermin und 200 € für fünf Einheiten hinterlegt. Noch offen sind die Bedingungen und Abläufe dazu.
-- Für Trainingsanmeldungen ist jetzt eine private STRATO-Datenbank mit PHP-Verarbeitung vorgesehen; die Google-Tabelle entfällt. Sanity bleibt für öffentliche Website-Inhalte zuständig. SpielerPlus betrifft nur Buchungen mehrerer Einheiten; der genaue Ablauf fehlt noch.
+- Für Trainingsanmeldungen ist eine private STRATO-Datenbank mit PHP-Verarbeitung vorgesehen; die Google-Tabelle entfällt. Sanity bleibt für öffentliche Website-Inhalte zuständig. SpielerPlus wird vollständig außerhalb der Website organisiert und ist keine Voraussetzung für deren Launch.
 - Die öffentliche Domain ist bestätigt: **pkhockeyacademy.de**. Sie muss nicht erneut erfragt werden; die technische Verbindung und der öffentliche Start sind gesonderte Schritte.
 
 ## Aktuelle WhatsApp-Rückfragen nach gemeinsamer Überarbeitung
@@ -38,19 +38,16 @@ Die erste geschützte Vorschau kann mit erfundenen Testantworten entstehen. Für
 
 ## 2. Online-Anmeldung: Entscheidungen für die Aktivierung
 
-Für Ticket #12 liegt eine [Freigabeunterlage zur vorhandenen Anmeldung v2](REGISTRATION-POLICY-REVIEW.md) vor. Sie enthält die 28 Feld-/Auswahlentscheidungen und acht Prozessbereiche mit offenen Fragen. Antworten bitte privat in normalem Deutsch geben; keine ausgefüllten Kinderanmeldungen oder Gesundheitsdaten als Beispiele schicken. Die Entwicklung dokumentiert den freigegebenen Stand separat. Onlineeingabe und Versand bleiben bis zur vollständigen Umsetzung und Abnahme deaktiviert.
+Für Ticket #12 gilt das [einfache Startmodell](REGISTRATION-LAUNCH-POLICY.md): ein Hauptkontakt, notwendige Kind-/Anfrageangaben, getrennte optionale Einwilligungen und persönliche Buchungsbestätigung durch Pierre. Die 28 Papierfelder sind dort zugeordnet; [Aufbewahrung und Zugriff](DATENSCHUTZ-BETRIEBSREGELN.md) sind festgelegt. Keine erneute 28-Punkte-Grundsatzabfrage und keine SpielerPlus-Abnahme für die Website. Onlineeingabe und Versand bleiben bis zur Umsetzung und Abnahme deaktiviert.
 
 Das PDF ist verfügbar. Die Online-Vorschau bleibt bis zur fertigen Verarbeitung und Freigabe deaktiviert.
 
 - [ ] Die Entwicklung richtet die private STRATO-Datenbank mit PHP-Verarbeitung und geschützter Anmeldungsverwaltung ein und prüft diese vor Aktivierung. Pierre muss keine Google-Tabelle erstellen oder freigeben. Siehe [Migrationsentscheidung](STRATO-MIGRATION.md).
-- [ ] Benennen, wer eingehende Anmeldungen ansehen und wer sie bearbeiten darf. Den technischen Schreibzugang richtet die Entwicklung anschließend ein; dafür keine Passwörter oder Schlüsseldateien verschicken.
-- [ ] Für jedes Formularfeld Pflicht/optional festlegen. Klären: Jahrgang oder vollständiges Geburtsdatum, ein oder zwei Erziehungsberechtigte und ob einzelne Gesundheitsangaben überhaupt online erfasst werden sollen.
-- [ ] Freigegebene Datenschutz-, Gesundheits-, Versicherungs- und Zustimmungstexte bereitstellen. Die drei Medienauswahlfelder der Papiervorlage einschließlich interner Videoanalyse eindeutig erklären; freiwillige Auswahl und Widerruf klären.
-- [ ] Festlegen, wie die Unterschriften online abgebildet werden und welche Bestätigung der Erziehungsberechtigten erforderlich ist.
-- [ ] Festlegen, wie lange Anmeldungen aufbewahrt werden und wer die Löschung übernimmt.
-- [ ] Den Buchungsablauf erklären: Wer bestätigt einen Platz, wann ist eine Buchung verbindlich, und welche Rückmeldung sollen Eltern nach dem Absenden erhalten?
-- [ ] Ort/Zeitpunkt beziehungsweise zuständige Person für die Abgabe ausgefüllter Papierformulare nennen.
-- [ ] Den genauen SpielerPlus-Ablauf für Mehrfachbuchungen samt freigegebenem Link erklären. Für Einzeltermine bleibt die eigene Anmeldung vorgesehen.
+- [x] Startmodell und Datenumfang: ein Hauptkontakt, Jahrgang, optionale betreuungsrelevante Gesundheitsangaben mit eigener Einwilligung; keine zusätzlichen Pflicht-Unterschriften oder Kinderanschriften.
+- [x] Rollen, Fristen, Widerruf und Löschverantwortung sind in den Betriebsregeln gewählt; technische Umsetzung steht aus.
+- [x] Ablauf: Trainingsanfrage; Eingangsbestätigung erst nach Speicherung; Pierre bestätigt die Buchung persönlich. SpielerPlus ist ein getrennter Vorgang.
+- [ ] Konkrete Texte und tatsächlich eingesetzte Provider vor Launch rechtlich/inhaltlich mit der fertigen Umsetzung abgleichen; keine ungeprüften Papier-Haftungserklärungen übernehmen.
+- [ ] Sichere Speicherung, Zugriff und Löschung sowie den gesamten Anfrage-/Bestätigungsweg abnehmen. Keine echten Daten vor Aktivierung verwenden.
 
 ## 3. Echte Trainingstermine und Trainingsstätten
 

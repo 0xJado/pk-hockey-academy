@@ -183,7 +183,7 @@ Copy `web/.env.example` to `web/.env` only when needed:
 - `SITE_URL`: real HTTPS origin. Optional for previews; without it no canonical or absolute social URL is emitted. Invalid origins fail the build.
 - `PUBLIC_LAUNCH_READY`: keep `false` until launch is approved and real content/legal information is complete. It enables indexing/sitemap only together with a configured site origin.
 
-These environment flags do not constitute launch approval or legal review. The Impressum now contains Pierre's supplied provider address, telephone, email, website and sole-proprietor details (approved for insertion on 10 November 2026), stored in `web/src/data/legal.ts`. Its notice retains the outstanding tax-identification/additional-disclosure check and final legal approval. The telephone is not verified as a WhatsApp destination. The privacy route remains an incomplete internal draft pending the supplied privacy text.
+These environment flags do not constitute launch approval or legal review. The Impressum now contains Pierre's supplied provider address, telephone, email, website and sole-proprietor details (approved for insertion on 10 November 2026), stored in `web/src/data/legal.ts`. Its notice retains the outstanding tax-identification/additional-disclosure check and final legal approval. The telephone is not verified as a WhatsApp destination. The privacy route is still a placeholder. The supplied privacy text has been revised for the completed STRATO/Sanity production service in [the German draft](docs/DATENSCHUTZ-ENTWURF.md). On 10 November the user delegated privacy operating decisions; [production privacy rules](docs/DATENSCHUTZ-BETRIEBSREGELN.md) define retention, role access, consent and rights handling. These are implementation requirements, not a claim that collection, automatic deletion or staff access already works. Provider facts and production acceptance remain to be verified before launch.
 
 ## Required from Pierre before launch
 
@@ -228,6 +228,6 @@ Source: public `0xJado/pk-hockey-academy`. Vercel review hosting is configured s
 
 See [forms foundation](docs/FORMS-FOUNDATION.md). Registration has a tested server-only processing core with injected policy and fake delivery; `/api/registration` always returns 503 without reading the request body. The PDF and disabled `/anmeldung` preview are preserved.
 
-Issue #12's [German review packet](docs/REGISTRATION-POLICY-REVIEW.md) prepares the outstanding field, consent, booking and retention decisions. Run `npm run review:registration --prefix web -- --check` to verify it against the unchanged supplied PDF. Owner/legal approval remains pending; the checker cannot activate registration.
+Issue #12's [simple start model](docs/REGISTRATION-LAUNCH-POLICY.md) defines a minimal training request with one guardian contact and personal booking confirmation by Pierre. SpielerPlus is a separate workflow outside the website. The [source review](docs/REGISTRATION-POLICY-REVIEW.md) binds all paper references to this model and the unchanged PDF; run `npm run review:registration --prefix web -- --check`. Final text/legal and implementation acceptance remain pending; the checker cannot activate registration.
 
 The existing browser command now covers full player/trainer journeys, with fictional exports in ignored diagnostics.

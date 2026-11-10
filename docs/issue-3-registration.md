@@ -1,5 +1,7 @@
 # Registration template — partial issue #3
 
+Current scope, 10 November 2026: use the [simple training-request model](REGISTRATION-LAUNCH-POLICY.md) and chosen [privacy operating rules](DATENSCHUTZ-BETRIEBSREGELN.md). SpielerPlus is entirely separate from the website; no integration, invitation/link verification or SpielerPlus acceptance is a website-launch dependency. The older questions below preserve their dated source context and do not reopen the already chosen field/privacy decisions. PHP storage, staff access and actual online activation remain #13–#15.
+
 Current decision, 6 November 2026: replace the previously planned Google Sheet with a private STRATO database and PHP registration backend, plus a protected staff interface. No Google account/Sheet setup is required. Storage, processing, staff access and production acceptance remain unimplemented; registration stays disabled. The Google-specific sections below preserve the superseded October plan and must not be followed. See [current migration decision](STRATO-MIGRATION.md).
 
 Update, 2 November 2026: a server-only processing foundation now exists with policy injection, request limits, duplicate protection and fake delivery tests. The public `/api/registration` route remains unconditionally inactive and does not read submitted bodies. No actual form, approved field policy or Google connection is activated. See [forms foundation](FORMS-FOUNDATION.md).

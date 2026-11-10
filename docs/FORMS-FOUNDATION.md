@@ -4,7 +4,7 @@ Current direction, 6 November 2026: Google Sheets delivery is abandoned. Product
 
 This increment adds processing infrastructure and fictional local previews, not live registration or contact delivery. No Google Sheet, messaging account, email service, database or CMS record is connected.
 
-Issue #12 now has a [German source-based review packet](REGISTRATION-POLICY-REVIEW.md): 28 field/choice decisions and eight process decisions, all unapproved. `npm run review:registration -- --check` in `web/` checks PDF integrity and packet consistency. Private worksheets stay under ignored `output/registration-private/`; completeness is not approval and is never consumed by a runtime endpoint.
+Issue #12 uses the [simple launch request model](REGISTRATION-LAUNCH-POLICY.md), chosen under the user's 10 November direction: minimal fields, one guardian contact, separate optional consents and personal confirmation by Pierre. SpielerPlus is entirely outside the website; no integration or invitation acceptance is required. The [source-review packet](REGISTRATION-POLICY-REVIEW.md) retains 28 paper references/eight process groups without reopening chosen decisions. `npm run review:registration -- --check` in `web/` binds its consistency check to the selected model and unchanged PDF. Private worksheets remain ignored and cannot activate a runtime endpoint. Backend/UI implementation and final text/legal acceptance are still required before genuine data.
 
 ## Registration boundary
 

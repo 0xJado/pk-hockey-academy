@@ -10,7 +10,8 @@ import {registration as paper} from '../src/data/registration.ts';
 const root=new URL('../../',import.meta.url);
 const review=JSON.parse(await readFile(new URL('docs/registration-policy-review.json',root),'utf8'));
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
-const digest=sha(JSON.stringify({review,paper}));
+const launchPolicy=(await readFile(new URL('docs/REGISTRATION-LAUNCH-POLICY.md',root),'utf8')).replaceAll('\r\n','\n');
+const digest=sha(JSON.stringify({review,paper,launchPolicy}));
 const document=new URL('docs/REGISTRATION-POLICY-REVIEW.md',root);
 const privateDirectory=new URL('output/registration-private/',root);
 const privateName=`policy-answers.${digest.slice(0,12)}.local.json`;
@@ -48,6 +49,7 @@ add('medical-first-aid','medicalChoices',5);
 assert.equal(new Set(review.fields.map(field=>field.id)).size,review.fields.length,'Duplicate field decision');
 assert.equal(review.fields.length,expected.length,'Paper decision coverage changed');
 for(const item of expected){
+  assert.ok(launchPolicy.includes('`'+item.id+'`'),'Launch policy must map each paper field/choice');
   const field=review.fields.find(field=>field.id===item.id);
   assert.ok(field,'Missing paper field decision');
   for(const key of ['sourceRef','section','page'])assert.equal(field[key],item[key],'Paper reference drift');
@@ -63,10 +65,10 @@ const sourceText=path=>{
 };
 const cell=value=>String(value).replaceAll('|','\\|').replace(/[\r\n]+/g,' ');
 const rows=review.fields.map(field=>`| \`${field.id}\` | ${field.page} / ${field.section+1} | ${cell(sourceText(field.sourceRef))} | ${cell(field.question)} |`).join('\n');
-const decisions=review.decisions.map(item=>`## ${item.title}\n\nEntscheidung: \`${item.id}\` — **offen**.\n\n${item.questions.map(text=>'- '+text).join('\n')}`).join('\n\n');
+const decisions=review.decisions.map(item=>`## ${item.title}\n\nQuellenreview: \`${item.id}\`. Aktuelle Produktentscheidungen stehen im [einfachen Startmodell](REGISTRATION-LAUNCH-POLICY.md); die folgenden Punkte dienen dem Abgleich, nicht einer erneuten Abfrage bereits festgelegter Regeln.\n\n${item.questions.map(text=>'- '+text).join('\n')}`).join('\n\n');
 const markdown=`# Anmeldung v2: Freigabeunterlage für Pierre
 
-**Entwurf zur Entscheidung, keine Freigabe und keine fertigen Rechtstexte.** Onlineeingabe und Versand bleiben deaktiviert. Dieses Dokument enthält ausschließlich Fragen und bekannte Projektentscheidungen, keine privaten Antworten oder ausgefüllten Anmeldungen.
+**Quellenreview der Papiervorlage, keine Aktivierungsfreigabe und keine fertigen Rechtstexte.** Die Produktentscheidungen vom 10. November stehen im [einfachen Startmodell](REGISTRATION-LAUNCH-POLICY.md); Aufbewahrung und Zugriff sind in den [Betriebsregeln](DATENSCHUTZ-BETRIEBSREGELN.md) festgelegt. Diese Quellfragen öffnen bereits getroffene Entscheidungen nicht erneut. Onlineeingabe und Versand bleiben deaktiviert. Keine privaten Antworten oder ausgefüllten Anmeldungen hier eintragen.
 
 Review-Version: \`${review.reviewVersion}\`
 
@@ -80,54 +82,54 @@ PDF-SHA-256: \`${paper.sha256}\`
 
 - Astro/Sanity bleiben erhalten. Anmeldungen sind für PHP und eine private STRATO-Datenbank vorgesehen; keine Google-Tabelle und keine Ablage in Sanity.
 - Angebot bis U13, 60 Minuten On-Ice plus 60 Minuten Off-Ice. Bekannte Preise: 50 € für eine Einheit, 200 € für fünf Einheiten. Daraus folgen keine weiteren Paket- oder Zahlungsregeln.
-- SpielerPlus betrifft nur Mehrfachbuchungen. Der genaue Ablauf ist noch offen; Einzeltermine werden nicht automatisch dorthin verwiesen.
+- SpielerPlus ist ein vollständig eigenständiger Vorgang außerhalb der Website. Keine Integration, automatische Einladung, Datenübertragung oder SpielerPlus-Abnahme als Launch-Voraussetzung vorsehen.
 - Das Original-PDF liegt bereits vor und wird nicht erneut angefordert oder verändert. Es enthält selbst einen Hinweis auf die rechtliche Prüfung.
 - Die Formularvorlage legt keinen Pflichtstatus fest. Zwei Kontakt-/Unterschriftsbereiche bedeuten nicht automatisch zwei online verpflichtende Personen.
 
 ## Feld-, Zweck- und Pflichtmatrix
 
-Für **jede** Zeile privat festhalten: online aufnehmen, weglassen oder einen getrennten freigegebenen Weg nutzen; dazu Zweck, Pflicht/optional und genaues Format. Sämtliche Entscheidungen sind offen. Die Fragen sind keine Empfehlung, die jeweiligen Daten tatsächlich zu erheben.
+Die Zuordnung aller 28 Papierfelder/-auswahlen mit Zweck, Pflichtstatus und Format ist im Startmodell festgelegt. Die folgende Tabelle bewahrt die Quellfragen zur Nachvollziehbarkeit; sie ist keine offene 28-Punkte-Aufgabenliste für Pierre. Zusätzliche private Abweichungen werden nur bei tatsächlichem Bedarf dokumentiert.
 
 | ID | PDF-Seite / Abschnitt | Feld bzw. Auswahl der Papiervorlage | Prüffrage |
 | --- | --- | --- | --- |
 ${rows}
 
-## Medienauswahl: ausdrücklich aufzulösende Fälle
+## Medienauswahl: festgelegtes Startmodell
 
-| Papierauswahl | Offene Entscheidung |
+| Papierauswahl | Online-Abbildung |
 | --- | --- |
-| Öffentliches Ja und Nein zugleich | Welche Eingabe ist zulässig und welche Rückfrage/Fehlermeldung folgt? |
-| Öffentliches Nein plus interne Videoanalyse | Sind dies unabhängig erlaubte Zwecke? Wortlaut und Auswahlmodell freigeben. |
-| Öffentliches Ja ohne interne Auswahl | Deckt das interne Analyse ab oder braucht es eine gesonderte Entscheidung? |
-| Keine Medienauswahl | Was bedeutet eine leere Auswahl? Keine Einwilligung aus dem Schweigen ableiten oder automatisch vorauswählen. |
+| Öffentliches Ja und Nein zugleich | Kein widersprüchliches Kästchenpaar übernehmen; getrennte optionale Zwecke verwenden. |
+| Öffentliches Nein plus interne Videoanalyse | Unabhängige Auswahl; interne Analyse erlaubt keine Veröffentlichung. |
+| Öffentliches Ja ohne interne Auswahl | Keine interne Analyse aus einer Veröffentlichungsfreigabe ableiten. |
+| Keine Medienauswahl | Keine Erlaubnis für den jeweiligen Zweck; keine Vorauswahl. |
 
 ${decisions}
 
-## Aufbewahrung und Rollen: privat zu ergänzen
+## Aufbewahrung und Rollen: bereits festgelegt
 
-Für offene, bestätigte, abgelehnte/zurückgezogene Anfragen, Gesundheitsangaben, Mediennachweise/Widerrufe, Papierunterlagen und technische Sicherungen jeweils festlegen: Zweck, Fristbeginn, Dauer, berechtigte Rollen, Löschverantwortung und Umgang mit Kopien/Sicherungen. Hier wird keine Frist gesetzt und keine Person pauschal berechtigt.
+Die Datenschutz-Betriebsregeln definieren die gewählten Fristen, Auslöser, Zugriffe und Verantwortlichkeiten. Diese nicht erneut als unbeantwortete Fragen behandeln; Implementierung und tatsächliche Lösch-/Zugriffskontrollen bleiben nachzuweisen. Keine gesetzliche Pflicht zur pauschalen Archivierung aller Anmeldedaten daraus ableiten.
 
 Die rechtliche Prüfung muss zu den tatsächlichen Zwecken und Abläufen passen. Die Prüffragen betreffen insbesondere Datenumfang, Rechtsgrundlage, Einwilligungen, besondere Datenkategorien, Information und Löschung; die Einzelfallentscheidung ist offen. Referenz: [DSGVO, insbesondere Artikel 5, 6, 7, 9, 13 und 17](https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32016R0679).
 
 ## Vorschlag für eine spätere technische Eingangsbestätigung
 
-Nur zur Freigabe, noch nicht im Formular oder einem Versanddienst verwendet:
+Für das Startmodell gewählt, noch nicht im Formular oder einem Versanddienst verwendet:
 
 > Deine Trainingsanfrage wurde entgegengenommen. Die Academy prüft die Anfrage. Ein Trainingsplatz ist damit noch nicht bestätigt.
 
-Diese Meldung darf erst nach nachgewiesener technischer Annahme verwendet werden. Sie ersetzt keine Platzprüfung oder Buchungsbestätigung. Wer wann verbindlich bestätigt und welche Folgen das hat, muss Pierre festlegen und prüfen lassen. Die jetzige API nimmt keine Angaben an und gibt weiterhin HTTP 503 zurück.
+Diese Meldung darf erst nach nachgewiesener dauerhafter Speicherung verwendet werden. Sie ersetzt keine Platzprüfung oder Buchungsbestätigung. Pierre bestätigt die Buchung persönlich; weitere Bedingungen werden nicht erfunden. Die jetzige API nimmt keine Angaben an und gibt weiterhin HTTP 503 zurück.
 
 ## Private Antworten und verbindliche Freigabe
 
 Pierre kann die Fragen in normalem Deutsch beantworten; die Arbeitsdatei dient der privaten Dokumentation durch die Entwicklung. Im Verzeichnis \`web/\` wird sie mit \`npm run review:registration -- --init-private\` unter \`output/registration-private/${privateName}\` im Projektstamm erzeugt. Dieser Pfad ist Git-ignoriert. Der Dateiname bindet sie an den Review-Stand. Vorhandene Antworten werden weder überschrieben noch automatisch in neue Versionen übernommen.
 
-Je Feld: \`collection\` ist \`include\`, \`omit\` oder \`separate_approved_channel\`; \`purpose\` beschreibt den bestätigten Zweck bzw. den Grund für das Weglassen. Bei \`include\` werden \`requiredness\` als \`required\` oder \`optional\` und das genaue \`format\` eingetragen. Andernfalls lautet \`requiredness\` \`not_applicable\`. Je Prozessentscheidung gehören Beschreibung und privater Freigabeverweis zusammen. Dies sind Dokumentationswerte, keine bereits genehmigten Regeln.
+Das Arbeitsblatt ist nur für zusätzliche private Nachweise oder Abweichungen vorgesehen; ein leeres altes Blatt bedeutet nicht, dass die im Startmodell bereits gewählten Produktregeln offen sind. Je Feld: \`collection\` ist \`include\`, \`omit\` oder \`separate_approved_channel\`; \`purpose\` beschreibt den Zweck bzw. das Weglassen. Bei \`include\` werden \`requiredness\` als \`required\` oder \`optional\` und das genaue \`format\` eingetragen; sonst \`not_applicable\`. Eine vollständig ausgefüllte Datei ist keine eigenständige Aktivierungs- oder Rechtsfreigabe.
 
 Keine realen Anmeldungen, Gesundheitsangaben, Passwörter oder Einladungslinks in die Arbeitskopie schreiben; sensible Freigabeunterlagen nur über private Verweise referenzieren.
 
 \`npm run review:registration -- --status ../output/registration-private/${privateName}\` zeigt nur Vollständigkeitszahlen, keine Antworten. Die Prüfung bestätigt weder Pierres Identität/Freigabe noch rechtliche Angemessenheit und kann die Registrierung nicht aktivieren. Geänderte Fragen, Quellformulierungen oder PDF-Versionen machen die Versionsbindung der Arbeitskopie ungültig.
 
-Vor Abschluss von [Ticket #12](https://github.com/0xJado/pk-hockey-academy/issues/12) sind geschäftliche Freigabe, erforderliche fachliche/rechtliche Prüfung und die verbindlichen Text-/Prozessversionen privat nachzuweisen. Erst danach können #13 bis #15 die freigegebene Datenverarbeitung und Bedienung umsetzen und abnehmen. Hosting, ein ausgefülltes Arbeitsblatt oder ein erfolgreicher HTTP-Request sind dafür keine Freigabe.
+Die Nutzerentscheidung vom 10. November legt das einfache Produktmodell fest. #13 bis #15 setzen dessen Datenverarbeitung und Bedienung um; vor echten Daten bleiben technische Abnahme, konkrete Textstände und erforderlicher rechtlicher/Provider-Abgleich nachzuweisen. Die Papiervorlage gilt dadurch nicht als rechtlich geprüft. SpielerPlus ist keine Freigabeabhängigkeit. Hosting, ein ausgefülltes Arbeitsblatt oder ein erfolgreicher HTTP-Request aktivieren keine Registrierung.
 `;
 if(args.includes('--write'))await writeFile(document,markdown);
 assert.equal((await readFile(document,'utf8')).replaceAll('\r\n','\n'),markdown,'Review document is stale; regenerate with --write');
