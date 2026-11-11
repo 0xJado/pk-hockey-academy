@@ -1,11 +1,14 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {deployRelease,rollbackRelease,withReleaseLock} from '../lib/releases.mjs';
-import {sha256,validateArtifact} from '../lib/artifact.mjs';
+import {sha256,validateArtifact,publicPath} from '../lib/artifact.mjs';
 import {activeRelease,ROUTER_MARKER,renderRouter} from '../lib/release-router.mjs';
 
 const auth='AuthType Basic\nAuthName "Review"\nAuthUserFile "/private/review"\nRequire valid-user\nHeader always set X-Robots-Tag "noindex, nofollow"\n';
 const original=auth+ROUTER_MARKER+'RewriteEngine On\n';
+test('staff source/configuration cannot enter a static deployment artifact',()=>{
+  for(const path of ['staff/public/index.php','staff/config.example.json','staff/Staff.php','staff/console.php'])assert.equal(publicPath(path),false);
+});
 class Memory {
   files=new Map([['.htaccess',Buffer.from(original)]]);dirs=new Set();fail;
   async get(path){if(!this.files.has(path))throw Error('Missing '+path);return this.files.get(path);}

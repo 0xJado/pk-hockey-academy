@@ -6,7 +6,7 @@ export const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 export function publicPath(path) {
   return typeof path === 'string' && /^[A-Za-z0-9_./-]+$/.test(path)
     && !path.startsWith('/') && path.split('/').every(part=>part && part!=='.' && part!=='..')
-    && !/(^|\/)(?:\.env[^/]*|node_modules|private|server|src|vendor)(\/|$)/.test(path)
+    && !/(^|\/)(?:\.env[^/]*|node_modules|private|server|src|staff|vendor)(\/|$)/.test(path)
     && (path==='.htaccess' || path==='api/preview-lib/.htaccess' || !path.split('/').some(part=>part.startsWith('.')));
 }
 export function validateArtifact(ready,contents) {
