@@ -1,6 +1,6 @@
 # Private registration management — issue #14 candidate
 
-Implemented on 11 November 2026. This is a locally tested PHP candidate, **not a deployed staff service**. #14 depends on #13; production intake/storage remains unimplemented and `/api/registration` still returns inactive 503 without parsing bodies. No real registrations or staff credentials were created. Source lives in `hosting/strato/staff/` and is deliberately excluded from the static deployment artifact.
+Implemented on 11 November 2026. This is a locally tested PHP candidate, **not an enabled staff service**. #14 depends on #13, which now has a separate [implemented, disabled intake candidate](STRATO-REGISTRATION-BACKEND.md). Public `/api/registration` still returns inactive 503 without parsing bodies. No real registrations or staff credentials were created. Source lives in `hosting/strato/staff/` and is deliberately excluded from the static deployment artifact.
 
 ## Verified account prerequisites
 
@@ -21,6 +21,8 @@ Read-only STRATO inspection found **0 of 25 databases used**, with MariaDB 11.8 
 - Narrow legal holds require a concrete basis, category and review within 31 days; care holds require an explicit special-category basis. A new hold cannot resurrect already expired/missing data. Expired/released holds do not extend other categories.
 
 ## #13 storage contract, version 1
+
+Later #13 implementation adopted this encrypted record contract. Local cross-reading and withdrawal/restore tests pass; actual MariaDB intake concurrency/failure tests pass using isolated fictional tables. The updated restore code pauses/rotates an existing intake epoch so recovery cannot silently replay old browser tokens. The current staff service is still disabled and its actual-host deployment/restore/operator acceptance remains #14; do not infer it from intake tests.
 
 `Staff::migrate()` creates the prefixed InnoDB tables for MySQL/MariaDB or equivalent SQLite test tables. HTTP requests never migrate a database. `pk_staff_schema.version` must match 1. Production configuration rejects SQLite and requires the explicit `databaseContractAccepted` gate. MariaDB syntax, privileges, concurrency and performance must still be verified on the actual provisioned database.
 

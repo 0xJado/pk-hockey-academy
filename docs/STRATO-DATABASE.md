@@ -28,7 +28,7 @@ Existing differing local/server configurations are refused. Inspect partial stat
 
 ## Remaining acceptance
 
-#13 remains open: validated policy/session inputs, purpose-bound encrypted payload mapping, durable idempotency/rate controls, concurrent/conflicting retries, outages and uncertain-write reconciliation. #12 final text approval and #13–#15 acceptance still gate genuine collection.
+#13 now has an [implemented and host-tested intake candidate](STRATO-REGISTRATION-BACKEND.md): validated policy/session inputs, encrypted staff records, atomic receipt/idempotency/rate controls and uncertain-write handling. Three additional paused intake tables and disabled versioned private source/configuration are installed. No genuine collection is enabled. Runtime privilege/upstream timeout acceptance, #12 final policy approval and #14/#15 acceptance remain outstanding.
 
 Runtime-versus-migration privilege separation has **not** been established. The dashboard-created login was used for operator setup. Inspect supported grants/account management and arrange or document narrow runtime privileges before enabling intake. Connectivity alone does not establish least-privilege acceptance. No database listener was made public by this work.
 

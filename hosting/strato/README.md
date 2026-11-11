@@ -49,6 +49,8 @@ Every uploaded file is read back. After one atomic SFTP rename of the routing fi
 
 ## PHP boundary
 
+#13 now has a [private PHP intake candidate and operations runbook](../../docs/STRATO-REGISTRATION-BACKEND.md), with atomic encrypted requests/receipts, persisted limits and local/actual-MariaDB failure tests. Source/configuration stay outside the public root and static artifact. Intake schema is paused and approval flags remain disabled; the public entry below is unchanged. Runtime privilege/upstream timeout acceptance and #12/#14/#15 gates remain open.
+
 Update, 11 November 2026: private MariaDB is now provisioned with six empty foundation tables. PHP connection, rollback, Unicode and sodium prerequisites passed; no intake/staff activation occurred. See [database setup and outstanding acceptance](../../docs/STRATO-DATABASE.md). The following inactive-endpoint behavior remains current; earlier unprovisioned hosting checkpoints below are historical.
 
 `/api/registration` rewrites to `api/registration.php`. Every method returns the existing German inactive JSON response with HTTP 503 and no-store. Application code does not parse request bodies or access storage. Registration remains disabled in the UI. The private database, consent policy, submission processing, durable duplicate/rate controls, staff authentication and retention/deletion are future increments; no schema or credentials are invented here.
