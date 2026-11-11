@@ -1,5 +1,9 @@
 # Private PHP registration intake — #13
 
+Update, 12 November 2026: the stalled case is **not** a slow-drip acceptance. A slowly continuing incomplete JSON request stayed open until the client abort at 75 seconds despite reported `max_input_time=60`. A PHP elapsed-read comparison did not demonstrate an upstream/SAPI hard deadline. A scoped automatic-POST-off/alarm experiment also failed the short-deadline host test and was removed; the exact blocking/buffering boundary is unconfirmed. Both host-acceptance gates remain false. [Concrete STRATO questions](STRATO-SUPPORT-QUESTIONS.md) are prepared and have **not** been sent. Do not close #13 or activate collection based on the earlier idle-upload result.
+
+The pushed quality run initially failed in the CMS-free static media-kit export, before PHP tests. Commit `b46f71e` fixes the distinction between a bundled Astro logo and CMS downloads; [quality run 43118264712](https://github.com/0xJado/pk-hockey-academy/actions/runs/43118264712) passed. Local starter export and CMS publication/withdrawal/invalid-size builds passed; 79 website tests now pass. Separate uncommitted legal/privacy work in the workspace was preserved.
+
 Implemented and fictional-data tested on 11 November 2026. This adopts the selected minimal request model and version-1 encrypted staff storage contract. It is a **disabled backend candidate**, not an enabled registration journey or final policy approval. Public `/api/registration` remains the original unconditional 503 response; its source was not changed. The form remains inactive. No real registration or staff account was created.
 
 ## Components and protocol
