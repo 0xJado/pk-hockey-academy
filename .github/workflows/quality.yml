@@ -80,6 +80,12 @@ jobs:
         run: php -n hosting/strato/tests/preview.php
       - name: Check staff authentication, lifecycle and private restore
         run: php hosting/strato/tests/staff.php
+      - name: Check PHP registration validation, atomic receipts and unknown outcomes
+        run: php hosting/strato/tests/registration.php
+      - name: Test isolated registration HTTP and simultaneous retries
+        env:
+          PK_PHP_EXECUTABLE: php
+        run: npm run test:strato:registration:http --prefix web
       - name: Test isolated staff HTTP and browser workflow
         env:
           PK_PHP_EXECUTABLE: php

@@ -7,7 +7,7 @@ import {activeRelease,ROUTER_MARKER,renderRouter} from '../lib/release-router.mj
 const auth='AuthType Basic\nAuthName "Review"\nAuthUserFile "/private/review"\nRequire valid-user\nHeader always set X-Robots-Tag "noindex, nofollow"\n';
 const original=auth+ROUTER_MARKER+'RewriteEngine On\n';
 test('staff source/configuration cannot enter a static deployment artifact',()=>{
-  for(const path of ['staff/public/index.php','staff/config.example.json','staff/Staff.php','staff/console.php','database/install.php.template','database/config.json'])assert.equal(publicPath(path),false);
+  for(const path of ['staff/public/index.php','staff/config.example.json','staff/Staff.php','staff/console.php','database/install.php.template','database/config.json','registration/Intake.php','registration/public/index.php','registration/config.example.json'])assert.equal(publicPath(path),false);
 });
 class Memory {
   files=new Map([['.htaccess',Buffer.from(original)]]);dirs=new Set();fail;
