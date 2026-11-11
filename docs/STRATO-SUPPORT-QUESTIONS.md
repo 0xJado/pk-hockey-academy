@@ -1,6 +1,8 @@
-# Technische Rückfragen zu Hosting Basic — Entwurf, nicht versendet
+# Technische Rückfragen zu Hosting Basic — am 12. November 2026 versendet
 
-Betreff: Hosting Basic / PHP: langsame JSON-Uploads und Datenbankrechte
+Betreff: Hosting Basic: JSON-Upload-Zeitlimit und MariaDB-Benutzerrechte
+
+Mit ausdrücklicher Zustimmung des Nutzers über den angemeldeten STRATO-Kundenservice unter „Hosting und Domains“ versendet. STRATO zeigte die Eingangsbestätigung „Vielen Dank für Ihre Anfrage“; eine Vorgangsnummer wurde in der Bestätigung nicht angezeigt. Es wurden keine Zugangsdaten oder Teilnehmerdaten eingetragen. Eine technische Antwort steht aus; die Annahme-Sperren bleiben bestehen. Keine Session-URL oder Kundennummer in diese Dokumentation übernehmen.
 
 Wir betreiben eine statisch gebaute Website mit kleinen PHP-Endpunkten für Trainingsanfragen. Die Anwendung ist noch geschützt; die Annahme echter Daten bleibt deaktiviert. Bitte klären Sie folgende Funktionen im vorhandenen Hosting-Basic-Paket ohne kostenpflichtige Umstellung:
 
@@ -12,7 +14,7 @@ Es werden keine Zugangsdaten, Tokens, Sessionlinks, Datenbanknamen oder Teilnehm
 
 ## Interner Abgleich
 
-- Dies ist eine vorbereitete Anfrage, keine bereits erhaltene Anbieterbestätigung und kein Auftrag für ein Upgrade.
+- Die Anfrage wurde versendet. Dies ist noch keine Anbieterbestätigung zu den technischen Eigenschaften und kein Auftrag für ein Upgrade.
 - Der lokale #13-Zeitvergleich schützt vor verspäteter Verarbeitung nach Rückkehr des Leseaufrufs. Die gemessene langsame Eingabe ist damit noch nicht als fristgerecht beendet akzeptiert.
 - Ein isolierter Versuch mit ausgeschaltetem automatischem POST-Lesen und PHP-Alarm hat auf diesem Hosting ebenfalls keine belastbare kurze Antwortfrist für den Testrequest ergeben. Die genaue Grenze zwischen vorgelagerter Verarbeitung und blockierendem SAPI-Lesen ist nicht nachgewiesen; keine ungeprüfte Ursachenbehauptung an den Anbieter senden.
 - Die experimentelle Laufzeit-/Verzeichniskonfiguration wurde entfernt und nicht in den öffentlichen oder privaten Registrierungseintrag übernommen. Die Site-Konfiguration und die Annahme-Sperren blieben erhalten.
