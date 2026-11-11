@@ -1,5 +1,7 @@
 # Current project status
 
+Database increment, 11 November 2026: the account holder created private MariaDB and entered credentials locally. PHP connectivity, six empty InnoDB/utf8mb4 foundation tables, Unicode round-trip, rollback and sodium prerequisites passed on STRATO. Configuration/keys/journal/library are outside the public root; the temporary helper was removed and its 404 verified. No registrations or staff accounts exist; staff access and intake remain disabled. See [database setup and remaining #13/#14 work](STRATO-DATABASE.md). Runtime privilege separation, validated/idempotent intake and full lifecycle/restore acceptance remain open. This supersedes the earlier read-only/no-database checkpoint below.
+
 This is the current entry point. Dated assessments and VALIDATION.md preserve historical evidence, not current task lists.
 
 Launch work is tracked in [STRATO migration and webapp launch #7](https://github.com/0xJado/pk-hockey-academy/issues/7), with twelve native sub-issues (#8–#19) covering dependencies and acceptance. Start with [protected production hosting #8](https://github.com/0xJado/pk-hockey-academy/issues/8). Existing feature issues remain referenced; optional social/shop work is not silently added to the launch scope.

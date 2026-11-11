@@ -43,11 +43,13 @@ Every uploaded file is read back. After one atomic SFTP rename of the routing fi
 | `web/src/runtime/` | Existing review-host Node routes; injected only for the review build |
 | `hosting/strato/public/` | Reviewed public Apache configuration and PHP entry points |
 | `output/strato/public/` | Generated static site plus PHP, ignored by Git |
-| Private STRATO directory | Temporary review credential hash outside the public root; registration database remains unprovisioned |
+| Private STRATO directory | Review/preview credentials and disabled registration database configuration, keys and journal outside the public root |
 
 `npm run build` retains the existing local Node/Vercel review adapter and original route URLs. A PHP private-preview candidate is now deployed and standalone-tested on STRATO, while hosted Studio remains connected to Vercel. The optional `STRATO_PRIVATE_PREVIEW_ENABLED=true` package uses private PHP configuration and the existing Astro components/native editing controller; no Node runtime is injected. Default builds still exclude it. See [private-preview operations and pending Studio acceptance](../../docs/STRATO-PRIVATE-PREVIEW.md). Keep the existing preview destination and publication hook until their separate acceptance gates pass.
 
 ## PHP boundary
+
+Update, 11 November 2026: private MariaDB is now provisioned with six empty foundation tables. PHP connection, rollback, Unicode and sodium prerequisites passed; no intake/staff activation occurred. See [database setup and outstanding acceptance](../../docs/STRATO-DATABASE.md). The following inactive-endpoint behavior remains current; earlier unprovisioned hosting checkpoints below are historical.
 
 `/api/registration` rewrites to `api/registration.php`. Every method returns the existing German inactive JSON response with HTTP 503 and no-store. Application code does not parse request bodies or access storage. Registration remains disabled in the UI. The private database, consent policy, submission processing, durable duplicate/rate controls, staff authentication and retention/deletion are future increments; no schema or credentials are invented here.
 

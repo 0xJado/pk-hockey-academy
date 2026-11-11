@@ -4,6 +4,8 @@ Implemented on 11 November 2026. This is a locally tested PHP candidate, **not a
 
 ## Verified account prerequisites
 
+Later update, 11 November: the account holder created MariaDB and entered credentials privately. The [database foundation](STRATO-DATABASE.md) now has verified PDO access, six empty InnoDB/utf8mb4 tables, rollback and runtime encryption prerequisites. The staff library is installed outside the public root with activation disabled; no staff route/account exists. Runtime privilege separation, intake and full staff/lifecycle acceptance remain open. This supersedes the initial read-only checkpoint below.
+
 Read-only STRATO inspection found **0 of 25 databases used**, with MariaDB 11.8 and MySQL 8.0 offered. No database was created and no hosting/security setting was changed. Creation requires entering a new password. That credential-entry step remains for the account holder; do not send the password in chat. No paid upgrade is needed based on the observed quota.
 
 ## Implemented boundary
