@@ -1,0 +1,13 @@
+{
+  "enabled": false,
+  "maintenance": true,
+  "databaseContractAccepted": false,
+  "origin": "https://pkhockeyacademy.de",
+  "path": "/intern/anmeldungen",
+  "dsn": "mysql:host=PRIVATE_DATABASE_HOST;dbname=PRIVATE_DATABASE_NAME;charset=utf8mb4",
+  "username": "",
+  "password": "",
+  "journal": "/PRIVATE_DIRECTORY/erasure-journal.enc",
+  "backupDirectory": "/PRIVATE_DIRECTORY/backups",
+  "keys": {"data":"", "auth":"", "audit":"", "backup":""}
+}
