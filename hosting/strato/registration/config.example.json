@@ -1,0 +1,13 @@
+{
+  "enabled": false,
+  "maintenance": true,
+  "policyAccepted": false,
+  "staffAccepted": false,
+  "realDataApproved": false,
+  "runtimePrivilegesAccepted": false,
+  "requestTimeoutsAccepted": false,
+  "databaseConfig": "/PRIVATE_DIRECTORY/registration/config.json",
+  "policyFile": "/PRIVATE_DIRECTORY/registration/policy.v1.json",
+  "policySha256": "",
+  "sanity": {"enabled":false, "projectId":"", "dataset":"", "readToken":""}
+}

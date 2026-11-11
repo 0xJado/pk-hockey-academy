@@ -389,6 +389,15 @@ final class Staff
         $this->journal(function ($entries) use ($data, $now) {
             $this->atomic(function () use ($entries, $data, $now) {
                 if ((int)$this->sql('SELECT COUNT(*) FROM pk_staff_requests')->fetchColumn() !== 0) throw new Rejected('Restore only into an empty maintenance database');
+                // Intake receipts are deliberately not restored. Invalidate pre-recovery tokens
+                // and pause intake atomically so missing/restored claims cannot create duplicates.
+                $hasIntake = $this->db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql'
+                    ? (int)$this->sql('SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=?',['pk_intake_meta'])->fetchColumn()
+                    : (int)$this->sql('SELECT COUNT(*) FROM sqlite_master WHERE type=? AND name=?',['table','pk_intake_meta'])->fetchColumn();
+                if ($hasIntake) {
+                    if ((int)$this->sql('SELECT version FROM pk_intake_meta WHERE id=1')->fetchColumn() !== 1) throw new Rejected('Unknown intake recovery contract');
+                    $this->sql('UPDATE pk_intake_meta SET paused=1,epoch=? WHERE id=1',[bin2hex(random_bytes(32))]);
+                }
                 foreach ($data['requests'] as $row) {
                     if (!preg_match('/^[a-f0-9]{32}$/D', $row['id'] ?? '')) throw new Rejected('Invalid backup record');
                     $skip = false;
