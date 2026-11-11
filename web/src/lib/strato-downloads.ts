@@ -1,6 +1,12 @@
 import type {MediaKitDownload} from '../types/media-kit.ts';
 
+// Bundled Astro assets already belong to the static release; only CMS files need copying.
+export function isBundledDownload(asset: MediaKitDownload) {
+  return /^\/_astro\/[A-Za-z0-9_.-]+\.(png|jpe?g|webp|pdf|zip)$/.test(asset.url);
+}
+
 export function stratoDownloadPath(asset: MediaKitDownload) {
+  if(isBundledDownload(asset))return asset.url;
   const url=new URL(asset.url);
   const extension=url.pathname.split('.').at(-1);
   if(!/^[A-Za-z0-9_.-]{1,200}$/.test(asset.id)||!extension||!['png','jpg','jpeg','webp','pdf','zip'].includes(extension))

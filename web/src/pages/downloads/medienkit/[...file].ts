@@ -1,12 +1,12 @@
 import type {APIRoute,GetStaticPaths} from 'astro';
 import {getMediaKitDownloads} from '../../../lib/media-kit-source.ts';
-import {fetchReleaseDownload,stratoDownloadPath} from '../../../lib/strato-downloads.ts';
+import {fetchReleaseDownload,stratoDownloadPath,isBundledDownload} from '../../../lib/strato-downloads.ts';
 import type {MediaKitDownload} from '../../../types/media-kit.ts';
 
 export const prerender=true;
 export const getStaticPaths: GetStaticPaths=async()=>{
   if(import.meta.env.DEPLOY_TARGET!=='strato')return [];
-  return (await getMediaKitDownloads()).map(asset=>({params:{file:stratoDownloadPath(asset).split('/').at(-1)},props:{asset}}));
+  return (await getMediaKitDownloads()).filter(asset=>!isBundledDownload(asset)).map(asset=>({params:{file:stratoDownloadPath(asset).split('/').at(-1)},props:{asset}}));
 };
 export const GET: APIRoute=async({props})=>{
   const asset=props.asset as MediaKitDownload;

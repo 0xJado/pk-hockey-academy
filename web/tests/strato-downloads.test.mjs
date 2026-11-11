@@ -1,7 +1,14 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {stratoDownloadPath,fetchReleaseDownload} from '../src/lib/strato-downloads.ts';
+import {stratoDownloadPath,fetchReleaseDownload,isBundledDownload} from '../src/lib/strato-downloads.ts';
 const asset={id:'approved-test',url:'https://cdn.sanity.io/files/public123/production/abcd.pdf?dl=test.pdf',sizeBytes:4,format:'PDF',downloadName:'test.pdf'};
+test('bundled logo remains a release asset without being fetched as a CMS file',()=>{
+  const local={...asset,url:'/_astro/pk-hockey-crest.Abc123.png'};
+  assert.equal(isBundledDownload(local),true);
+  assert.equal(stratoDownloadPath(local),local.url);
+  for(const url of ['/private/secret','/_astro/../secret','/_astro/script.js','https://foreign.example/logo.png'])assert.equal(isBundledDownload({...asset,url}),false);
+  assert.throws(()=>stratoDownloadPath({...asset,url:'/private/secret'}));
+});
 test('release downloads use stable website paths and fetch bounded approved bytes',async()=>{
   assert.equal(stratoDownloadPath(asset),'/downloads/medienkit/entry-approved-test.pdf');
   const result=await fetchReleaseDownload(asset,async(url,options)=>{
