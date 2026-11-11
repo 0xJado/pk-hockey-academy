@@ -16,9 +16,12 @@ final class Staff
     private array $keys;
     private string $journal;
     private bool $testing;
+    private string $prefix;
 
-    public function __construct(PDO $db, array $keys, string $journal, bool $testing = false)
+    public function __construct(PDO $db, array $keys, string $journal, bool $testing = false, string $prefix = 'pk_')
     {
+        if (!preg_match('/\Apk_(?:fixture_[a-f0-9]{12}_)?\z/',$prefix) || (!$testing && $prefix !== 'pk_')) throw new Rejected('Invalid staff table scope');
+        $this->prefix = $prefix;
         $this->db = $db; $this->keys = $keys; $this->journal = $journal; $this->testing = $testing;
         foreach (['data', 'auth', 'audit', 'backup'] as $name) {
             if (strlen($keys[$name] ?? '') !== SODIUM_CRYPTO_SECRETBOX_KEYBYTES) throw new Rejected('Invalid private key configuration');
@@ -40,7 +43,7 @@ final class Staff
             'pk_staff_limits' => 'id VARCHAR(64) PRIMARY KEY, hits INTEGER NOT NULL, expires_at BIGINT NOT NULL',
             'pk_staff_requests' => 'id VARCHAR(32) PRIMARY KEY, status VARCHAR(16) NOT NULL, version INTEGER NOT NULL, created_at BIGINT NOT NULL, activity_at BIGINT NOT NULL, org TEXT NULL, care TEXT NULL, proofs TEXT NULL, care_due BIGINT NULL, org_due BIGINT NULL, proof_due BIGINT NULL, `hold` TEXT NULL, hold_until BIGINT NULL',
             'pk_staff_audit' => 'id VARCHAR(32) PRIMARY KEY, actor VARCHAR(64) NOT NULL, record_ref VARCHAR(64) NOT NULL, action VARCHAR(32) NOT NULL, at_time BIGINT NOT NULL',
-        ] as $table => $columns) $this->db->exec("CREATE TABLE IF NOT EXISTS $table ($columns)$suffix");
+        ] as $table => $columns) $this->sql("CREATE TABLE IF NOT EXISTS $table ($columns)$suffix");
         $row = $this->sql('SELECT version FROM pk_staff_schema')->fetchColumn();
         if ($row === false) $this->sql('INSERT INTO pk_staff_schema (version) VALUES (?)', [self::VERSION]);
         elseif ((int)$row !== self::VERSION) throw new Rejected('Unknown staff contract version');
@@ -49,6 +52,8 @@ final class Staff
 
     private function sql(string $sql, array $args = []): \PDOStatement
     {
+        // A fixed, test-only namespace permits real-host acceptance without touching live staff tables.
+        $sql = str_replace(['pk_staff_','pk_intake_'],[$this->prefix.'staff_',$this->prefix.'intake_'],$sql);
         $statement = $this->db->prepare($sql); $statement->execute($args); return $statement;
     }
 
@@ -392,8 +397,8 @@ final class Staff
                 // Intake receipts are deliberately not restored. Invalidate pre-recovery tokens
                 // and pause intake atomically so missing/restored claims cannot create duplicates.
                 $hasIntake = $this->db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql'
-                    ? (int)$this->sql('SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=?',['pk_intake_meta'])->fetchColumn()
-                    : (int)$this->sql('SELECT COUNT(*) FROM sqlite_master WHERE type=? AND name=?',['table','pk_intake_meta'])->fetchColumn();
+                    ? (int)$this->sql('SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=?',[$this->prefix.'intake_meta'])->fetchColumn()
+                    : (int)$this->sql('SELECT COUNT(*) FROM sqlite_master WHERE type=? AND name=?',['table',$this->prefix.'intake_meta'])->fetchColumn();
                 if ($hasIntake) {
                     if ((int)$this->sql('SELECT version FROM pk_intake_meta WHERE id=1')->fetchColumn() !== 1) throw new Rejected('Unknown intake recovery contract');
                     $this->sql('UPDATE pk_intake_meta SET paused=1,epoch=? WHERE id=1',[bin2hex(random_bytes(32))]);

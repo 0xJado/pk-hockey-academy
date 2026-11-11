@@ -14,6 +14,11 @@ $journal = $directory . '/erasure.enc';
 $db = database(); $app = new Staff($db, $keys, $journal, true); $app->migrate();
 $now = strtotime('2026-11-11T12:00:00Z'); $password = 'SYNTHETIC-password-for-test-only';
 try {
+    denied(fn()=>new Staff(database(),$keys,$directory.'/bad.enc',true,'arbitrary_'),'arbitrary fixture scope rejected');
+    denied(fn()=>new Staff(database(),$keys,$directory.'/bad.enc',false,'pk_fixture_123456abcdef_'),'production cannot select fixture scope');
+    $scopedDb=database();$scoped=new Staff($scopedDb,$keys,$directory.'/scoped.enc',true,'pk_fixture_123456abcdef_');$scoped->migrate();$scoped->insertFixture(['childName'=>'SCOPED FICTIONAL FIXTURE'],[],[],$now);
+    ok((int)$scopedDb->query('SELECT COUNT(*) FROM pk_fixture_123456abcdef_staff_requests')->fetchColumn()===1,'fixture insertion uses fixed isolated scope');
+    ok((int)$scopedDb->query("SELECT COUNT(*) FROM sqlite_master WHERE name='pk_staff_requests'")->fetchColumn()===0,'fixture migration does not create live staff tables');
     denied(fn()=>new Staff(database(),array_fill_keys(['data','auth','audit','backup'],str_repeat('x',32)),$journal,true),'cryptographic purposes cannot share a key');
     file_put_contents($directory.'/config.json','{}');denied(fn()=>\PK\Staff\Config::load($directory.'/config.json',$directory,true),'configuration inside public root rejected');
     $app->setAdmin('fixture-admin', $password);

@@ -1,0 +1,76 @@
+<?php
+declare(strict_types=1);
+// Temporary dual-authenticated harness. All accounts/records use a fixed fictional table scope.
+ini_set('display_errors','0');ini_set('log_errors','0');
+header('Cache-Control: no-store');header('X-Robots-Tag: noindex, nofollow');
+function reply(int $status,array $body): never {http_response_code($status);header('Content-Type: application/json');echo json_encode($body,JSON_THROW_ON_ERROR);exit;}
+if(!hash_equals('__TOKEN_HASH__',hash('sha256',$_SERVER['HTTP_X_PK_SETUP_TOKEN']??'')))reply(403,['code'=>'denied']);
+$stage='configuration';
+try {
+ $scope=json_decode(base64_decode('__SCOPE__',true),true,8,JSON_THROW_ON_ERROR);$prefix=$scope['prefix'];
+ if(!preg_match('/\Apk_fixture_[a-f0-9]{12}_\z/',$prefix))throw new RuntimeException();
+ $private=realpath($scope['private']);$public=realpath($scope['public']);
+ if(!$private||!$public||$private!==$scope['private']||str_starts_with($private.'/',$public.'/'))throw new RuntimeException();
+ $library=$private.'/registration/staff-acceptance-'.$scope['hash'];$directory=$private.'/registration/'.$prefix;
+ if(!is_dir($library)&&!mkdir($library,0700))throw new RuntimeException();
+ $sources=json_decode(base64_decode('__SOURCES__',true),true,4,JSON_THROW_ON_ERROR);
+ foreach($sources as $name=>$content){
+  if(!in_array($name,['Staff.php','Http.php','Maintenance.php','Intake.php','Policy.php','policy.v1.json'],true))throw new RuntimeException();
+  $file=$library.'/'.$name;$bytes=base64_decode($content,true);
+  if(file_exists($file)){if(is_link($file)||hash_file('sha256',$file)!==hash('sha256',$bytes))throw new RuntimeException();}
+  else{$f=fopen($file,'x');if(!$f)throw new RuntimeException();try{if(!chmod($file,0600)||fwrite($f,$bytes)!==strlen($bytes))throw new RuntimeException();}finally{fclose($f);}}
+ }
+ foreach(['Staff','Http','Maintenance','Policy','Intake'] as $name)require $library.'/'.$name.'.php';
+ $database=json_decode(file_get_contents($private.'/registration/config.json'),true,16,JSON_THROW_ON_ERROR);
+ $db=new PDO($database['dsn'],$database['username'],$database['password'],[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION,PDO::ATTR_DEFAULT_FETCH_MODE=>PDO::FETCH_ASSOC]);
+ $action=$_SERVER['HTTP_X_PK_STAFF_ACTION']??'view';$now=time();$stage=$action;
+ if($action==='setup'){
+  if(is_dir($directory)||!mkdir($directory,0700)||!mkdir($directory.'/backups',0700))throw new RuntimeException();
+  $state=['keys'=>array_combine(['data','auth','audit','backup'],array_map(fn()=>base64_encode(random_bytes(32)),range(1,4))),'enabled'=>true,'maintenance'=>false];
+ }else{$state=json_decode(file_get_contents($directory.'/state.json'),true,16,JSON_THROW_ON_ERROR);}
+ $keys=array_map(fn($s)=>base64_decode($s,true),$state['keys']);
+ $staff=new \PK\Staff\Staff($db,$keys,$directory.'/journal.enc',true,$prefix);
+ $policy=new \PK\Registration\Policy(json_decode(file_get_contents($library.'/policy.v1.json'),true,16,JSON_THROW_ON_ERROR));
+ $intake=new \PK\Registration\Intake($db,$keys,$policy,fn()=>null,true,$prefix);
+ $save=static function()use(&$state,$directory){$file=$directory.'/state.json';if(file_put_contents($file,json_encode($state,JSON_THROW_ON_ERROR),LOCK_EX)===false||!chmod($file,0600))throw new RuntimeException();};
+ if($action!=='view'&&($_SERVER['REQUEST_METHOD']??'')!=='POST')reply(405,['code'=>'method']);
+ if($action==='setup'){
+  $staff->migrate();$intake->migrate();$intake->pause(false);$staff->setAdmin('fixture-owner',$_SERVER['HTTP_X_PK_FIXTURE_PASSWORD']??'');
+  $state['id']=$staff->insertFixture(['childName'=>'FIKTIVES HOST-TESTKIND <script>alert(1)</script>','birthYear'=>2017,'guardianName'=>'FIKTIVER KONTAKT','guardianEmail'=>'fixture@example.invalid','bookingType'=>'five'],
+   ['healthNotes'=>'FIKTIVE HOST-GESUNDHEITSANGABE','emergencyPhone'=>'000000'],['health'=>['version'=>'fixture-v1','grantedAt'=>$now],'website'=>['version'=>'fixture-v1','grantedAt'=>$now]],$now);$save();reply(200,['ready'=>true,'id'=>$state['id']]);
+ }
+ if($action==='backup'){$bytes=$staff->backup($now);$file=$directory.'/backup.enc';if(file_put_contents($file,$bytes,LOCK_EX)!==strlen($bytes)||!chmod($file,0600))throw new RuntimeException();reply(200,['backup'=>true]);}
+ if($action==='daily-maintenance')reply(200,\PK\Staff\Maintenance::run($staff,$intake,['backupDirectory'=>$directory.'/backups','journal'=>$directory.'/journal.enc','keys'=>$state['keys']],$now));
+ if($action==='restore'){
+  $db->exec('DELETE FROM '.$prefix.'staff_requests');$staff->restore(file_get_contents($directory.'/backup.enc'),$now);
+  $row=$db->query('SELECT status FROM '.$prefix.'staff_requests')->fetch();
+  reply(200,['restored'=>true,'status'=>$row['status'],'intakePaused'=>(int)$db->query('SELECT paused FROM '.$prefix.'intake_meta')->fetchColumn()===1]);
+ }
+ if($action==='revoke'){$staff->revoke('fixture-owner',$now);reply(200,['revoked'=>true]);}
+ if($action==='reset'){$staff->setAdmin('fixture-owner',$_SERVER['HTTP_X_PK_FIXTURE_PASSWORD']??'');reply(200,['reset'=>true]);}
+ if($action==='coach'){$db->exec("UPDATE ".$prefix."staff_users SET role='coach'");reply(200,['roleChanged'=>true]);}
+ if($action==='maintenance'){$state['maintenance']=true;$save();reply(200,['maintenance'=>true]);}
+ if($action==='retention'){
+  $first=$staff->retention($now+91*86400);
+  $row=$db->query('SELECT org,care,proofs FROM '.$prefix.'staff_requests')->fetch();
+  $separate=$row&&$row['org']===null&&$row['care']===null&&$row['proofs']!==null;
+  $last=$staff->retention($now+5*366*86400);
+  reply(200,['independentCategories'=>$separate,'recordsRemaining'=>(int)$db->query('SELECT COUNT(*) FROM '.$prefix.'staff_requests')->fetchColumn(),'purgedRecords'=>$last['purgedRecords']]);
+ }
+ if($action==='summary'){
+  $row=$db->query('SELECT status,version FROM '.$prefix.'staff_requests')->fetch();
+  reply(200,['status'=>$row['status'],'version'=>(int)$row['version'],'confirmations'=>(int)$db->query("SELECT COUNT(*) FROM ".$prefix."staff_audit WHERE action='confirmed'")->fetchColumn(),
+   'productionRequests'=>(int)$db->query('SELECT COUNT(*) FROM pk_staff_requests')->fetchColumn(),'productionUsers'=>(int)$db->query('SELECT COUNT(*) FROM pk_staff_users')->fetchColumn()]);
+ }
+ if($action==='cleanup'){
+  foreach(['intake_claims','intake_limits','intake_meta','staff_requests','staff_sessions','staff_limits','staff_audit','staff_users','staff_schema'] as $table)$db->exec('DROP TABLE IF EXISTS '.$prefix.$table);
+  foreach(['state.json','journal.enc','journal.enc.lock','backup.enc'] as $file)if(is_file($directory.'/'.$file)&&!unlink($directory.'/'.$file))throw new RuntimeException();
+  if(is_dir($directory.'/backups')){foreach(glob($directory.'/backups/pk-staff-*.enc')as$file)if(!unlink($file))throw new RuntimeException();if(!rmdir($directory.'/backups'))throw new RuntimeException();}
+  if(is_dir($directory)&&!rmdir($directory))throw new RuntimeException();
+  $q=$db->prepare('SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME LIKE ?');$q->execute([$prefix.'%']);reply(200,['tablesRemaining'=>(int)$q->fetchColumn(),'privateFixtureRemoved'=>!is_dir($directory)]);
+ }
+ if($action!=='view')throw new RuntimeException();
+ if(!$state['enabled']||$state['maintenance']){http_response_code(503);echo 'Die Anmeldungsverwaltung ist noch nicht freigegeben.';exit;}
+ $config=['origin'=>'https://pkhockeyacademy.de','path'=>parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH)];
+ \PK\Staff\Http::serve($staff,$config); // Production HTTPS/cookie behavior, isolated fictional SQL storage.
+}catch(Throwable){reply(503,['code'=>'staff-acceptance-failed','stage'=>$stage]);}
