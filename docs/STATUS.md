@@ -1,5 +1,7 @@
 # Current project status
 
+Daily maintenance now has configured encrypted path secrets, an enabled 02:17 UTC schedule and a successful first CI execution ([43121714991](https://github.com/0xJado/pk-hockey-academy/actions/runs/43121714991), `9847268`). It verifies the private encrypted daily backup and runs retention while intake/staff remain disabled. Failure-channel receipt, real operator/canonical-route handoff, #13 provider acceptance and final policy/form activation remain separate.
+
 12 November 2026: fixed and pushed the CMS-free media-kit export regression (`b46f71e`); hosted quality run 43118264712 passed. Extended #13 testing found that a slow-drip JSON request exceeded the reported 60-second input setting and remained open to the 75-second client limit. The timeout gate remains false; [STRATO support questions](STRATO-SUPPORT-QUESTIONS.md) are prepared, not sent. No experimental timeout setting was retained.
 
 #14 progressed independently using isolated fictional data: 34 real-host MariaDB checks passed for staff auth/cookies, concurrent updates, withdrawal, revocation/recovery, backup/restore erasure replay, category deletion and cleanup. Production still has no staff users/requests. Daily retention/encrypted-backup code has eight local assertions; manual actual-host creation and same-day verification of an empty encrypted backup passed. The gated CI schedule is prepared; its live dispatch/notification and owner handoff remain open. Existing legal/privacy edits were preserved separately.
