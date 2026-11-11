@@ -1,0 +1,45 @@
+{
+  "version": "registration-request-v1-2026-11-11",
+  "status": "implementation-draft",
+  "publicIntakeEnabled": false,
+  "sourcePdfSha256": "5ad3b2845008b09213280653fda49d6fb15882a4ddbfcb0ca975dc664162bff9",
+  "booking": {
+    "type": "request-only",
+    "choices": [{"value":"single","label":"Einzeltermin","priceEUR":50},{"value":"five","label":"5er-Paket","priceEUR":200}],
+    "singleRequiresPublishedSession": true,
+    "confirmation": "personal-by-pierre",
+    "spielerPlusIntegration": false,
+    "paymentsEnabled": false
+  },
+  "fields": [
+    {"name":"childName","paperIds":["child-name"],"type":"text","required":true,"maxLength":120,"category":"org"},
+    {"name":"birthYear","paperIds":["child-birth"],"type":"year","required":true,"category":"org","fullBirthDate":false,"eligibility":"manual-no-invented-season-cutoff"},
+    {"name":"team","paperIds":["child-team"],"type":"text","required":false,"maxLength":160,"category":"org"},
+    {"name":"position","paperIds":["child-position"],"type":"enum","values":["field","goalie"],"required":false,"category":"org"},
+    {"name":"experience","paperIds":["child-experience"],"type":"text","required":false,"maxLength":500,"category":"org"},
+    {"name":"guardianName","paperIds":["guardian-1-name"],"type":"text","required":true,"maxLength":120,"category":"org"},
+    {"name":"guardianPhone","paperIds":["guardian-1-phone"],"type":"tel","required":true,"maxLength":40,"category":"org"},
+    {"name":"guardianEmail","paperIds":["guardian-1-email"],"type":"email","required":true,"maxLength":254,"category":"org"},
+    {"name":"emergencyName","paperIds":["emergency-name"],"type":"text","required":false,"maxLength":120,"pairedWith":"emergencyPhone","category":"care"},
+    {"name":"emergencyPhone","paperIds":["emergency-phone"],"type":"tel","required":false,"maxLength":40,"pairedWith":"emergencyName","category":"care"},
+    {"name":"pickupPersons","paperIds":["pickup-persons"],"type":"text","required":false,"maxLength":300,"category":"care"},
+    {"name":"bookingType","paperIds":["booking-type"],"type":"enum","values":["single","five"],"required":true,"category":"org"},
+    {"name":"healthNotes","paperIds":["health-notes"],"type":"text","required":false,"maxLength":1000,"requiresConsent":"health","category":"care"},
+    {"name":"guardianAuthority","paperIds":["guardian-1-signature"],"type":"boolean","mustEqual":true,"required":true,"category":"proofs"}
+  ],
+  "omittedPaperIds": ["child-address","child-city","guardian-2-name","guardian-2-phone","guardian-2-email","health-confirmation","insurance-cover","liability-acknowledgement","medical-first-aid","media-public-no","signature-location-date","guardian-2-signature"],
+  "consents": [
+    {"purpose":"health","paperIds":[],"required":false,"default":false,"text":"Ich willige ausdrücklich ein, dass die PK Hockey Academy die von mir angegebenen betreuungsrelevanten Gesundheitsinformationen meines Kindes zur sicheren Organisation und Durchführung der gebuchten Trainingseinheiten verarbeitet und den dafür zuständigen Betreuern im erforderlichen Umfang zugänglich macht. Die Einwilligung kann ich jederzeit mit Wirkung für die Zukunft unter info@pkhockeyacademy.de widerrufen. Weitere Informationen, insbesondere zur Löschung, stehen in der Datenschutzerklärung."},
+    {"purpose":"website","paperIds":["media-public-yes"],"required":false,"default":false,"text":"Ich willige freiwillig ein, dass freigegebene Foto- und Videoaufnahmen meines Kindes aus dem Academy-Training zur Darstellung der PK Hockey Academy auf ihrer Website veröffentlicht werden. Die Veröffentlichung ist weltweit abrufbar und ist keine Voraussetzung für die Teilnahme. Die Nutzung endet spätestens 24 Monate nach der Aufnahme, sofern vorher keine neue konkrete Freigabe erteilt wird. Ich kann diese Einwilligung jederzeit mit Wirkung für die Zukunft unter info@pkhockeyacademy.de widerrufen. Einzelheiten zur Nutzung, zu Empfängern und zur Löschung stehen in der Datenschutzerklärung."},
+    {"purpose":"print","paperIds":["media-public-yes"],"required":false,"default":false,"text":"Ich willige freiwillig ein, dass freigegebene Fotos meines Kindes aus dem Academy-Training in gedruckten Informationsmaterialien der PK Hockey Academy verwendet werden. Das ist keine Voraussetzung für die Teilnahme. Die Nutzung endet spätestens 24 Monate nach der Aufnahme, sofern vorher keine neue konkrete Freigabe erteilt wird. Ich kann die Einwilligung jederzeit mit Wirkung für die Zukunft unter info@pkhockeyacademy.de widerrufen. Bereits verteilte Druckexemplare können nicht vollständig zurückgeholt werden; weitere Verteilung und Neuauflagen werden dann gestoppt. Weitere Informationen stehen in der Datenschutzerklärung."},
+    {"purpose":"analysis","paperIds":["media-internal-video"],"required":false,"default":false,"text":"Ich willige freiwillig ein, dass Videoaufnahmen meines Kindes aus dem Training ausschließlich von den zuständigen Betreuern für internes sportliches Feedback verwendet werden. Das erlaubt keine Veröffentlichung. Ohne diese Einwilligung bleibt Training mit anderem Feedback möglich. Die Aufnahmen werden nach abgeschlossenem Feedback gelöscht, spätestens 30 Tage danach und in jedem Fall spätestens 90 Tage nach der Aufnahme. Ich kann die Einwilligung jederzeit mit Wirkung für die Zukunft unter info@pkhockeyacademy.de widerrufen. Weitere Informationen stehen in der Datenschutzerklärung."}
+  ],
+  "copy": {
+    "submitLabel": "Trainingsanfrage senden",
+    "guardianAuthority": "Ich bin berechtigt, diese Trainingsanfrage für das genannte Kind abzugeben.",
+    "receipt": "Deine Trainingsanfrage wurde entgegengenommen. Die Academy prüft die Anfrage. Ein Trainingsplatz ist damit noch nicht bestätigt.",
+    "healthHint": "Nur betreuungsrelevante Hinweise angeben. Keine Arztbriefe, Ausweise oder Diagnosendokumente hochladen. Fehlende Gesundheitsangaben führen nicht automatisch zur Ablehnung; konkrete Sicherheitsfragen klärt Pierre persönlich.",
+    "privacyConsentRequired": false
+  },
+  "remainingActivationGates": ["final-owner-text-acceptance","actual-provider-and-privacy-copy-review","accepted-php-intake-and-staff-workflow","fictional-end-to-end-acceptance","explicit-real-data-activation"]
+}

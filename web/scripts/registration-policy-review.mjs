@@ -11,7 +11,15 @@ const root=new URL('../../',import.meta.url);
 const review=JSON.parse(await readFile(new URL('docs/registration-policy-review.json',root),'utf8'));
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 const launchPolicy=(await readFile(new URL('docs/REGISTRATION-LAUNCH-POLICY.md',root),'utf8')).replaceAll('\r\n','\n');
-const digest=sha(JSON.stringify({review,paper,launchPolicy}));
+const textPolicy=JSON.parse(await readFile(new URL('hosting/strato/registration/policy.v1.json',root),'utf8'));
+assert.equal(textPolicy.status,'implementation-draft');assert.equal(textPolicy.publicIntakeEnabled,false);
+assert.equal(textPolicy.sourcePdfSha256,paper.sha256);
+assert.equal(textPolicy.booking.spielerPlusIntegration,false);assert.equal(textPolicy.booking.paymentsEnabled,false);
+assert.equal(new Set(textPolicy.fields.map(field=>field.name)).size,textPolicy.fields.length);
+assert.deepEqual(textPolicy.consents.map(consent=>consent.purpose),['health','website','print','analysis']);
+for(const consent of textPolicy.consents){assert.equal(consent.required,false);assert.equal(consent.default,false);assert.ok(consent.text.trim().length>80);}
+assert.equal(textPolicy.fields.find(field=>field.name==='healthNotes').requiresConsent,'health');
+const digest=sha(JSON.stringify({review,paper,launchPolicy,textPolicy}));
 const document=new URL('docs/REGISTRATION-POLICY-REVIEW.md',root);
 const privateDirectory=new URL('output/registration-private/',root);
 const privateName=`policy-answers.${digest.slice(0,12)}.local.json`;
@@ -48,6 +56,8 @@ for(const [source,ids,section]of [
 add('medical-first-aid','medicalChoices',5);
 assert.equal(new Set(review.fields.map(field=>field.id)).size,review.fields.length,'Duplicate field decision');
 assert.equal(review.fields.length,expected.length,'Paper decision coverage changed');
+const mappedPaperIds=new Set([...textPolicy.fields.flatMap(field=>field.paperIds),...textPolicy.consents.flatMap(consent=>consent.paperIds),...textPolicy.omittedPaperIds]);
+assert.deepEqual([...mappedPaperIds].sort(),expected.map(item=>item.id).sort(),'Text policy must map or explicitly omit every paper field');
 for(const item of expected){
   assert.ok(launchPolicy.includes('`'+item.id+'`'),'Launch policy must map each paper field/choice');
   const field=review.fields.find(field=>field.id===item.id);
@@ -71,6 +81,8 @@ const markdown=`# Anmeldung v2: Freigabeunterlage für Pierre
 **Quellenreview der Papiervorlage, keine Aktivierungsfreigabe und keine fertigen Rechtstexte.** Die Produktentscheidungen vom 10. November stehen im [einfachen Startmodell](REGISTRATION-LAUNCH-POLICY.md); Aufbewahrung und Zugriff sind in den [Betriebsregeln](DATENSCHUTZ-BETRIEBSREGELN.md) festgelegt. Diese Quellfragen öffnen bereits getroffene Entscheidungen nicht erneut. Onlineeingabe und Versand bleiben deaktiviert. Keine privaten Antworten oder ausgefüllten Anmeldungen hier eintragen.
 
 Review-Version: \`${review.reviewVersion}\`
+
+Konkrete Textfassung: [\`${textPolicy.version}\`](REGISTRATION-TEXT-V1.md), Umsetzungsvorlage mit noch ausstehender finaler Textfreigabe.
 
 Review-Prüfsumme: \`${digest}\`
 

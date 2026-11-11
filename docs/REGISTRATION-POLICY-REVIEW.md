@@ -2,9 +2,11 @@
 
 **Quellenreview der Papiervorlage, keine Aktivierungsfreigabe und keine fertigen Rechtstexte.** Die Produktentscheidungen vom 10. November stehen im [einfachen Startmodell](REGISTRATION-LAUNCH-POLICY.md); Aufbewahrung und Zugriff sind in den [Betriebsregeln](DATENSCHUTZ-BETRIEBSREGELN.md) festgelegt. Diese Quellfragen öffnen bereits getroffene Entscheidungen nicht erneut. Onlineeingabe und Versand bleiben deaktiviert. Keine privaten Antworten oder ausgefüllten Anmeldungen hier eintragen.
 
-Review-Version: `registration-v2-review-2026-11-10`
+Review-Version: `registration-v2-review-2026-11-11`
 
-Review-Prüfsumme: `ac859e116e06b7deb8ed676cddc945edbfd278bb3e0e2c48850b7e2e9076fea2`
+Konkrete Textfassung: [`registration-request-v1-2026-11-11`](REGISTRATION-TEXT-V1.md), Umsetzungsvorlage mit noch ausstehender finaler Textfreigabe.
+
+Review-Prüfsumme: `69cf39197058b538134c68cfb74b5182a45157affb7065d5ebbaa48dc59a93c9`
 
 Quelle: [unveränderte Anmeldung v2](../web/public/downloads/PK-Hockey-Academy-Anmeldung-v2.pdf), 2 Seiten, 203522 Bytes.
 
@@ -141,12 +143,12 @@ Diese Meldung darf erst nach nachgewiesener dauerhafter Speicherung verwendet we
 
 ## Private Antworten und verbindliche Freigabe
 
-Pierre kann die Fragen in normalem Deutsch beantworten; die Arbeitsdatei dient der privaten Dokumentation durch die Entwicklung. Im Verzeichnis `web/` wird sie mit `npm run review:registration -- --init-private` unter `output/registration-private/policy-answers.ac859e116e06.local.json` im Projektstamm erzeugt. Dieser Pfad ist Git-ignoriert. Der Dateiname bindet sie an den Review-Stand. Vorhandene Antworten werden weder überschrieben noch automatisch in neue Versionen übernommen.
+Pierre kann die Fragen in normalem Deutsch beantworten; die Arbeitsdatei dient der privaten Dokumentation durch die Entwicklung. Im Verzeichnis `web/` wird sie mit `npm run review:registration -- --init-private` unter `output/registration-private/policy-answers.69cf39197058.local.json` im Projektstamm erzeugt. Dieser Pfad ist Git-ignoriert. Der Dateiname bindet sie an den Review-Stand. Vorhandene Antworten werden weder überschrieben noch automatisch in neue Versionen übernommen.
 
 Das Arbeitsblatt ist nur für zusätzliche private Nachweise oder Abweichungen vorgesehen; ein leeres altes Blatt bedeutet nicht, dass die im Startmodell bereits gewählten Produktregeln offen sind. Je Feld: `collection` ist `include`, `omit` oder `separate_approved_channel`; `purpose` beschreibt den Zweck bzw. das Weglassen. Bei `include` werden `requiredness` als `required` oder `optional` und das genaue `format` eingetragen; sonst `not_applicable`. Eine vollständig ausgefüllte Datei ist keine eigenständige Aktivierungs- oder Rechtsfreigabe.
 
 Keine realen Anmeldungen, Gesundheitsangaben, Passwörter oder Einladungslinks in die Arbeitskopie schreiben; sensible Freigabeunterlagen nur über private Verweise referenzieren.
 
-`npm run review:registration -- --status ../output/registration-private/policy-answers.ac859e116e06.local.json` zeigt nur Vollständigkeitszahlen, keine Antworten. Die Prüfung bestätigt weder Pierres Identität/Freigabe noch rechtliche Angemessenheit und kann die Registrierung nicht aktivieren. Geänderte Fragen, Quellformulierungen oder PDF-Versionen machen die Versionsbindung der Arbeitskopie ungültig.
+`npm run review:registration -- --status ../output/registration-private/policy-answers.69cf39197058.local.json` zeigt nur Vollständigkeitszahlen, keine Antworten. Die Prüfung bestätigt weder Pierres Identität/Freigabe noch rechtliche Angemessenheit und kann die Registrierung nicht aktivieren. Geänderte Fragen, Quellformulierungen oder PDF-Versionen machen die Versionsbindung der Arbeitskopie ungültig.
 
 Die Nutzerentscheidung vom 10. November legt das einfache Produktmodell fest. #13 bis #15 setzen dessen Datenverarbeitung und Bedienung um; vor echten Daten bleiben technische Abnahme, konkrete Textstände und erforderlicher rechtlicher/Provider-Abgleich nachzuweisen. Die Papiervorlage gilt dadurch nicht als rechtlich geprüft. SpielerPlus ist keine Freigabeabhängigkeit. Hosting, ein ausgefülltes Arbeitsblatt oder ein erfolgreicher HTTP-Request aktivieren keine Registrierung.
