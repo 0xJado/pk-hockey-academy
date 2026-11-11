@@ -226,8 +226,14 @@ Source: public `0xJado/pk-hockey-academy`. Vercel review hosting is configured s
 
 ## Registration processing foundation
 
+The [PHP staff candidate](docs/STRATO-STAFF.md) now has isolated authentication, status/lifecycle and encrypted backup/restore tests. It is not deployed and does not replace #13's intake/database implementation; no staff account or real-data collection is activated. `npm run test:strato:staff:browser --prefix web` tests fictional loopback-only records with PHP PDO SQLite/sodium and an installed Playwright browser.
+
+The [interview launch scope](docs/INTERVIEW-LAUNCH-SCOPE.md) excludes questionnaires from STRATO, including protected acceptance builds; `npm run test:strato:interview-scope --prefix web` checks compiled placeholders at all viewports. Original protected fictional review questionnaires remain separate. Actual-device speech/real-data activation is deferred.
+
 See [forms foundation](docs/FORMS-FOUNDATION.md). Registration has a tested server-only processing core with injected policy and fake delivery; `/api/registration` always returns 503 without reading the request body. The PDF and disabled `/anmeldung` preview are preserved.
 
 Issue #12's [simple start model](docs/REGISTRATION-LAUNCH-POLICY.md) defines a minimal training request with one guardian contact and personal booking confirmation by Pierre. SpielerPlus is a separate workflow outside the website. The [source review](docs/REGISTRATION-POLICY-REVIEW.md) binds all paper references to this model and the unchanged PDF; run `npm run review:registration --prefix web -- --check`. Final text/legal and implementation acceptance remain pending; the checker cannot activate registration.
+
+The concrete German fields/consents/acknowledgement are versioned in [the v1 text draft](docs/REGISTRATION-TEXT-V1.md) and its JSON implementation template. The source checker binds that version too; `implementation-draft` is not a human/legal approval or an activation flag.
 
 The existing browser command now covers full player/trainer journeys, with fictional exports in ignored diagnostics.

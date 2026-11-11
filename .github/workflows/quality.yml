@@ -70,10 +70,21 @@ jobs:
         run: npm run test:cms --prefix web
       - name: Build and verify the Node-free STRATO export
         run: npm run build:strato --prefix web
+      - name: Verify interviews remain omitted on STRATO
+        env:
+          PK_BROWSER_CHANNEL: ''
+        run: npm run test:strato:interview-scope --prefix web
       - name: Verify STRATO download publication and withdrawal
         run: npm run test:strato:downloads --prefix web
       - name: Check PHP private-preview security
         run: php -n hosting/strato/tests/preview.php
+      - name: Check staff authentication, lifecycle and private restore
+        run: php hosting/strato/tests/staff.php
+      - name: Test isolated staff HTTP and browser workflow
+        env:
+          PK_PHP_EXECUTABLE: php
+          PK_BROWSER_CHANNEL: ''
+        run: npm run test:strato:staff:browser --prefix web
       - name: Build and verify optional PHP preview package
         run: npm run test:strato:preview:package --prefix web
       - name: Test isolated PHP preview browser flow
