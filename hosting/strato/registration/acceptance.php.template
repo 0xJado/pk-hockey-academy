@@ -1,0 +1,97 @@
+<?php
+declare(strict_types=1);
+// One-use, dual-authenticated acceptance harness. Fixed fictional data/table scope only.
+ini_set('display_errors','0'); ini_set('log_errors','0');
+header('Content-Type: application/json; charset=utf-8'); header('Cache-Control: no-store'); header('X-Robots-Tag: noindex, nofollow');
+function reply(int $status,array $body): never { http_response_code($status); echo json_encode($body,JSON_THROW_ON_ERROR); exit; }
+if (($_SERVER['REQUEST_METHOD'] ?? '')!=='POST' || !hash_equals('__TOKEN_HASH__',hash('sha256',$_SERVER['HTTP_X_PK_SETUP_TOKEN'] ?? ''))) reply(403,['code'=>'denied']);
+if ((int)($_SERVER['CONTENT_LENGTH'] ?? 0)>16384) reply(413,['code'=>'body-limit']);
+$stage='private_setup';
+try {
+    $scope=json_decode(base64_decode('__SCOPE__',true),true,8,JSON_THROW_ON_ERROR);
+    $prefix=$scope['prefix'];
+    if (!preg_match('/\Apk_fixture_[a-f0-9]{12}_\z/',$prefix)) throw new RuntimeException();
+    $private=realpath($scope['private']); $public=realpath($scope['public']);
+    if (!$private || !$public || $private!==$scope['private'] || str_starts_with($private.'/',$public.'/')) throw new RuntimeException();
+    $library=$private.'/registration/intake-'.$scope['sourceHash'];
+    if (!is_dir($library) && !mkdir($library,0700)) throw new RuntimeException();
+    $sources=json_decode(base64_decode('__SOURCES__',true),true,4,JSON_THROW_ON_ERROR);
+    foreach ($sources as $name=>$content) {
+        if (!in_array($name,['Policy.php','Intake.php','Http.php','Config.php','Sessions.php','policy.v1.json'],true)) throw new RuntimeException();
+        $file=$library.'/'.$name; $bytes=base64_decode($content,true);
+        if (file_exists($file)) { if (is_link($file) || hash_file('sha256',$file)!==hash('sha256',$bytes)) throw new RuntimeException(); }
+        else { $f=fopen($file,'x'); if (!$f) throw new RuntimeException(); try { if (!chmod($file,0600) || fwrite($f,$bytes)!==strlen($bytes)) throw new RuntimeException(); } finally { fclose($f); } }
+    }
+    foreach (['Policy','Intake','Http','Config','Sessions'] as $name) require $library.'/'.$name.'.php';
+    $config=json_decode(file_get_contents($private.'/registration/config.json'),true,16,JSON_THROW_ON_ERROR);
+    $mode=$_SERVER['HTTP_X_PK_FIXTURE_ACTION'] ?? '';
+    class FixturePDO extends PDO {
+        public int $commits=0;
+        public string $fault='';
+        public function commit(): bool {
+            ++$this->commits;
+            if ($this->commits===2 && $this->fault==='loss-before') throw new RuntimeException('fictional pre-commit loss');
+            $result=parent::commit();
+            if ($this->commits===2 && $this->fault==='loss-after') throw new RuntimeException('fictional post-commit loss');
+            return $result;
+        }
+    }
+    $db=new FixturePDO($config['dsn'],$config['username'],$config['password'],[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION,PDO::ATTR_TIMEOUT=>5]);
+    $keys=array_map(fn($s)=>base64_decode($s,true),$config['keys']);
+    $policy=new \PK\Registration\Policy(json_decode(file_get_contents($library.'/policy.v1.json'),true));
+    $source=fn($id)=>$id==='fictional-published-session'?['id'=>$id,'requestable'=>true]:null;
+    $intake=new \PK\Registration\Intake($db,$keys,$policy,$source,true,$prefix);
+    $stage='fixture_'.$mode;
+    if ($mode==='setup') {
+        $db->exec('CREATE TABLE '.$prefix.'staff_requests (id VARCHAR(32) PRIMARY KEY,status VARCHAR(16) NOT NULL,version INTEGER NOT NULL,created_at BIGINT NOT NULL,activity_at BIGINT NOT NULL,org TEXT NULL,care TEXT NULL,proofs TEXT NULL,care_due BIGINT NULL,org_due BIGINT NULL,proof_due BIGINT NULL,`hold` TEXT NULL,hold_until BIGINT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
+        $intake->migrate(); $intake->pause(false);
+        $globalAdmin=false;
+        foreach ($db->query('SHOW GRANTS')->fetchAll(PDO::FETCH_COLUMN) as $grant) if (preg_match('/GRANT (?:ALL PRIVILEGES|.*CREATE USER.*) ON \*\.\*/i',$grant)) $globalAdmin=true;
+        reply(200,['ready'=>true,'driver'=>$db->getAttribute(PDO::ATTR_DRIVER_NAME),'serverAccountAdministration'=>$globalAdmin]);
+    }
+    if ($mode==='summary') {
+        $count=(int)$db->query('SELECT COUNT(*) FROM '.$prefix.'staff_requests')->fetchColumn();
+        $claims=(int)$db->query('SELECT COUNT(*) FROM '.$prefix.'intake_claims')->fetchColumn();
+        $encrypted=true;
+        foreach ($db->query('SELECT org,care,proofs FROM '.$prefix.'staff_requests')->fetchAll(PDO::FETCH_ASSOC) as $row) foreach ($row as $value) if ($value!==null && (str_contains($value,'FIKTIV') || str_contains($value,'example.invalid'))) $encrypted=false;
+        reply(200,['records'=>$count,'claims'=>$claims,'encrypted'=>$encrypted]);
+    }
+    if ($mode==='source-check') {
+        $setup=json_decode(base64_decode('__SOURCE_CONFIG__',true),true,8,JSON_THROW_ON_ERROR);
+        $setup['enabled']=true; // Transport acceptance for one invented ID, not production training activation.
+        $sessions=new \PK\Registration\Sessions($setup);
+        $result=$sessions->lookup('pk-fictional-acceptance-missing',time());
+        reply(200,['publishedSourceReachable'=>true,'inventedSessionRejected'=>$result===null]);
+    }
+    if ($mode==='lock') {
+        $db->beginTransaction();$db->query('SELECT epoch FROM '.$prefix.'intake_meta WHERE id=1 FOR UPDATE');
+        sleep(3);$db->rollBack();reply(200,['released'=>true]);
+    }
+    if ($mode==='cleanup') {
+        foreach (['intake_claims','intake_limits','intake_meta','staff_requests'] as $table) $db->exec('DROP TABLE IF EXISTS '.$prefix.$table);
+        $stmt=$db->prepare('SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME LIKE ?');$stmt->execute([$prefix.'%']);
+        $remaining=(int)$stmt->fetchColumn();
+        if (function_exists('opcache_invalidate')) opcache_invalidate(__FILE__,true);
+        reply(200,['fixtureTablesRemaining'=>$remaining]);
+    }
+    if ($mode==='migrate') {
+        $stage='production_schema';
+        // Preserve the staff gates; only create the intake contract in its paused state.
+        $real=new \PK\Registration\Intake($db,$keys,$policy,fn()=>null); $real->migrate();
+        $state=$db->query('SELECT version,paused FROM pk_intake_meta WHERE id=1')->fetch(PDO::FETCH_ASSOC);
+        if ((int)$state['paused']!==1) throw new RuntimeException('Unexpected active intake');
+        $stage='production_config';
+        $setup=json_decode(base64_decode('__CONFIG__',true),true,8,JSON_THROW_ON_ERROR);
+        $setup['databaseConfig']=$private.'/registration/config.json';$setup['policyFile']=$library.'/policy.v1.json';$setup['policySha256']=hash_file('sha256',$setup['policyFile']);
+        $target=$private.'/registration/intake-config-'.$scope['sourceHash'].'.json';$bytes=json_encode($setup,JSON_THROW_ON_ERROR);
+        $stage='production_config_write';
+        if (file_exists($target)) { if (hash_file('sha256',$target)!==hash('sha256',$bytes)) throw new RuntimeException('Existing configuration differs'); }
+        else { $f=fopen($target,'x');if(!$f)throw new RuntimeException();try{if(!chmod($target,0600)||fwrite($f,$bytes)!==strlen($bytes))throw new RuntimeException();}finally{fclose($f);} }
+        reply(200,['schemaVersion'=>(int)$state['version'],'paused'=>true,'configDisabled'=>true]);
+    }
+    if (!in_array($mode,['token','submit','loss-before','loss-after','timeout'],true)) throw new RuntimeException();
+    $_SERVER['REQUEST_URI']=$mode==='token'?'/api/registration/token':'/api/registration';
+    if (in_array($mode,['loss-before','loss-after'],true)) $db->fault=$mode;
+    if ($mode==='timeout') $db->exec('SET SESSION innodb_lock_wait_timeout=1');
+    \PK\Registration\Http::emit(\PK\Registration\Http::handle($_SERVER,true,fn()=>$intake,static fn($limit)=>file_get_contents('php://input',false,null,0,$limit)));
+} catch (Throwable) { reply(503,['code'=>'fixture-operation-failed','stage'=>$stage]); }
