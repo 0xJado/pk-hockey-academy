@@ -1,0 +1,81 @@
+<?php
+declare(strict_types=1);
+// Temporary, token-authenticated operator helper. Never include in a public build.
+ini_set('display_errors', '0');
+ini_set('log_errors', '0');
+header('Content-Type: application/json; charset=utf-8');
+header('Cache-Control: private, no-store');
+header('X-Robots-Tag: noindex, nofollow, noarchive');
+header('X-Content-Type-Options: nosniff');
+function respond(int $status, array $body): never { http_response_code($status); echo json_encode($body, JSON_THROW_ON_ERROR); exit; }
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST' || !hash_equals('__TOKEN_HASH__', hash('sha256', $_SERVER['HTTP_X_PK_SETUP_TOKEN'] ?? ''))) respond(403, ['code'=>'denied']);
+if ((int)($_SERVER['CONTENT_LENGTH'] ?? 0) > 8192) respond(413, ['code'=>'too_large']);
+$stage = 'configuration';
+try {
+    $paths = json_decode(base64_decode('__PATHS__', true), true, 8, JSON_THROW_ON_ERROR);
+    $public = realpath($paths['publicPath']); $private = realpath($paths['privatePath']);
+    if (!$public || !$private || $public !== $paths['publicPath'] || $private !== $paths['privatePath'] || str_starts_with($private.'/', $public.'/')) throw new RuntimeException();
+    $bytes = file_get_contents('php://input', false, null, 0, 8193);
+    if ($bytes === false || strlen($bytes) > 8192) throw new RuntimeException();
+    $config = json_decode($bytes, true, 16, JSON_THROW_ON_ERROR);
+    $directory = $private.'/registration';
+    if (($config['enabled'] ?? null) !== false || ($config['maintenance'] ?? null) !== true || ($config['databaseContractAccepted'] ?? null) !== false
+        || ($config['origin'] ?? '') !== 'https://pkhockeyacademy.de' || ($config['path'] ?? '') !== '/intern/anmeldungen'
+        || !preg_match('/\Amysql:host=[a-z0-9.-]+;dbname=[a-zA-Z0-9_]+;charset=utf8mb4\z/', $config['dsn'] ?? '')
+        || !preg_match('/\A[a-zA-Z0-9_]+\z/', $config['username'] ?? '') || !is_string($config['password'] ?? null) || $config['password'] === ''
+        || ($config['journal'] ?? '') !== $directory.'/erasure-journal.enc' || ($config['backupDirectory'] ?? '') !== $directory.'/backups') throw new RuntimeException();
+    $keys = [];
+    foreach (['data','auth','audit','backup'] as $name) {
+        $keys[$name] = base64_decode($config['keys'][$name] ?? '', true);
+        if ($keys[$name] === false || strlen($keys[$name]) !== 32) throw new RuntimeException();
+    }
+    if (count(array_unique($keys, SORT_STRING)) !== 4) throw new RuntimeException();
+    $stage = 'connection';
+    $db = new PDO($config['dsn'], $config['username'], $config['password'], [PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION, PDO::ATTR_EMULATE_PREPARES=>false, PDO::ATTR_TIMEOUT=>10]);
+    $db->exec("SET time_zone = '+00:00'");
+    $version = $db->query('SELECT VERSION()')->fetchColumn();
+    if (!str_contains($version, 'MariaDB')) throw new RuntimeException();
+    $stage = 'private_files';
+    foreach ([$directory, $directory.'/backups'] as $folder) {
+        if (is_link($folder)) throw new RuntimeException();
+        if (!is_dir($folder) && !mkdir($folder, 0700)) throw new RuntimeException();
+        if (realpath($folder) !== $folder || !chmod($folder, 0700)) throw new RuntimeException();
+    }
+    function privateFile(string $path, string $content): void {
+        if (is_link($path)) throw new RuntimeException();
+        if (file_exists($path)) {
+            if (!hash_equals(hash('sha256', $content), hash_file('sha256', $path))) throw new RuntimeException();
+            return;
+        }
+        $handle = fopen($path, 'x'); if (!$handle) throw new RuntimeException();
+        try { if (!chmod($path, 0600) || fwrite($handle, $content) !== strlen($content) || !fflush($handle)) throw new RuntimeException(); }
+        finally { fclose($handle); }
+    }
+    privateFile($directory.'/config.json', $bytes);
+    privateFile($directory.'/Staff.php', base64_decode('__STAFF_SOURCE__', true));
+    require $directory.'/Staff.php';
+    $stage = 'migration';
+    $staff = new \PK\Staff\Staff($db, $keys, $config['journal']);
+    $staff->migrate(); $staff->assertContract();
+    $stage = 'transaction_test';
+    $db->exec('CREATE TEMPORARY TABLE pk_database_acceptance (id INTEGER PRIMARY KEY, value TEXT NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
+    $fixture = 'FIKTIVER DATENBANKTEST – Eisläufer 🏒';
+    $db->beginTransaction();
+    $statement = $db->prepare('INSERT INTO pk_database_acceptance (id,value) VALUES (?,?)'); $statement->execute([1,$fixture]);
+    if ($db->query('SELECT value FROM pk_database_acceptance WHERE id=1')->fetchColumn() !== $fixture) throw new RuntimeException();
+    $db->rollBack();
+    if ((int)$db->query('SELECT COUNT(*) FROM pk_database_acceptance')->fetchColumn() !== 0) throw new RuntimeException();
+    $nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
+    $cipher = sodium_crypto_secretbox($fixture, $nonce, $keys['data']);
+    if (sodium_crypto_secretbox_open($cipher, $nonce, $keys['data']) !== $fixture) throw new RuntimeException();
+    $counts = [];
+    foreach (['users','sessions','requests','audit','limits'] as $table) $counts[$table] = (int)$db->query('SELECT COUNT(*) FROM pk_staff_'.$table)->fetchColumn();
+    $tables = $db->query("SELECT ENGINE,TABLE_COLLATION FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME IN ('pk_staff_schema','pk_staff_users','pk_staff_sessions','pk_staff_limits','pk_staff_requests','pk_staff_audit')")->fetchAll(PDO::FETCH_ASSOC);
+    if (count($tables) !== 6) throw new RuntimeException();
+    foreach ($tables as $table) if ($table['ENGINE'] !== 'InnoDB' || !str_starts_with($table['TABLE_COLLATION'], 'utf8mb4_')) throw new RuntimeException();
+    respond(200, ['installed'=>true,'version'=>$version,'schemaVersion'=>\PK\Staff\Staff::VERSION,'tables'=>count($tables),'counts'=>$counts,
+        'transactionRollback'=>true,'unicodeRoundTrip'=>true,'sodiumRoundTrip'=>true,'privateConfiguration'=>true,'staffEnabled'=>false,'intakeEnabled'=>false]);
+} catch (Throwable) {
+    if (isset($db) && $db->inTransaction()) $db->rollBack();
+    respond(503, ['code'=>'database_setup_failed','stage'=>$stage]);
+}
