@@ -1,0 +1,28 @@
+<?php
+declare(strict_types=1);
+// One-use operator maintenance; never an intake/admin web endpoint.
+ini_set('display_errors','0');ini_set('log_errors','0');
+header('Content-Type: application/json');header('Cache-Control: no-store');header('X-Robots-Tag: noindex, nofollow');
+function reply(int $status,array $body):never{http_response_code($status);echo json_encode($body,JSON_THROW_ON_ERROR);exit;}
+if(($_SERVER['REQUEST_METHOD']??'')!=='POST'||!hash_equals('__TOKEN_HASH__',hash('sha256',$_SERVER['HTTP_X_PK_SETUP_TOKEN']??'')))reply(403,['code'=>'denied']);
+try{
+ $scope=json_decode(base64_decode('__SCOPE__',true),true,8,JSON_THROW_ON_ERROR);$public=realpath($scope['public']);$private=realpath($scope['private']);
+ if(!$public||!$private||$private!==$scope['private']||str_starts_with($private.'/',$public.'/'))throw new RuntimeException();
+ $directory=$private.'/registration/maintenance-'.$scope['hash'];if(is_link($directory)||(!is_dir($directory)&&!mkdir($directory,0700)))throw new RuntimeException();
+ $sources=json_decode(base64_decode('__SOURCES__',true),true,4,JSON_THROW_ON_ERROR);
+ foreach($sources as$name=>$encoded){
+  if(!in_array($name,['Staff.php','Maintenance.php','Intake.php','Policy.php','policy.v1.json'],true))throw new RuntimeException();
+  $file=$directory.'/'.$name;$bytes=base64_decode($encoded,true);
+  if(file_exists($file)){if(is_link($file)||hash_file('sha256',$file)!==hash('sha256',$bytes))throw new RuntimeException();}
+  else{$f=fopen($file,'x');if(!$f)throw new RuntimeException();try{if(!chmod($file,0600)||fwrite($f,$bytes)!==strlen($bytes))throw new RuntimeException();}finally{fclose($f);}}
+ }
+ foreach(['Staff','Maintenance','Policy','Intake']as$name)require $directory.'/'.$name.'.php';
+ $config=json_decode(file_get_contents($private.'/registration/config.json'),true,16,JSON_THROW_ON_ERROR);
+ if(realpath($config['backupDirectory']??'')!==$private.'/registration/backups'||realpath(dirname($config['journal']??''))!==$private.'/registration')throw new RuntimeException();
+ $db=new PDO($config['dsn'],$config['username'],$config['password'],[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION,PDO::ATTR_TIMEOUT=>5]);$keys=array_map(fn($s)=>base64_decode($s,true),$config['keys']);
+ $staff=new \PK\Staff\Staff($db,$keys,$config['journal']);$staff->assertContract();
+ $policy=new \PK\Registration\Policy(json_decode(file_get_contents($directory.'/policy.v1.json'),true,16,JSON_THROW_ON_ERROR));$intake=new \PK\Registration\Intake($db,$keys,$policy,fn()=>null);
+ $result=\PK\Staff\Maintenance::run($staff,$intake,$config,time());
+ if(function_exists('opcache_invalidate'))opcache_invalidate(__FILE__,true);
+ reply(200,['completed'=>true,'counts'=>$result]);
+}catch(Throwable){reply(503,['code'=>'maintenance-failed']);}

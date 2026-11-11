@@ -1,0 +1,44 @@
+name: STRATO private data maintenance
+on:
+  schedule:
+    - cron: '17 2 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: strato-data-maintenance
+  cancel-in-progress: false
+jobs:
+  maintain:
+    if: github.ref == 'refs/heads/main' && vars.STRATO_DATA_MAINTENANCE_ENABLED == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .node-version
+          cache: npm
+          cache-dependency-path: hosting/strato/package-lock.json
+      - run: npm ci --ignore-scripts --prefix hosting/strato
+      - name: Run retention and verify daily encrypted backup
+        env:
+          STRATO_SFTP_HOST: ${{ secrets.STRATO_SFTP_HOST }}
+          STRATO_SFTP_PORT: ${{ secrets.STRATO_SFTP_PORT }}
+          STRATO_SFTP_USERNAME: ${{ secrets.STRATO_SFTP_USERNAME }}
+          STRATO_SFTP_PASSWORD: ${{ secrets.STRATO_SFTP_PASSWORD }}
+          STRATO_SFTP_HOST_KEY: ${{ secrets.STRATO_SFTP_HOST_KEY }}
+          STRATO_PREVIEW_USERNAME: ${{ secrets.STRATO_PREVIEW_USERNAME }}
+          STRATO_PREVIEW_PASSWORD: ${{ secrets.STRATO_PREVIEW_PASSWORD }}
+          STRATO_PRIVATE_PATH: ${{ secrets.STRATO_PRIVATE_PATH }}
+          STRATO_PUBLIC_PATH: ${{ secrets.STRATO_PUBLIC_PATH }}
+        run: node hosting/strato/maintain-registrations.mjs
+      - name: Report maintenance result
+        if: always()
+        env:
+          RESULT: ${{ job.status }}
+        run: |
+          echo "STRATO private maintenance: $RESULT. Review failures; a failed run does not establish completed deletion or backup." >> "$GITHUB_STEP_SUMMARY"
