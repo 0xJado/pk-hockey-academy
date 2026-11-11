@@ -2,7 +2,8 @@
 import Base from "../layouts/Base.astro";
 import { interviewDefinitions } from "../data/interviews";
 import "../styles/interview.css";
-const available = import.meta.env.PUBLIC_LAUNCH_READY !== "true";
+// STRATO never exposes questionnaire inputs, even during password-protected acceptance.
+const available = import.meta.env.PUBLIC_LAUNCH_READY !== "true" && import.meta.env.DEPLOY_TARGET !== "strato";
 ---
 <Base title="Interview-Portal – deine Hockeygeschichte" description="Geschützte Testversion der Spieler- und Trainerinterviews für die PK Hockey Academy. Eigene Antworten erzählen, prüfen und als Testprofil speichern." noindex>
   <section class="page-hero"><div class="wrap"><p class="eyebrow">PK HOCKEY ACADEMY · INTERVIEW-PORTAL</p><h1>DEINE STORY.<br /><span>DEIN HOCKEY.</span></h1><p class="page-intro">Jeder Weg aufs Eis ist anders. Erzähl uns von deinem.</p></div></section>

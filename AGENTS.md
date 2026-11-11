@@ -41,6 +41,8 @@ Production privacy scope confirmed on 10 November 2026: draft the policy for the
 
 On 10 November 2026 the user delegated production privacy decisions, including necessary deletion/access rules. `docs/DATENSCHUTZ-BETRIEBSREGELN.md` now defines the chosen retention limits, Pierre-controlled role access, separate health/media consents, rights handling, and minimal launch communication scope; `docs/DATENSCHUTZ-ENTWURF.md` reflects them. Distinguish chosen operational limits from statutory retention and narrowly documented legal holds. Implement and verify these requirements with the registration backend before accepting genuine data; documentation does not activate collection or prove automatic deletion. Provider-contract facts must still be verified rather than invented.
 
+Interview launch scope recorded on 11 November 2026 from the delegated production/privacy decision: interviews are excluded from the public launch and genuine-data workflows. STRATO builds always suppress their inputs, independently of the general launch flag. Preserve the original simple questionnaires only for separate protected fictional development/review testing. Actual-device speech/privacy acceptance is deferred with that excluded feature; do not reintroduce it as a core website-launch dependency or enable real interview storage through registration approval.
+
 **Do not fabricate facts.**
 
 Never invent testimonials, trainer credentials, registrations, free-place counts, exact venue addresses, legal contact details, real booking links, sponsor relationships, or team affiliations.

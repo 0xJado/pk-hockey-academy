@@ -1,0 +1,11 @@
+# Interview scope — issue #18
+
+Decision recorded 11 November 2026 from the user's delegated production/privacy scope: **interviews and speech questionnaires are excluded from the public launch and from genuine participant-data workflows**. The original simple questions and local fictional review/export/printing tools remain available for separately protected development/review testing. AI interviews, generated summaries and automatic publication remain cancelled.
+
+Both player/trainer pages and the portal now suppress interview inputs whenever `DEPLOY_TARGET=strato`, independently of `PUBLIC_LAUNCH_READY`. Thus a password-protected STRATO acceptance build also contains only noindex placeholders with links back to ordinary academy pages. The existing public-launch gate remains effective for the other build target; interview URLs stay outside the public sitemap. Static artifact verification rejects inputs or an interactive interview shell in any of the three STRATO routes.
+
+The three routes do not request answers, initialize speech services, export participant data or deliver questionnaire results. Server-rendered placeholders work without JavaScript. No interview storage or consent is inferred from the separate registration backend work. Do not give test speech/privacy controls a real-data meaning or turn them on through a general registration activation flag.
+
+Executed: compiled STRATO artifact checks; desktop/tablet/phone browser checks for the portal and both individual routes; no-JavaScript and back navigation checks; instrumented speech hooks confirming zero initialization; zero outside-origin requests or page errors. Existing fictional questionnaire tests continue separately. These are browser/synthetic checks, **not actual-phone, WhatsApp-browser or real speech acceptance**.
+
+Actual-device input/dictation/read-aloud testing, provider/consent review, private destination, retention, recovery and real-data activation are explicitly deferred with this excluded feature. A future activation requires a separate task and acceptance, not reopening the core website launch implicitly. This completes #18 for the chosen omission scope; #19 still verifies the accepted production release before exposing the site. No live host or Studio destination was changed by these source updates.

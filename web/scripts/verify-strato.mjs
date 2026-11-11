@@ -17,8 +17,13 @@ export async function verifyStrato(output=new URL('../../output/strato/',import.
   for (const route of ["index.html", "training/index.html", "trainingstermine/index.html", "trainerpool/index.html", "anmeldung/index.html", "404.html", ".htaccess", "api/registration.php", "api/preview-unavailable.php"])
     assert.ok(names.includes(route), `Missing STRATO artifact: ${route}`);
   for (const name of names) {
-    assert.ok(!/(^|\/)(node_modules|server|redaktion|\.vercel|\.env[^/]*)(\/|$)/.test(name), `Runtime/private artifact: ${name}`);
+    assert.ok(!/(^|\/)(node_modules|server|staff|redaktion|\.vercel|\.env[^/]*)(\/|$)/.test(name), `Runtime/private artifact: ${name}`);
     assert.ok(!/\.(mjs|ts|astro|map)$/.test(name), `Source/server artifact: ${name}`);
+  }
+  for(const route of ['interviews','spieler-interview','trainer-interview']) {
+    const html=await readFile(resolve(root,route,'index.html'),'utf8');
+    assert.ok(!/<(?:input|textarea|form)(?:\s|>)/i.test(html)&&!html.includes('data-interview='),'Interview input exposed on STRATO');
+    assert.match(html,/content="noindex,nofollow"/,'Deferred interview route must stay noindex');
   }
   const env = loadEnv("production", fileURLToPath(new URL("../", import.meta.url)), "");
   const privateTokens = [env.SANITY_PREVIEW_READ_TOKEN, env.SANITY_READ_TOKEN].filter(Boolean);
