@@ -8,6 +8,7 @@ import {
 const training = await getTraining();
 const sessions = getUpcomingSessions(training.sessions);
 const { venues } = training;
+const Heading = Astro.url.pathname.replace(/\/$/, "") === "/trainingstermine" ? "h2" : "h3";
 const date = (value: string, options: Intl.DateTimeFormatOptions) =>
   new Intl.DateTimeFormat("de-DE", {
     timeZone: "Europe/Berlin",
@@ -33,7 +34,7 @@ const date = (value: string, options: Intl.DateTimeFormatOptions) =>
               year: "numeric",
             })}
           </p>
-          <h3>{session.title}</h3>
+          <Heading>{session.title}</Heading>
           <dl>
             <div>
               <dt>Uhrzeit</dt>
@@ -100,7 +101,7 @@ const date = (value: string, options: Intl.DateTimeFormatOptions) =>
       <span class="status-label">
         <span class="status-dot"></span> TERMINE IN VORBEREITUNG
       </span>
-      <h3>DEIN NÄCHSTES EISZEIT-KAPITEL.</h3>
+      <Heading>DEIN NÄCHSTES EISZEIT-KAPITEL.</Heading>
       <p>
         Die nächsten Trainingstermine werden hier veröffentlicht, sobald Zeit
         und Ort feststehen. Aktuell gibt es keine freigegebenen Termine und

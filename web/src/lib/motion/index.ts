@@ -185,6 +185,12 @@ export function installMotion() {
   if (installed) return;
   installed = true;
   document.addEventListener("astro:page-load", initialize);
+  // Native request pages have no ClientRouter to emit astro:page-load. Keep
+  // menu/keyboard behavior and visible motion fallbacks initialized there too.
+  if (!document.querySelector('meta[name="astro-view-transitions-enabled"]')) {
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initialize, {once:true});
+    else initialize();
+  }
   document.addEventListener("astro:before-swap", () => {
     dispose?.();
     dispose = undefined;

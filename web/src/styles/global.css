@@ -1074,7 +1074,7 @@ p {
   align-items: center;
   gap: 8px;
 }
-.schedule-empty h3 {
+.schedule-empty :is(h2, h3) {
   font-size: 36px;
   margin-block: 12px 16px;
 }
@@ -1514,15 +1514,18 @@ p {
   color: #40576b;
 }
 .legal-content > p {
-  font-size: 13px;
+  font-size: 16px;
+  line-height: 1.8;
 }
+.legal-content > h2 { margin-block: 36px 14px; }
+.legal-content > p a { color: #005fa9; text-decoration: underline; text-underline-offset: 3px; }
 .session-card {
   background: white;
   border: 1px solid #bfccd8;
   padding: 30px;
   margin-top: 20px;
 }
-.session-card h3 {
+.session-card :is(h2, h3) {
   margin-block: 15px;
 }
 .session-card dl {
@@ -2109,7 +2112,7 @@ p {
   .calendar-art svg {
     width: 43px;
   }
-  .schedule-empty h3 {
+  .schedule-empty :is(h2, h3) {
     font-size: 32px;
   }
   .schedule-empty p {

@@ -1,6 +1,9 @@
 ---
 import Button from "./Button.astro";
 import PKOutline from "./PKOutline.astro";
+import { getAcademy } from "../lib/content";
+const email = getAcademy().settings.contactDestinations?.email;
+const onContact = Astro.url.pathname.replace(/\/$/, "") === "/kontakt";
 ---
 
 <section class="final-cta">
@@ -15,8 +18,8 @@ import PKOutline from "./PKOutline.astro";
     </div>
     <div class="final-cta-actions">
       <Button href="/trainingstermine">Trainingstermine ansehen</Button>
-      <Button href="/kontakt" variant="outline">
-        Training anfragen
+      <Button href={onContact && email ? `mailto:${email}` : "/kontakt"} variant="outline">
+        {onContact && email ? "E-Mail schreiben" : "Training anfragen"}
       </Button>
       <p>Individuelles Training. Gemeinsame Entwicklung.</p>
     </div>

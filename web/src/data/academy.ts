@@ -9,6 +9,7 @@ import { pierreProfile } from "../../../shared/pierre-profile.ts";
 
 export const settings: SiteSettings = {
   brandName: "PK Hockey Academy",
+  contactDestinations: { email: "info@pkhockeyacademy.de" },
   globalCTAs: {
     schedule: "Trainingstermine ansehen",
     contact: "Training anfragen",

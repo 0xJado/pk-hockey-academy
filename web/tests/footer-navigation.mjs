@@ -48,7 +48,8 @@ export async function runFooterNavigation(page, origin) {
             if (performance.now() - start < 400) requestAnimationFrame(sample);
             else
               resolve({
-                outgoing: window.__footerPositions,
+                outgoing: window.__footerPositions ?? [],
+                native: window.__footerPositions === undefined,
                 incoming,
                 transition: getComputedStyle(document.querySelector("main"))
                   .viewTransitionName,
@@ -61,6 +62,7 @@ export async function runFooterNavigation(page, origin) {
       target.outgoing.every((y) => y > oldY - 100),
       `Footer navigation moved the outgoing page: ${path}`,
     );
+    assert.equal(target.native,path==='/anmeldung',`Unexpected native/client route boundary: ${path}`);
     assert.ok(
       target.incoming.every((y) => y < 2),
       `Footer destination inherited an old scroll position: ${path}`,

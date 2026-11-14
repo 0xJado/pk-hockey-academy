@@ -70,6 +70,10 @@ jobs:
         run: npm run test:cms --prefix web
       - name: Build and verify the Node-free STRATO export
         run: npm run build:strato --prefix web
+      - name: Audit all STRATO routes, assets, semantics and navigation
+        env:
+          PK_BROWSER_CHANNEL: ''
+        run: npm run test:strato:audit --prefix web
       - name: Verify interviews remain omitted on STRATO
         env:
           PK_BROWSER_CHANNEL: ''
