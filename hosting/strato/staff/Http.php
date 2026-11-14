@@ -117,7 +117,7 @@ final class Http
     {
         $html = '<dl>';
         foreach ($fields as $key=>$value) {
-            $label = self::LABELS[$key] ?? match($key) { 'basis'=>'Grundlage', 'categories'=>'Kategorien', 'responsible'=>'Verantwortliche Kennung', 'endedAt'=>'Nutzung beendet am', 'due'=>'Nachweis löschen ab', '_subject'=>'Zuordnung', default=>'Nachweisangabe' };
+            $label = self::LABELS[$key] ?? match($key) { 'guardianAuthority'=>'Berechtigung bestätigt', 'policyVersion'=>'Fassung der Anfrage', 'textSha256'=>'Prüfsumme des Erklärungstexts', 'actor'=>'Erklärende Person', 'contact'=>'Rückmeldekontakt', 'subject'=>'Betroffenes Kind', 'basis'=>'Grundlage', 'categories'=>'Kategorien', 'responsible'=>'Verantwortliche Kennung', 'endedAt'=>'Nutzung beendet am', 'due'=>'Nachweis löschen ab', '_subject'=>'Zuordnung', default=>'Nachweisangabe' };
             $html .= '<dt>'.self::e($label).'</dt><dd>';
             if (is_array($value)) $html .= self::fields($value,(string)$key);
             else {
