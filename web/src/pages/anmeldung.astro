@@ -1,17 +1,17 @@
 ---
 import Base from "../layouts/Base.astro";
 import Arrow from "../components/Arrow.astro";
-import RegistrationPreview from "../components/RegistrationPreview.astro";
+import TrainingRequestForm from "../components/TrainingRequestForm.astro";
 import { registration } from "../data/registration";
 import "../styles/registration.css";
 ---
-<Base title="Anmeldung – Formularvorlage & PDF" description="Die bereitgestellte Anmeldevorlage der PK Hockey Academy als A4-PDF und in einer Onlinevorschau. Die Onlineanmeldung ist noch nicht freigegeben." noindex>
+<Base title="Trainingsanfrage – Anmeldung & PDF" description="Einzeltermin oder 5er-Paket bei der PK Hockey Academy anfragen. Die Onlineanmeldung wird vorbereitet; die Papiervorlage steht als PDF bereit." noindex>
   <section class="page-hero">
     <div class="wrap">
       <a href="/" class="breadcrumb">STARTSEITE <span aria-hidden="true">/</span> ANMELDUNG</a>
       <p class="eyebrow">DEIN WEG ZUM TRAINING</p>
       <h1>DER ERSTE SCHRITT.<br /><span>DEIN FORMULAR.</span></h1>
-      <p class="page-intro">Hier findest du die Anmeldevorlage als PDF und einen Überblick über ihre Inhalte. Die Onlineanmeldung wird noch vorbereitet.</p>
+      <p class="page-intro">Dein Weg zum Einzeltraining oder 5er-Paket. Die Academy prüft jede Anfrage und bestätigt deine Buchung persönlich. Der Onlineversand wird noch vorbereitet.</p>
       <div class="registration-hero-actions">
         <a href="#formular" class="button button--primary"><span>Formularvorschau ansehen</span><Arrow /></a>
         <a href={registration.downloadUrl} download={registration.downloadName} class="button button--outline"><span>PDF-Vorlage herunterladen</span><Arrow diagonal /></a>
@@ -23,15 +23,10 @@ import "../styles/registration.css";
   <section class="section registration-section" aria-labelledby="registration-heading">
     <div class="wrap registration-layout">
       <div class="registration-main" id="formular">
-        <p class="eyebrow">DIE BEREITGESTELLTE VORLAGE · VERSION 2</p>
+        <p class="eyebrow">DEINE TRAININGSANFRAGE</p>
         <h2 id="registration-heading">ALLE ANGABEN.<br /><span>IM ÜBERBLICK.</span></h2>
         <p class="registration-training-format">{registration.tagline}<br /><strong>{registration.trainingFormat}</strong></p>
-        <div class="registration-status" id="registration-preview-status" role="note">
-          <strong>Onlineanmeldung noch nicht freigegeben</strong>
-          <p>Diese Vorschau zeigt die Felder der bereitgestellten Vorlage. Eingabe und Versand sind deaktiviert. Bitte übermittle hier keine persönlichen Daten.</p>
-        </div>
-        <p class="registration-source-instruction">Aus der PDF-Vorlage: {registration.instruction}</p>
-        <RegistrationPreview />
+        <TrainingRequestForm />
         <p class="registration-end-note">Über diese Seite werden keine Anmeldungen angenommen oder Trainingsplätze gebucht.</p>
       </div>
 
@@ -46,7 +41,7 @@ import "../styles/registration.css";
             <div><dt>Dateigröße</dt><dd>{Math.round(registration.sizeBytes / 1000)} kB</dd></div>
           </dl>
           <a href={registration.downloadUrl} download={registration.downloadName} class="button button--primary"><span>PDF herunterladen</span><Arrow /></a>
-          <p class="registration-small">Die Vorlage enthält einen Hinweis auf die noch erforderliche rechtliche Prüfung. Eine Datenschutzinformation für die Onlineverarbeitung steht noch aus.</p>
+          <p class="registration-small">Die Papiervorlage enthält zusätzliche Erklärungen und einen Hinweis auf die erforderliche rechtliche Prüfung. Die Onlineanfrage beschränkt sich auf die für die erste Anfrage nötigen Angaben und getrennte freiwillige Einwilligungen. Beide Fassungen sind noch nicht zur Annahme echter Daten freigegeben.</p>
         </div>
         <div class="registration-process">
           <h3>Wie geht es weiter?</h3>

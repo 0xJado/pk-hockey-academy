@@ -1,4 +1,25 @@
 .registration-hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
+.training-request { color: var(--ink); overflow-wrap: anywhere; }
+.training-request p { margin-block: 12px; font-size: 14px; line-height: 1.7; }
+.training-request fieldset { min-width: 0; margin-block: 28px; padding: 22px; border: 1px solid #bbcde0; background: #fff; }
+.training-request fieldset[data-controls] { padding: 0; border: 0; background: transparent; }
+.training-request legend { padding: 0 8px; font: 700 26px/1.2 "Barlow Condensed", sans-serif; }
+.training-request input:not(:disabled), .training-request textarea:not(:disabled) { cursor: text; color: var(--ink); }
+.training-request input[type="checkbox"], .training-request input[type="radio"] { cursor: pointer; }
+.training-request textarea { resize: vertical; }
+.training-request select { display: block; max-width: 100%; min-height: 44px; padding: 10px; margin-block: 10px; background: #f4f7fb; border: 1px solid #bbcde0; font: inherit; color: var(--ink); }
+.training-request label { font-size: 14px; }
+.training-request .registration-choice { padding-block: 14px; }
+.training-request a { color: #005fa9; text-decoration: underline; }
+.training-request [aria-invalid="true"] { outline: 2px solid #a42121; outline-offset: 2px; }
+.training-request .request-error { color: #9b1616; font-weight: 600; }
+.training-request [data-errors]:not([hidden]), .training-request [data-feedback]:not(:empty) { margin-block: 24px; padding: 20px; border: 2px solid #087ed5; background: #e5effb; }
+.training-request [data-errors] ul { padding-left: 24px; }
+.training-request [data-errors] a { display: inline-block; padding-block: 8px; }
+.training-request [data-retry] { white-space: normal; text-align: left; }
+.training-request :focus-visible { outline: 3px solid #005fa9; outline-offset: 4px; }
+.training-request [hidden] { display: none !important; }
+@media (max-width: 600px) { .training-request .registration-fields { grid-template-columns: 1fr; } .training-request fieldset { padding: 16px; } }
 .registration-hero-actions .button--outline { color: var(--ink); border-color: #8aa9cd; }
 .registration-hero-actions .button--outline:hover { color: #fff; }
 .registration-section { background: #f6faff; }

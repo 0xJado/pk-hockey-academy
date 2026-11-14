@@ -88,6 +88,11 @@ jobs:
         env:
           PK_PHP_EXECUTABLE: php
         run: npm run test:strato:registration:http --prefix web
+      - name: Test fictional registration form through PHP and staff storage
+        env:
+          PK_PHP_EXECUTABLE: php
+          PK_BROWSER_CHANNEL: ''
+        run: npm run test:strato:registration:browser --prefix web
       - name: Test isolated staff HTTP and browser workflow
         env:
           PK_PHP_EXECUTABLE: php

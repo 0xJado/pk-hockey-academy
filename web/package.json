@@ -19,6 +19,7 @@
     "test:strato:preview:package": "node tests/integration/strato-preview-package.mjs",
     "test:strato:staff:browser": "node tests/staff-browser.mjs",
     "test:strato:registration:http": "node tests/registration-http.mjs",
+    "test:strato:registration:browser": "node tests/registration-form-browser.mjs",
     "test:strato:interview-scope": "node tests/interview-scope-browser.mjs",
     "review:registration": "node --experimental-strip-types scripts/registration-policy-review.mjs",
     "preview": "astro preview --host 127.0.0.1",

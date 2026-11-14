@@ -1,0 +1,108 @@
+---
+import policy from "../../../hosting/strato/registration/policy.v1.json";
+interface Props {
+  enabled?: boolean;
+  sessions?: { id: string; label: string }[];
+}
+// No caller enables this on the public website. Only isolated fictional fixtures
+// currently pass enabled=true; backend approval is independent of this property.
+const { enabled = false, sessions = [] } = Astro.props;
+const fields: { name: string; label: string; required?: boolean; max: number; hint?: string; type?: "tel" | "email" }[] = [
+  { name: "childName", label: "Vor- und Nachname des Kindes", required: true, max: 120 },
+  { name: "birthYear", label: "Jahrgang des Kindes", required: true, max: 4, hint: "Vierstelliger Jahrgang, kein vollständiges Geburtsdatum." },
+  { name: "team", label: "Verein / Mannschaft (optional)", max: 160 },
+  { name: "guardianName", label: "Dein Vor- und Nachname", required: true, max: 120 },
+  { name: "guardianPhone", label: "Deine Telefonnummer", required: true, type: "tel", max: 40 },
+  { name: "guardianEmail", label: "Deine E-Mail-Adresse", required: true, type: "email", max: 254 },
+  { name: "emergencyName", label: "Zusätzlicher Notfallkontakt: Name (optional)", max: 120 },
+  { name: "emergencyPhone", label: "Zusätzlicher Notfallkontakt: Telefon (optional)", type: "tel", max: 40 },
+  { name: "pickupPersons", label: "Abholberechtigte Personen (optional)", max: 300 },
+];
+---
+<div class="training-request" data-training-request data-enabled={String(enabled)} data-policy={policy.version}>
+  <p>Einzeltermin: 50 € · 5er-Paket: 200 €. Jede Einheit umfasst 60 Minuten On-Ice und 60 Minuten Off-Ice. Die Academy bestätigt deine Buchung persönlich.</p>
+  {!enabled && <p class="registration-status">Die Onlineanmeldung ist noch nicht freigegeben. Eingabe und Versand sind deaktiviert.</p>}
+  <noscript><p>Für den sicheren Onlineversand ist JavaScript erforderlich. Bitte kläre den weiteren Ablauf persönlich mit der Academy. Sende keine Gesundheitsangaben per E-Mail.</p></noscript>
+  <div data-feedback tabindex="-1" role="status" aria-live="polite"></div>
+  <div data-errors tabindex="-1" role="region" aria-label="Bitte prüfe deine Angaben" hidden></div>
+  <!-- Disabled in server HTML even for a fixture: no accidental native GET/POST
+       or personal data in the address bar if JavaScript fails. -->
+  <form novalidate autocomplete="off">
+    <fieldset data-controls disabled>
+      <legend>Deine Trainingsanfrage</legend>
+      <p>Mit * markierte Angaben sind erforderlich. Weitere Angaben sind freiwillig.</p>
+      <fieldset>
+        <legend>1. Training wählen</legend>
+        <label class="registration-choice"><input type="radio" name="bookingType" value="single" required aria-describedby="request-bookingType-error" />Einzeltermin · 50 €</label>
+        <label class="registration-choice"><input type="radio" name="bookingType" value="five" required aria-describedby="request-bookingType-error" />5er-Paket · 200 €</label>
+        <p id="request-bookingType-error" class="request-error" hidden></p>
+        <div data-session hidden>
+          <label for="request-sessionId">Trainingstermin *</label>
+          <select id="request-sessionId" name="sessionId" disabled aria-describedby="request-sessionId-error">
+            <option value="">Bitte wählen</option>
+            {sessions.map(session => <option value={session.id}>{session.label}</option>)}
+          </select>
+          {sessions.length === 0 && <p>Aktuell steht kein anfragbarer Einzeltermin zur Auswahl. Bitte sieh später bei den <a href="/trainingstermine">Trainingsterminen</a> nach.</p>}
+          <p id="request-sessionId-error" class="request-error" hidden></p>
+        </div>
+        <p data-package hidden>Die Termine für dein Paket stimmt Pierre persönlich mit dir ab.</p>
+      </fieldset>
+      <fieldset>
+        <legend>2. Kind und Hauptkontakt</legend>
+        <div class="registration-fields">
+          {fields.map(field => <div class="registration-field">
+            <label for={`request-${field.name}`}>{field.label}{field.required && " *"}</label>
+            {field.hint && <p id={`request-${field.name}-hint`}>{field.hint}</p>}
+            <input id={`request-${field.name}`} name={field.name} type={field.type ?? "text"} required={field.required} maxlength={field.max}
+              inputmode={field.name === "birthYear" ? "numeric" : undefined} pattern={field.name === "birthYear" ? "[0-9]{4}" : undefined}
+              aria-describedby={`${field.hint ? `request-${field.name}-hint ` : ""}request-${field.name}-error`} />
+            <p id={`request-${field.name}-error`} class="request-error" hidden></p>
+          </div>)}
+        </div>
+        <p>Ohne zusätzlichen Notfallkontakt nutzen wir den Hauptkontakt. Einen zusätzlichen Namen und dessen Telefonnummer bitte gemeinsam angeben.</p>
+        <label for="request-position">Position (optional)</label>
+        <select id="request-position" name="position"><option value="">Keine Angabe</option><option value="field">Feldspieler</option><option value="goalie">Torwart</option></select>
+        <div class="registration-field">
+          <label for="request-experience">Erfahrungsstand (optional)</label>
+          <p id="request-experience-hint">Gesundheitshinweise bitte ausschließlich im gesonderten Bereich angeben.</p>
+          <textarea id="request-experience" name="experience" maxlength="500" rows="3" aria-describedby="request-experience-hint request-experience-error"></textarea>
+          <p id="request-experience-error" class="request-error" hidden></p>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>3. Freiwillige Gesundheitshinweise</legend>
+        <p>{policy.copy.healthHint}</p>
+        <label class="registration-choice"><input type="checkbox" name="consent-health" />{policy.consents[0].text}</label>
+        <div class="registration-field">
+          <label for="request-healthNotes">Betreuungsrelevante Gesundheitshinweise (optional)</label>
+          <textarea id="request-healthNotes" name="healthNotes" maxlength="1000" rows="4" disabled aria-describedby="request-healthNotes-error"></textarea>
+          <p id="request-healthNotes-error" class="request-error" hidden></p>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>4. Freiwillige Medienfreigaben</legend>
+        <p>Jede Auswahl ist unabhängig und freiwillig. Keine Auswahl bedeutet keine Erlaubnis. Die Teilnahme hängt davon nicht ab.</p>
+        {policy.consents.slice(1).map(consent => <label class="registration-choice"><input type="checkbox" name={`consent-${consent.purpose}`} />{consent.text}</label>)}
+        <p id="request-consents-error" class="request-error" hidden></p>
+      </fieldset>
+      <fieldset>
+        <legend>5. Prüfen und anfragen</legend>
+        <p><a href="/datenschutz">Datenschutzhinweise zur Trainingsanfrage</a></p>
+        <label class="registration-choice"><input type="checkbox" name="guardianAuthority" required aria-describedby="request-guardianAuthority-error" />{policy.copy.guardianAuthority} *</label>
+        <p id="request-guardianAuthority-error" class="request-error" hidden></p>
+        <p>Bitte prüfe deine Angaben vor dem Versand. Du sendest eine Anfrage; ein Trainingsplatz wird dadurch nicht reserviert oder bestätigt. Hier erfolgt keine Zahlung.</p>
+        <button class="button button--primary" type="submit">{policy.copy.submitLabel}</button>
+      </fieldset>
+    </fieldset>
+  </form>
+  <button class="button button--outline" type="button" data-retry hidden>Dieselbe Anfrage erneut prüfen</button>
+  <p data-help hidden>Bitte beginne bei unklarem Versandstatus keine neue Anfrage und lade die Seite nicht neu. Bei Rückfragen kontaktiere <a href="mailto:info@pkhockeyacademy.de">info@pkhockeyacademy.de</a>, ohne Gesundheitsangaben per E-Mail zu senden.</p>
+</div>
+<script>
+  import { mountTrainingRequests } from "../lib/registration/form";
+  let cleanup = () => {};
+  function mount() { cleanup(); cleanup = mountTrainingRequests(document); }
+  document.addEventListener("astro:page-load", mount);
+  document.addEventListener("astro:before-swap", () => cleanup());
+  mount();
+</script>
