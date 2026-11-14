@@ -1,3 +1,15 @@
+# Aktuelle Übergabe an Pierre
+
+Stand: 15. November 2026. Maßgeblich sind das [aktualisierte Freigabepaket](FREIGABEPAKET-PIERRE.md) und das [Entscheidungsprotokoll](REGISTRATION-APPROVAL-2026-11-15.md). A/B sind unter Nutzerdelegation angenommen; keine erneute Text-/Rollen-/Fristenentscheidung nötig.
+
+Noch erforderlich sind die tatsächlichen Anbieter-Vertragsnachweise, der private persönliche Admin-Handoff und ein repräsentativer Sanity-/Studio-Veröffentlichungsdurchlauf. Zugangsdaten niemals in dieses öffentliche Repository schreiben. Echte Datenerfassung und öffentliche Freischaltung bleiben getrennte abschließende Schritte.
+
+Firmenangaben einschließlich fehlender Steuer-/Registereinträge, Preise, Domain, Hauptkontaktmodell, Rollen und Löschfristen sind geklärt. Echte Termine erst mit bestätigten Angaben veröffentlichen; zusätzliche Medien sind optional. Interviews sind Phase 2, SpielerPlus bleibt außerhalb der Website, Google Sheets entfällt.
+
+## Historischer Gesprächsstand vom 6. November — durch obige Entscheidungen überholt
+
+Die folgenden alten Fragen sind Archivmaterial, keine aktuelle Aufgaben- oder Freigabeliste.
+
 # Was wir noch von Pierre brauchen
 
 Stand: 6. November 2026. Diese Liste dient als Gesprächs- und Freigabegrundlage. Der Shop bleibt ausgeklammert. Antworten mit privaten Kontakt- oder Kontoinformationen bitte privat weitergeben; diese Checkliste liegt in einem öffentlichen Repository. Keine Passwörter, Tokens, ausgefüllten Anmeldungen oder Gesundheitsdaten hier eintragen.
@@ -70,7 +82,7 @@ Für weitere Städte bitte ausdrücklich bestätigen, ob sie weiterhin geplant o
 
 ## 5. Unternehmensangaben, Rechtstexte und öffentlicher Start
 
-- [ ] Vollständige Anbieter-/Unternehmensangaben für das Impressum liefern: offizieller Name, gegebenenfalls Rechtsform/Vertretung, ladungsfähige Geschäftsanschrift und freigegebene Kontaktdaten; Register-/Steuerangaben, soweit für die Academy zutreffend.
+- [x] Anbieterangaben für das Impressum geliefert: PK Hockey Academy, Einzelunternehmen/Inhaber Pierre Klein, Verbindungsweg 8, 46562 Voerde, Deutschland, info@pkhockeyacademy.de. Am 12. November 2026 bestätigt: keine USt-IdNr./W-IdNr., kein Handelsregistereintrag; die vorläufige Telefonnummer +49 163 80 63 741 bleibt vorerst im Impressum. Keine Bestätigung als WhatsApp-Kontakt.
 - [ ] Geprüfte Texte für Impressum, Datenschutz und die anwendbaren Buchungs-/Stornobedingungen freigeben. Die vorhandenen Platzhalter sind keine fertigen Rechtstexte.
 - [x] Gewünschte öffentliche Domain: **pkhockeyacademy.de**. Die spätere technische Domain-Verbindung ist noch nicht geprüft.
 - [x] Pierre hat laut Rückmeldung des Nutzers vom 6. November einen eigenen erfolgreichen Sanity-Probedurchlauf durchgeführt. Der Einzelnutzerumfang ist erfüllt; zusätzliche Redaktionskonten können später folgen. MFA/Kontowiederherstellung und weitere Mitglieder sind damit nicht als separat geprüft ausgewiesen.
