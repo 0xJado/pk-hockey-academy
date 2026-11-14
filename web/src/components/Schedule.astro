@@ -3,11 +3,15 @@ import { getTraining } from "../lib/training-source";
 import Button from "./Button.astro";
 import {
   getUpcomingSessions,
-  getRegistrationUrl,
 } from "../lib/content";
+import { registrationFormEnabled } from "../lib/registration/activation";
+import { requestableSessionOptions } from "../lib/registration/sessions";
+import policy from "../../../hosting/strato/registration/policy.v1.json";
 const training = await getTraining();
 const sessions = getUpcomingSessions(training.sessions);
 const { venues } = training;
+const registrationEnabled = registrationFormEnabled(import.meta.env,policy);
+const requestable = new Set(requestableSessionOptions(training.sessions,venues).map(session=>session.id));
 const Heading = Astro.url.pathname.replace(/\/$/, "") === "/trainingstermine" ? "h2" : "h3";
 const date = (value: string, options: Intl.DateTimeFormatOptions) =>
   new Intl.DateTimeFormat("de-DE", {
@@ -23,7 +27,7 @@ const date = (value: string, options: Intl.DateTimeFormatOptions) =>
 {sessions.length ? (
   <div class="sessions">
     {sessions.map((session) => {
-      const url = getRegistrationUrl(session);
+      const url = registrationEnabled && requestable.has(session.id) ? "/anmeldung#formular" : undefined;
       return (
         <article class="session-card">
           <p class="eyebrow">
@@ -78,7 +82,7 @@ const date = (value: string, options: Intl.DateTimeFormatOptions) =>
               href={url}
               rel="noopener noreferrer"
             >
-              Zum Anmeldeweg
+              Trainingsanfrage stellen
             </a>
           ) : (
             <button class="button" disabled>

@@ -19,6 +19,7 @@ jobs:
     timeout-minutes: 30
     env:
       PUBLIC_LAUNCH_READY: 'false'
+      PUBLIC_REGISTRATION_ENABLED: ${{ vars.STRATO_REGISTRATION_ENABLED || 'false' }}
       SITE_URL: https://pkhockeyacademy.de
       SANITY_PROJECT_ID: ${{ vars.SANITY_PROJECT_ID }}
       SANITY_DATASET: ${{ vars.SANITY_DATASET }}

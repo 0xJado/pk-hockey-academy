@@ -6,18 +6,21 @@ import { registration } from "../data/registration";
 import "../styles/registration.css";
 import { getTraining } from "../lib/training-source";
 import { requestableSessionOptions } from "../lib/registration/sessions";
+import { registrationFormEnabled } from "../lib/registration/activation";
+import policy from "../../../hosting/strato/registration/policy.v1.json";
 const training = await getTraining();
 const sessions = requestableSessionOptions(training.sessions, training.venues);
+const enabled = registrationFormEnabled(import.meta.env, policy);
 ---
-<Base title="Trainingsanfrage – Anmeldung & PDF" description="Einzeltermin oder 5er-Paket bei der PK Hockey Academy anfragen. Die Onlineanmeldung wird vorbereitet; die Papiervorlage steht als PDF bereit." noindex clientRouting={false}>
+<Base title="Trainingsanfrage – Anmeldung & PDF" description={enabled ? "Einzeltermin oder 5er-Paket bei der PK Hockey Academy anfragen. Pierre prüft die Anfrage und bestätigt die Buchung persönlich." : "Einzeltermin oder 5er-Paket bei der PK Hockey Academy anfragen. Die Onlineanmeldung wird vorbereitet; die Papiervorlage steht als PDF bereit."} noindex clientRouting={false}>
   <section class="page-hero">
     <div class="wrap">
       <a href="/" class="breadcrumb">STARTSEITE <span aria-hidden="true">/</span> ANMELDUNG</a>
       <p class="eyebrow">DEIN WEG ZUM TRAINING</p>
       <h1>DER ERSTE SCHRITT.<br /><span>DEIN FORMULAR.</span></h1>
-      <p class="page-intro">Dein Weg zum Einzeltraining oder 5er-Paket. Die Academy prüft jede Anfrage und bestätigt deine Buchung persönlich. Der Onlineversand wird noch vorbereitet.</p>
+      <p class="page-intro">Dein Weg zum Einzeltraining oder 5er-Paket. Die Academy prüft jede Anfrage und bestätigt deine Buchung persönlich. {enabled ? "Stelle hier deine Trainingsanfrage." : "Der Onlineversand wird noch vorbereitet."}</p>
       <div class="registration-hero-actions">
-        <a href="#formular" class="button button--primary"><span>Formularvorschau ansehen</span><Arrow /></a>
+        <a href="#formular" class="button button--primary"><span>{enabled ? "Trainingsanfrage ausfüllen" : "Formularvorschau ansehen"}</span><Arrow /></a>
         <a href={registration.downloadUrl} download={registration.downloadName} class="button button--outline"><span>PDF-Vorlage herunterladen</span><Arrow diagonal /></a>
       </div>
     </div>
@@ -30,8 +33,8 @@ const sessions = requestableSessionOptions(training.sessions, training.venues);
         <p class="eyebrow">DEINE TRAININGSANFRAGE</p>
         <h2 id="registration-heading">ALLE ANGABEN.<br /><span>IM ÜBERBLICK.</span></h2>
         <p class="registration-training-format">{registration.tagline}<br /><strong>{registration.trainingFormat}</strong></p>
-        <TrainingRequestForm sessions={sessions} />
-        <p class="registration-end-note">Über diese Seite werden keine Anmeldungen angenommen oder Trainingsplätze gebucht.</p>
+        <TrainingRequestForm sessions={sessions} enabled={enabled} />
+        <p class="registration-end-note">{enabled ? "Eine Eingangsbestätigung bestätigt den Empfang deiner Anfrage. Ein Trainingsplatz wird erst persönlich durch die Academy bestätigt." : "Über diese Seite werden keine Anmeldungen angenommen oder Trainingsplätze gebucht."}</p>
       </div>
 
       <aside class="registration-sidebar" aria-labelledby="registration-download-heading">
@@ -45,11 +48,11 @@ const sessions = requestableSessionOptions(training.sessions, training.venues);
             <div><dt>Dateigröße</dt><dd>{Math.round(registration.sizeBytes / 1000)} kB</dd></div>
           </dl>
           <a href={registration.downloadUrl} download={registration.downloadName} class="button button--primary"><span>PDF herunterladen</span><Arrow /></a>
-          <p class="registration-small">Die Papiervorlage enthält zusätzliche Erklärungen und einen Hinweis auf die erforderliche rechtliche Prüfung. Die Onlineanfrage beschränkt sich auf die für die erste Anfrage nötigen Angaben und getrennte freiwillige Einwilligungen. Beide Fassungen sind noch nicht zur Annahme echter Daten freigegeben.</p>
+          <p class="registration-small">Die Papiervorlage enthält zusätzliche Erklärungen und einen Hinweis auf die erforderliche rechtliche Prüfung. Die Onlineanfrage beschränkt sich auf die für die erste Anfrage nötigen Angaben und getrennte freiwillige Einwilligungen. {!enabled && "Beide Fassungen sind noch nicht zur Annahme echter Daten freigegeben."}</p>
         </div>
         <div class="registration-process">
           <h3>Wie geht es weiter?</h3>
-          <p>Die Abgabe ausgefüllter Papierformulare und der sichere Versand der Onlineanmeldung werden noch abgestimmt. Bitte sende vorerst keine ausgefüllten Formulare über unbestätigte Kontaktwege.</p>
+          <p>{enabled ? "Bitte nutze für die Onlineanfrage das Formular. Wie du eine ausgefüllte Papiervorlage übergeben kannst, kläre vorab persönlich mit der Academy. Sende Gesundheitsangaben nicht per gewöhnlicher E-Mail." : "Die Abgabe ausgefüllter Papierformulare und der sichere Versand der Onlineanmeldung werden noch abgestimmt. Bitte sende vorerst keine ausgefüllten Formulare über unbestätigte Kontaktwege."}</p>
           <h3>Formular &amp; Trainingstermin</h3>
           <p>Die Vorlage umfasst Einzel- und Mehrfachbuchungen. Eine Trainingsanfrage wird erst nach Bestätigung durch die Academy verbindlich.</p>
           <a href="/trainingstermine" class="registration-inline-link">Trainingstermine ansehen <Arrow /></a>
