@@ -6,8 +6,9 @@ ErrorDocument 404 /404.html
 RewriteEngine On
 RewriteBase /
 
-# Deliberately inactive PHP endpoints; never fall through to public HTML.
-RewriteRule ^api/registration/?$ api/registration.php [END]
+# Private runtime defaults to inactive; never fall through to public HTML.
+RewriteRule ^api/registration(?:/token)?/?$ api/requests.php [END]
+RewriteRule ^intern/anmeldungen/?$ api/requests.php [END]
 RewriteRule ^(?:api/preview(?:/.*)?|redaktion(?:/.*)?)$ api/preview-unavailable.php [END]
 
 # Block accidental upload of secrets/source, including files in nested folders.

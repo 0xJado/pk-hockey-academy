@@ -19,6 +19,7 @@ export function renderRouter(authentication,id,inventory) {
   assert.ok(inventory.every(file=>publicPath(file.path)),'Unsafe release inventory');
   const prefix='.pk-releases/'+id+'/';
   const preview=inventory.some(file=>file.path==='api/editor.php');
+  const requests=inventory.some(file=>file.path==='api/requests.php');
   const rules=[authLayer(authentication),ROUTER_MARKER.trimEnd(),`# PK-RELEASE ${id}`,
     'Options -Indexes -MultiViews','DirectorySlash Off','DirectoryIndex index.html',
     'ErrorDocument 404 /404.html','RewriteEngine On','RewriteBase /',
@@ -28,7 +29,10 @@ export function renderRouter(authentication,id,inventory) {
     'RewriteRule ^(?:manifest|previous)\\.json$ - [F,END]',
     'RewriteRule ^api/preview-lib(?:/|$) - [F,END]',
     'RewriteRule ^_astro(?:/|$) - [END]',
-    `RewriteRule ^api/registration/?$ ${prefix}api/registration.php [END]`,
+    ...(requests ? [
+      `RewriteRule ^api/registration(?:/token)?/?$ ${prefix}api/requests.php [END]`,
+      `RewriteRule ^intern/anmeldungen/?$ ${prefix}api/requests.php [END]`,
+    ] : [`RewriteRule ^api/registration/?$ ${prefix}api/registration.php [END]`]),
     ...(preview?[`RewriteRule ^(?:api/preview/enable|redaktion/(?:verbinden|trainerpool|daten|abmelden))/?$ ${prefix}api/editor.php [END]`]:[]),
     `RewriteRule ^(?:api/preview(?:/.*)?|redaktion(?:/.*)?)$ ${prefix}api/preview-unavailable.php [END]`,
     `RewriteRule ^$ ${prefix}index.html [END]`];

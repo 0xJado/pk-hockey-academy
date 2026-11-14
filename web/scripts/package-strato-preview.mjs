@@ -16,7 +16,7 @@ export async function packageStratoPreview(output=new URL('../../output/strato/p
   await cp(new URL('public/preview/preview-lib/',candidate),new URL('api/preview-lib/',output),{recursive:true});
   const file=new URL('.htaccess',output);
   const router=await readFile(file,'utf8');
-  const marker='RewriteRule ^api/registration/?$ api/registration.php [END]';
+  const marker='RewriteRule ^api/registration(?:/token)?/?$ api/requests.php [END]';
   if(!router.includes(marker))throw Error('Unexpected STRATO routing overlay');
   await writeFile(file,router.replace(marker,
     'RewriteRule ^api/preview-lib(?:/|$) - [F,END]\n'+

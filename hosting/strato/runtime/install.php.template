@@ -1,0 +1,42 @@
+<?php
+declare(strict_types=1);
+// One-use protected operator installer. Only writes immutable source and a
+// disabled descriptor; never enables intake, changes DB state or creates users.
+ini_set('display_errors','0');ini_set('log_errors','0');
+header('Content-Type: application/json');header('Cache-Control: no-store');header('X-Robots-Tag: noindex, nofollow');
+function reply(int $status,array $body):never{http_response_code($status);echo json_encode($body,JSON_THROW_ON_ERROR);exit;}
+if(($_SERVER['REQUEST_METHOD']??'')!=='POST'||!hash_equals('__TOKEN_HASH__',hash('sha256',$_SERVER['HTTP_X_PK_SETUP_TOKEN']??'')))reply(403,['code'=>'denied']);
+try{
+ $scope=json_decode(base64_decode('__SCOPE__',true),true,8,JSON_THROW_ON_ERROR);
+ $public=realpath($scope['public']);$private=realpath($scope['private']);
+ if(!$public||!$private||$private!==$scope['private']||str_starts_with($private.'/',$public.'/')||!preg_match('/\A[a-f0-9]{24}\z/',$scope['hash']))throw new RuntimeException();
+ $directory=$private.'/registration/runtime-'.$scope['hash'];
+ if(is_link($directory)||(!is_dir($directory)&&!mkdir($directory,0700)))throw new RuntimeException();
+ function immutable(string $path,string $bytes):void{
+  if(is_link($path))throw new RuntimeException();
+  if(is_file($path)){if(!hash_equals(hash('sha256',$bytes),hash_file('sha256',$path)))throw new RuntimeException();return;}
+  $file=fopen($path,'x');if(!$file)throw new RuntimeException();
+  try{if(!chmod($path,0600)||fwrite($file,$bytes)!==strlen($bytes)||!fflush($file))throw new RuntimeException();}finally{fclose($file);}
+ }
+ $sourceBytes=base64_decode('__SOURCES__',true);
+ if(substr(hash('sha256',$sourceBytes),0,24)!==$scope['hash'])throw new RuntimeException();
+ $sources=json_decode($sourceBytes,true,8,JSON_THROW_ON_ERROR);
+ $expected=['Requests.php','staff/Staff.php','staff/Config.php','staff/Http.php','registration/Policy.php','registration/Intake.php','registration/Config.php','registration/Http.php','registration/Sessions.php','registration/policy.v1.json'];
+ if(count($sources)!==count($expected)||array_diff(array_keys($sources),$expected))throw new RuntimeException();
+ foreach($sources as $name=>$content){
+  if(!preg_match('#\A(?:Requests\.php|staff/(?:Staff|Http|Config)\.php|registration/(?:(?:Policy|Intake|Sessions|Http|Config)\.php|policy\.v1\.json))\z#',$name))throw new RuntimeException();
+  $parent=dirname($directory.'/'.$name);if(!is_dir($parent)&&!mkdir($parent,0700))throw new RuntimeException();
+  immutable($directory.'/'.$name,base64_decode($content,true));
+ }
+ $intake=json_decode(base64_decode('__CONFIG__',true),true,8,JSON_THROW_ON_ERROR);
+ foreach(['enabled','policyAccepted','staffAccepted','realDataApproved','runtimePrivilegesAccepted','requestTimeoutsAccepted'] as $gate)if(($intake[$gate]??null)!==false)throw new RuntimeException();
+ if(($intake['maintenance']??null)!==true)throw new RuntimeException();
+ $intake['databaseConfig']=$private.'/registration/config.json';$intake['policyFile']=$directory.'/registration/policy.v1.json';$intake['policySha256']=hash_file('sha256',$intake['policyFile']);
+ immutable($directory.'/intake-config.json',json_encode($intake,JSON_THROW_ON_ERROR));
+ $descriptor=['version'=>1,'enabled'=>false,'staffLibrary'=>$directory.'/staff','staffConfig'=>$private.'/registration/config.json','intakeLibrary'=>$directory.'/registration','intakeConfig'=>$directory.'/intake-config.json'];
+ immutable($directory.'/runtime.json',json_encode($descriptor,JSON_THROW_ON_ERROR));
+ // Path metadata only; dotfile routing denies HTTP access. Existing locator is
+ // never replaced implicitly, including an already activated runtime.
+ immutable($public.'/.pk-registration-location.json',json_encode(['publicRoot'=>$public,'runtimeFile'=>$directory.'/Requests.php'],JSON_THROW_ON_ERROR));
+ reply(200,['installed'=>true,'runtimeEnabled'=>false,'realDataApproved'=>false]);
+}catch(Throwable){reply(503,['code'=>'runtime-install-refused']);}

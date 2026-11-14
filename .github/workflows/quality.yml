@@ -84,6 +84,8 @@ jobs:
         run: php hosting/strato/tests/maintenance.php
       - name: Check PHP registration validation, atomic receipts and unknown outcomes
         run: php hosting/strato/tests/registration.php
+      - name: Check private request runtime remains fail-closed
+        run: php hosting/strato/tests/requests-runtime.php
       - name: Test isolated registration HTTP and simultaneous retries
         env:
           PK_PHP_EXECUTABLE: php
