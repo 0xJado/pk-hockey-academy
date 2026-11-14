@@ -6,6 +6,10 @@ ErrorDocument 404 /404.html
 RewriteEngine On
 RewriteBase /
 
+# One production origin. Preserve methods when following a www alias redirect.
+RewriteCond %{HTTP_HOST} ^www\.pkhockeyacademy\.de$ [NC]
+RewriteRule ^ https://pkhockeyacademy.de%{REQUEST_URI} [R=308,END,NE]
+
 # Private runtime defaults to inactive; never fall through to public HTML.
 RewriteRule ^api/registration(?:/token)?/?$ api/requests.php [END]
 RewriteRule ^intern/anmeldungen/?$ api/requests.php [END]

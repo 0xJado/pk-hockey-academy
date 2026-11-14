@@ -11,6 +11,8 @@ test('permanent request routes include token and staff endpoints without exposin
  assert.ok(router.includes('^api/registration(?:/token)?/?$ .pk-releases/test-runtime-20261114/api/requests.php'));
  assert.ok(router.includes('^intern/anmeldungen/?$ .pk-releases/test-runtime-20261114/api/requests.php'));
  assert.ok(router.indexOf('(?:\\.[^/]+')<router.indexOf('^api/registration'));
+ assert.ok(router.includes('RewriteCond %{HTTP_HOST} ^www\\.pkhockeyacademy\\.de$ [NC]'));
+ assert.ok(router.includes('https://pkhockeyacademy.de%{REQUEST_URI} [R=308,END,NE]'));
 });
 test('staff source/configuration cannot enter a static deployment artifact',()=>{
   for(const path of ['staff/public/index.php','staff/config.example.json','staff/Staff.php','staff/console.php','database/install.php.template','database/config.json','registration/Intake.php','registration/public/index.php','registration/config.example.json'])assert.equal(publicPath(path),false);

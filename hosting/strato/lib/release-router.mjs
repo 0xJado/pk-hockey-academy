@@ -29,6 +29,8 @@ export function renderRouter(authentication,id,inventory) {
     'RewriteRule ^(?:manifest|previous)\\.json$ - [F,END]',
     'RewriteRule ^api/preview-lib(?:/|$) - [F,END]',
     'RewriteRule ^_astro(?:/|$) - [END]',
+    'RewriteCond %{HTTP_HOST} ^www\\.pkhockeyacademy\\.de$ [NC]',
+    'RewriteRule ^ https://pkhockeyacademy.de%{REQUEST_URI} [R=308,END,NE]',
     ...(requests ? [
       `RewriteRule ^api/registration(?:/token)?/?$ ${prefix}api/requests.php [END]`,
       `RewriteRule ^intern/anmeldungen/?$ ${prefix}api/requests.php [END]`,
