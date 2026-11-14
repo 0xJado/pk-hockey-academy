@@ -131,28 +131,6 @@ function initialize() {
             scrollTrigger: { trigger: panel, start: "top 90%", once: true },
           });
         });
-        if (desktop && panels.length === 2) {
-          gsap
-            .timeline({
-              scrollTrigger: {
-                trigger: "[data-story]",
-                start: "top 65%",
-                end: "bottom 65%",
-                scrub: 0.6,
-              },
-            })
-            .fromTo(
-              panels[0]!,
-              { borderTopColor: "#0754db" },
-              { borderTopColor: "#adc8e6" },
-            )
-            .fromTo(
-              panels[1]!,
-              { borderTopColor: "#adc8e6" },
-              { borderTopColor: "#0754db" },
-              "<",
-            );
-        }
         return () => {
           stopSpray();
           stopImages();

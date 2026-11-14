@@ -166,14 +166,23 @@
 }
 .hockey-home .story-panels {
   gap: 5%;
-  align-items: start;
+  align-items: stretch;
 }
 .hockey-home .story-panel {
   background: #edf4fa;
   border: 1px solid #b6cddd;
   border-top: 3px solid #087ed5;
   padding: 30px;
-  transition: border-color 0.35s;
+  transition: border-color 0.25s, box-shadow 0.3s;
+}
+.hockey-home .story-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 85% 0%, rgb(8 126 213 / 18%), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 .hockey-home .story-panel::after {
   content: "";
@@ -184,9 +193,10 @@
   right: 16px;
   bottom: 15px;
   transform: rotate(-45deg);
+  transition: width 0.35s var(--blade-ease), background-color 0.25s;
 }
 .hockey-home .story-panel:nth-child(2) {
-  margin-top: 76px;
+  margin-top: 0;
   background: #101d2e;
   color: #ddecf8;
   border-color: #3e5d76;
@@ -205,11 +215,43 @@
   aspect-ratio: 1.6;
 }
 .hockey-home .phase-photo-image {
-  transition: transform 0.75s var(--blade-ease);
+  transition: transform 0.75s var(--blade-ease), filter 0.4s, opacity 0.4s;
 }
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+@media (min-width: 901px) and (hover: hover) and (pointer: fine) {
+  .hockey-home .story-panel:hover {
+    z-index: 2;
+    border-color: #087ed5;
+    box-shadow: inset 0 0 0 1px #087ed5,
+      0 30px 48px -20px rgb(5 11 18 / 45%),
+      0 0 32px -12px rgb(8 126 213 / 45%);
+  }
+  .hockey-home .story-panel:hover::before {
+    opacity: 1;
+  }
+  .hockey-home .story-panels:has(.story-panel:hover) .story-panel:not(:hover) .phase-photo-image {
+    filter: saturate(0.6);
+    opacity: 0.8;
+  }
+}
+@media (min-width: 901px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .hockey-home .story-panel {
+    /* Individual translate leaves the GSAP entrance transform independent. */
+    transform-origin: center center;
+    transition: translate 0.55s cubic-bezier(0.22, 1.3, 0.36, 1),
+      scale 0.55s cubic-bezier(0.22, 1.3, 0.36, 1),
+      border-color 0.25s, box-shadow 0.3s;
+  }
+  .hockey-home .story-panel:hover {
+    /* GSAP normalizes individual transforms inline during its entrance. */
+    translate: 0 -24px !important;
+    scale: 1.025 !important;
+  }
+  .hockey-home .story-panel:hover::after {
+    width: 64px;
+    background-color: #56b9ff;
+  }
   .hockey-home .story-panel:hover .phase-photo-image {
-    transform: scale(1.035);
+    transform: scale(1.08);
   }
 }
 .hockey-home .philosophy {
@@ -421,7 +463,7 @@
     gap: 24px;
   }
   .hockey-home .story-panel:nth-child(2) {
-    margin-top: 45px;
+    margin-top: 0;
   }
   .hockey-home .story-heading h2 {
     font-size: 64px;
