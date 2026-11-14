@@ -6,6 +6,7 @@ import TrainerCard from "../components/TrainerCard.astro";
 import Schedule from "../components/Schedule.astro";
 import Pricing from "../components/Pricing.astro";
 import FinalCTA from "../components/FinalCTA.astro";
+import PrivacyPolicy from "../components/PrivacyPolicy.astro";
 import { pages, principles, organisationSteps } from "../data/pages";
 import type { ContentPage } from "../data/pages";
 import { legalProvider } from "../data/legal";
@@ -322,8 +323,8 @@ const legal = slug === "impressum" || slug === "datenschutz";
           <strong>NICHT ZUR VERÖFFENTLICHUNG FREIGEGEBEN</strong>
           <p>
             {slug === "impressum"
-              ? "Die Anbieterangaben wurden ergänzt. Ob eine USt-IdNr. oder W-IdNr. vorliegt und weitere Pflichtangaben erforderlich sind, muss noch bestätigt werden. Die abschließende rechtliche Prüfung und Freigabe für den Website-Start stehen aus."
-              : "Pflichtangaben und rechtliche Prüfung stehen aus. Dieser Platzhalter ist keine rechtliche Freigabe für den Website-Start."}
+              ? "Die Anbieterangaben wurden ergänzt und von Pierre bestätigt. Die abschließende rechtliche Prüfung und Freigabe für den Website-Start stehen aus."
+              : "Diese Fassung beschreibt den vorgesehenen Produktionsbetrieb auf STRATO mit Sanity. Die Anbieter- und Vertragsangaben, die tatsächliche Umsetzung der Datenschutzregeln sowie die abschließende rechtliche Prüfung müssen vor dem öffentlichen Start abgeglichen werden. Die Darstellung schaltet keine Anmeldung frei."}
           </p>
         </div>
         {slug === "impressum" ? (
@@ -349,40 +350,7 @@ const legal = slug === "impressum" || slug === "datenschutz";
             </p>
           </>
         ) : (
-          <>
-            <h2>OFFENE PRÜFPUNKTE</h2>
-            <ul class="todo-list">
-              <li>
-                Verantwortlichen und Kontakt für Datenschutzanfragen bestätigen
-              </li>
-              <li>
-                Tatsächlichen Hostingbetrieb, Verarbeitung und Serverprotokolle
-                erfassen
-              </li>
-              <li>Rechtsgrundlagen, Speicherfristen und Empfänger prüfen</li>
-              <li>Betroffenenrechte und zuständige Aufsicht ergänzen</li>
-              <li>
-                Vor Formular- oder WhatsApp-Freigabe Datenflüsse und
-                Informationen prüfen
-              </li>
-              <li>
-                Tatsächlich eingesetzte externe Dienste bewerten
-              </li>
-              <li>
-                Sanity als Redaktionssystem und die Auslieferung freigegebener
-                Fotos, Videos und Vorschaubilder über Sanitys CDN dokumentieren;
-                Veröffentlichungsrechte, Einwilligungen und Löschabläufe klären
-              </li>
-            </ul>
-            <p>
-              Im aktuellen Projekt sind keine Analysewerkzeuge, externen
-              Video-Einbettungen oder Kontaktübermittlungen implementiert.
-              Schriftarten und Illustrationen werden lokal ausgeliefert.
-              Sobald freigegebene Camp-Alben verbunden sind, werden deren
-              Medien über Sanitys CDN geladen. Diese technische
-              Bestandsbeschreibung ersetzt keine Datenschutzerklärung.
-            </p>
-          </>
+          <PrivacyPolicy />
         )}
         <Button href="/" variant="text">
           Zurück zur Startseite
