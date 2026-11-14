@@ -14,12 +14,14 @@ interface Props {
   description: string;
   noindex?: boolean;
   editorPreview?: boolean;
+  clientRouting?: boolean;
 }
 const {
   title,
   description,
   noindex = false,
   editorPreview = false,
+  clientRouting = true,
 } = Astro.props;
 const canonical =
   Astro.site && !editorPreview
@@ -86,7 +88,7 @@ const socialImage = Astro.site
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <link rel="icon" href={favicon.src} />
-    {!editorPreview && <ClientRouter fallback="none" />}
+    {!editorPreview && clientRouting && <ClientRouter fallback="none" />}
   </head>
   <body>
     <a class="skip-link" href="#inhalt">

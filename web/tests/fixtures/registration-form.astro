@@ -1,7 +1,9 @@
 ---
 import TrainingRequestForm from "../../src/components/TrainingRequestForm.astro";
+import Base from "../../src/layouts/Base.astro";
 import "../../src/styles/global.css";
 import "../../src/styles/registration.css";
 ---
-<!doctype html><html lang="de"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><meta name="robots" content="noindex,nofollow" /><title>Fiktive Formularprüfung</title></head>
-<body><main class="wrap" style="max-width:900px;padding-block:40px"><h1>Fiktive Formularprüfung</h1><TrainingRequestForm enabled sessions={[{id:"fictional-session",label:"Fiktiver Testtermin – ausschließlich lokale Prüfung"}]} /></main></body></html>
+<Base title="Fiktive Formularprüfung" description="Ausschließlich fiktive lokale Prüfung." noindex clientRouting={false}>
+<section class="wrap" style="max-width:900px;padding-block:40px"><h1>Fiktive Formularprüfung</h1><p><a href="/training" data-fixture-leave>Zurück zum Training</a></p><TrainingRequestForm enabled sessions={[{id:"fictional-session",label:"Fiktiver Testtermin – ausschließlich lokale Prüfung"}]} /></section>
+</Base>

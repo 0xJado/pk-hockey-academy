@@ -100,9 +100,8 @@ export function mountTrainingRequests(scope: ParentNode): () => void {
       await settle(await client.retry());
     };
     const beforeUnload = (event: BeforeUnloadEvent) => { if (unresolved) event.preventDefault(); };
-    const beforeNavigation = (event: Event) => { if (unresolved) event.preventDefault(); };
-    // Guard same-document links too; an unresolved private request must not be
-    // silently discarded by Astro's client router or an ordinary navigation.
+    // This page deliberately uses native navigation so beforeunload also guards
+    // browser back/forward and reload. No retry state crosses a route swap.
     const click = (event: MouseEvent) => {
       if (!unresolved) return;
       const anchor = (event.target as Element).closest?.("a");
@@ -110,13 +109,13 @@ export function mountTrainingRequests(scope: ParentNode): () => void {
     };
     form.addEventListener("change", update); form.addEventListener("submit", submit);
     retry.addEventListener("click", onRetry); window.addEventListener("beforeunload", beforeUnload);
-    document.addEventListener("astro:before-preparation", beforeNavigation); document.addEventListener("click", click, true);
+    document.addEventListener("click", click, true);
     update();
     return () => {
       disposed = true; controls.disabled = true;
       form.removeEventListener("change", update); form.removeEventListener("submit", submit);
       retry.removeEventListener("click", onRetry); window.removeEventListener("beforeunload", beforeUnload);
-      document.removeEventListener("astro:before-preparation", beforeNavigation); document.removeEventListener("click", click, true);
+      document.removeEventListener("click", click, true);
     };
   });
   return () => cleanups.forEach(cleanup => cleanup());

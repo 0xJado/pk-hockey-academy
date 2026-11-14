@@ -4,8 +4,12 @@ import Arrow from "../components/Arrow.astro";
 import TrainingRequestForm from "../components/TrainingRequestForm.astro";
 import { registration } from "../data/registration";
 import "../styles/registration.css";
+import { getTraining } from "../lib/training-source";
+import { requestableSessionOptions } from "../lib/registration/sessions";
+const training = await getTraining();
+const sessions = requestableSessionOptions(training.sessions, training.venues);
 ---
-<Base title="Trainingsanfrage – Anmeldung & PDF" description="Einzeltermin oder 5er-Paket bei der PK Hockey Academy anfragen. Die Onlineanmeldung wird vorbereitet; die Papiervorlage steht als PDF bereit." noindex>
+<Base title="Trainingsanfrage – Anmeldung & PDF" description="Einzeltermin oder 5er-Paket bei der PK Hockey Academy anfragen. Die Onlineanmeldung wird vorbereitet; die Papiervorlage steht als PDF bereit." noindex clientRouting={false}>
   <section class="page-hero">
     <div class="wrap">
       <a href="/" class="breadcrumb">STARTSEITE <span aria-hidden="true">/</span> ANMELDUNG</a>
@@ -26,7 +30,7 @@ import "../styles/registration.css";
         <p class="eyebrow">DEINE TRAININGSANFRAGE</p>
         <h2 id="registration-heading">ALLE ANGABEN.<br /><span>IM ÜBERBLICK.</span></h2>
         <p class="registration-training-format">{registration.tagline}<br /><strong>{registration.trainingFormat}</strong></p>
-        <TrainingRequestForm />
+        <TrainingRequestForm sessions={sessions} />
         <p class="registration-end-note">Über diese Seite werden keine Anmeldungen angenommen oder Trainingsplätze gebucht.</p>
       </div>
 

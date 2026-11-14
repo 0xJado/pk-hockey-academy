@@ -41,7 +41,9 @@ try {
    for(const [name,value] of Object.entries({childName:'FIKTIVES KIND',birthYear:'2017',guardianName:'FIKTIVER KONTAKT',guardianPhone:'+49 000 000000',guardianEmail:'fixture@example.invalid'}))await page.locator(`[name=${name}]`).fill(value);
    await page.locator('[name=guardianAuthority]').check();
  }
+ await page.goto(origin+'/training');
  await openForm();
+ check(await page.locator('meta[name="astro-view-transitions-enabled"]').count()===0,'form uses native history navigation');
  for(const width of [1440,768,375]) {
    await page.setViewportSize({width,height:1000});
    check(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'no overflow '+width);
@@ -52,7 +54,7 @@ try {
  await page.getByRole('button',{name:'Trainingsanfrage senden',exact:true}).click();
  check(await page.locator('[data-errors]').evaluate(e=>e===document.activeElement),'error summary receives focus');
  check(writes.length===0,'invalid draft never sent');
- await page.locator('[data-errors] a').first().click();
+ await page.locator('[data-errors] a').first().focus();await page.keyboard.press('Enter');
  check(await page.evaluate(()=>document.activeElement?.getAttribute('name'))==='bookingType','error link focuses control');
  await fill();
  await page.locator('[name=guardianPhone]').fill('123');
@@ -70,6 +72,14 @@ try {
  await page.getByRole('button',{name:'Dieselbe Anfrage erneut prüfen'}).waitFor();
  check(await page.locator('[data-feedback]').innerText().then(t=>t.includes('nicht bestätigt')),'lost receipt never shows success');
  check(await page.locator('[name=childName]').isDisabled(),'uncertain draft frozen');
+ const unresolvedUrl=page.url();
+ await page.locator('[data-fixture-leave]').click();
+ check(page.url()===unresolvedUrl,'ordinary navigation cannot silently discard an uncertain request');
+ const backPrompt=page.waitForEvent('dialog');const back=page.goBack({timeout:2000}).catch(()=>null);
+ const dialog=await backPrompt;check(dialog.type()==='beforeunload','back navigation asks before discarding retry state');await dialog.dismiss();await back;
+ check(page.url()===unresolvedUrl,'cancelled back retains request page');
+ const reloadPrompt=page.waitForEvent('dialog');const reload=page.reload({timeout:2000}).catch(()=>null);
+ const reloadDialog=await reloadPrompt;check(reloadDialog.type()==='beforeunload','reload asks before discarding retry state');await reloadDialog.dismiss();await reload;
  php('registration-form-inspect.php',['1']);
  await page.getByRole('button',{name:'Dieselbe Anfrage erneut prüfen'}).click();
  await page.waitForFunction(()=>document.querySelector('[data-feedback]')?.textContent?.includes('entgegengenommen'));
@@ -85,6 +95,9 @@ try {
  check(JSON.parse(writes.at(-1).body).sessionId==='fictional-session','single session delivered');
  check(await page.evaluate(()=>localStorage.length===0&&sessionStorage.length===0),'no browser persistence');
  check(!page.url().includes('FIKTIV'),'no personal data in URL');
+ await page.locator('[data-fixture-leave]').click();await page.waitForURL(origin+'/training');
+ await page.goBack();await page.waitForURL(origin+'/__registration-fixture');
+ check(await page.locator('h1').count()===1,'history returns without duplicated form markup');
  // Public route remains disabled, including if JS is available.
  await page.goto(origin+'/anmeldung');check(await page.locator('[name=childName]').isDisabled(),'public form remains disabled');
  const noJs=await browser.newContext({javaScriptEnabled:false});const staticPage=await noJs.newPage();
