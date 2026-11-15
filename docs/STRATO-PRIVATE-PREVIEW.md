@@ -2,6 +2,14 @@
 
 ## Active cutover — 15 November 2026
 
+### Expired-session repair — 16 November 2026
+
+The open signed-in Brave Studio showed `preview_login_required` after its one-hour PHP cookie expired. Presentation retained the plain `/redaktion/trainerpool` iframe address, so refreshing did not rerun the fragment handoff. This failure is independent of Vercel retirement.
+
+Unauthorized private-page GETs now return a 401 HTML connection bootstrap without draft data. It requests a fresh native preview capability from its signed-in Studio parent, with a random nonce and exact origin/source checks in both directions. Studio only replies to its current STRATO iframe and rechecks the user's capability creation permission. PHP validates that capability before issuing the same one-hour secure session. Selected profile and perspective survive reconnection. An open embedded preview also reconnects at expiry. Standalone unauthenticated visitors cannot renew; private JSON remains 401. No server read token is exposed or capability sent in URLs.
+
+Regression checks cover missing/expired cookies, forged messages, removed frames, permission failures, preserved selection/perspective, responsive rendering and no capability in request URLs. The Studio wrapper uses the [supported layout component API](https://www.sanity.io/docs/studio/studio-components-reference). Extended signed-in editing acceptance remains separate from isolated and native-host browser verification.
+
 ### Portrait CORS repair — 15 November 2026
 
 The missing portrait is resolved in actual nested Brave acceptance. Sanity returned `403 CORS Origin not allowed` for image requests carrying `Origin: https://pkhockeyacademy.de`; Brave surfaced that JSON denial as `ERR_BLOCKED_BY_ORB`. A direct image tab without that Origin loaded successfully, so standalone decoding did not establish iframe acceptance. Added the exact `https://pkhockeyacademy.de` origin through `sanity cors add ... --no-credentials --yes`. Readback listed the origin; a fresh image response returned 200 with matching `Access-Control-Allow-Origin` and no `Access-Control-Allow-Credentials` header. The private draft-read token, Studio identity and role settings were not changed.

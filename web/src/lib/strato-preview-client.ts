@@ -99,7 +99,13 @@ export async function loadStratoPreview() {
     marker.dataset.profileId=current.searchParams.get('id')?.replace(/^drafts\./,'')||'';
     await installPreviewEditing(marker);
     if(typeof data.expiresAt==='number'){
-      const expire=()=>{if(Date.now()>=data.expiresAt*1000){profiles.replaceChildren();incomplete.replaceChildren();status.textContent='Die Vorschau-Sitzung ist abgelaufen. Bitte im Studio neu öffnen.';}};
+      let renewing=false;
+      const expire=()=>{if(!renewing && Date.now()>=data.expiresAt*1000){
+        renewing=true;profiles.replaceChildren();incomplete.replaceChildren();
+        status.textContent='Die Vorschau-Sitzung ist abgelaufen. Die Verbindung wird erneuert.';
+        if(window.parent!==window)location.reload();
+        else status.textContent='Die Vorschau-Sitzung ist abgelaufen. Bitte im Studio neu öffnen.';
+      }};
       setTimeout(expire,Math.max(0,data.expiresAt*1000-Date.now()));
       document.addEventListener('visibilitychange',expire);
     }

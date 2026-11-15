@@ -2,7 +2,7 @@
 declare(strict_types=1);
 require __DIR__ . '/../preview/Preview.php';
 use function PK\Preview\{handle,signSession,verifySession,safeRedirect,validateConfig,loadConfig,locateConfig};
-use const PK\Preview\COOKIE;
+use const PK\Preview\{COOKIE,PATH};
 
 $count = 0;
 function check(bool $value, string $label): void {
@@ -28,6 +28,10 @@ $transport = static function($query,$params,$perspective) use (&$calls,$now) {
     return [];
 };
 $run = static fn($req,$source=null,$time=null) => handle($config,$req,$source??$transport,$time??$now);
+$bootstrap = PK\Preview\dispatch($config,['method'=>'GET','path'=>PATH,'cookies'=>[]],$transport,$now);
+check($bootstrap['status']===401 && $bootstrap['template']==='preview-connect.html','expired iframe receives unauthorized renewal bootstrap');
+check($bootstrap['studioOrigin']==='https://example.sanity.studio','renewal uses only approved Studio origin');
+check($calls===0 && !str_contains(json_encode($bootstrap),'server-only-test-token'),'renewal bootstrap exposes no drafts or server credential');
 $result = $run($request);
 check($result['status']===401 && $calls===0,'unauthenticated request never queries drafts');
 check(!str_contains(json_encode($result),'server-only-test-token'),'token isolation');

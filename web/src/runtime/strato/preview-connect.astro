@@ -1,17 +1,37 @@
 ---
 // The secret stays in the browser fragment, never an HTTP request URL.
 ---
-<!doctype html><html lang="de"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="robots" content="noindex,nofollow"/><meta name="referrer" content="no-referrer"/><title>Private Website-Vorschau verbinden</title></head>
+<!doctype html><html lang="de"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="robots" content="noindex,nofollow"/><meta name="referrer" content="no-referrer"/><meta name="pk-preview-studio-origin" content="__PK_STUDIO_ORIGIN__"/><title>Private Website-Vorschau verbinden</title></head>
 <body><main><h1>Private Website-Vorschau</h1><p id="connect-status" role="status">Die sichere Vorschau wird verbunden.</p><noscript>Zum Verbinden der privaten Vorschau ist JavaScript erforderlich.</noscript></main></body></html>
 <script>
   const fragment=new URLSearchParams(location.hash.slice(1));
+  const current=new URL(location.href);
+  const requestedPath=current.pathname==='/redaktion/trainerpool'?current.pathname+current.search:'/redaktion/trainerpool';
   history.replaceState(null,'','/redaktion/verbinden');
   const status=document.querySelector('#connect-status')!;
   try {
-    const secret=fragment.get('sanity-preview-secret');
+    let secret=fragment.get('sanity-preview-secret');
     fragment.delete('sanity-preview-secret');
-    if(!secret)throw Error('Missing preview link');
-    const response=await fetch('/api/preview/enable',{method:'POST',credentials:'same-origin',cache:'no-store',redirect:'error',headers:{'Content-Type':'application/json'},body:JSON.stringify({'sanity-preview-secret':secret,'sanity-preview-pathname':fragment.get('sanity-preview-pathname'), 'sanity-preview-perspective':fragment.get('sanity-preview-perspective')})});
+    if(!secret) {
+      const studio=document.querySelector<HTMLMetaElement>('meta[name="pk-preview-studio-origin"]')?.content;
+      if(window.parent===window || !studio || !/^https:\/\//.test(studio))throw Error('Open preview in Studio');
+      secret=await new Promise<string>((resolve,reject)=>{
+        const bytes=crypto.getRandomValues(new Uint8Array(32));
+        const nonce=Array.from(bytes,byte=>byte.toString(16).padStart(2,'0')).join('');
+        const send=()=>window.parent.postMessage({type:'pk-preview-renew',nonce},studio);
+        const cleanup=()=>{clearInterval(retry);clearTimeout(timeout);window.removeEventListener('message',receive);};
+        const receive=(event:MessageEvent)=>{
+          if(event.origin!==studio || event.source!==window.parent || event.data?.type!=='pk-preview-renew-result' || event.data.nonce!==nonce)return;
+          cleanup();
+          if(typeof event.data.secret==='string' && /^[\x21-\x7E]{16,256}$/.test(event.data.secret))resolve(event.data.secret);
+          else reject(Error('Studio authentication unavailable'));
+        };
+        const retry=setInterval(send,1000);
+        const timeout=setTimeout(()=>{cleanup();reject(Error('Studio connection timed out'));},30000);
+        window.addEventListener('message',receive);send();
+      });
+    }
+    const response=await fetch('/api/preview/enable',{method:'POST',credentials:'same-origin',cache:'no-store',redirect:'error',headers:{'Content-Type':'application/json'},body:JSON.stringify({'sanity-preview-secret':secret,'sanity-preview-pathname':fragment.get('sanity-preview-pathname')||requestedPath, 'sanity-preview-perspective':fragment.get('sanity-preview-perspective')||current.searchParams.get('perspective')})});
     if(!response.ok)throw Error('Preview link rejected');
     const data=await response.json();
     if(typeof data.redirectTo!=='string'||!/^\/redaktion\/trainerpool(?:\?|$)/.test(data.redirectTo))throw Error('Invalid preview redirect');

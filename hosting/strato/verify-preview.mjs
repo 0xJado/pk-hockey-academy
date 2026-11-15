@@ -83,7 +83,11 @@ try {
         phase='nested-browser';
         const studioOrigin=new URL(cms.PUBLIC_SANITY_STUDIO_URL).origin;
         await context.route('https://www.sanity.io/pk-preview-acceptance',route=>route.fulfill({contentType:'text/html',body:`<iframe title="Studio" src="${studioOrigin}/pk-preview-acceptance" style="width:100%;height:100vh;border:0"></iframe>`}));
-        await context.route(studioOrigin+'/pk-preview-acceptance',route=>route.fulfill({contentType:'text/html',body:`<iframe title="Website" src="${origin}/redaktion/verbinden#${fragment}" style="width:100%;height:100vh;border:0"></iframe>`}));
+        await context.route(studioOrigin+'/pk-preview-acceptance',route=>route.fulfill({contentType:'text/html',body:`<iframe title="Website" src="${origin}/redaktion/verbinden#${fragment}" style="width:100%;height:100vh;border:0"></iframe>
+          <script>window.addEventListener('message',event=>{
+            if(event.origin!==${JSON.stringify(origin)}||event.source!==document.querySelector('iframe').contentWindow||event.data?.type!=='pk-preview-renew')return;
+            event.source.postMessage({type:'pk-preview-renew-result',nonce:event.data.nonce,secret:${JSON.stringify(secret)}},event.origin);
+          });</script>`}));
         const nested=await context.newPage();
         const imageDiagnostics=[];
         nested.on('pageerror',()=>errors.push('Nested preview runtime error'));
@@ -113,6 +117,16 @@ try {
           },50);
         }));
         checks.push('nested-browser-natural-portrait-load');
+        phase='nested-session-renewal';
+        await context.clearCookies();
+        const denied=nested.waitForResponse(response=>response.url().startsWith(origin+'/redaktion/trainerpool?')&&response.status()===401);
+        await nested.frameLocator('iframe[title="Studio"]').locator('iframe[title="Website"]').evaluate(frame=>{
+          frame.src='https://pkhockeyacademy.de/redaktion/trainerpool?id=trainer-pierre-klein&perspective=published';
+        });
+        await denied;await website.locator('#preview-profiles article').waitFor();
+        assert.equal(await website.locator('#preview-status[role="alert"]').count(),0);
+        assert.ok(nested.frames().some(frame=>frame.url()===origin+'/redaktion/trainerpool?id=trainer-pierre-klein&perspective=published'));
+        checks.push('nested-live-missing-session-renewal-preserves-selection');
         }finally{
           const images=await nested.frameLocator('iframe[title="Studio"]').frameLocator('iframe[title="Website"]').locator('.trainer-portrait--photo img').evaluateAll(images=>images.map(image=>({src:image.src,currentSrc:image.currentSrc,complete:image.complete,width:image.naturalWidth}))).catch(()=>[]);
           imageDiagnostics.push({images});

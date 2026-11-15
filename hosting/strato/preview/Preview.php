@@ -199,8 +199,10 @@ function dispatch(array $config,array $request,?callable $transport=null,?int $n
     $config=validateConfig($config);
     $connect=($request['path'] ?? '')==='/redaktion/verbinden' && ($request['method'] ?? '')==='GET';
     $result=$connect ? response(200,null,$config) : handle($config,$request,$transport,$now);
-    if ($connect || (($request['path'] ?? '')===PATH && $result['status']===200)) {
-        $result['template']=$connect ? 'preview-connect.html' : 'preview-shell.html';
+    $renew=($request['path'] ?? '')===PATH && ($request['method'] ?? '')==='GET' && $result['status']===401;
+    if ($connect || $renew || (($request['path'] ?? '')===PATH && $result['status']===200)) {
+        $result['template']=($connect || $renew) ? 'preview-connect.html' : 'preview-shell.html';
+        if ($connect || $renew) $result['studioOrigin']=$config['studioOrigin'];
         $result['headers']['Content-Type']='text/html; charset=utf-8';
         $result['headers']['Content-Security-Policy']="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://cdn.sanity.io data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'self' " . $config['studioOrigin'] . ' https://www.sanity.io';
     }
@@ -212,6 +214,12 @@ function emit(array $result,string $directory): void {
         || !is_file($directory . '/' . $result['template']))) throw new \RuntimeException('Preview template unavailable');
     http_response_code($result['status']);
     foreach ($result['headers'] as $key=>$value) header($key . ': ' . $value);
-    if (isset($result['template'])) readfile($directory . '/' . $result['template']);
+    if (isset($result['template'])) {
+        $html=file_get_contents($directory . '/' . $result['template']);
+        if ($html===false) throw new \RuntimeException('Preview template unavailable');
+        if ($result['template']==='preview-connect.html')
+            $html=str_replace('__PK_STUDIO_ORIGIN__',htmlspecialchars($result['studioOrigin'],ENT_QUOTES,'UTF-8'),$html);
+        echo $html;
+    }
     elseif ($result['body']!==null) echo json_encode($result['body'],JSON_THROW_ON_ERROR|JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT);
 }

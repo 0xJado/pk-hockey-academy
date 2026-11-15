@@ -115,5 +115,31 @@ try {
   },'Nested preview portrait loads without decode() forcing a request');
   await embedded.screenshot({path:fileURLToPath(new URL('nested-preview.png',output)),fullPage:true});
   await embedded.close();
+  // A cached plain iframe URL must recover both a missing and an expired cookie.
+  const renewContext=await browser.newContext();
+  await renewContext.route('https://cdn.sanity.io/**',route=>route.fulfill({body:png,contentType:'image/png'}));
+  await renewContext.route('https://pkhockeyacademy.de/**',async route=>{
+    const url=new URL(route.request().url());
+    await route.fulfill({response:await route.fetch({url:origin+url.pathname+url.search,maxRedirects:0})});
+  });
+  await renewContext.route('https://example.sanity.studio/renew-fixture',route=>route.fulfill({contentType:'text/html',body:`
+    <iframe title="Website" src="https://pkhockeyacademy.de/redaktion/trainerpool?id=fixture-preview&perspective=published"></iframe>
+    <script>window.addEventListener('message',event=>{
+      if(event.origin!=='https://pkhockeyacademy.de'||event.source!==document.querySelector('iframe').contentWindow||event.data?.type!=='pk-preview-renew')return;
+      event.source.postMessage({type:'pk-preview-renew-result',nonce:'wrong',secret:'INVALID_SECRET'},event.origin);
+      setTimeout(()=>event.source.postMessage({type:'pk-preview-renew-result',nonce:event.data.nonce,secret:'ISOLATED_PREVIEW_SECRET'},event.origin),50);
+    });</script>`}));
+  const renewal=await renewContext.newPage();await renewal.goto('https://example.sanity.studio/renew-fixture');
+  const renewed=renewal.frameLocator('iframe');
+  await renewed.getByText('Veröffentlichte Testrolle · PK Hockey Academy').waitFor();
+  assert.match(renewal.frames()[1].url(),/id=fixture-preview&perspective=published/);
+  await writeFile(state,JSON.stringify({clockOffset:3601}));
+  const expiredResponse=renewal.waitForResponse(response=>response.url().includes('/redaktion/trainerpool?')&&response.status()===401);
+  await renewal.locator('iframe').evaluate(frame=>{frame.src=frame.src;});await expiredResponse;
+  await renewed.getByText('Veröffentlichte Testrolle · PK Hockey Academy').waitFor();
+  assert.match(renewal.frames()[1].url(),/id=fixture-preview&perspective=published/);
+  await renewContext.close();await writeFile(state,'{}');
+  assert.ok(!log.includes('ISOLATED_PREVIEW_SECRET'),'Renewal capability absent from request URLs');
+  console.log('Session renewal passed: cold cached iframe, expired cookie, preserved selection/perspective and rejected wrong nonce.');
   console.log('PHP preview browser passed: fragment handoff, private data, shared layout at 1440/768/375, escaping, field metadata, selected navigation, refreshed draft, published perspective, missing portrait and signout. Live Studio connection remains separate acceptance.');
 }finally{await browser?.close();server.kill();await writeFile(new URL('server.log',output),log);}

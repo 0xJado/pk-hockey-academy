@@ -22,6 +22,7 @@ import {
   trainerLocations,
 } from "./lib/presentation";
 import { TrainerNavigator } from "./components/TrainerNavigator";
+import { PreviewLayout } from "./components/PreviewLayout";
 
 const previewUrl = getPreviewUrl(process.env.SANITY_STUDIO_PREVIEW_URL);
 const previewTransport = process.env.SANITY_STUDIO_PREVIEW_TRANSPORT?.trim();
@@ -36,6 +37,7 @@ export default defineConfig({
   name: "pk-hockey-academy",
   title: "PK Hockey Academy · Redaktion",
   ...getStudioConfig(),
+  components: {layout: PreviewLayout},
   auth: {
     providers: (previous) => selectAuthProviders(previous, authProvider),
   },
