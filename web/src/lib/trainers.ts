@@ -35,6 +35,7 @@ export const TRAINERS_QUERY = `*[
 function portrait(
   value: unknown,
   config: Pick<GalleryConfig, "projectId" | "dataset">,
+  fallbackAlt: string,
 ): Trainer["portrait"] {
   const raw = asRecord(value);
   const asset = asRecord(raw.asset);
@@ -72,16 +73,15 @@ function portrait(
     !Number.isSafeInteger(dimensions.height) ||
     dimensions.height <= 0 ||
     dimensions.height > 30000 ||
-    typeof raw.alt !== "string" ||
-    raw.alt.trim().length < 8 ||
-    raw.alt.trim().length > 240 ||
+    (raw.alt != null &&
+      (typeof raw.alt !== "string" || raw.alt.trim().length > 240)) ||
     (raw.credit != null &&
       (typeof raw.credit !== "string" || raw.credit.trim().length > 160))
   )
     return;
   return {
     url: url.href,
-    alt: raw.alt.trim(),
+    alt: typeof raw.alt === "string" && raw.alt.trim() ? raw.alt.trim() : fallbackAlt,
     credit: typeof raw.credit === "string" ? raw.credit.trim() : "",
     width: dimensions.width,
     height: dimensions.height,
@@ -118,7 +118,7 @@ export function normalizeTrainers(
     const image =
       raw.portrait === undefined || raw.portrait === null
         ? undefined
-        : portrait(raw.portrait, config);
+        : portrait(raw.portrait, config, `Trainerfoto von ${fields.name}`);
     if (raw.portrait != null && !image)
       throw new Error(
         "An approved trainer portrait has invalid metadata or an untrusted asset URL.",
@@ -132,9 +132,9 @@ export function normalizeTrainers(
         throw new Error(
           "An approved trainer gallery must contain at most eight images.",
         );
-      playerGallery = raw.playerGallery.map((value: unknown) => {
+      playerGallery = raw.playerGallery.map((value: unknown, index: number) => {
         const rawImage = asRecord(value);
-        const normalized = portrait(value, config);
+        const normalized = portrait(value, config, `Bild ${index + 1} aus der Spielerlaufbahn von ${fields.name}`);
         if (
           !normalized ||
           (rawImage.caption != null &&

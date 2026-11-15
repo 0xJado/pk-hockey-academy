@@ -58,6 +58,10 @@ test("native Sanity validation allows complete profiles with and without a portr
     {},
     { portrait },
     { portrait: { ...portrait, credit: undefined } },
+    ...[undefined, null, "", "   ", "Foto"].map((alt) => ({
+      portrait: { ...portrait, alt, credit: "" },
+      playerGallery: [{ ...portrait, _key: "optional-text", alt, credit: undefined }],
+    })),
     {
       playingYears: 18,
       coachingYears: 0,
@@ -90,11 +94,11 @@ test("native publication checks are blocking errors, including whitespace and up
     { active: "true" },
     { visibility: "invalid" },
     { portrait: {} },
-    { portrait: { ...portrait, alt: " ".repeat(10) } },
+    { portrait: { ...portrait, alt: "x".repeat(241) } },
     { portrait: { ...portrait, credit: "x".repeat(161) } },
     { playingYears: -1 },
     { coachingYears: 1.5 },
-    { playerGallery: [{ ...portrait, _key: "invalid-image", alt: "" }] },
+    { playerGallery: [{ ...portrait, _key: "invalid-image", alt: "x".repeat(241) }] },
     {
       playerGallery: Array.from({ length: 9 }, (_, index) => ({
         ...portrait,

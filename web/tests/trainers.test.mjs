@@ -84,7 +84,7 @@ test("coach gallery uses trusted images, bounded captions and publication filter
         asset: { ...portrait.asset, url: "https://evil.invalid/image.webp" },
       },
     ],
-    [{ ...portrait, alt: "" }],
+    [{ ...portrait, alt: "x".repeat(241) }],
     Array(9).fill(portrait),
     [{ ...portrait, caption: "x".repeat(241) }],
   ]) {
@@ -113,7 +113,7 @@ test("coach gallery uses trusted images, bounded captions and publication filter
     validateTrainerPublication({
       ...coach,
       playerGallery: [
-        { asset: { _ref: "image-fixture-800x1000-webp" }, alt: "" },
+        { asset: { _ref: "image-fixture-800x1000-webp" }, alt: "x".repeat(241) },
       ],
     }),
     true,
@@ -302,7 +302,7 @@ test("portrait is optional but uploaded assets require trusted URLs and valid me
   assert.throws(
     () =>
       normalizeTrainers(
-        [{ ...coach, portrait: { ...portrait, alt: " " } }],
+        [{ ...coach, portrait: { ...portrait, alt: "x".repeat(241) } }],
         config,
       ),
     /portrait/,
@@ -334,10 +334,22 @@ test("shared validation accepts approved verified content and rejects missing ap
   assert.notEqual(
     validateTrainerPublication({
       ...coach,
-      portrait: { ...portrait, alt: " " },
+      portrait: { ...portrait, alt: "x".repeat(241) },
     }),
     true,
   );
+});
+
+test("trainer images publish and preview without descriptions or credits using accessible fallbacks", () => {
+  for (const alt of [undefined, null, "", "   ", "Foto"]) {
+    const asset = { ...portrait, alt, credit: undefined };
+    const [result] = normalizeTrainers([{ ...coach, portrait: asset, playerGallery: [asset] }], config);
+    assert.equal(result.portrait.alt, alt?.trim() || `Trainerfoto von ${coach.name}`);
+    assert.equal(result.playerGallery[0].alt, alt?.trim() || `Bild 1 aus der Spielerlaufbahn von ${coach.name}`);
+    assert.equal(result.portrait.credit, "");
+    const upload = { ...asset, asset: { _ref: "image-fixture-800x1000-webp" } };
+    assert.equal(validateTrainerPublication({ ...coach, portrait: upload, playerGallery: [upload] }), true);
+  }
 });
 
 test("public trainer transport needs no token and still excludes drafts and withheld profiles", async () => {

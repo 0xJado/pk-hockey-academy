@@ -138,13 +138,13 @@ export function validateTrainerPublication(value: unknown): true | string {
       const image = asRecord(value);
       if (
         typeof asRecord(image.asset)._ref !== "string" ||
-        !plainText(image.alt, 8, 240) ||
+        (image.alt != null && plainText(image.alt, 0, 240) === undefined) ||
         (image.credit != null &&
           plainText(image.credit, 0, 160) === undefined) ||
         (image.caption != null &&
           plainText(image.caption, 0, 240) === undefined)
       )
-        return "Galeriebilder benötigen eine Datei und Bildbeschreibung (8–240 Zeichen); Bildnachweis maximal 160, Bildunterschrift maximal 240 Zeichen.";
+        return "Galeriebilder benötigen eine Datei; optionale Bildbeschreibung maximal 240, Bildnachweis maximal 160, Bildunterschrift maximal 240 Zeichen.";
     }
   }
   if (raw.portrait !== undefined && raw.portrait !== null) {
@@ -156,9 +156,9 @@ export function validateTrainerPublication(value: unknown): true | string {
       return "Der optionale Bildnachweis darf höchstens 160 Zeichen enthalten.";
     if (
       typeof asRecord(portrait.asset)._ref !== "string" ||
-      !plainText(portrait.alt, 8, 240)
+      (portrait.alt != null && plainText(portrait.alt, 0, 240) === undefined)
     ) {
-      return "Trainerfoto vollständig hochladen und Bildbeschreibung (8–240 Zeichen) ergänzen; alternativ das Bildfeld entfernen.";
+      return "Trainerfoto vollständig hochladen; optionale Bildbeschreibung maximal 240 Zeichen. Alternativ das Bildfeld entfernen.";
     }
   }
   return true;

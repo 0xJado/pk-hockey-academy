@@ -62,9 +62,9 @@ export function TrainerPreviewContent({
               <img
                 src={image}
                 alt={
-                  typeof portrait.alt === "string"
-                    ? portrait.alt
-                    : "Trainerfoto in Bearbeitung"
+                  typeof portrait.alt === "string" && portrait.alt.trim()
+                    ? portrait.alt.trim()
+                    : `Trainerfoto von ${profile.name}`
                 }
               />
               {typeof portrait.credit === "string" && portrait.credit.trim() && (

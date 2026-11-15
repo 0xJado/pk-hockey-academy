@@ -1,5 +1,7 @@
 # PK Hockey Academy
 
+Trainer image metadata, 15 November 2026: image descriptions and credits are optional for trainer portraits and career-gallery images in Sanity and website retrieval. Empty descriptions use a German alternative text derived from the trainer's name; empty credits are omitted. Image-file validation and rights approval remain required. See `studio/README.md`.
+
 Start with [current status](docs/STATUS.md). Dated assessments and validation entries preserve historical evidence.
 
 Production direction confirmed on 6 November 2026: migrate to Pierre's existing STRATO hosting, retain Sanity for public content, and replace Google Sheets registration delivery with PHP and a private STRATO database. The first restructuring increment adds a Node-free hosting export (`cd web; npm run build:strato`), separate review runtime routes and inactive PHP entry points. Node/npm remain build tools only for this target. Private preview replacement, deployment automation, database processing and the protected staff interface remain pending; Vercel remains the protected review host. Earlier Google Sheets setup references below are superseded: Pierre no longer needs to create or share a Sheet. See [STRATO build/layout instructions](hosting/strato/README.md) and [migration acceptance work](docs/STRATO-MIGRATION.md).

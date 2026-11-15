@@ -91,7 +91,7 @@ export async function loadStratoPreview() {
       const notice=document.createElement('div');notice.className='notice';
       const title=document.createElement('h2');title.textContent=profile.name;
       title.setAttribute('data-sanity',createDataAttribute({id:profile.id,type:'trainer',path:'name',projectId:config.projectId,dataset:config.dataset,baseUrl:getStudioEditBaseUrl(config.studioUrl)}).toString());
-      const text=document.createElement('p');text.textContent='Dieses Profil ist noch unvollständig. Pflichtfelder und gegebenenfalls die Bildbeschreibung im Studio ergänzen. Danach erscheint hier das Website-Layout.';
+      const text=document.createElement('p');text.textContent='Dieses Profil ist noch unvollständig. Pflichtfelder im Studio ergänzen. Danach erscheint hier das Website-Layout.';
       const link=document.createElement('a');link.href=data.studioUrl.replace(/\/$/,'')+'/intent/edit/id='+encodeURIComponent(profile.id)+';type=trainer/';link.target='_top';link.textContent='Profil vervollständigen ↗';
       notice.append(title,text,link);incomplete.append(notice);
     }
