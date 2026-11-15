@@ -40,7 +40,7 @@ export const pages = {
     title: "ZEIT FÜR",
     accent: "DEIN POTENZIAL.",
     description:
-      "Hier findest du künftig die bestätigten Trainingstermine der PK Hockey Academy, mit Ort, Uhrzeit, Altersgruppe und Anmeldestatus. Aktuell keine Buchung möglich.",
+      "Trainingstermine der PK Hockey Academy mit Ort, Uhrzeit, Altersgruppe und Informationen zur Trainingsanfrage.",
     intro:
       "Alle bestätigten Termine an einem Ort. Sobald Ort und Zeit feststehen, findest du hier die nächsten Einheiten.",
   },
@@ -113,6 +113,6 @@ export const organisationSteps = [
   {
     number: "03",
     title: "Anmeldung prüfen",
-    text: "Die Formularvorlage ist als PDF und in einer Onlinevorschau verfügbar. Die Onlineanmeldung wird noch vorbereitet. Eine Trainingsanfrage wird erst nach Bestätigung durch die Academy verbindlich.",
+    text: "Einzeltermin oder 5er-Paket: Die Academy stimmt die Teilnahme persönlich mit dir ab und bestätigt deine Buchung.",
   },
 ];

@@ -142,8 +142,8 @@ const legal = slug === "impressum" || slug === "datenschutz";
         </div>
         <div class="notice trainer-details">
           <p class="eyebrow">PERSÖNLICHE ENTWICKLUNG</p>
-          <h3>{trainers.length ? "Die Haltung hinter dem Training" : "Trainerprofile folgen"}</h3>
-          <p>{trainers.length ? "Weitere Trainer werden nach Bestätigung vorgestellt." : "Aktuell sind keine Trainerprofile veröffentlicht."}</p>
+          <h3>Die Haltung hinter dem Training</h3>
+          <p>{trainers.length ? "Kleine Gruppen und persönliche Aufmerksamkeit ergänzen das Mannschaftstraining." : "Aktuell sind keine Trainerprofile veröffentlicht."}</p>
           <Button href="/philosophie" variant="text">
             Unsere Haltung kennenlernen
           </Button>
@@ -165,9 +165,9 @@ const legal = slug === "impressum" || slug === "datenschutz";
                   <span class="status-label">TRAININGSSTADT</span>
                   <h2>{venue.city}</h2>
                   <p>{venue.details}</p>
-                  <span class="small muted">
-                    {venue.rinkName ?? "Eishalle: noch nicht veröffentlicht"}<br />{venue.address ?? "Adresse: noch nicht veröffentlicht"}
-                  </span>
+                  {(venue.rinkName || venue.address) && <span class="small muted">
+                    {venue.rinkName}{venue.rinkName && venue.address && <br />}{venue.address}
+                  </span>}
                 </div>
                 <Button href="/trainingstermine" variant="text">
                   Termine ansehen
@@ -225,11 +225,11 @@ const legal = slug === "impressum" || slug === "datenschutz";
             </article>
             <article>
               <span class="eyebrow">03 / DIE ANMELDUNG</span>
-              <h3>Die Formularvorlage ist da.</h3>
+              <h3>Persönlich bestätigt.</h3>
               <p>
-                Die Anmeldevorlage steht als PDF und in einer Onlinevorschau zur
-                Verfügung. Die Onlineanmeldung ist noch nicht freigegeben.
-                Die Academy bestätigt eine Buchung persönlich.
+                Die Academy prüft jede Trainingsanfrage und bestätigt eine
+                Buchung persönlich. Informationen zum Formular und die
+                PDF-Vorlage findest du auf der Anmeldeseite.
               </p>
               <a href="/anmeldung" class="inline-link">
                 Anmeldeformular & PDF ↗
@@ -286,9 +286,9 @@ const legal = slug === "impressum" || slug === "datenschutz";
           </h2>
           <Pricing />
           <div class="notice">
-            <p class="eyebrow">DIE ANMELDEVORLAGE</p>
+            <p class="eyebrow">DEINE TRAININGSANFRAGE</p>
             <h3>Alle Angaben im Überblick.</h3>
-            <p>Die bereitgestellte Vorlage gibt es als A4-PDF und in einer Onlinevorschau. Die Onlineanmeldung wird noch vorbereitet. Eine Trainingsanfrage wird erst nach Bestätigung durch die Academy verbindlich.</p>
+            <p>Informationen zur Trainingsanfrage und die PDF-Vorlage findest du auf der Anmeldeseite. Ein Trainingsplatz wird erst durch die persönliche Bestätigung der Academy verbindlich zugesagt.</p>
             <Button href="/anmeldung" variant="text">Anmeldeformular & PDF ansehen</Button>
           </div>
         </div>
@@ -307,10 +307,6 @@ const legal = slug === "impressum" || slug === "datenschutz";
           <article>
             <h3>E-Mail</h3>
             <p><a class="contact-email" href="mailto:info@pkhockeyacademy.de">info@pkhockeyacademy.de</a></p>
-          </article>
-          <article>
-            <h3>WhatsApp</h3>
-            <p>Die WhatsApp-Nummer steht noch aus.</p>
           </article>
         </div>
       </div>

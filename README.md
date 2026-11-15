@@ -138,7 +138,9 @@ The live schedule and separate demo collection are intentionally empty. Publishe
 
 `getRegistrationUrl()` deliberately returns no functional registration URL in this milestone, including for a configured URL. The user clarified on 23 October 2026 that SpielerPlus is relevant only for participants who booked multiple sessions; it is not the default single-session registration path. Its destination, participant eligibility and multi-session workflow must be verified before enabling this boundary. No live synchronization is implied. The stable permanent QR destination is **`/trainingstermine`**.
 
-The contact page links to info@pkhockeyacademy.de. The WhatsApp number is pending. No analytics, third-party video embeds or non-essential visitor cookies are configured. Once real albums are connected, gallery media is delivered by Sanity's CDN; document this in the reviewed privacy notice.
+The contact page links to info@pkhockeyacademy.de. WhatsApp is omitted until an actual destination is confirmed. No analytics, third-party video embeds or non-essential visitor cookies are configured. Once real albums are connected, gallery media is delivered by Sanity's CDN; document this in the reviewed privacy notice.
+
+Copy cleanup, 15 November 2026: general footer, price/process copy and empty schedule/gallery/download states use ordinary production wording. Missing venue fields and speculative trainer-photo promises are omitted. Dedicated registration inactivity warnings, legal review notices, explicitly labelled trainer templates and deferred interview notices remain; this copy change does not enable submissions, remove protection or establish missing business/provider facts.
 
 ### Registration template — partial issue #3
 

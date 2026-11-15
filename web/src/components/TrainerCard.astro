@@ -65,12 +65,12 @@ const widths = portrait
         imageKey="crest"
         fallback={crest}
         width={500}
-        alt="Wappen der PK Hockey Academy. Ein separates Trainerfoto folgt."
+        alt="Wappen der PK Hockey Academy"
         loading="lazy"
       />
     )}
     <span class="image-label">
-      {portrait ? trainer.name : "WAPPEN · TRAINERFOTO FOLGT"}
+      {trainer.name}
     </span>
     <span class="portrait-overlay">
       Trainerprofil ansehen <span aria-hidden="true">↗</span>
@@ -136,9 +136,6 @@ const widths = portrait
       <p class="small muted" data-sanity={field("portrait.credit")}>
         Bildnachweis: {portrait.credit}
       </p>
-    )}
-    {!portrait && (
-      <p class="small muted">Ein freigegebenes Trainerfoto folgt.</p>
     )}
   </div>
 </article>

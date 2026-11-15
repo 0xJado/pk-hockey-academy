@@ -294,7 +294,7 @@ for (const mode of [
     "Media-kit CMS did not activate.",
   );
   if (mode === "empty") {
-    assert.match(downloads, /Downloads in Vorbereitung/);
+    assert.match(downloads, /Keine Downloads verfügbar/);
     assert.equal(downloads.includes('class="media-download"'), false);
     assert.equal(downloads.includes("PK-Hockey-Academy-Logo.png"), false);
   } else {

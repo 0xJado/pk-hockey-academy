@@ -25,7 +25,7 @@ const downloads = await getMediaKitDownloads();
     <div class="wrap">
       <p class="eyebrow">MEDIENKIT</p>
       <h2 id="downloads-heading">DIE ACADEMY ZUM MITNEHMEN.</h2>
-      {!downloads.length && <div class="media-download-empty"><h3>Downloads in Vorbereitung.</h3><p>Aktuell sind keine Dateien im Medienkit veröffentlicht. Freigegebene Downloads findest du künftig hier.</p></div>}
+      {!downloads.length && <div class="media-download-empty"><h3>Keine Downloads verfügbar.</h3><p>Zurzeit sind keine Dateien zum Herunterladen veröffentlicht.</p></div>}
       {downloads.map((asset, index) => (
         <article class="media-download" aria-labelledby={`${asset.id}-title`}>
           <div class="media-download-preview">
