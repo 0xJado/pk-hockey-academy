@@ -43,12 +43,17 @@ try {
   assert.equal((await install('x'.repeat(8193))).status,413);
   assert.equal(await readFile(join(privatePath,'preview-config.json'),'utf8'),setupConfig);
   const channel=process.env.PK_BROWSER_CHANNEL??(process.platform==='win32'?'msedge':undefined);
-  browser=await chromium.launch({headless:true,...(channel?{channel}:{})});
+  browser=await chromium.launch({headless:true,...(process.env.PK_BROWSER_EXECUTABLE?{executablePath:process.env.PK_BROWSER_EXECUTABLE}:channel?{channel}:{})});
   const context=await browser.newContext({reducedMotion:'reduce'});
   const errors=[];const requests=[];
   context.on('request',request=>requests.push(request.url()));
-  const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9Z4S8AAAAASUVORK5CYII=','base64');
-  await context.route('https://cdn.sanity.io/**',route=>route.fulfill({body:png,contentType:'image/png'}));
+  const {default:sharp}=await import('sharp');
+  // Match the fixture's declared dimensions. A 1px response paired with an
+  // 800w srcset can round naturalWidth to zero in a narrow nested iframe.
+  const png=await sharp({create:{width:800,height:1000,channels:3,background:'#087ed5'}}).png().toBuffer();
+  await context.route('https://cdn.sanity.io/**',route=>new URL(route.request().url()).pathname.includes('/abc-800x1000.webp')
+    ?route.fulfill({body:png,contentType:'image/png'})
+    :route.fulfill({status:404,body:'{"error":"Template image is not a published asset"}',contentType:'application/json'}));
   const page=await context.newPage();page.on('pageerror',error=>errors.push(error.message));
   const fragment=new URLSearchParams({'sanity-preview-secret':'ISOLATED_PREVIEW_SECRET','sanity-preview-pathname':'/redaktion/trainerpool','sanity-preview-perspective':'drafts'});
   await page.goto(origin+'/redaktion/verbinden#'+fragment);
@@ -60,6 +65,7 @@ try {
   assert.ok(await page.locator('[data-sanity]').count()>8);
   assert.ok(!(await page.content()).includes('ISOLATED_SERVER_TOKEN'));
   assert.ok(requests.every(url=>!url.includes('ISOLATED_PREVIEW_SECRET')));
+  await page.locator('.trainer-portrait--photo img').evaluate(image=>image.decode());
   for(const width of [1440,768,375]){
     await page.setViewportSize({width,height:900});await page.screenshot({path:fileURLToPath(new URL('preview-'+width+'.png',output)),fullPage:true});
     assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'No horizontal overflow '+width);
@@ -78,5 +84,36 @@ try {
   await page.locator('a[href="/redaktion/abmelden"]').click();await page.waitForURL(origin+'/trainerpool');assert.equal((await page.goto(origin+'/redaktion/trainerpool')).status(),401);
   assert.equal(errors.length,0,errors.join('\n'));
   assert.ok(!log.includes('ISOLATED_PREVIEW_SECRET'),'Fragment secret absent from server URL logs');
+  // Model Dashboard -> hosted Studio -> PHP preview, rather than forcing an
+  // image decode in a standalone tab (which can hide lazy-loading problems).
+  await writeFile(state,'{}');
+  // Keep every website request on the isolated fixture; HTTPS-shaped origins
+  // avoid testing Chromium's public-page -> localhost network permission gate.
+  await context.route('https://pkhockeyacademy.de/**',async route=>{
+    const url=new URL(route.request().url());
+    const response=await route.fetch({url:origin+url.pathname+url.search,maxRedirects:0});
+    await route.fulfill({response});
+  });
+  await context.route('https://www.sanity.io/pk-fixture',route=>route.fulfill({contentType:'text/html',body:'<iframe title="Studio" src="https://example.sanity.studio/pk-fixture" style="width:100%;height:100vh;border:0"></iframe>'}));
+  await context.route('https://example.sanity.studio/pk-fixture',route=>route.fulfill({contentType:'text/html',body:`<iframe title="Website" src="https://pkhockeyacademy.de/redaktion/verbinden#${fragment}" style="width:100%;height:100vh;border:0"></iframe>`}));
+  const embedded=await context.newPage();
+  embedded.on('console',message=>{if(message.type()==='error')console.error('Nested fixture console:',message.text());});
+  embedded.on('requestfailed',request=>console.error('Nested fixture request failed:',request.url(),request.failure()?.errorText));
+  await embedded.goto('https://www.sanity.io/pk-fixture');
+  const website=embedded.frameLocator('iframe[title="Studio"]').frameLocator('iframe[title="Website"]');
+  const portrait=website.locator('.trainer-portrait--photo img');
+  await portrait.waitFor();
+  await portrait.scrollIntoViewIfNeeded();
+  await assert.doesNotReject(async()=>{
+    await portrait.evaluate(image=>new Promise((resolve,reject)=>{
+      let attempts=0;
+      const poll=setInterval(()=>{
+        if(image.complete && image.naturalWidth>0){clearInterval(poll);resolve();}
+        else if(++attempts>=200){clearInterval(poll);reject(Error('Portrait did not load naturally'));}
+      },50);
+    }));
+  },'Nested preview portrait loads without decode() forcing a request');
+  await embedded.screenshot({path:fileURLToPath(new URL('nested-preview.png',output)),fullPage:true});
+  await embedded.close();
   console.log('PHP preview browser passed: fragment handoff, private data, shared layout at 1440/768/375, escaping, field metadata, selected navigation, refreshed draft, published perspective, missing portrait and signout. Live Studio connection remains separate acceptance.');
 }finally{await browser?.close();server.kill();await writeFile(new URL('server.log',output),log);}

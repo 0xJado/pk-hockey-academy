@@ -1,5 +1,7 @@
 # PK Hockey Academy
 
+The STRATO trainer-preview portrait now has actual nested Brave image acceptance. Sanity CORS permits the exact academy origin without credentials; no browser draft token is exposed. [Current preview operations and evidence](docs/STRATO-PRIVATE-PREVIEW.md) supersede the earlier missing-portrait note below.
+
 15 November hosting cutover: website delivery and the hosted Sanity trainer preview now use STRATO. The old Sanity→Vercel hook is disabled; Vercel accepted a pause request. The user explicitly approved disabling future Vercel builds and previews, and those settings have been applied. See [preview acceptance and browser limitations](docs/STRATO-PRIVATE-PREVIEW.md); extended editor checks are not all complete. Site protection, noindex and disabled intake remain in place. Vercel sections below describe the historical review setup.
 
 Trainer image metadata, 15 November 2026: image descriptions and credits are optional for trainer portraits and career-gallery images in Sanity and website retrieval. Empty descriptions use a German alternative text derived from the trainer's name; empty credits are omitted. Image-file validation and rights approval remain required. See `studio/README.md`.

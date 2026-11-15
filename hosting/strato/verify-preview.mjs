@@ -56,7 +56,7 @@ try {
     phase='standalone-browser';
     const webRequire=createRequire(new URL('../../web/package.json',import.meta.url));
     const {chromium}=webRequire('playwright');
-    const browser=await chromium.launch({headless:true,...(process.platform==='win32'?{channel:'msedge'}:{})});
+    const browser=await chromium.launch({headless:true,...(process.env.PK_BROWSER_EXECUTABLE?{executablePath:process.env.PK_BROWSER_EXECUTABLE}:process.platform==='win32'?{channel:'msedge'}:{})});
     try {
       const context=await browser.newContext({reducedMotion:'reduce',httpCredentials:{origin,username:env.STRATO_PREVIEW_USERNAME,password:env.STRATO_PREVIEW_PASSWORD}});
       const page=await context.newPage();const errors=[];
@@ -78,6 +78,49 @@ try {
         await page.setViewportSize({width,height:900});
         assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Private preview overflow');
         await page.screenshot({path:fileURLToPath(new URL('preview-live-'+width+'.png',privateRoot)),fullPage:true});
+      }
+      if(process.argv.includes('--nested')) {
+        phase='nested-browser';
+        const studioOrigin=new URL(cms.PUBLIC_SANITY_STUDIO_URL).origin;
+        await context.route('https://www.sanity.io/pk-preview-acceptance',route=>route.fulfill({contentType:'text/html',body:`<iframe title="Studio" src="${studioOrigin}/pk-preview-acceptance" style="width:100%;height:100vh;border:0"></iframe>`}));
+        await context.route(studioOrigin+'/pk-preview-acceptance',route=>route.fulfill({contentType:'text/html',body:`<iframe title="Website" src="${origin}/redaktion/verbinden#${fragment}" style="width:100%;height:100vh;border:0"></iframe>`}));
+        const nested=await context.newPage();
+        const imageDiagnostics=[];
+        nested.on('pageerror',()=>errors.push('Nested preview runtime error'));
+        nested.on('response',response=>{
+          if(new URL(response.url()).origin==='https://cdn.sanity.io'){
+            const headers=response.headers();
+            imageDiagnostics.push({status:response.status(),type:headers['content-type'],corp:headers['cross-origin-resource-policy'],coep:headers['cross-origin-embedder-policy'],acao:headers['access-control-allow-origin']});
+          }
+        });
+        nested.on('requestfailed',request=>{
+          if(new URL(request.url()).origin!=='https://cdn.sanity.io')return;
+          imageDiagnostics.push({url:request.url(),failed:request.failure()?.errorText});
+        });
+        nested.on('console',message=>{if(message.type()==='error'&&message.text().includes('cdn.sanity.io'))imageDiagnostics.push({console:message.text().replaceAll(secret,'[REDACTED]')});});
+        try {
+        await nested.goto('https://www.sanity.io/pk-preview-acceptance');
+        const website=nested.frameLocator('iframe[title="Studio"]').frameLocator('iframe[title="Website"]');
+        const portrait=website.locator('.trainer-portrait--photo img');
+        phase='nested-profile-render';
+        await portrait.waitFor();await portrait.scrollIntoViewIfNeeded();
+        phase='nested-portrait-load';
+        await portrait.evaluate(image=>new Promise((resolve,reject)=>{
+          let attempts=0;
+          const timer=setInterval(()=>{
+            if(image.complete&&image.naturalWidth>0){clearInterval(timer);resolve();}
+            else if(++attempts>=200){clearInterval(timer);reject(Error('Portrait did not load naturally'));}
+          },50);
+        }));
+        checks.push('nested-browser-natural-portrait-load');
+        }finally{
+          const images=await nested.frameLocator('iframe[title="Studio"]').frameLocator('iframe[title="Website"]').locator('.trainer-portrait--photo img').evaluateAll(images=>images.map(image=>({src:image.src,currentSrc:image.currentSrc,complete:image.complete,width:image.naturalWidth}))).catch(()=>[]);
+          imageDiagnostics.push({images});
+          await writeFile(new URL('preview-nested-image-diagnostics.json',privateRoot),JSON.stringify(imageDiagnostics,null,2));
+          await nested.screenshot({path:fileURLToPath(new URL('preview-live-nested.png',privateRoot)),fullPage:true});
+          await nested.close();
+        }
+        phase='standalone-browser';
       }
       await page.locator('a[href="/redaktion/abmelden"]').click();await page.waitForURL(origin+'/trainerpool');
       assert.equal((await page.goto(origin+'/redaktion/trainerpool')).status(),401);
