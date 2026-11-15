@@ -1,5 +1,7 @@
 # PK Hockey Academy
 
+15 November hosting cutover: website delivery and the hosted Sanity trainer preview now use STRATO. The old Sanity→Vercel hook is disabled; Vercel accepted a pause request. The user explicitly approved disabling future Vercel builds and previews, and those settings have been applied. See [preview acceptance and browser limitations](docs/STRATO-PRIVATE-PREVIEW.md); extended editor checks are not all complete. Site protection, noindex and disabled intake remain in place. Vercel sections below describe the historical review setup.
+
 Trainer image metadata, 15 November 2026: image descriptions and credits are optional for trainer portraits and career-gallery images in Sanity and website retrieval. Empty descriptions use a German alternative text derived from the trainer's name; empty credits are omitted. Image-file validation and rights approval remain required. See `studio/README.md`.
 
 Start with [current status](docs/STATUS.md). Dated assessments and validation entries preserve historical evidence.
@@ -42,7 +44,7 @@ Public static files are in `web/dist/client`. The private trainer preview needs 
 
 `npm run test:cms` builds isolated starter, populated, public and empty CMS cases, plus invalid trainer, gallery, media-kit, training and website-image content. It verifies real bundler environment substitution, publication filtering, escaping, ordering, image replacements and defaults, withdrawal behavior, admin linking, tokenless public reads and absence of read tokens/withheld fixtures from website output. It uses no real project or token and retains its artifacts under ignored `output/cms-integration-*`; it never changes `web/dist` or deploys anything.
 
-### Vercel review hosting
+### Historical Vercel review hosting
 
 Project: `driftwoodmedia/pk-hockey-academy`. Connected GitHub source: `0xJado/pk-hockey-academy`, branch `main`.
 

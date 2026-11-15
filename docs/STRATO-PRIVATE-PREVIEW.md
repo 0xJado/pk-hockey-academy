@@ -1,5 +1,15 @@
 # PHP private Visual Editing — issue #11
 
+## Active cutover — 15 November 2026
+
+Hosted Studio now uses `https://pkhockeyacademy.de` with the `php-fragment` transport. The deployment guard accepts only that hosted origin and always selects PHP transport; local `SANITY_STUDIO_PREVIEW_URL` remains independent. The previous Vercel publication hook was disabled with authenticated readback. Vercel accepted the project-pause request; after the user explicitly approved the two additional settings, Vercel accepted `commandForIgnoringBuildStep=exit 0` and `previewDeploymentsDisabled=true`. No project or deployment was deleted, and registration/public-launch gates remain disabled.
+
+Actual signed-in Sanity Dashboard acceptance verified the STRATO iframe connection, native document discovery/name selection, opening the portrait editor with optional metadata, and automatic mutation refresh: a clearly labelled role suffix was saved only in the draft, appeared in the preview, then the original `Gründer & Trainer` wording was restored. Nothing was published during this check. Standalone protected STRATO checks passed again for native session activation, selected draft/published data, denied invalid access, 1440/768/375 layouts, actual portrait decoding and sign-out. Extended in-Studio perspective/history/share/browser checks remain unaccepted: Computer Use stopped when it could not determine the browser URL. The open Brave iframe displayed a missing portrait despite successful standalone image decoding; this browser-specific discrepancy remains unresolved. Do not report all #11 acceptance complete.
+
+The pinned Studio 6 callback receives an empty `previewUrlSecret` and does not create it automatically for legacy function resolvers. The PHP resolver now creates a native `sanity.previewUrlSecret` draft through the signed-in user's client when needed, using 256 bits of browser randomness. Concurrent resolution shares only the in-flight request; each later opening checks the current user's create permission again. PHP still validates the native document and its one-hour age. The read token stays outside the public root; no credential is put in query parameters or logs. This fixes the actual authenticated Studio handoff rather than merely testing a synthetic secret argument.
+
+The earlier implementation notes below describe pre-cutover checkpoints. Vercel is no longer the configured Studio destination.
+
 The PHP candidate is deployed behind the existing STRATO website protection. It passed native Sanity capability/session checks and standalone browser checks at 1440, 768 and 375px. **Hosted Studio still points to the existing Vercel preview.** In-Studio field selection, mutation refresh, iframe cookies and the user’s acceptance remain open before changing that destination or retiring Vercel. The implementation checkpoint series through `688918f` is pushed to main.
 
 ## Existing workflow inventory

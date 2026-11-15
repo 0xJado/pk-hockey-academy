@@ -2,6 +2,7 @@ import {
   defineLocations,
   type PresentationPluginOptions,
 } from "sanity/presentation";
+import type { SanityClient } from 'sanity';
 
 export function getPreviewUrl(value: string | undefined): string | undefined {
   if (!value?.trim()) return;
@@ -36,14 +37,48 @@ export function getPhpTrainerPreviewResolver(origin: string) {
   const approved = getPreviewUrl(origin);
   if (!approved || !approved.startsWith('https://'))
     throw new Error('PHP preview requires an approved HTTPS origin.');
+  let capability: Promise<string> | undefined;
+  let capabilityClient: SanityClient | undefined;
   return async (context: {
+    client?: SanityClient;
+    studioBasePath?: string | null;
     previewUrlSecret: string;
     studioPreviewPerspective: string;
     previewSearchParam?: string | null;
   }) => {
+    // Studio 6 resolves legacy callbacks with an empty secret. Mint a native,
+    // short-lived draft capability through the signed-in user's existing client.
+    // It stays in memory/fragment only and grants no CMS editing permissions.
+    let secret = context.previewUrlSecret;
+    if (!secret) {
+      if (!context.client) throw new Error('Signed-in Studio client required for private preview.');
+      if (!capability || capabilityClient !== context.client) {
+        capabilityClient = context.client;
+        const bytes = new Uint8Array(32);
+        crypto.getRandomValues(bytes);
+        const generated = Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
+        const client = context.client.withConfig({apiVersion: '2025-02-19', useCdn: false});
+        capability = client.create({
+          _id: `drafts.pk-strato-preview-${crypto.randomUUID()}`,
+          _type: 'sanity.previewUrlSecret',
+          source: 'pk-strato-presentation',
+          studioUrl: typeof location === 'undefined' ? '' : new URL(context.studioBasePath || '/', location.origin).href,
+          secret: generated,
+        }).then(async () => {
+          // Match native secret housekeeping, restricted to our expired drafts.
+          await client.delete({query: '*[_type == "sanity.previewUrlSecret" && _id in path("drafts.pk-strato-preview-**") && source == "pk-strato-presentation" && dateTime(_updatedAt) < dateTime(now()) - 3600]'}).catch(() => undefined);
+          return generated;
+        }).catch(() => {
+          capability = undefined;
+          throw new Error('Private preview authentication could not be prepared. Reopen it from the signed-in Studio.');
+        });
+      }
+      const pending = capability;
+      try { secret = await pending; } finally { if (capability === pending) capability = undefined; }
+    }
     const url = new URL('/redaktion/verbinden', approved);
     url.hash = new URLSearchParams({
-      'sanity-preview-secret': context.previewUrlSecret,
+      'sanity-preview-secret': secret,
       'sanity-preview-pathname': context.previewSearchParam || '/redaktion/trainerpool',
       'sanity-preview-perspective': context.studioPreviewPerspective,
     }).toString();

@@ -65,6 +65,13 @@ try {
       await page.goto(origin+'/redaktion/verbinden#'+fragment);
       await page.waitForURL('**/redaktion/trainerpool?id=trainer-pierre-klein&perspective=published');
       await page.locator('#preview-profiles article').waitFor();
+      phase='standalone-portrait';
+      for (const picture of await page.locator('#preview-profiles .trainer-portrait--photo img').all()) {
+        await picture.scrollIntoViewIfNeeded();
+        await picture.evaluate(image=>image.decode());
+        assert.ok(await picture.evaluate(image=>image.naturalWidth>0),'Trainer portrait must load');
+      }
+      phase='standalone-browser';
       assert.equal(await page.locator('#preview-status[role="alert"]').count(),0);
       assert.ok(await page.locator('[data-sanity]').count()>3);
       for(const width of [1440,768,375]) {

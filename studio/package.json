@@ -14,7 +14,7 @@
     "schema:extract": "sanity schema extract",
     "media-kit:migrate-logo": "node --env-file-if-exists=.env --experimental-strip-types scripts/migrate-media-kit-logo.mjs",
     "deploy": "node --env-file-if-exists=.env scripts/deploy-hosted.mjs",
-    "webhook:setup": "node --env-file-if-exists=.env --experimental-strip-types scripts/configure-publication-hook.mjs"
+    "webhook:setup": "node --env-file-if-exists=.env --env-file-if-exists=../hosting/strato/.env.local --experimental-strip-types scripts/configure-strato-hook.mjs"
   },
   "dependencies": {
     "@sanity/locale-de-de": "1.1.37",

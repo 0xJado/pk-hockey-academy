@@ -1,5 +1,7 @@
 # Trainer Visual Editing
 
+15 November: the hosted Studio preview has moved to STRATO PHP; Vercel is paused and its publishing hook/builds/previews are disabled. The following Node/Vercel credential and setup notes are historical. Use [current STRATO operations and actual acceptance limits](STRATO-PRIVATE-PREVIEW.md) and `SANITY_STUDIO_HOSTED_PREVIEW_URL=https://pkhockeyacademy.de` for hosted Studio deployment. Local Node development remains available.
+
 Pierre can edit trainer profiles in the website layout through Sanity's **Website bearbeiten** tool. The first release covers trainer profiles only. Gallery, curated social cards and other website content retain their existing editing workflows. Sessions, prices and venues have not been migrated.
 
 ## Editor workflow

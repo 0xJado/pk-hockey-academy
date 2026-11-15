@@ -1,5 +1,7 @@
 # Protected STRATO publishing — issue #10
 
+15 November cutover: the superseded `PK Hockey Academy · Website` Sanity hook to Vercel is disabled, with authenticated readback; `PK Hockey Academy · STRATO` remains enabled. The guarded, repeatable command is `node --env-file-if-exists=.env --experimental-strip-types scripts/retire-vercel-hook.mjs --apply` from `studio/` (omit `--apply` for inspection). Hosted Studio now points to the STRATO PHP preview; see its [acceptance and remaining browser limitations](STRATO-PRIVATE-PREVIEW.md). Vercel accepted a project-pause request; the user then explicitly approved disabling future builds/previews, and Vercel accepted `commandForIgnoringBuildStep=exit 0` plus `previewDeploymentsDisabled=true`. Earlier notes below about retaining the active Vercel hook are historical. Pierre's own representative editorial-update acceptance is separate from the assistant's private draft test.
+
 Protected publishing is enabled, 10 November 2026. The GitHub workflow and separate Sanity hook passed real approved-download edit, withdrawal, restoration and deliberately invalid-publication checks; the final rollback round trip also passed. Issue #10 remains open for Pierre's representative update; operator failure-alert receipt was confirmed on 10 November 2026. The existing Vercel publication hook and private Visual Editing remain intact. Registration stays inactive and indexing stays disabled.
 
 ## Delivery model

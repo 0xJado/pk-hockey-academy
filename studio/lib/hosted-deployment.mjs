@@ -7,8 +7,11 @@ export function getHostedDeploymentEnv(env, args = []) {
       url.username || url.password || url.pathname !== '/' || url.search || url.hash) {
     throw new Error('Hosted preview must use an HTTPS origin without credentials, paths or query parameters.');
   }
+  if (url.origin !== 'https://pkhockeyacademy.de') {
+    throw new Error('Hosted Studio uses the accepted STRATO preview at https://pkhockeyacademy.de.');
+  }
   if (args.some(arg => arg === '--no-build' || arg.startsWith('--build='))) {
     throw new Error('Hosted deployment must rebuild Studio with the hosted preview configuration.');
   }
-  return { ...env, SANITY_STUDIO_PREVIEW_URL: url.origin };
+  return { ...env, SANITY_STUDIO_PREVIEW_URL: url.origin, SANITY_STUDIO_PREVIEW_TRANSPORT: 'php-fragment' };
 }

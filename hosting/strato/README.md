@@ -1,5 +1,7 @@
 # STRATO hosting boundary
 
+15 November: hosted Sanity now uses the STRATO PHP trainer preview; the old Vercel publishing hook is disabled and its project is paused with future builds/previews disabled under explicit user approval. The default Studio webhook setup now targets STRATO. See [current acceptance and browser limitations](../../docs/STRATO-PRIVATE-PREVIEW.md). Earlier Vercel-retention notes below are historical. The academy remains password-protected/noindex with registration inactive.
+
 The website stays authored in Astro. Node/npm run locally or in CI only. STRATO receives static HTML/CSS/browser JavaScript/assets and PHP; it does not execute Astro or start a Node service. Sanity Studio remains a separate hosted editorial application.
 
 User decision, 7 November 2026: deploy to one production environment at `pkhockeyacademy.de`, initially password-protected for acceptance. References below to staging mean this protected acceptance phase, not a second environment. No QA subdomain or wildcard upgrade is required. Public exposure remains a separate launch decision.

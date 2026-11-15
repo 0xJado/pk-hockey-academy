@@ -505,4 +505,6 @@ Validate framework and motion APIs against official documentation when versions 
 
 ## Delegated launch preparation — 15 November 2026
 
+The user requested completing STRATO hosting and retiring Vercel on 15 November 2026. Hosted Studio now uses the STRATO PHP trainer preview. The former Vercel publication hook is disabled and the Vercel pause request was accepted; the user explicitly approved disabling future builds and previews for the PK project, and Vercel accepted those settings. Follow `docs/STRATO-PRIVATE-PREVIEW.md` for actual acceptance and browser limitations. Do not restore the Vercel destination as the default or infer public-launch/intake approval from this cutover.
+
 The user authorized the assistant to approve sensible decisions from the concrete review packet. Registration wording/fields and the chosen operating model (packet A/B) are adopted under that delegation; do not request another signature round for these decisions. See docs/REGISTRATION-APPROVAL-2026-11-15.md. Do not infer Pierre personally completed admin handoff, actual provider-contract verification, legal certification or public/intake activation. Keep machine/runtime activation gates until their complete prerequisites are met. Additional media and an empty genuine schedule are not automatic launch blockers.
