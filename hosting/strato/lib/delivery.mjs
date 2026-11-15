@@ -1,6 +1,15 @@
 import assert from 'node:assert/strict';
 import {sha256} from './artifact.mjs';
 
+export function verifyPreviewHandshake(bytes,expectedHash) {
+  if(sha256(bytes)===expectedHash)return; // Previous releases have no runtime substitution.
+  const html=bytes.toString('utf8');
+  const bound='name="pk-preview-studio-origin" content="https://pk-hockey-academy.sanity.studio"';
+  assert.ok(html.includes(bound),'Unexpected preview Studio origin');
+  const template=html.replace(bound,'name="pk-preview-studio-origin" content="__PK_STUDIO_ORIGIN__"');
+  assert.equal(sha256(Buffer.from(template)),expectedHash,'Unexpected preview handshake');
+}
+
 export function deliveryHealth(env) {
   assert.ok(env.STRATO_PREVIEW_USERNAME&&env.STRATO_PREVIEW_PASSWORD,'Missing review credentials');
   const authentication='Basic '+Buffer.from(`${env.STRATO_PREVIEW_USERNAME}:${env.STRATO_PREVIEW_PASSWORD}`).toString('base64');
@@ -22,7 +31,7 @@ export function deliveryHealth(env) {
       await request('/redaktion/trainerpool',401);
       await request('/redaktion/daten',401);
       const connect=await request('/redaktion/verbinden',200);
-      assert.equal(sha256(connect.bytes),ready.inventory.find(file=>file.path==='api/preview-lib/preview-connect.html').sha256,'Unexpected preview handshake');
+      verifyPreviewHandshake(connect.bytes,ready.inventory.find(file=>file.path==='api/preview-lib/preview-connect.html').sha256);
       for(const path of ['/api/preview-lib/preview-shell.html','/api/preview-lib/Preview.php'])await request(path,403);
     }
     for(let index=0;index<served.length;index+=4)await Promise.all(served.slice(index,index+4).map(async file=>{
