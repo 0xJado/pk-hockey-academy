@@ -1,10 +1,10 @@
 # Technische Rückfragen zu Hosting Basic — am 12. November 2026 versendet
 
-Stand 16. November: Der Nutzer bestätigt weiterhin keine inhaltliche Antwort. Die PHP-/Datenbankumsetzung ist für die geschützte, deaktivierte Umgebung getestet; offene Anbieterantworten und Entscheidungen vor echter Datenerfassung bleiben im [Hosting-Abgleich](STRATO-HOSTING-REVIEW-2026-11-16.md) und Launch-Ticket #19 ausdrücklich offen. Keine Zeitlimit-Garantie und kein zweiter eingeschränkter SQL-Benutzer sind bestätigt.
+Antwort am 16. November vom Nutzer weitergegeben: STRATO bestätigt vollständige vorgelagerte Request-Body-Pufferung mit globalen, in Basic nicht pro Endpunkt konfigurierbaren Webserver-Zeit-/Datenratenlimits. Konkrete Zahlen nennt die Antwort nicht. Ebenfalls bestätigt: ein fest zugewiesener Benutzer je Datenbank, keine GRANT-/Benutzerverwaltungsrechte und kein zweiter DML-only-Zugang im Basic-Kundenbereich. Die vorherige Notiz „keine inhaltliche Antwort“ ist damit überholt. [Hosting-Abgleich und Betriebsentscheidung](STRATO-HOSTING-REVIEW-2026-11-16.md) dokumentieren die verbleibenden Risiken und Launch-Gates; echte Datenerfassung bleibt aus.
 
 Betreff: Hosting Basic: JSON-Upload-Zeitlimit und MariaDB-Benutzerrechte
 
-Mit ausdrücklicher Zustimmung des Nutzers über den angemeldeten STRATO-Kundenservice unter „Hosting und Domains“ versendet. STRATO zeigte die Eingangsbestätigung „Vielen Dank für Ihre Anfrage“; eine Vorgangsnummer wurde in der Bestätigung nicht angezeigt. Es wurden keine Zugangsdaten oder Teilnehmerdaten eingetragen. Eine technische Antwort steht aus; die Annahme-Sperren bleiben bestehen. Keine Session-URL oder Kundennummer in diese Dokumentation übernehmen.
+Mit ausdrücklicher Zustimmung des Nutzers über den angemeldeten STRATO-Kundenservice unter „Hosting und Domains“ versendet. STRATO zeigte die Eingangsbestätigung „Vielen Dank für Ihre Anfrage“; eine Vorgangsnummer wurde in der Bestätigung nicht angezeigt. Es wurden keine Zugangsdaten oder Teilnehmerdaten eingetragen. Die technische Antwort wurde am 16. November weitergegeben; die Annahme-Sperren bleiben bestehen. Keine Session-URL oder Kundennummer in diese Dokumentation übernehmen.
 
 Wir betreiben eine statisch gebaute Website mit kleinen PHP-Endpunkten für Trainingsanfragen. Die Anwendung ist noch geschützt; die Annahme echter Daten bleibt deaktiviert. Bitte klären Sie folgende Funktionen im vorhandenen Hosting-Basic-Paket ohne kostenpflichtige Umstellung:
 
