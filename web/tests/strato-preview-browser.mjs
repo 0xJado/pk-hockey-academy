@@ -133,11 +133,15 @@ try {
   const renewal=await renewContext.newPage();await renewal.goto('https://example.sanity.studio/renew-fixture');
   const renewed=renewal.frameLocator('iframe');
   await renewed.getByText('Veröffentlichte Testrolle · PK Hockey Academy').waitFor();
+  // This isolated page has finite fixture traffic. Finish lazy editor imports
+  // before deliberately navigating away; profile text appears before them.
+  await renewal.waitForLoadState('networkidle');
   assert.match(renewal.frames()[1].url(),/id=fixture-preview&perspective=published/);
   await writeFile(state,JSON.stringify({clockOffset:3601}));
   const expiredResponse=renewal.waitForResponse(response=>response.url().includes('/redaktion/trainerpool?')&&response.status()===401);
   await renewal.locator('iframe').evaluate(frame=>{frame.src=frame.src;});await expiredResponse;
   await renewed.getByText('Veröffentlichte Testrolle · PK Hockey Academy').waitFor();
+  await renewal.waitForLoadState('networkidle');
   assert.match(renewal.frames()[1].url(),/id=fixture-preview&perspective=published/);
   // Profile text can render before the lazy editing module finishes fetching.
   // Drain handlers before disposal so slow CI does not race route.fetch().
