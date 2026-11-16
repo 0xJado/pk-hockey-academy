@@ -1,5 +1,11 @@
 # PHP private Visual Editing — issue #11
 
+## Signed-in acceptance completed — 16 November 2026
+
+STRATO 04 / #11 is closed under the user's explicit instruction to use the signed-in Studio and accept the representative editing check. In the in-app browser, clicking Pierre's role in the website preview opened the matching document field. Changed only `Gründer & Trainer` to `Gründer und Trainer`; a native read beforehand confirmed no unrelated draft differences. The draft preview refreshed automatically. Switching to published perspective still showed the old wording; switching back showed the edited draft. Published through Studio, navigated to the selected profile and manually refreshed successfully.
+
+Preview sign-out returned to the ordinary public trainer page. The in-app browser then needed the existing STRATO Basic Auth login entered again by the user; Sanity identity stayed signed in. After that, Studio reopened the authenticated preview and preserved selected-profile navigation. This browser login behavior is recorded, not presented as CMS sign-out or public-launch acceptance. Prior security/isolation and responsive checks remain supporting evidence. No sharing/release-perspective expansion is claimed. The earlier Computer Use limitations below are superseded for these tested editing interactions.
+
 ## Active cutover — 15 November 2026
 
 ### Expired-session repair — 16 November 2026
