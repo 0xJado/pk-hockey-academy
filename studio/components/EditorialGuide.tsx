@@ -63,8 +63,10 @@ export function EditorialGuideContent({
         Dieses CMS enthält öffentliche Website-Inhalte. Veröffentlichte
         Dokumente sind über Sanitys API lesbar, auch wenn „Zurückhalten“ sie von
         der Website ausschließt. Unveröffentlichte Texte im Entwurf lassen.
-        Trainingsanmeldungen und Spielerangaben gehören in das separat
-        vorgesehene private Google Sheet.
+        Trainingsanmeldungen, Gesundheitsangaben und Einwilligungsnachweise
+        gehören ausschließlich in die getrennte private STRATO-Verwaltung.
+        Sanity-Zugriff berechtigt nicht zum Zugriff auf Anmeldungen. Die
+        Annahme echter Anfragen bleibt bis zur gesonderten Freischaltung aus.
       </p>
       <section aria-labelledby="coach-guide">
         <h2 id="coach-guide">Trainerprofile</h2>
@@ -84,7 +86,11 @@ export function EditorialGuideContent({
           <li>
             Name, Rolle, Biografie und bestätigten Hintergrund ergänzen.
             Qualifikationen und Schwerpunkte nur eintragen, wenn bestätigt. Ein
-            Trainerfoto ist optional.
+            Trainerfoto ist optional. Bildbeschreibung und Urheber sind beim
+            Trainerfoto und den Laufbahnbildern ebenfalls optional. Ohne
+            Bildbeschreibung verwendet die Website den Trainernamen; einen
+            Bildnachweis nur bei tatsächlicher Vorgabe eintragen. Die
+            Nutzungsrechte müssen unabhängig davon geklärt sein.
           </li>
           <li>
             Unter „Profilvorschau“ den aktuellen Bearbeitungsstand prüfen. Diese
@@ -107,6 +113,44 @@ export function EditorialGuideContent({
             gegebenenfalls zuerst die veröffentlichte Perspektive auswählen.
           </li>
         </ol>
+      </section>
+      <section aria-labelledby="training-guide">
+        <h2 id="training-guide">Termine und Trainingsstätten</h2>
+        <p>
+          Zuerst eine bestätigte Trainingsstätte pflegen, prüfen und freigeben.
+          Geplante Städte bleiben als geplant gekennzeichnet und können keinen
+          anfragbaren Termin beherbergen. Keine Hallen, Adressen, Gruppen oder
+          freien Plätze ergänzen, solange diese nicht bestätigt sind.
+        </p>
+        <p>
+          Beim Termin Beginn und Ende mit Zeitzone, Gruppe, Trainingsstätte
+          und tatsächlichen Status eintragen. Unbekannte Kapazität leer lassen.
+          Entwürfe, zurückgehaltene und ungeprüfte Einträge erscheinen nicht
+          auf der Website. Ein veröffentlichter Termin ist keine automatische
+          Platzbestätigung. SpielerPlus wird getrennt von der Website betreut.
+        </p>
+        <p>
+          Die Übernahme der CMS-Termine ist noch deaktiviert. Vor der ersten
+          Aktivierung müssen alle gewünschten Städte und echte Termine geprüft
+          werden. Eine absichtlich leere Sammlung bleibt anschließend leer.
+          Abgelaufene Termine verschwinden erst nach einem erfolgreichen Build.
+        </p>
+      </section>
+      <section aria-labelledby="images-guide">
+        <h2 id="images-guide">Website-Bilder und Startseiten-Hero</h2>
+        <p>
+          Unter „Website-Bilder“, „Startseiten-Hero“ und „Trainingsbilder“ nur
+          freigegebene Motive zuordnen. Die jeweilige Bildbeschreibung und
+          Freigabeprüfung beachten. Ein leeres oder zurückgezogenes Bild wird
+          gemäß der vorgesehenen Ersatzdarstellung behandelt. Nach jedem
+          Veröffentlichen oder Zurückziehen die betroffenen Seiten auf STRATO
+          kontrollieren; eine Entwurfsvorschau ersetzt diese Prüfung nicht.
+        </p>
+        <p>
+          Das Entfernen einer Zuordnung macht eine bekannte CDN-Adresse nicht
+          privat. Bei einem Widerruf die Website-Verwendung beenden und die
+          tatsächliche Asset-Löschung sowie weitere Nutzungen getrennt prüfen.
+        </p>
       </section>
       <section aria-labelledby="media-kit-guide">
         <h2 id="media-kit-guide">Medienkit-Downloads</h2>
@@ -271,7 +315,7 @@ export function EditorialGuideContent({
         <ol>
           <li>
             Trainerpool, Startseite oder betroffenes Camp-Album auf der
-            Review-Website öffnen.
+            passwortgeschützten STRATO-Website unter pkhockeyacademy.de öffnen.
           </li>
           <li>
             Inhalte, Bildbeschreibungen und mobile Ansicht prüfen.

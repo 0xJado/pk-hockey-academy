@@ -61,7 +61,8 @@ const fields: { name: string; label: string; required?: boolean; max: number; hi
         </div>
         <p>Ohne zusätzlichen Notfallkontakt nutzen wir den Hauptkontakt. Einen zusätzlichen Namen und dessen Telefonnummer bitte gemeinsam angeben.</p>
         <label for="request-position">Position (optional)</label>
-        <select id="request-position" name="position"><option value="">Keine Angabe</option><option value="field">Feldspieler</option><option value="goalie">Torwart</option></select>
+        <select id="request-position" name="position" aria-describedby="request-position-error"><option value="">Keine Angabe</option><option value="field">Feldspieler</option><option value="goalie">Torwart</option></select>
+        <p id="request-position-error" class="request-error" hidden></p>
         <div class="registration-field">
           <label for="request-experience">Erfahrungsstand (optional)</label>
           <p id="request-experience-hint">Gesundheitshinweise bitte ausschließlich im gesonderten Bereich angeben.</p>
@@ -72,7 +73,7 @@ const fields: { name: string; label: string; required?: boolean; max: number; hi
       <fieldset>
         <legend>3. Freiwillige Gesundheitshinweise</legend>
         <p>{policy.copy.healthHint}</p>
-        <label class="registration-choice"><input type="checkbox" name="consent-health" />{policy.consents[0].text}</label>
+        <label class="registration-choice"><input type="checkbox" name="consent-health" aria-describedby="request-consents-error" />{policy.consents[0].text}</label>
         <div class="registration-field">
           <label for="request-healthNotes">Betreuungsrelevante Gesundheitshinweise (optional)</label>
           <textarea id="request-healthNotes" name="healthNotes" maxlength="1000" rows="4" disabled aria-describedby="request-healthNotes-error"></textarea>
@@ -82,7 +83,7 @@ const fields: { name: string; label: string; required?: boolean; max: number; hi
       <fieldset>
         <legend>4. Freiwillige Medienfreigaben</legend>
         <p>Jede Auswahl ist unabhängig und freiwillig. Keine Auswahl bedeutet keine Erlaubnis. Die Teilnahme hängt davon nicht ab.</p>
-        {policy.consents.slice(1).map(consent => <label class="registration-choice"><input type="checkbox" name={`consent-${consent.purpose}`} />{consent.text}</label>)}
+        {policy.consents.slice(1).map(consent => <label class="registration-choice"><input type="checkbox" name={`consent-${consent.purpose}`} aria-describedby="request-consents-error" />{consent.text}</label>)}
         <p id="request-consents-error" class="request-error" hidden></p>
       </fieldset>
       <fieldset>

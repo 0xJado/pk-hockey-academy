@@ -2,7 +2,7 @@
 
 Stand: 15. November 2026. Maßgeblich sind das [aktualisierte Freigabepaket](FREIGABEPAKET-PIERRE.md) und das [Entscheidungsprotokoll](REGISTRATION-APPROVAL-2026-11-15.md). A/B sind unter Nutzerdelegation angenommen; keine erneute Text-/Rollen-/Fristenentscheidung nötig.
 
-Noch erforderlich sind die tatsächlichen Anbieter-Vertragsnachweise, der private persönliche Admin-Handoff und ein repräsentativer Sanity-/Studio-Veröffentlichungsdurchlauf. Zugangsdaten niemals in dieses öffentliche Repository schreiben. Echte Datenerfassung und öffentliche Freischaltung bleiben getrennte abschließende Schritte.
+Noch erforderlich sind die tatsächlichen Anbieter-Vertragsnachweise und der private persönliche Admin-Handoff. Der repräsentative Sanity-/Studio-Veröffentlichungsdurchlauf ist unter Nutzerdelegation am 16. November abgenommen (#10/#11); nicht erneut als unerledigt abfragen. Der Nutzer hat bestätigt, die Verwaltungsprüfung als Delegierter zu übernehmen; die private Passwortwahl bleibt ausstehend. Zugangsdaten niemals in dieses öffentliche Repository schreiben. Echte Datenerfassung und öffentliche Freischaltung bleiben getrennte abschließende Schritte. Die [aktuelle Betriebsanleitung](PIERRE-SETUP.md) ersetzt die alten Google-Einrichtungsschritte.
 
 Firmenangaben einschließlich fehlender Steuer-/Registereinträge, Preise, Domain, Hauptkontaktmodell, Rollen und Löschfristen sind geklärt. Echte Termine erst mit bestätigten Angaben veröffentlichen; zusätzliche Medien sind optional. Interviews sind Phase 2, SpielerPlus bleibt außerhalb der Website, Google Sheets entfällt.
 

@@ -1,5 +1,11 @@
 # CMS publishing and automatic website updates
 
+## Current production workflow — 17 November 2026
+
+Use the accepted [STRATO publishing workflow](STRATO-PUBLISHING.md) and [STRATO private preview](STRATO-PRIVATE-PREVIEW.md). The former Vercel hook is disabled and the Vercel project/builds/previews are retired. Do not execute the Vercel setup instructions below; they are historical evidence from October. Sanity manages public content only; private registrations use STRATO PHP/MariaDB. Current German operator instructions are in [PIERRE-SETUP.md](PIERRE-SETUP.md), with detailed field guidance in Studio's Redaktionshilfe.
+
+## Historical October setup and acceptance
+
 Current implementation: 25 October 2026. The Studio is deployed; native CLI/browser login and draft privacy are verified. Vercel has the public project/dataset and Studio URL for its existing protected review project. Following the user's explicit approval, the main-branch deploy hook **PK Hockey Academy · Sanity** is connected to the active Sanity document webhook **PK Hockey Academy · Website** (`0DrSPAU3ECwrY7Y9`). An identical-config readback passed. The user then explicitly approved Pierre's existing verified profile publishing test. Trainer migration is now enabled locally and on hosting; social activation remains `false`.
 
 ## Completed coach acceptance

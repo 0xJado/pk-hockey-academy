@@ -37,15 +37,31 @@ export function mountTrainingRequests(scope: ParentNode): () => void {
       for (const name of new Set(fields)) {
         // Field names from the server are untrusted; no HTML or selector interpolation.
         const input = [...form.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>("input,select,textarea")].find(element => element.name === name);
-        const target = input ?? (name === "consents" ? form.querySelector<HTMLInputElement>("[name=consent-website]") : null);
+        const target = input ?? (name === "consents" ? form.querySelector<HTMLInputElement>("[name=consent-health]") : null);
         if (!target) continue;
-        target.setAttribute("aria-invalid", "true");
+        const related = [...form.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>("input,select,textarea")]
+          .filter(element => element.name === name || (name === "consents" && element.name.startsWith("consent-")));
+        for (const element of related) element.setAttribute("aria-invalid", "true");
+        const messages: Record<string, string> = {
+          bookingType: "Bitte wähle einen Einzeltermin oder das 5er-Paket.",
+          sessionId: "Bitte wähle einen aktuell anfragbaren Trainingstermin.",
+          childName: "Bitte gib den Vor- und Nachnamen des Kindes an.",
+          birthYear: "Bitte gib einen gültigen vierstelligen Jahrgang an.",
+          guardianName: "Bitte gib deinen Vor- und Nachnamen an.",
+          guardianPhone: "Bitte prüfe die Telefonnummer des Hauptkontakts.",
+          guardianEmail: "Bitte gib eine gültige E-Mail-Adresse an.",
+          emergencyName: "Bitte ergänze den Namen des zusätzlichen Notfallkontakts oder entferne dessen Telefonnummer.",
+          emergencyPhone: "Bitte ergänze eine gültige Telefonnummer des zusätzlichen Notfallkontakts oder entferne dessen Namen.",
+          guardianAuthority: "Bitte bestätige deine Berechtigung zur Trainingsanfrage.",
+          consents: "Bitte prüfe die freiwilligen Einwilligungen. Keine Auswahl bedeutet keine Erlaubnis.",
+        };
+        const message = messages[name] ?? "Bitte prüfe diese Angabe und ihre zulässige Länge.";
         const inline = document.getElementById(`request-${name}-error`);
-        if (inline && root.contains(inline)) { inline.hidden = false; inline.textContent = "Bitte Angabe prüfen und gegebenenfalls ergänzen."; }
+        if (inline && root.contains(inline)) { inline.hidden = false; inline.textContent = message; }
         if (!target.id) target.id = `request-error-target-${list.childElementCount}`;
         const label = target.labels?.[0]?.textContent?.trim() ?? "Angabe";
         const item = document.createElement("li"), link = document.createElement("a");
-        link.href = `#${target.id}`; link.textContent = label;
+        link.href = `#${target.id}`; link.textContent = `${name === "consents" ? "Freiwillige Einwilligungen" : label}: ${message}`;
         link.addEventListener("click", event => { event.preventDefault(); target.focus(); });
         item.append(link); list.append(item);
       }
@@ -80,7 +96,8 @@ export function mountTrainingRequests(scope: ParentNode): () => void {
       if (inFlight || unresolved) return;
       clearErrors(); update();
       const invalid = [...form.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>("input,select,textarea")].filter(input => !input.disabled && !input.validity.valid).map(input => input.name);
-      if (Boolean(selected("emergencyName").trim()) !== Boolean(selected("emergencyPhone").trim())) invalid.push("emergencyPhone");
+      const emergencyName = selected("emergencyName").trim(), emergencyPhone = selected("emergencyPhone").trim();
+      if (Boolean(emergencyName) !== Boolean(emergencyPhone)) invalid.push(emergencyName ? "emergencyPhone" : "emergencyName");
       if (invalid.length) { showErrors(invalid); return; }
       const data: Record<string, unknown> = { policyVersion: root.dataset.policy };
       for (const element of form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>("input,textarea,select")) {
