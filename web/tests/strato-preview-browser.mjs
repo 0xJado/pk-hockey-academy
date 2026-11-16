@@ -114,6 +114,7 @@ try {
     }));
   },'Nested preview portrait loads without decode() forcing a request');
   await embedded.screenshot({path:fileURLToPath(new URL('nested-preview.png',output)),fullPage:true});
+  await context.unrouteAll({behavior:'wait'});
   await embedded.close();
   // A cached plain iframe URL must recover both a missing and an expired cookie.
   const renewContext=await browser.newContext();
@@ -138,6 +139,9 @@ try {
   await renewal.locator('iframe').evaluate(frame=>{frame.src=frame.src;});await expiredResponse;
   await renewed.getByText('Veröffentlichte Testrolle · PK Hockey Academy').waitFor();
   assert.match(renewal.frames()[1].url(),/id=fixture-preview&perspective=published/);
+  // Profile text can render before the lazy editing module finishes fetching.
+  // Drain handlers before disposal so slow CI does not race route.fetch().
+  await renewContext.unrouteAll({behavior:'wait'});
   await renewContext.close();await writeFile(state,'{}');
   assert.ok(!log.includes('ISOLATED_PREVIEW_SECRET'),'Renewal capability absent from request URLs');
   console.log('Session renewal passed: cold cached iframe, expired cookie, preserved selection/perspective and rejected wrong nonce.');
