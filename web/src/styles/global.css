@@ -849,14 +849,6 @@ p {
 .trainer-portrait:focus-visible img {
   transform: scale(1.035);
 }
-.trainer-portrait .image-label {
-  bottom: 82px;
-  left: 24px;
-  background: none;
-  color: #345a83;
-  font-size: 9px;
-  padding: 0;
-}
 .portrait-overlay {
   position: absolute;
   inset: auto 0 0;
@@ -932,12 +924,6 @@ p {
 }
 .trainer-portrait--photo .portrait-overlay {
   position: static;
-}
-.trainer-portrait--photo .image-label {
-  position: static;
-  display: block;
-  padding: 4px 8px;
-  background: #fff;
 }
 .venues-section {
   background: #050b12;

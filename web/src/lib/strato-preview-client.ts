@@ -39,7 +39,7 @@ export function renderPreviewTrainer(trainer:Trainer,config:Config,published:boo
   for(const link of fragment.querySelectorAll<HTMLAnchorElement>('a[href^="/trainerpool/"]'))link.href=selected;
   const portrait=fragment.querySelector<HTMLAnchorElement>('.trainer-portrait')!;
   portrait.setAttribute('aria-label',`${trainer.name} – Trainerprofil ansehen`);
-  if(trainer.portrait){image(portrait.querySelector('img')!,trainer.portrait);portrait.querySelector('.image-label')!.textContent=trainer.name;}
+  if(trainer.portrait)image(portrait.querySelector('img')!,trainer.portrait);
   const button=fragment.querySelector('.trainer-copy .button span');if(button)button.textContent=trainer.name+' kennenlernen';
   for(const element of attributes(fragment,'portrait.credit')){if(trainer.portrait?.credit)element.textContent='Bildnachweis: '+trainer.portrait.credit;else element.remove();}
   for(const path of ['playingYears','coachingYears','highestDivision'] as const)for(const element of attributes(fragment,path)){
