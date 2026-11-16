@@ -1,5 +1,7 @@
 # Technische Rückfragen zu Hosting Basic — am 12. November 2026 versendet
 
+Stand 16. November: Der Nutzer bestätigt weiterhin keine inhaltliche Antwort. Die PHP-/Datenbankumsetzung ist für die geschützte, deaktivierte Umgebung getestet; offene Anbieterantworten und Entscheidungen vor echter Datenerfassung bleiben im [Hosting-Abgleich](STRATO-HOSTING-REVIEW-2026-11-16.md) und Launch-Ticket #19 ausdrücklich offen. Keine Zeitlimit-Garantie und kein zweiter eingeschränkter SQL-Benutzer sind bestätigt.
+
 Betreff: Hosting Basic: JSON-Upload-Zeitlimit und MariaDB-Benutzerrechte
 
 Mit ausdrücklicher Zustimmung des Nutzers über den angemeldeten STRATO-Kundenservice unter „Hosting und Domains“ versendet. STRATO zeigte die Eingangsbestätigung „Vielen Dank für Ihre Anfrage“; eine Vorgangsnummer wurde in der Bestätigung nicht angezeigt. Es wurden keine Zugangsdaten oder Teilnehmerdaten eingetragen. Eine technische Antwort steht aus; die Annahme-Sperren bleiben bestehen. Keine Session-URL oder Kundennummer in diese Dokumentation übernehmen.

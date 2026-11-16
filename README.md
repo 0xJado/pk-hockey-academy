@@ -1,5 +1,7 @@
 # PK Hockey Academy
 
+16 November backend review: registration processing is implemented and fictional-data tested on STRATO. [Hosting review and activation limits](docs/STRATO-HOSTING-REVIEW-2026-11-16.md) records the still-unconfirmed provider deadline/restricted-user decisions; intake/runtime remain disabled, with those decisions tracked in launch #19.
+
 The STRATO trainer-preview portrait now has actual nested Brave image acceptance. Sanity CORS permits the exact academy origin without credentials; no browser draft token is exposed. [Current preview operations and evidence](docs/STRATO-PRIVATE-PREVIEW.md) supersede the earlier missing-portrait note below.
 
 15 November hosting cutover: website delivery and the hosted Sanity trainer preview now use STRATO. The old Sanity→Vercel hook is disabled; Vercel accepted a pause request. The user explicitly approved disabling future Vercel builds and previews, and those settings have been applied. See [preview acceptance and browser limitations](docs/STRATO-PRIVATE-PREVIEW.md); extended editor checks are not all complete. Site protection, noindex and disabled intake remain in place. Vercel sections below describe the historical review setup.

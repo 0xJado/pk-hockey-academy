@@ -20,6 +20,15 @@ if(($_SERVER['HTTP_X_PK_PROBE']??'')==='slow'){$body=file_get_contents('php://in
 try{
 $path=base64_decode('${Buffer.from(paths.privatePath+'/registration/config.json').toString('base64')}',true);
 $c=json_decode(file_get_contents($path),true,16,JSON_THROW_ON_ERROR);$db=new PDO($c['dsn'],$c['username'],$c['password'],[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION]);
+$public=base64_decode('${Buffer.from(paths.publicPath).toString('base64')}',true);
+$locator=json_decode(file_get_contents($public.'/.pk-registration-location.json'),true,8,JSON_THROW_ON_ERROR);
+$private=dirname($path);$runtimeFile=realpath($locator['runtimeFile']??'');
+if(!$runtimeFile||!str_starts_with($runtimeFile,$private.'/')||str_starts_with($runtimeFile,$public.'/'))throw new RuntimeException();
+$runtime=json_decode(file_get_contents(dirname($runtimeFile).'/runtime.json'),true,8,JSON_THROW_ON_ERROR);
+$intakeFile=realpath($runtime['intakeConfig']??'');
+if(!$intakeFile||!str_starts_with($intakeFile,$private.'/')||str_starts_with($intakeFile,$public.'/'))throw new RuntimeException();
+$intake=json_decode(file_get_contents($intakeFile),true,16,JSON_THROW_ON_ERROR);
+$gates=[];foreach(['enabled','policyAccepted','staffAccepted','realDataApproved','runtimePrivilegesAccepted','requestTimeoutsAccepted'] as $gate)$gates[$gate]=$intake[$gate]??null;
 $input=fopen('php://input','rb');$nonblocking=stream_set_blocking($input,false);$inputTimeout=stream_set_timeout($input,3);fclose($input);
 preg_match('/;dbname=([a-zA-Z0-9_]+);/',$c['dsn'],$parts);$scoped=true;$grantOption=false;$admin=false;
 foreach($db->query('SHOW GRANTS')->fetchAll(PDO::FETCH_COLUMN) as $grant){
@@ -31,7 +40,7 @@ echo json_encode(['maxInputTime'=>(int)ini_get('max_input_time'),'maxExecutionTi
 'sapi'=>PHP_SAPI,'inputNonblocking'=>$nonblocking,'inputTimeout'=>$inputTimeout,'pcntlAlarm'=>function_exists('pcntl_alarm'),'userIniFile'=>ini_get('user_ini.filename'),
 'directPeerPublic'=>filter_var($_SERVER['REMOTE_ADDR']??'',FILTER_VALIDATE_IP,FILTER_FLAG_NO_PRIV_RANGE|FILTER_FLAG_NO_RES_RANGE)!==false,
 'proxyHeaderPresent'=>isset($_SERVER['HTTP_X_FORWARDED_FOR'])||isset($_SERVER['HTTP_FORWARDED']),
-'databaseScopedGrants'=>$scoped,'serverAccountAdministration'=>$admin,'grantOption'=>$grantOption,'requests'=>(int)$db->query('SELECT COUNT(*) FROM pk_staff_requests')->fetchColumn(),'claims'=>(int)$db->query('SELECT COUNT(*) FROM pk_intake_claims')->fetchColumn(),'users'=>(int)$db->query('SELECT COUNT(*) FROM pk_staff_users')->fetchColumn(),'intakePaused'=>(int)$db->query('SELECT paused FROM pk_intake_meta WHERE id=1')->fetchColumn()===1],JSON_THROW_ON_ERROR);
+'databaseScopedGrants'=>$scoped,'serverAccountAdministration'=>$admin,'grantOption'=>$grantOption,'runtimeEnabled'=>$runtime['enabled']??null,'intakeGates'=>$gates,'intakeMaintenance'=>$intake['maintenance']??null,'requests'=>(int)$db->query('SELECT COUNT(*) FROM pk_staff_requests')->fetchColumn(),'claims'=>(int)$db->query('SELECT COUNT(*) FROM pk_intake_claims')->fetchColumn(),'users'=>(int)$db->query('SELECT COUNT(*) FROM pk_staff_users')->fetchColumn(),'intakePaused'=>(int)$db->query('SELECT paused FROM pk_intake_meta WHERE id=1')->fetchColumn()===1],JSON_THROW_ON_ERROR);
 if(function_exists('opcache_invalidate'))opcache_invalidate(__FILE__,true);
 }catch(Throwable){http_response_code(503);echo '{"code":"inspection-unavailable"}';}
 `;
