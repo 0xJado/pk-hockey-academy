@@ -18,6 +18,7 @@
     "test:strato:preview:browser": "node tests/strato-preview-browser.mjs",
     "test:strato:preview:package": "node tests/integration/strato-preview-package.mjs",
     "test:strato:staff:browser": "node tests/staff-browser.mjs",
+    "test:strato:staff:enrollment": "node tests/staff-enrollment.mjs",
     "test:strato:registration:http": "node tests/registration-http.mjs",
     "test:strato:registration:browser": "node tests/registration-form-browser.mjs",
     "test:strato:audit": "node tests/site-audit.mjs",

@@ -1,0 +1,66 @@
+<?php
+declare(strict_types=1);
+// Disposable owner-operated enrollment. Not part of any permanent deployment.
+ini_set('display_errors','0');ini_set('log_errors','0');
+header('Cache-Control: private, no-store');header('X-Robots-Tag: noindex, nofollow');header('Referrer-Policy: same-origin');header('X-Content-Type-Options: nosniff');header('X-Frame-Options: DENY');
+$nonce=base64_encode(random_bytes(24));
+header("Content-Security-Policy: default-src 'none'; script-src 'nonce-$nonce'; style-src 'unsafe-inline'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
+$scope=json_decode(base64_decode('__SCOPE__',true),true,8,JSON_THROW_ON_ERROR);
+$testing=PHP_SAPI==='cli-server'&&($scope['fixture']??false)===true;
+function page(string $text,int $status=200):never{http_response_code($status);header('Content-Type: text/html; charset=utf-8');echo '<!doctype html><html lang="de"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Private Verwaltung</title><main><h1>Private Anmeldungsverwaltung</h1>'.$text.'</main></html>';exit;}
+if(time()>$scope['expires'])page('<p>Die Einrichtung ist abgelaufen. Bitte einen neuen privaten Einrichtungslink anfordern.</p>',410);
+$method=$_SERVER['REQUEST_METHOD']??'';
+if($method==='GET'){
+ header('Content-Type: text/html; charset=utf-8');
+ echo '<!doctype html><html lang="de"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Privaten Verwaltungszugang einrichten</title><style>body{font:18px system-ui;background:#eef4fa;color:#101d2e}main{max-width:620px;margin:6vh auto;padding:24px;background:white}label,input,button{display:block;margin:16px 0}input{font:inherit;max-width:100%;padding:10px}button{font:inherit;padding:12px;background:#062c80;color:white}a:focus-visible,input:focus-visible,button:focus-visible{outline:3px solid #087ed5;outline-offset:3px}</style><main><h1>Privaten Verwaltungszugang einrichten</h1><p>Persönliches Konto: <strong>pierre</strong>. Nur du oder der beauftragte Vertreter richten diesen Zugang ein.</p><p>Ein eigenes Passwort mit 16 bis 72 Zeichen wählen. Keine Zugangsdaten aus Sanity, Hosting oder Datenbank wiederverwenden.</p><p>Die Onlineanmeldung bleibt ausgeschaltet. Diese Einrichtung öffnet nur die leere, geschützte Anmeldungsverwaltung.</p><form method="post"><input type="hidden" name="setup" id="setup"><label>Neues Passwort<input name="password" type="password" autocomplete="new-password" minlength="16" maxlength="72" required></label><label>Passwort wiederholen<input name="confirm" type="password" autocomplete="new-password" minlength="16" maxlength="72" required></label><button>Privaten Zugang einrichten</button></form><p id="notice" role="status"></p></main>';
+ echo '<script nonce="'.htmlspecialchars($nonce,ENT_QUOTES).'">const p=new URLSearchParams(location.hash.slice(1));document.querySelector("#setup").value=p.get("setup")||"";history.replaceState(null,"",location.pathname);if(!document.querySelector("#setup").value){document.querySelector("button").disabled=true;document.querySelector("#notice").textContent="Bitte den vollständigen privaten Einrichtungslink öffnen."}</script></html>';
+ exit;
+}
+if($method!=='POST'){header('Allow: GET, POST');page('<p>Methode nicht erlaubt.</p>',405);}
+if(($_SERVER['HTTPS']??'')!=='on'||($_SERVER['HTTP_ORIGIN']??'')!=='https://pkhockeyacademy.de'||
+ strtolower(explode(';',$_SERVER['CONTENT_TYPE']??'')[0])!=='application/x-www-form-urlencoded'||(int)($_SERVER['CONTENT_LENGTH']??0)>2048)page('<p>Einrichtung verweigert.</p>',403);
+if(array_diff(array_keys($_POST),['setup','password','confirm'])||!is_string($_POST['setup']??null)||!hash_equals('__TOKEN_HASH__',hash('sha256',$_POST['setup'])))page('<p>Einrichtungslink ungültig.</p>',403);
+$password=$_POST['password']??null;$confirm=$_POST['confirm']??null;
+if(!is_string($password)||!is_string($confirm)||strlen($password)<16||strlen($password)>72||str_contains($password,"\0")||!hash_equals($password,$confirm))page('<p>Passwörter müssen übereinstimmen und 16 bis 72 UTF-8-Bytes lang sein. Bitte den Einrichtungslink neu öffnen.</p>',422);
+$normalize=static fn($path)=>str_replace('\\','/',$path?:'');
+$public=$normalize(realpath($scope['public']));$private=$normalize(realpath($scope['private']));$locked=false;$owner=bin2hex(random_bytes(16));$oldRuntime=$oldStaff=null;$runtimeFile=$staffFile=null;$success=false;
+try{
+ if(!$public||!$private||$private!==$scope['private']||str_starts_with($private.'/',$public.'/'))throw new RuntimeException();
+ $lock=$public.'/.pk-state/deploy.lock';if(!mkdir($lock,0700))throw new RuntimeException();$locked=true;
+ file_put_contents($lock.'/owner.json',json_encode(['id'=>$owner,'createdAt'=>gmdate('c')],JSON_THROW_ON_ERROR));
+ if(!hash_equals($scope['routerHash'],hash_file('sha256',$public.'/.htaccess')))throw new RuntimeException();
+ $outside=static function(string $path)use($private,$normalize):string{$real=$normalize(realpath($path));if(!$real||$real!==$path||is_link($path)||!str_starts_with($real,$private.'/'))throw new RuntimeException();return $real;};
+ $read=static fn(string $file)=>json_decode(file_get_contents($file),true,16,JSON_THROW_ON_ERROR);
+ $location=$read($public.'/.pk-registration-location.json');if(($location['publicRoot']??'')!==$public)throw new RuntimeException();
+ $entry=$outside($location['runtimeFile']);$runtimeFile=$outside(dirname($entry).'/runtime.json');$runtime=$read($runtimeFile);
+ if(($runtime['version']??null)!==1||($runtime['enabled']??null)!==false)throw new RuntimeException();
+ $staffFile=$outside($runtime['staffConfig']);$config=$read($staffFile);$intakeFile=$outside($runtime['intakeConfig']);$intake=$read($intakeFile);$intakeHash=hash_file('sha256',$intakeFile);
+ foreach(['enabled','policyAccepted','staffAccepted','realDataApproved','runtimePrivilegesAccepted','requestTimeoutsAccepted']as$gate)if(($intake[$gate]??null)!==false)throw new RuntimeException();
+ if(($intake['maintenance']??null)!==true||($config['enabled']??null)!==false||($config['maintenance']??null)!==true||($config['path']??'')!=='/intern/anmeldungen')throw new RuntimeException();
+ foreach(['Staff.php','Config.php']as$file)require_once $outside($runtime['staffLibrary'].'/'.$file);
+ [$config,$staff]=PK\Staff\Config::load($staffFile,$public,$testing,true);$staff->assertContract();
+ $db=new PDO($config['dsn'],$config['username'],$config['password'],[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION]);
+ foreach(['pk_staff_users','pk_staff_requests','pk_intake_claims']as$table)if((int)$db->query('SELECT COUNT(*) FROM '.$table)->fetchColumn()!==0)throw new RuntimeException();
+ if((int)$db->query('SELECT paused FROM pk_intake_meta WHERE id=1')->fetchColumn()!==1)throw new RuntimeException();
+ if(!preg_match('/\A[a-f0-9-]{36}\z/',$scope['id']))throw new RuntimeException();
+ $used=dirname($runtimeFile).'/enroll-'.$scope['id'].'.used';$marker=fopen($used,'x');if(!$marker)throw new RuntimeException();chmod($used,0600);fclose($marker);
+ $replace=static function(string $file,array $value):void{
+  $temporary=$file.'.enroll-'.bin2hex(random_bytes(8));$bytes=json_encode($value,JSON_THROW_ON_ERROR);$h=fopen($temporary,'x');if(!$h)throw new RuntimeException();
+  try{if(!chmod($temporary,0600)||fwrite($h,$bytes)!==strlen($bytes)||!fflush($h))throw new RuntimeException();}finally{fclose($h);}
+  if(!rename($temporary,$file)){unlink($temporary);throw new RuntimeException();}
+ };
+ $oldStaff=$config;$oldRuntime=$runtime;
+ $staff->setAdmin('pierre',$password);sodium_memzero($password);sodium_memzero($confirm);unset($_POST['password'],$_POST['confirm']);
+ $config['enabled']=true;$config['maintenance']=false;$config['databaseContractAccepted']=true;$replace($staffFile,$config);
+ if($testing&&($scope['failAfterStaff']??false))throw new RuntimeException('Fixture write interruption');
+ $runtime['enabled']=true;$replace($runtimeFile,$runtime);
+ if(!hash_equals($intakeHash,hash_file('sha256',$intakeFile)))throw new RuntimeException();
+ $success=true;
+}catch(Throwable){
+ if($oldRuntime!==null&&$runtimeFile!==null)try{$replace($runtimeFile,$oldRuntime);}catch(Throwable){}
+ if($oldStaff!==null&&$staffFile!==null)try{$replace($staffFile,$oldStaff);}catch(Throwable){}
+}finally{
+ if($locked){$record=json_decode(file_get_contents($lock.'/owner.json'),true);if(($record['id']??null)===$owner){unlink($lock.'/owner.json');rmdir($lock);}}
+}
+if(!$success)page('<p>Die Einrichtung wurde nicht freigegeben. Bitte die Technik kontaktieren; nicht erneut ein anderes Passwort ausprobieren.</p>',503);
+page('<p>Der Zugang <strong>pierre</strong> ist eingerichtet.</p><p><a href="/intern/anmeldungen">Zur privaten Anmeldungsverwaltung</a></p><p>Die Onlineanmeldung bleibt deaktiviert. Jetzt mit dem eben gewählten Passwort anmelden.</p>');

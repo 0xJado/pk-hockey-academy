@@ -104,6 +104,10 @@ jobs:
           PK_PHP_EXECUTABLE: php
           PK_BROWSER_CHANNEL: ''
         run: npm run test:strato:staff:browser --prefix web
+      - name: Test owner enrollment without enabling registration
+        env:
+          PK_PHP_EXECUTABLE: php
+        run: npm run test:strato:staff:enrollment --prefix web
       - name: Build and verify optional PHP preview package
         run: npm run test:strato:preview:package --prefix web
       - name: Test isolated PHP preview browser flow
