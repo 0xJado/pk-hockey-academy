@@ -1,8 +1,9 @@
 // Complete local form → actual PHP intake → encrypted fixture → staff read.
 // The extra route exists only with tests/fixtures/registration.config.mjs.
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
 import { spawn, spawnSync } from 'node:child_process';
-import { mkdir, mkdtemp, open, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, open, readFile, writeFile } from 'node:fs/promises';
 import { createServer } from 'node:net';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
@@ -114,6 +115,18 @@ try {
  check(await page.locator('h1').count()===1,'history returns without duplicated form markup');
  // Public route remains disabled, including if JS is available.
  await page.goto(origin+'/anmeldung');check(await page.locator('[name=childName]').isDisabled(),'public form remains disabled');
+ const printable=JSON.parse(await readFile(new URL('../../shared/registration-print-manifest.json',import.meta.url),'utf8'));
+ const printLink=page.getByRole('link',{name:'Trainingsanfrage als PDF',exact:true});
+ const printResponse=await context.request.get(origin+await printLink.getAttribute('href'));
+ check(printResponse.ok()&&printResponse.headers()['content-type'].includes('application/pdf')&&createHash('sha256').update(await printResponse.body()).digest('hex')===printable.sha256,'matching PDF downloads as the verified policy-bound file');
+ const sourceResponse=await context.request.get(origin+await page.getByRole('link',{name:'Originalvorlage v2 ansehen',exact:true}).getAttribute('href'));
+ check(sourceResponse.ok()&&createHash('sha256').update(await sourceResponse.body()).digest('hex')==='5ad3b2845008b09213280653fda49d6fb15882a4ddbfcb0ca975dc664162bff9','original PDF remains separately linked and unchanged');
+ check((await page.locator('.registration-download').innerText()).includes('noch nicht freigegeben'),'paper download does not activate genuine hand-in');
+ for(const width of [1440,768,375]){
+   await page.setViewportSize({width,height:1000});await page.evaluate(()=>document.fonts.ready);
+   check(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'public PDF/sidebar layout fits '+width);
+ }
+ await page.screenshot({path:directory+'/public-downloads-375.png',fullPage:true});
  const noJs=await browser.newContext({javaScriptEnabled:false});const staticPage=await noJs.newPage();
  await staticPage.goto(origin+'/__registration-fixture');check(await staticPage.locator('[name=childName]').isDisabled(),'no-JS cannot submit');await noJs.close();
  check(errors.length===0,'no browser runtime errors');

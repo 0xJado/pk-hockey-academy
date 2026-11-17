@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "policyVersion": "registration-request-v1-2026-11-11",
+  "policySha256": "52f0914402f8019671bdf2987d37c82df5f9a127c0fd8565f81e4e08337fc260",
+  "filename": "PK-Hockey-Academy-Trainingsanfrage-v1.pdf",
+  "pages": 2,
+  "sizeBytes": 6237,
+  "sha256": "08812f58e40371525b1b775887690766901f70dfe32909a2e2b19e33d7a142d4",
+  "fields": [
+    "childName",
+    "birthYear",
+    "team",
+    "position",
+    "experience",
+    "guardianName",
+    "guardianPhone",
+    "guardianEmail",
+    "emergencyName",
+    "emergencyPhone",
+    "pickupPersons",
+    "bookingType",
+    "healthNotes",
+    "guardianAuthority"
+  ],
+  "consentPurposes": [
+    "health",
+    "website",
+    "print",
+    "analysis"
+  ],
+  "draft": true,
+  "fillable": false
+}

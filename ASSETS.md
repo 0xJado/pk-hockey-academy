@@ -1,5 +1,11 @@
 # Asset provenance
 
+## Matching printable training request - 17 November 2026
+
+`web/public/downloads/PK-Hockey-Academy-Trainingsanfrage-v1.pdf` is a new two-page A4 blank print companion generated from the adopted minimal request policy by `web/scripts/generate-registration-print.py`. It uses the academy name, original simple line/checkbox layout and PDF standard Helvetica; no third-party photo, new logo or personal data. All four consent paragraphs, health hint and authority statement are checked against extracted PDF text. Both pages were rendered with Poppler and visually inspected. It is a handwriting template, not a fillable/tagged-PDF accessibility certification or legal/intake approval. Both pages visibly prohibit genuine-data hand-in pending activation.
+
+The policy/file hashes and page/field metadata are in `shared/registration-print-manifest.json`; the unit check rejects policy/file drift. The supplied v2 source stays unchanged at its original download URL and is now explicitly a reference rather than the matching minimal request. No invented liability, insurance, payment, signature or package terms are added.
+
 ## Subpage contour and hockey equipment accents — 7 November 2026
 
 The final skate revision uses a side-on hockey boot with a forward tongue, reinforced quarter, rounded toe cap, thin outsole, two mounting towers, blade holder and rockered steel runner. It is original generic vector artwork, with no product branding or third-party tracing.

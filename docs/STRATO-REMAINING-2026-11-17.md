@@ -37,6 +37,8 @@ Sanity's current general terms incorporate its DPA, but account/order-specific t
 
 The STRATO support reply already confirms Basic's provider-managed upstream body buffering and single assigned database identity. No repeated support request, server/WAF purchase, DNS modification or false hard-timeout guarantee is needed. Operational reconciliation remains before real intake; the two corresponding machine flags remain false.
 
+Fresh direct TLS validation succeeded for both root and www with hostname verification enabled. Both currently present a certificate valid through **6 May 2027, 23:59:59 UTC**. Pierre retains the STRATO account/package/domain and certificate-renewal responsibility; actual renewal settings must be checked at the next authenticated portal review. Current validity does not prove future automatic renewal. [STRATO certificate lifecycle guidance](https://www.strato.de/faq/domains/gueltigkeit-von-strato-ssl-zertifikaten/).
+
 ## Delivery and final host evidence
 
 Protected publishing run [43982496530](https://github.com/0xJado/pk-hockey-academy/actions/runs/43982496530) **passed** for `a8b9964`, activating **2026-11-16t23-49-45-148z-db13ec7c**. SFTP readback confirms this active release and no deployment lock.
@@ -50,3 +52,9 @@ The expanded route/SEO audit initially reported the `/404.html` canonical alias 
 The content review also corrected the training page's obsolete promise of future contact options: the Academy already has its confirmed contact route. This is a factual wording correction, not a new response-time or booking-policy promise. Local Astro check remained at zero diagnostics and the subsequent static build verified 130 files in its default package; production CI independently includes the enabled private-preview package.
 
 No ticket is closed by this report alone. All genuine-data and public-launch controls remain independent of source/schema publication.
+
+## Paper consistency gap resolved independently
+
+Added a new, clearly marked two-page A4 print companion matching the accepted minimal request; see [printable generation/verification](REGISTRATION-PRINTABLE.md). All four consent paragraphs, authority confirmation and health hint were verified from actual extracted PDF text. Both rendered pages were inspected after the final layout, including repeated child/contact identifiers on the consent sheet. It is a handwriting draft, not a fillable/tagged-PDF certification. The supplied original v2 remains byte-identical and separately linked as a reference. The new companion adds no blanket insurance/liability/payment terms, child address, second parent or signature requirement.
+
+The manifest binds the PDF bytes and semantic policy version/hash, and a new unit check rejects policy/file drift. Website checks now pass **90 unit tests**, zero Astro diagnostics and a **131-file** default static export. The expanded fictional browser/PHP suite passed **44 checks**, including both actual PDF downloads/checksums, draft hand-in warning and public sidebar overflow at all three viewports. The new artifact resolves the former online/primary-paper text mismatch; safe paper hand-in and actual-device/manual assistive-technology acceptance still remain before genuine use. No registration or paper collection was enabled.

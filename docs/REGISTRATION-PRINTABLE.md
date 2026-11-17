@@ -1,0 +1,11 @@
+# Matching printable request
+
+17 November 2026: added a two-page A4 paper companion to the adopted minimal online request. The primary PDF buttons on `/anmeldung` use `PK-Hockey-Academy-Trainingsanfrage-v1.pdf`. The original supplied v2 remains byte-identical and separately linked as a reference; its additional declarations are not silently adopted or overwritten.
+
+The companion includes the same child/year, primary contact, booking choice and conditional genuine-session reference, optional additional care contacts/experience/position, guardian-authority confirmation and four independent optional consents. It omits the same address/second-parent/blanket liability/insurance/medical declarations. Page 2 repeats the child/contact names solely to keep the consent sheet associated with page 1. No drawn signature, automatic booking, payment or receipt is implied. The policy version appears on both pages. Every page visibly says the draft is not for genuine data; safe paper hand-in remains to be accepted separately.
+
+Generation reads `hosting/strato/registration/policy.v1.json`, checks the explicit printed field set, copies the actual consent/authority/health text, creates the PDF with standard fonts and then uses pypdf to verify the extracted paragraphs, two A4 pages and absence of form fields/annotations/open actions. The manifest binds semantic policy and PDF hashes. `web/tests/registration-print.test.mjs` detects either policy or file drift and verifies the original source checksum as well. It does not claim a manual screen-reader or physical-printer test.
+
+Regenerate locally with Python and the pinned `web/scripts/requirements-print.txt`, then run `python web/scripts/generate-registration-print.py`. Output is initially under ignored `output/pdf/`; render both pages with Poppler and inspect them before copying the PDF to `web/public/downloads/`. The script updates the manifest. Run the website tests/check/build afterward. Python is a local authoring tool; production still requires only static files/PHP, with no added service or dependency.
+
+The generator intentionally refuses an activated policy. Before genuine paper intake, explicitly reconcile paper hand-in, legal/operational acceptance and pre-launch notices with #15/#17/#19, then review a new final artifact. No activation flag is changed by generating or downloading this draft.
