@@ -13,8 +13,12 @@ const authentication=credentials?{httpCredentials:{username:credentials.STRATO_P
 const root=fileURLToPath(new URL('../../',import.meta.url)),directory=resolve(root,'output/strato/public'),output=resolve(root,'output/playwright/'+(remote?'full-site-audit-host':'full-site-audit'));
 await mkdir(output,{recursive:true});
 async function htmlFiles(path){const result=[];for(const entry of await readdir(path,{withFileTypes:true})){const name=resolve(path,entry.name);if(entry.isDirectory())result.push(...await htmlFiles(name));else if(entry.name.endsWith('.html'))result.push(name);}return result;}
-const routes=(await htmlFiles(directory)).filter(file=>!relative(directory,file).replaceAll('\\','/').startsWith('api/')).map(file=>'/'+relative(directory,file).replaceAll('\\','/').replace(/index\.html$/,'').replace(/\/$/,'')).map(route=>route||'/');
-const server=remote?{origin:remote,close:async()=>{}}:await staticReviewServer(directory);let browser;let checks=0;const findings=[],seenLinks=new Set(),screenshots=[];
+const allRoutes=(await htmlFiles(directory)).filter(file=>!relative(directory,file).replaceAll('\\','/').startsWith('api/')).map(file=>'/'+relative(directory,file).replaceAll('\\','/').replace(/index\.html$/,'').replace(/\/$/,'')).map(route=>route||'/');
+// Focused diagnosis uses the same assertions; the full audit remains the default.
+const selectedRoute=process.env.PK_SITE_AUDIT_ROUTE;
+if(selectedRoute)assert.ok(allRoutes.includes(selectedRoute),'Unknown audit route');
+const routes=selectedRoute?[selectedRoute]:allRoutes;
+const server=remote?{origin:remote,close:async()=>{}}:await staticReviewServer(directory);let browser;let checks=0;const findings=[],seenLinks=new Set(),screenshots=[],titles=new Set(),descriptions=new Set();
 function check(value,label){checks++;if(!value)findings.push(label);}
 try{
  browser=await chromium.launch({headless:true,...(process.env.PK_BROWSER_CHANNEL?{channel:process.env.PK_BROWSER_CHANNEL}:{})});
@@ -29,8 +33,16 @@ try{
   await page.evaluate(()=>document.fonts.ready);
   check(await page.locator('h1').count()===1,'exactly one h1 '+route);
   check(await page.locator('html').getAttribute('lang')==='de','German document '+route);
-  check(Boolean(await page.title()),'title '+route);
-  check(Boolean(await page.locator('meta[name=description]').getAttribute('content')),'description '+route);
+  const title=await page.title(),description=await page.locator('meta[name=description]').getAttribute('content');
+  check(Boolean(title)&&!titles.has(title),'unique title '+route);titles.add(title);
+  check(Boolean(description)&&!descriptions.has(description),'unique description '+route);descriptions.add(description);
+  if(remote){
+   const canonical=await page.locator('link[rel=canonical]').getAttribute('href');
+   // Astro exports its /404 route as 404.html; its logical canonical is /404.
+   const canonicalPath=route==='/404.html'?'/404':route;
+   check(Boolean(canonical)&&new URL(canonical).origin===remote&&new URL(canonical).pathname.replace(/\/$/,'')===canonicalPath.replace(/\/$/,''),'production canonical '+route);
+   check(await page.locator('meta[property="og:url"]').getAttribute('content')===canonical,'social URL matches canonical '+route);
+  }
   check((await page.locator('meta[name=robots]').getAttribute('content')).includes('noindex'),'protected indexing '+route);
   const duplicateIds=await page.evaluate(()=>{const ids=[...document.querySelectorAll('[id]')].map(e=>e.id);return ids.filter((id,index)=>ids.indexOf(id)!==index);});
   check(duplicateIds.length===0,'duplicate IDs '+route+': '+duplicateIds.join(','));
@@ -42,15 +54,22 @@ try{
   const links=await page.locator('a[href]').evaluateAll(links=>links.map(link=>link.getAttribute('href')));
   for(const href of links)if(href.startsWith('/')&&!href.startsWith('//'))seenLinks.add(new URL(href,server.origin).pathname);
   for(const width of [1440,768,375]){
-   await page.setViewportSize({width,height:1000});await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
-   check(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'overflow '+route+' '+width);
+   await page.setViewportSize({width,height:1000});
+   await page.evaluate(()=>document.fonts.ready);
+   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+   const overflow=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth,
+    elements:[...document.querySelectorAll('body *')].filter(element=>{
+      const box=element.getBoundingClientRect();return box.width>0&&(box.right>innerWidth+1||box.left<-1);
+    }).slice(0,12).map(element=>({tag:element.tagName,class:element.className,left:Math.round(element.getBoundingClientRect().left),right:Math.round(element.getBoundingClientRect().right)}))}));
+   check(overflow.scroll<=width,'overflow '+route+' '+width+': '+JSON.stringify(overflow));
   }
-  if(['/','/trainingstermine','/anmeldung','/kontakt','/datenschutz','/impressum'].includes(route)){
+  if(selectedRoute||['/','/trainingstermine','/anmeldung','/kontakt','/datenschutz','/impressum'].includes(route)){
    const name=(route==='/'?'start':route.slice(1).replaceAll('/','-'))+'-375.png';await page.screenshot({path:resolve(output,name),fullPage:true});screenshots.push(name);
   }
  }
  console.log('Checking '+seenLinks.size+' internal routes/assets');
  for(const link of seenLinks){if(link.startsWith('/api/')||link.startsWith('/intern/'))continue;const response=await fetch(server.origin+link,{signal:AbortSignal.timeout(20000),headers:credentials?{Authorization:'Basic '+Buffer.from(credentials.STRATO_PREVIEW_USERNAME+':'+credentials.STRATO_PREVIEW_PASSWORD).toString('base64')}:undefined});check(response.ok,'broken internal link '+link);await response.body?.cancel();}
+ if(!selectedRoute){
  await page.goto(server.origin+'/');
  const menu=page.locator('[data-mobile-menu]');
  await menu.locator('summary').click();check(await menu.evaluate(element=>element.open),'mobile menu opens');await page.keyboard.press('Escape');check(await menu.evaluate(element=>!element.open),'mobile menu closes with Escape');
@@ -65,7 +84,8 @@ try{
   if(route==='/anmeldung')check(await staticPage.locator('[name=childName]').isDisabled(),'no-JS disabled registration');
  }
  await noJs.close();
- const report={passed:findings.length===0,routes:routes.length,viewports:[1440,768,375],checks,findings,screenshots,source:remote?'actual protected STRATO host; no participant/staff records accessed':'current local STRATO artifact; real host and visual IAB acceptance reported separately',realDataUsed:false};
- await writeFile(resolve(output,'result.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report));
+ }
+ const report={passed:findings.length===0,routes:routes.length,scope:selectedRoute?'focused route; excludes footer/history/no-JS suite':'full site',viewports:[1440,768,375],checks,findings,screenshots,source:remote?'actual protected STRATO host; no participant/staff records accessed':'current local STRATO artifact; real host and visual IAB acceptance reported separately',realDataUsed:false};
+ await writeFile(resolve(output,selectedRoute?'focused-result.json':'result.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report));
  assert.equal(findings.length,0,'Site audit found issues; see output/playwright/full-site-audit/result.json');
 }finally{await browser?.close();await server.close();}

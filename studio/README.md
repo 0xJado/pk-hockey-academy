@@ -14,6 +14,8 @@ Hosted **Website bearbeiten** now uses the protected STRATO PHP preview. See [cu
 
 ## Ownership and first account setup
 
+Read-only account check, 17 November: currently Growth Trial with automatic downgrade to Free, one Administrator and no pending invitations; no paid upgrade was made. The accepted public-dataset/single-owner implementation must remain within the intended Free scope. Current account/recovery/token evidence and remaining handoff are in [the migration review](../docs/STRATO-REMAINING-2026-11-17.md).
+
 The STRATO preview needs the exact `https://pkhockeyacademy.de` Sanity CORS origin **without credentials** so framed public asset requests are accepted. Configure with `sanity cors add https://pkhockeyacademy.de --no-credentials --yes` only for the existing academy project. This grants no browser draft-token access; PHP continues to read drafts privately. Verify natural portrait loading inside the nested preview, not only a direct image tab.
 
 The user confirmed on 25 October 2026 that Pierre should own the academy's Sanity project; the user is its developer. The developer has now created the account/project using Pierre's new academy email. This workstation's CLI is authenticated using native email/password sign-in, and the real public `production` dataset is configured in ignored local environment files. A single Pierre-owned account is sufficient; technical setup needs authorized account access, while code development needs no Sanity seat. A separate developer account remains optional. The German [owner setup guide](OWNER-SETUP.md) covers the initial steps.

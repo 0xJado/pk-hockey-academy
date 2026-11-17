@@ -2,6 +2,8 @@
 
 ## Current production boundary — 17 November 2026
 
+Actual management inspection on 17 November shows Growth Trial with automatic downgrade to Free, one Administrator, zero pending invitations, and one deliberately public production dataset. This corrects older shorthand calling the present plan Free. No upgrade, invitation or membership change was made. Two Viewer tokens exist: annual Hosted Visual Editing expires 30 October 2027; a second non-expiring read-only token was recently used and requires consumer identification before consolidation/revocation. Do not assume it belongs only to retired Vercel. Native account recovery/MFA have not been performed by this read-only check.
+
 The STRATO PHP preview and automatic STRATO publishing are accepted (#10/#11); Vercel is retired. Private registrations use the separate STRATO PHP/MariaDB staff service, never Google Sheets or Sanity. The historical setup observations below do not authorize recreating the old integration. Use [the current operator guide](../docs/PIERRE-SETUP.md). Account recovery/MFA and actual additional-member tests remain unverified; do not remove the sole owner or send a test invitation without a concrete need. Optional additional members are not a requirement for the accepted single-owner launch scope.
 
 The implementation uses native Sanity authentication and Content Lake grants. It has no shared password, custom login service, public write token or visitor account system. Local code and mock tests cannot provision a real project or prove live account access.

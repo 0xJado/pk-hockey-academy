@@ -2,7 +2,7 @@
 
 Readiness checked 16 November 2026. This completes technical preparation, not personal credential setup or operator acceptance. #14 remains open for the named person/delegate to complete that work.
 
-17 November: the user confirmed **“I’ll act as delegate.”** Operator identity is resolved; do not ask this again. The user then signed off for independent work. No private password was entered, no enrollment helper was staged and no production account was created. Full hosted quality run [43958735607](https://github.com/0xJado/pk-hockey-academy/actions/runs/43958735607) passed, including the 30-check fictional enrollment suite. Prepare the expiring enrollment page only when the delegate returns, then perform the remaining canonical login/logout and operating handoff.
+17 November: the user confirmed **“I’ll act as delegate.”** Operator identity is resolved; do not ask this again. The user then signed off for independent work. Full hosted quality run [43958735607](https://github.com/0xJado/pk-hockey-academy/actions/runs/43958735607) passed, including the 30-check fictional enrollment suite. Actual STRATO preparation was subsequently verified: protected GET/no-store, anonymous denial and wrong-token rejection; the helper was immediately removed and its 404 verified. No password was entered and no production account was created. No enrollment link remains active. Prepare a fresh expiring page when the delegate returns, then perform canonical login/logout and operating handoff.
 
 ## Ready
 

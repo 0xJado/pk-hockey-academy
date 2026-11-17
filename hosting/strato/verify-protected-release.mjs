@@ -41,9 +41,11 @@ try {
   check(!/Google Sheet|Google-Tabelle|spielerplus\.de/i.test(registration.body),'registration has no retired submission dependency');
   const robots=await request('/robots.txt');
   check(robots.response.status===200&&/^Disallow:\s*\/\s*$/m.test(robots.body),'robots disallows crawling');
-  const sitemap=await request('/sitemap-index.xml');
-  check([403,404].includes(sitemap.response.status)||
-    (sitemap.response.status===200&&!/<loc>/i.test(sitemap.body)),'no public sitemap published before launch');
+  for(const path of ['/sitemap.xml','/sitemap-index.xml']) {
+    const sitemap=await request(path);
+    check([403,404].includes(sitemap.response.status)||
+      (sitemap.response.status===200&&!/<loc>/i.test(sitemap.body)),'no indexed URLs exposed through '+path);
+  }
   for(const path of ['/.env','/.env.local','/.git/config','/.pk-registration-location.json','/.pk-state/',
     '/.pk-releases/'+release+'/manifest.json','/api/preview-lib/Preview.php','/node_modules/',
     '/src/','/manifest.json','/previous.json','/private/']) {

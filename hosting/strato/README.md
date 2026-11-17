@@ -47,7 +47,7 @@ Every uploaded file is read back. After one atomic SFTP rename of the routing fi
 | `output/strato/public/` | Generated static site plus PHP, ignored by Git |
 | Private STRATO directory | Review/preview credentials and disabled registration database configuration, keys and journal outside the public root |
 
-`npm run build` retains the existing local Node/Vercel review adapter and original route URLs. A PHP private-preview candidate is now deployed and standalone-tested on STRATO, while hosted Studio remains connected to Vercel. The optional `STRATO_PRIVATE_PREVIEW_ENABLED=true` package uses private PHP configuration and the existing Astro components/native editing controller; no Node runtime is injected. Default builds still exclude it. See [private-preview operations and pending Studio acceptance](../../docs/STRATO-PRIVATE-PREVIEW.md). Keep the existing preview destination and publication hook until their separate acceptance gates pass.
+`npm run build` retains separate local Node/legacy Vercel build modes. Production and hosted Studio use the accepted STRATO PHP preview. The `STRATO_PRIVATE_PREVIEW_ENABLED=true` production package uses private PHP configuration and existing Astro components/native editing controller; no Node runtime is injected. See [current private-preview operations](../../docs/STRATO-PRIVATE-PREVIEW.md). Vercel and its old publication hook remain retired.
 
 ## PHP boundary
 

@@ -4,14 +4,14 @@ Confirmed by the user on 6 November 2026. This supersedes earlier Google Sheets 
 
 Execution tracker: [STRATO migration and webapp launch #7](https://github.com/0xJado/pk-hockey-academy/issues/7). Native sub-issues #8–#19 cover hosting, first deployment, automated publishing, private preview, registration policy/backend/staff/form, editorial acceptance, legal/content/SEO, interview scope and final launch. Their checklists distinguish implementation from evidence and owner approvals. First step: [configure protected production hosting #8](https://github.com/0xJado/pk-hockey-academy/issues/8).
 
-Current increment, 8 November 2026: #8/#9 are complete; #10 automation awaits its GitHub dispatch token and activation. A PHP private-preview candidate (#11) is deployed and standalone-tested on STRATO with no Node runtime. The hosted Studio destination and existing review host remain unchanged until in-Studio acceptance. See [private preview scope, security and remaining checks](STRATO-PRIVATE-PREVIEW.md). This does not approve public launch or activate registrations.
+Current state, 17 November 2026: #8–#13 and #18 are complete within their recorded scope. STRATO serves the protected site and private PHP trainer preview; automatic Sanity publishing is accepted. Vercel is retired. Private PHP/MariaDB registration/staff processing exists and is fictional-data tested, with all genuine-data gates disabled. #14–#17 and #19 retain personal handoff, remaining content/provider/accessibility acceptance and explicit launch/intake decisions. Use [current operator instructions](PIERRE-SETUP.md); dated observations below preserve earlier migration evidence rather than current setup tasks.
 
 ## Ownership and boundaries
 
 - Updated decision, 7 November 2026: use **one STRATO production environment at `pkhockeyacademy.de`**, temporarily password-protected for server acceptance. No separate staging domain, QA subdomain or wildcard upgrade is required. Remove temporary protection only after explicit launch acceptance. Astro/npm stay as local/CI build tools and Sanity stays the existing CMS.
 
 - Pierre already pays for STRATO Hosting Basic. Browser inspection showed 100 GB of empty webspace, allowance for 25 databases, three academy domains and an unassigned free included single-domain SSL certificate.
-- Production should use Pierre's STRATO account. The current Vercel account belongs to the developer and remains the protected review host until cutover.
+- Production uses Pierre's STRATO account. The developer-owned Vercel review project has been retired; do not restore it as the default.
 - Keep Astro and the existing design. Build public pages outside the web server and deploy static output to STRATO.
 - Keep Sanity's public dataset for public website content. Native drafts still require authentication; public assets are not private storage. Do not migrate the editorial CMS or place registration/health/consent records in it.
 - Abandon Google Sheets as the registration destination. Use a private STRATO MySQL/MariaDB database with a PHP backend. One database should initially suffice; actual engine/version and limits need verification.
