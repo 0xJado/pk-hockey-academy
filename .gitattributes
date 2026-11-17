@@ -1,0 +1,2 @@
+# Preserve PDF bytes and their policy/source checksums on every checkout.
+*.pdf binary
