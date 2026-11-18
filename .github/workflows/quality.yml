@@ -46,6 +46,10 @@ jobs:
           cache-dependency-path: |
             web/package-lock.json
             studio/package-lock.json
+      - name: Exercise public routing on loopback Apache
+        run: |
+          test -x /usr/sbin/apache2 || (sudo apt-get update && sudo apt-get install -y apache2-bin)
+          node hosting/strato/tests/apache-public-router.mjs
       - name: Install website dependencies
         run: npm ci --prefix web
       - name: Install Studio dependencies
@@ -60,10 +64,6 @@ jobs:
         run: npm run review:registration --prefix web -- --check
       - name: Test STRATO release failure and rollback guards
         run: node --test hosting/strato/tests/*.test.mjs
-      - name: Exercise public routing on loopback Apache
-        run: |
-          test -x /usr/sbin/apache2 || (sudo apt-get update && sudo apt-get install -y apache2-bin)
-          node hosting/strato/tests/apache-public-router.mjs
       - name: Check Studio types
         run: npm run check --prefix studio
       - name: Test Studio
