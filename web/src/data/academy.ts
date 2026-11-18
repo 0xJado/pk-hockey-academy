@@ -6,7 +6,7 @@ import type {
   Venue,
 } from "../types/content.ts";
 import { pierreProfile } from "../../../shared/pierre-profile.ts";
-import { legalProvider } from "./legal";
+import { legalProvider } from "./legal.ts";
 
 export const settings: SiteSettings = {
   brandName: "PK Hockey Academy",
