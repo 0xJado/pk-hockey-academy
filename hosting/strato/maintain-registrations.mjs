@@ -4,7 +4,7 @@ import {readFile,writeFile} from 'node:fs/promises';
 import {settings,connect,privateRoot} from './lib/sftp.mjs';
 import {SftpReleaseStore} from './lib/release-store.mjs';
 import {withReleaseLock} from './lib/releases.mjs';
-import {activeRelease,authLayer} from './lib/release-router.mjs';
+import {activeRelease,isPublicRouter,verifyOperatorLayer} from './lib/release-router.mjs';
 import {sha256} from './lib/artifact.mjs';
 let connection,step='local_setup';
 try{
@@ -17,10 +17,12 @@ try{
  for(const[key,value]of Object.entries({TOKEN_HASH:sha256(token),SCOPE:Buffer.from(JSON.stringify({public:paths.publicPath,private:paths.privatePath,hash:sha256(JSON.stringify(sources)).slice(0,24)})).toString('base64'),SOURCES:Buffer.from(JSON.stringify(sources)).toString('base64')}))helper=helper.replace('__'+key+'__',value);
  step='sftp';connection=await connect();const store=new SftpReleaseStore(connection.call);let result;
  await withReleaseLock(store,async()=>{
-  const router=await store.get('.htaccess');authLayer(router.toString());const release=activeRelease(router.toString());assert.notEqual(release,'legacy');
-  const name='pk-maintenance-'+randomUUID()+'.php',remote='.pk-releases/'+release+'/api/'+name,url='https://pkhockeyacademy.de/api/'+name;
+  const router=await store.get('.htaccess');verifyOperatorLayer(router.toString());const release=activeRelease(router.toString());assert.notEqual(release,'legacy');
+  const name='pk-maintenance-'+randomUUID(),remote='.pk-releases/'+release+'/api/'+name+'.php';
+  const url='https://pkhockeyacademy.de'+(isPublicRouter(router.toString())?'/redaktion/'+name:'/api/'+name+'.php');
   const authorization='Basic '+Buffer.from(env.STRATO_PREVIEW_USERNAME+':'+env.STRATO_PREVIEW_PASSWORD).toString('base64');
   try{
+   step='access_check';const anonymous=await fetch(url,{redirect:'manual',signal:AbortSignal.timeout(10000)});await anonymous.body?.cancel();assert.equal(anonymous.status,401);
    step='helper_upload';await store.put(remote,Buffer.from(helper));assert.equal(sha256(await store.get(remote)),sha256(helper));
    step='maintenance';const response=await fetch(url,{method:'POST',redirect:'manual',headers:{Authorization:authorization,'X-PK-Setup-Token':token},signal:AbortSignal.timeout(60000)});
    assert.equal(response.status,200);result=await response.json();assert.equal(result.completed,true);

@@ -24,6 +24,8 @@ try {
   await writeFile(join(release,'index.html'),'academy homepage');
   await writeFile(join(release,'api','editor.php'),'editor fixture');
   await writeFile(join(release,'api','requests.php'),'staff fixture');
+  const maintenance='pk-maintenance-00000000-0000-0000-0000-000000000000';
+  await writeFile(join(release,'api',maintenance+'.php'),'maintenance fixture');
   await writeFile(join(dir,'users'),'review:{SHA}'+createHash('sha1').update('fictional').digest('base64')+'\n');
   const guard='AuthUserFile "'+join(dir,'users')+'"\nRequire valid-user\n';
   await writeFile(join(web,'.htaccess'),renderRouter(guard,id,['index.html','api/editor.php','api/requests.php'].map(path=>({path})),{publicLaunch:true}));
@@ -55,7 +57,8 @@ try {
   assert.equal(first?.status,200,'Anonymous homepage');
   assert.equal(first.body,'academy homepage');
   for(const [path,status,authorized] of [['/intern/anmeldungen',200,false],['/redaktion/verbinden',401,false],
-    ['/redaktion/verbinden',200,true],['/api/editor.php',403,false],['/.pk-state/',403,false],
+    ['/redaktion/verbinden',200,true],['/redaktion/'+maintenance,401,false],['/redaktion/'+maintenance,200,true],
+    ['/api/'+maintenance+'.php',403,false],['/api/editor.php',403,false],['/.pk-state/',403,false],
     ['/.pk-releases/'+id+'/index.html',403,false]])assert.equal((await request(path,authorized)).status,status,path);
   apache.kill();await exited;
   console.log('Apache public routing and protected editor checks passed.');

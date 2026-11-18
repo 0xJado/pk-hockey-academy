@@ -29,6 +29,10 @@ function publicLayer(configuration) {
     '  Require expr "%{HTTP_HOST} =~ m#^(?:www\\.)?pkhockeyacademy\\.de$#i && %{REQUEST_URI} !~ m#^/(?:redaktion(?:/|$)|api/preview(?:/|$))#i"',
     '</RequireAny>','<FilesMatch "^\\.">','  Require all denied','</FilesMatch>',''].join('\n');
 }
+export function verifyOperatorLayer(configuration) {
+  if(!isPublicRouter(configuration))return authLayer(configuration);
+  assert.equal(configuration.split(ROUTER_MARKER)[0].trimEnd(),publicLayer(configuration).trimEnd(),'Unexpected public access rules');
+}
 export function renderRouter(authentication,id,inventory,{publicLaunch=false}={}) {
   assert.ok(releaseId(id),'Invalid release identifier');
   assert.ok(inventory.every(file=>publicPath(file.path)),'Unsafe release inventory');
@@ -51,6 +55,7 @@ export function renderRouter(authentication,id,inventory,{publicLaunch=false}={}
       `RewriteRule ^api/registration(?:/token)?/?$ ${prefix}api/requests.php [END]`,
       `RewriteRule ^intern/anmeldungen/?$ ${prefix}api/requests.php [END]`,
     ] : [`RewriteRule ^api/registration/?$ ${prefix}api/registration.php [END]`]),
+    ...(publicLaunch?[`RewriteRule ^redaktion/(pk-maintenance-[a-f0-9-]{36})$ ${prefix}api/$1.php [END]`]:[]),
     ...(preview?[`RewriteRule ^(?:api/preview/enable|redaktion/(?:verbinden|trainerpool|daten|abmelden))/?$ ${prefix}api/editor.php [END]`]:[]),
     `RewriteRule ^(?:api/preview(?:/.*)?|redaktion(?:/.*)?)$ ${prefix}api/preview-unavailable.php [END]`,
     `RewriteRule ^$ ${prefix}index.html [END]`];

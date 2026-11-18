@@ -2,7 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {deployRelease,rollbackRelease,withReleaseLock} from '../lib/releases.mjs';
 import {sha256,validateArtifact,publicPath} from '../lib/artifact.mjs';
-import {activeRelease,ROUTER_MARKER,renderRouter} from '../lib/release-router.mjs';
+import {activeRelease,ROUTER_MARKER,renderRouter,verifyOperatorLayer} from '../lib/release-router.mjs';
 
 const auth='AuthType Basic\nAuthName "Review"\nAuthUserFile "/private/review"\nRequire valid-user\nHeader always set X-Robots-Tag "noindex, nofollow"\n';
 const original=auth+ROUTER_MARKER+'RewriteEngine On\n';
@@ -63,6 +63,8 @@ test('public cutover requires a public registration artifact and restores the re
   await deployRelease(store,candidate,{publicLaunch:true,id:'release-live-one'});
   const first=(await store.get('.htaccess')).toString();
   assert.match(first,/^# PK PUBLIC WEBSITE/);
+  verifyOperatorLayer(first);
+  assert.throws(()=>verifyOperatorLayer(first.replace('Require valid-user','Require all granted')));
   assert.ok(first.includes('AuthUserFile "/private/review"'));
   assert.ok(first.includes('api/preview'));
   assert.ok(!first.includes('Header always set X-Robots-Tag'));
