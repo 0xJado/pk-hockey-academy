@@ -526,10 +526,8 @@ try {
     );
     assert.equal(await plain.locator("main form").count(), 0);
     assert.equal(
-      await plain
-        .locator('main a[href*="wa.me"], main a[href^="tel:"]')
-        .count(),
-      0,
+      await plain.locator('main a[href*="wa.me"]').getAttribute("href"),
+      "https://wa.me/4915128790537",
     );
     await noJS.close();
     await runInterviewJourneys(page, context, origin, output);

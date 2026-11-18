@@ -42,11 +42,15 @@ export async function verifyStrato(output=new URL('../../output/strato/',import.
       sha256: createHash("sha256").update(bytes).digest("hex") };
   }));
   inventory.sort((a, b) => a.path.localeCompare(b.path, "en"));
+  const registrationPage = await readFile(resolve(root, "anmeldung/index.html"), "utf8");
+  const formState = registrationPage.match(/<[^>]+\bdata-training-request\b[^>]*\bdata-enabled="(true|false)"/);
+  assert.ok(formState, "Missing registration form activation state");
   await writeFile(new URL('READY.json',output), JSON.stringify({
     schemaVersion: 1, target: "strato", files: files.length, inventory,
     contentHash: createHash("sha256").update(JSON.stringify(inventory)).digest("hex"),
     verifiedAt: new Date().toISOString(),
-    registration: "inactive", privatePreview: names.includes('api/editor.php') ? 'php-candidate' : 'unavailable', hostingVerified: false,
+    registration: formState[1] === "true" ? "form-enabled" : "inactive",
+    privatePreview: names.includes('api/editor.php') ? 'php-candidate' : 'unavailable', hostingVerified: false,
   }, null, 2) + "\n");
   console.log(`Verified ${files.length} STRATO files; no Node server. This artifact check does not replace host acceptance.`);
 }

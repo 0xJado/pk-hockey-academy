@@ -32,9 +32,12 @@ try {
   check(!/vercel\.app|localhost:\d+/i.test(home.body),'homepage has no obsolete hosting destination');
   const www=await request('/trainingstermine',{www:true});
   check(www.response.status===308&&www.response.headers.get('location')===origin+'/trainingstermine','www preserves route to canonical HTTPS root');
-  for(const [path,method] of [['/api/registration','POST'],['/api/registration/token','POST'],['/intern/anmeldungen','GET']]) {
+  for(const [path,method] of [['/api/registration','POST'],['/api/registration/token','POST']]) {
     check((await request(path,{method})).response.status===503,'disabled route '+path);
   }
+  const staff=await request('/intern/anmeldungen');
+  check(staff.response.status===200&&staff.body.includes('autocomplete="current-password"')
+    &&/no-store/i.test(staff.response.headers.get('cache-control')||''),'staff login required and never cached');
   const registration=await request('/anmeldung');
   check(registration.response.status===200&&/data-enabled="false"/.test(registration.body),'public form rendered disabled');
   check(/<fieldset[^>]*data-controls[^>]*disabled/.test(registration.body),'form disabled before JavaScript');
@@ -62,7 +65,7 @@ try {
   const after=await connection.call('readFile','.htaccess');
   check(sha256(before)===sha256(after),'routing unchanged during read-only checks');
   const report={passed:true,at:new Date().toISOString(),release,checks:checks.length,labels:checks,
-    productionMutated:false,publicLaunchApproved:false,intakeActivated:false};
+    productionMutated:false,intakeActivated:false};
   await writeFile(new URL('protected-release-verification.json',privateRoot),JSON.stringify(report,null,2));
   console.log(JSON.stringify({passed:true,release,checks:checks.length,productionMutated:false}));
 } catch(error) {
