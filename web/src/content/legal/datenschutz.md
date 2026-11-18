@@ -78,6 +78,14 @@ Ein erreichbarer erziehungsberechtigter Kontakt und die für die Buchung/Trainin
 
 Zum Schutz des Onlineformulars vor Missbrauch bilden wir aus der IP-Adresse und bei neuen Anfragen auch aus der angegebenen E-Mail-Adresse getrennte pseudonyme Kennungen. Die zugehörigen Zähler gelten für 15-Minuten-Zeitfenster. Damit bei einem erneuten Sendeversuch keine zweite Anfrage entsteht, verwenden wir ein 24 Stunden gültiges Formular-Ticket und speichern eine technische Zuordnung mit einem geschützten Prüfwert der Einsendung. Die Zuordnung läuft eine Stunde nach dem Ticket ab. Abgelaufene Einträge entfernt die tägliche Bereinigung. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Unser berechtigtes Interesse ist der Schutz des Formulars und die zuverlässige Bearbeitung jeder Anfrage genau einmal.
 
+### Für dich als Spielerin oder Spieler
+
+Wenn dich jemand zum Training anmeldet, erfahren wir deinen Namen und deinen Jahrgang. So weiß Pierre, wer mittrainiert und welche Gruppe zu dir passt. Deine Eltern können uns sagen, wen wir im Notfall anrufen dürfen. Wenn sie uns mit deiner Anmeldung etwas über deine Gesundheit mitteilen möchten, fragen wir dafür extra um Erlaubnis. Wir nutzen diese Hinweise, damit wir beim Training auf dich achten können. Du darfst auch ohne Fotos oder Videos mittrainieren. Wenn du keine Aufnahme möchtest oder eine Frage hast, sag es Pierre. Du kannst ihn auch mit deinen Eltern unter info@pkhockeyacademy.de erreichen.
+
+### Für Notfallkontakte und Abholberechtigte
+
+Wer ein Kind anmeldet, kann Sie als Notfallkontakt mit Namen und Telefonnummer oder als abholberechtigte Person mit Namen angeben. Pierre und die für den Termin zuständigen Betreuungspersonen nutzen diese Angaben, um Sie bei Bedarf zu erreichen oder das Kind der richtigen Person zu übergeben. Rechtsgrundlage ist unser berechtigtes Interesse an der sicheren Betreuung (Art. 6 Abs. 1 lit. f DSGVO). Die Angaben werden gelöscht, sobald sie dafür nicht mehr gebraucht werden, spätestens 14 Tage nach dem letzten gebuchten Termin. Falls Sie falsch benannt wurden, der Verarbeitung widersprechen oder Ihre Rechte ausüben möchten, erreichen Sie Pierre unter info@pkhockeyacademy.de. Einzelheiten zu Ihren Rechten und zur Beschwerde finden Sie in den Abschnitten 14 und 15.
+
 ## 7. Gesundheitsbezogene Angaben
 
 Im Rahmen der Anmeldung erheben wir gesundheitsbezogene Angaben, soweit diese für die sichere Teilnahme und Betreuung erforderlich sind. Dazu können Hinweise auf Allergien, relevante Erkrankungen, Medikamente, gesundheitliche Einschränkungen und andere sicherheitsrelevante Besonderheiten gehören. Bitte beschränken Sie die Angaben auf Informationen, die für das Training und die Betreuung benötigt werden.
@@ -126,7 +134,7 @@ Pierre Klein verwaltet die Anmeldungen. Weitere persönlich berechtigte Personen
 
 ## 12. Verarbeitung außerhalb von EU/EWR
 
-Beim Abruf öffentlicher Medien über Sanity können insbesondere Abrufdaten und veröffentlichte Personenaufnahmen auch außerhalb des Europäischen Wirtschaftsraums verarbeitet werden, einschließlich in den USA. Die veröffentlichten [Sanity-Growth-Bedingungen](https://www.sanity.io/legal/tos-growth) nennen Sanity US Inc. in San Francisco. Solche Übermittlungen unterliegen den Anforderungen der Art. 44 ff. DSGVO. Sanitys Auftragsverarbeitungsbedingungen sehen je nach anwendbarem Vertrags- und Übermittlungsfall einen Angemessenheitsbeschluss oder geeignete Garantien, insbesondere EU-Standardvertragsklauseln, vor. Eine Kopie der für Ihre Datenübermittlung maßgeblichen Garantien können Sie unter info@pkhockeyacademy.de anfordern. Weitere Informationen finden Sie in den [Sanity-Auftragsverarbeitungsbedingungen](https://www.sanity.io/legal/dpa).
+Beim Abruf öffentlicher Medien über Sanity können insbesondere Abrufdaten und veröffentlichte Personenaufnahmen auch außerhalb des Europäischen Wirtschaftsraums verarbeitet werden, einschließlich in den USA. Die veröffentlichten [Sanity-Vertragsbedingungen](https://www.sanity.io/legal/tos) nennen Sanity US Inc. in San Francisco. Solche Übermittlungen unterliegen den Anforderungen der Art. 44 ff. DSGVO. Sanitys Auftragsverarbeitungsbedingungen sehen je nach anwendbarem Vertrags- und Übermittlungsfall einen Angemessenheitsbeschluss oder geeignete Garantien, insbesondere EU-Standardvertragsklauseln, vor. Eine Kopie der für Ihre Datenübermittlung maßgeblichen Garantien können Sie unter info@pkhockeyacademy.de anfordern. Weitere Informationen finden Sie in den [Sanity-Auftragsverarbeitungsbedingungen](https://www.sanity.io/legal/dpa).
 
 ## 13. Speicherdauer
 
