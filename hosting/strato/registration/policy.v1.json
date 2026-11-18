@@ -1,7 +1,7 @@
 {
   "version": "registration-request-v1-2026-11-11",
-  "status": "implementation-draft",
-  "publicIntakeEnabled": false,
+  "status": "approved",
+  "publicIntakeEnabled": true,
   "sourcePdfSha256": "5ad3b2845008b09213280653fda49d6fb15882a4ddbfcb0ca975dc664162bff9",
   "booking": {
     "type": "request-only",
@@ -40,6 +40,5 @@
     "receipt": "Deine Trainingsanfrage wurde entgegengenommen. Die Academy prüft die Anfrage. Ein Trainingsplatz ist damit noch nicht bestätigt.",
     "healthHint": "Nur betreuungsrelevante Hinweise angeben. Keine Arztbriefe, Ausweise oder Diagnosendokumente hochladen. Fehlende Gesundheitsangaben führen nicht automatisch zur Ablehnung; konkrete Sicherheitsfragen klärt Pierre persönlich.",
     "privacyConsentRequired": false
-  },
-  "remainingActivationGates": ["final-owner-text-acceptance","actual-provider-and-privacy-copy-review","accepted-php-intake-and-staff-workflow","fictional-end-to-end-acceptance","explicit-real-data-activation"]
+  }
 }

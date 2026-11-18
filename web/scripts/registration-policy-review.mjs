@@ -11,7 +11,7 @@ const root=new URL('../../',import.meta.url);
 const review=JSON.parse(await readFile(new URL('docs/registration-policy-review.json',root),'utf8'));
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 const launchPolicy=(await readFile(new URL('docs/REGISTRATION-LAUNCH-POLICY.md',root),'utf8')).replaceAll('\r\n','\n');
-const textPolicy=JSON.parse(await readFile(new URL('hosting/strato/registration/policy.v1.json',root),'utf8'));
+const textPolicy=JSON.parse(await readFile(new URL('docs/registration-policy-draft-2026-11-11.json',root),'utf8'));
 assert.equal(textPolicy.status,'implementation-draft');assert.equal(textPolicy.publicIntakeEnabled,false);
 assert.equal(textPolicy.sourcePdfSha256,paper.sha256);
 assert.equal(textPolicy.booking.spielerPlusIntegration,false);assert.equal(textPolicy.booking.paymentsEnabled,false);

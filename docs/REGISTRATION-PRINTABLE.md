@@ -9,3 +9,7 @@ Generation reads `hosting/strato/registration/policy.v1.json`, checks the explic
 Regenerate locally with Python and the pinned `web/scripts/requirements-print.txt`, then run `python web/scripts/generate-registration-print.py`. Output is initially under ignored `output/pdf/`; render both pages with Poppler and inspect them before copying the PDF to `web/public/downloads/`. The script updates the manifest. Run the website tests/check/build afterward. Python is a local authoring tool; production still requires only static files/PHP, with no added service or dependency.
 
 The generator intentionally refuses an activated policy. Before genuine paper intake, explicitly reconcile paper hand-in, legal/operational acceptance and pre-launch notices with #15/#17/#19, then review a new final artifact. No activation flag is changed by generating or downloading this draft.
+
+On 18 November 2026 the project delegate confirmed that Pierre can receive completed forms directly in a closed envelope, store them with restricted access and apply the documented deletion schedule. This resolves the paper hand-in procedure. The current PDF remains a pre-launch draft pending final artifact review and intake activation.
+
+18 November production decision: Pierre’s original v2 is the website paper form. The former generated draft is archived in this directory. The delegate authorized genuine online registration and confirmed direct paper hand-in to Pierre. The online form retains its accepted minimal fields and separate voluntary consents.

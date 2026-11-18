@@ -16,6 +16,8 @@ Scope: the user's instruction to progress all remaining migration work independe
 
 ## Actual remaining requirements
 
+18 November update to #15: the delegate removed the manual phone/screen-reader walkthrough from launch acceptance. It was not performed. The automated registration, keyboard and responsive results below remain the available test evidence. The delegate has also confirmed paper hand-in and completed the staff handoff; see REGISTRATION-PRINTABLE.md and STRATO-STAFF-HANDOFF.md. These decisions supersede the corresponding items in the 17 November snapshot below.
+
 The earlier issues remain reconciled explicitly: **#1** is closed for the established native Sanity entry/publishing scope, with the still-unperformed personal recovery/MFA checks retained in #16; no new member is required. **#2** is closed for the approved academy-logo download with tested replacement/withdrawal/delivery; additional press images, ZIPs and broader usage terms are optional, not invented. **#4** is closed for the established coach template; the optional career/gallery extension is now deployed while the same Pierre document ID and supplied facts are preserved. Empty optional career facts and gallery sections are intentional. This reconciliation does not claim first genuine new gallery/schedule publication or personal identity recovery has occurred.
 
 | Ticket | Work that can be accepted now | Still needed before closure |

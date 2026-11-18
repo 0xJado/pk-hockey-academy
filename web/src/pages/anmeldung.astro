@@ -3,7 +3,6 @@ import Base from "../layouts/Base.astro";
 import Arrow from "../components/Arrow.astro";
 import TrainingRequestForm from "../components/TrainingRequestForm.astro";
 import { registration } from "../data/registration";
-import printable from "../../../shared/registration-print-manifest.json";
 import "../styles/registration.css";
 import { getTraining } from "../lib/training-source";
 import { requestableSessionOptions } from "../lib/registration/sessions";
@@ -12,7 +11,6 @@ import policy from "../../../hosting/strato/registration/policy.v1.json";
 const training = await getTraining();
 const sessions = requestableSessionOptions(training.sessions, training.venues);
 const enabled = registrationFormEnabled(import.meta.env, policy);
-const printableUrl = `/downloads/${printable.filename}`;
 ---
 <Base title="Trainingsanfrage – Anmeldung & PDF" description={enabled ? "Einzeltermin oder 5er-Paket bei der PK Hockey Academy anfragen. Pierre prüft die Anfrage und bestätigt die Buchung persönlich." : "Einzeltermin oder 5er-Paket bei der PK Hockey Academy anfragen. Die Onlineanmeldung wird vorbereitet; die Papiervorlage steht als PDF bereit."} noindex clientRouting={false}>
   <section class="page-hero">
@@ -23,7 +21,7 @@ const printableUrl = `/downloads/${printable.filename}`;
       <p class="page-intro">Dein Weg zum Einzeltraining oder 5er-Paket. Die Academy prüft jede Anfrage und bestätigt deine Buchung persönlich. {enabled ? "Stelle hier deine Trainingsanfrage." : "Der Onlineversand wird noch vorbereitet."}</p>
       <div class="registration-hero-actions">
         <a href="#formular" class="button button--primary"><span>{enabled ? "Trainingsanfrage ausfüllen" : "Formularvorschau ansehen"}</span><Arrow /></a>
-        <a href={printableUrl} download={printable.filename} class="button button--outline"><span>Trainingsanfrage als PDF</span><Arrow diagonal /></a>
+        <a href={registration.downloadUrl} download={registration.downloadName} class="button button--outline"><span>Trainingsanfrage als PDF</span><Arrow diagonal /></a>
       </div>
     </div>
     <div class="page-hero-lines" aria-hidden="true"></div>
@@ -44,18 +42,16 @@ const printableUrl = `/downloads/${printable.filename}`;
           <span class="registration-pdf-icon" aria-hidden="true">PDF</span>
           <p class="eyebrow">ZUM HERUNTERLADEN</p>
           <h2 id="registration-download-heading">DEINE<br /><span>PAPIERVORLAGE.</span></h2>
-          <p>Die Druckvorlage mit den Angaben und getrennten freiwilligen Einwilligungen der Onlineanfrage. Zum handschriftlichen Ausfüllen; nicht digital ausfüllbar.</p>
+          <p>Hier kannst du Pierres Anmeldeformular für die Anmeldung auf Papier herunterladen.</p>
           <dl>
-            <div><dt>Format</dt><dd>A4 · {printable.pages} Seiten</dd></div>
-            <div><dt>Dateigröße</dt><dd>{Math.round(printable.sizeBytes / 1000)} kB</dd></div>
+            <div><dt>Format</dt><dd>A4 · {registration.pages} Seiten</dd></div>
+            <div><dt>Dateigröße</dt><dd>{Math.round(registration.sizeBytes / 1000)} kB</dd></div>
           </dl>
-          <a href={printableUrl} download={printable.filename} class="button button--primary"><span>PDF herunterladen</span><Arrow /></a>
-          <p class="registration-small">Vorabfassung: Die Papierabgabe und die Annahme echter Daten sind noch nicht freigegeben. Die ursprüngliche Vorlage v2 bleibt als unveränderte Referenz erhalten. Sie enthält zusätzliche Erklärungen, die nicht pauschal für die minimale Trainingsanfrage übernommen werden.</p>
-          <a href={registration.downloadUrl} download={registration.downloadName} class="registration-inline-link">Originalvorlage v2 ansehen <Arrow /></a>
+          <a href={registration.downloadUrl} download={registration.downloadName} class="button button--primary"><span>PDF herunterladen</span><Arrow /></a>
         </div>
         <div class="registration-process">
           <h3>Wie geht es weiter?</h3>
-          <p>{enabled ? "Bitte nutze für die Onlineanfrage das Formular. Wie du eine ausgefüllte Papiervorlage übergeben kannst, kläre vorab persönlich mit der Academy. Sende Gesundheitsangaben nicht per gewöhnlicher E-Mail." : "Die Abgabe ausgefüllter Papierformulare und der sichere Versand der Onlineanmeldung werden noch abgestimmt. Bitte sende vorerst keine ausgefüllten Formulare über unbestätigte Kontaktwege."}</p>
+          <p>Gib das ausgefüllte Papierformular in einem verschlossenen Umschlag direkt bei Pierre ab.</p>
           <h3>Formular &amp; Trainingstermin</h3>
           <p>Die Vorlage umfasst Einzel- und Mehrfachbuchungen. Eine Trainingsanfrage wird erst nach Bestätigung durch die Academy verbindlich.</p>
           <a href="/trainingstermine" class="registration-inline-link">Trainingstermine ansehen <Arrow /></a>

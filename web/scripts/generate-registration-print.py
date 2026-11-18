@@ -13,7 +13,7 @@ from reportlab.platypus import Paragraph
 from pypdf import PdfReader
 
 ROOT = Path(__file__).resolve().parents[2]
-policy = json.loads((ROOT / "hosting/strato/registration/policy.v1.json").read_text(encoding="utf-8"))
+policy = json.loads((ROOT / "docs/registration-policy-draft-2026-11-11.json").read_text(encoding="utf-8"))
 assert policy["status"] == "implementation-draft" and not policy["publicIntakeEnabled"]
 canonical = json.dumps(policy, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
 PRINTED_FIELDS = ["childName", "birthYear", "team", "position", "experience", "guardianName", "guardianPhone", "guardianEmail",
