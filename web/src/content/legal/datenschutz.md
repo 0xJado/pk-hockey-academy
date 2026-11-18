@@ -58,6 +58,8 @@ Sie können uns freiwillig über WhatsApp kontaktieren. Die Website stellt dafü
 
 Wenn Sie uns schreiben, verarbeiten wir Ihre Telefonnummer, gegebenenfalls Ihren Profilnamen sowie den von Ihnen übermittelten Nachrichteninhalt zur Bearbeitung Ihrer Anfrage. Es gelten die oben genannten Zwecke, Rechtsgrundlagen und Speicherregeln für Kontaktanfragen. Bitte übermitteln Sie über WhatsApp keine Gesundheitsinformationen oder ausgefüllten Anmeldeformulare.
 
+Auf Ihren Wunsch löschen wir auf den von der Academy genutzten Geräten alle Chatverläufe mit Ihnen und Ihren für WhatsApp gespeicherten Kontakteintrag. Schreiben Sie uns dazu im Chat oder per E-Mail an [info@pkhockeyacademy.de](mailto:info@pkhockeyacademy.de). Die Academy erstellt keine Sicherungskopien ihrer WhatsApp-Chats. Nachrichten auf Ihrem eigenen Gerät können Sie selbst löschen.
+
 Anbieter für Nutzer in der europäischen Region ist WhatsApp Ireland Limited. WhatsApp verarbeitet auch Daten für eigene Zwecke, etwa Konto-, Nutzungs- und Verbindungsinformationen; dabei kann eine Verarbeitung außerhalb von EU/EWR stattfinden. Weitere Informationen finden Sie in der [WhatsApp-Datenschutzrichtlinie für die europäische Region](https://www.whatsapp.com/legal/privacy-policy-eea).
 
 ## 6. Trainingsanmeldung und organisatorische Daten
