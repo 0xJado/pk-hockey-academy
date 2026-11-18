@@ -4,15 +4,15 @@ Readiness checked 16 November 2026. This completes technical preparation, not pe
 
 17 November: the user confirmed **“I’ll act as delegate.”** Operator identity is resolved; do not ask this again. The user then signed off for independent work. Full hosted quality run [43958735607](https://github.com/0xJado/pk-hockey-academy/actions/runs/43958735607) passed, including the 30-check fictional enrollment suite. Actual STRATO preparation was subsequently verified: protected GET/no-store, anonymous denial and wrong-token rejection; the helper was immediately removed and its 404 verified. No password was entered and no production account was created. No enrollment link remains active. Prepare a fresh expiring page when the delegate returns, then perform canonical login/logout and operating handoff.
 
-## Ready
+## Technical verification on 16–17 November
 
-- Canonical staff destination: `https://pkhockeyacademy.de/intern/anmeldungen`. It currently returns 503 because the service is deliberately disabled. Website Basic Auth and Sanity authentication are separate from the eventual personal staff login.
+- Canonical staff destination: `https://pkhockeyacademy.de/intern/anmeldungen`. Before enrollment it returned 503 while staff access was disabled. Website Basic Auth and Sanity authentication are separate from the eventual personal staff login.
 - Only Pierre's individually assigned administrator role is supported for launch. Additional roles/accounts are not automatically created, and Sanity membership grants no registration access. CSV/export is absent by design.
 - Fresh verification passed 63 PHP staff assertions, 8 maintenance assertions and 34 isolated real STRATO/MariaDB lifecycle checks. These cover authentication/cookie rotation, Origin/CSRF, unauthorized record denial, escaping, concurrent revision checks, withdrawals, stale-session revocation, recovery, backup/restore erasure replay, retention and cleanup.
 - Five consecutive scheduled maintenance runs from 12–16 November succeeded, including [16 November run 43843231679](https://github.com/0xJado/pk-hockey-academy/actions/runs/43843231679). The earlier deliberate failure alert was received and accepted on 12 November. Observed CI execution times are evidence of actual runs, not a guarantee that GitHub schedules run at an exact minute.
 - Fresh private-host inspection: zero requests, receipt claims and staff users. Runtime disabled; staff disabled, maintenance on, staff database-contract acceptance false; all six intake gates false and intake paused. The inspection now reports installed staff flags explicitly. Temporary helpers and fictional tables were removed and routing remained unchanged.
 
-## Handoff sequence still to perform
+## Operator handoff procedure
 
 1. Confirm whether Pierre is present or the user is performing the check as his delegate. Record the actual operator; do not claim Pierre personally used an assistant/delegate-tested account.
 2. The operator chooses and privately enters a unique staff password (16–72 bytes). Do not paste it into chat, a GitHub issue, a command argument or a committed file. Use the temporary protected browser enrollment described below; the existing offline password-file command remains a recovery mechanism. Do not reuse Sanity, hosting or database credentials, ship a default password, or silently reset an existing account.
@@ -34,4 +34,8 @@ After the operator finishes, run `node hosting/strato/prepare-staff-enrollment.m
 
 The pinned SFTP account cannot read the outside-root files. Any hosted operator bridge needed for setup must be temporary, dual-authenticated, bounded and removed/404-checked like the existing acceptance tools; no permanent setup/reset endpoint is approved by this checklist. Never bypass the private path checks or expose the staff source/configuration as a deployment shortcut.
 
-Current action state: **no permanent account created, no staff route enabled, no password requested in chat, no intake activated**. The delegate is confirmed; private entry/use remains pending. No technical verification is represented as personal handoff.
+## Live handoff on 18 November 2026
+
+The authorized delegate signed into the canonical staff portal after private enrollment. The empty list and guidance on personal confirmations were visible. After logout, reopening the same URL required staff authentication. The temporary setup page was removed and returned HTTP 404.
+
+At 15:32 UTC, STRATO reported one staff account, zero requests and zero receipt claims. Staff and the shared runtime were enabled. All six intake gates were false, intake maintenance was active and the database intake was paused. Recovery and revocation were verified with isolated fictional accounts. The delegate acknowledged that Pierre handles booking confirmations and monthly deletion, access-rights and media checks. 0xJado receives maintenance failure alerts. The delegate also acknowledged that password recovery revokes existing sessions. [Issue 14](https://github.com/0xJado/pk-hockey-academy/issues/14) closed as completed on 18 November.
