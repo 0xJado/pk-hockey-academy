@@ -62,6 +62,9 @@ export default defineConfig({
     },
   }],
   trailingSlash: "never",
-  vite: { plugins: [tailwindcss(), localGalleryPlugin()] },
+  vite: {
+    plugins: [tailwindcss(), localGalleryPlugin()],
+    define: { "import.meta.env.DEPLOY_TARGET": JSON.stringify(target) },
+  },
   devToolbar: { enabled: false },
 });
