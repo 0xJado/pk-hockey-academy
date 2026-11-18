@@ -113,7 +113,8 @@ try {
         $blocked=$configuration; $blocked[$gate]=false; file_put_contents($directory.'/config.json',json_encode($blocked));
         denied(fn()=>Config::load($directory.'/config.json',$directory.'/public'),'each acceptance gate independently blocks intake','inactive');
     }
-    file_put_contents($directory.'/database.json','{}');file_put_contents($directory.'/policy.json',json_encode($policy->document));
+    $draftPolicy=$policy->document;$draftPolicy['status']='implementation-draft';$draftPolicy['publicIntakeEnabled']=false;
+    file_put_contents($directory.'/database.json','{}');file_put_contents($directory.'/policy.json',json_encode($draftPolicy));
     $configuration['databaseConfig']=$directory.'/database.json';$configuration['policyFile']=$directory.'/policy.json';$configuration['policySha256']=hash_file('sha256',$configuration['policyFile']);
     file_put_contents($directory.'/config.json',json_encode($configuration));denied(fn()=>Config::load($directory.'/config.json',$directory.'/public'),'draft policy cannot activate even with all flags true','inactive');
     echo json_encode(['passed'=>true,'checks'=>$checks,'storage'=>'SQLite fictional fixtures','publicIntakeEnabled'=>false],JSON_THROW_ON_ERROR)."\n";
