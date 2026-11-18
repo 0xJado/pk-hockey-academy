@@ -76,14 +76,15 @@ Für weitere Städte bitte ausdrücklich bestätigen, ob sie weiterhin geplant o
 ## 4. Kontakt und Buchungsbedingungen
 
 - [ ] Bestätigen, welche der bereits eingerichteten Academy-E-Mail-Adressen öffentlich erscheinen soll und wer Anfragen bearbeitet.
-- [ ] Die für die Website freigegebene WhatsApp-Nummer beziehungsweise den vorgesehenen Kontaktlink nennen.
+- [x] Am 18. November 2026 für Impressum und WhatsApp bestätigt: +49 151 28790537, Kontaktlink https://wa.me/4915128790537. Ersetzt die vorläufige Telefonnummer.
 - [ ] Festlegen, wer Nachrichten aus dem künftigen Kontaktformular erhalten soll.
 - [ ] Die tatsächlichen Zahlungs-, Absage-, Umbuchungs- und Erstattungsbedingungen sowie die Regeln des 5er-Pakets mitteilen, soweit sie festgelegt sind. Keine Gültigkeit, Übertragbarkeit oder Zahlungsart wird aus dem Paketpreis abgeleitet.
 
 ## 5. Unternehmensangaben, Rechtstexte und öffentlicher Start
 
-- [x] Anbieterangaben für das Impressum geliefert: PK Hockey Academy, Einzelunternehmen/Inhaber Pierre Klein, Verbindungsweg 8, 46562 Voerde, Deutschland, info@pkhockeyacademy.de. Am 12. November 2026 bestätigt: keine USt-IdNr./W-IdNr., kein Handelsregistereintrag; die vorläufige Telefonnummer +49 163 80 63 741 bleibt vorerst im Impressum. Keine Bestätigung als WhatsApp-Kontakt.
-- [ ] Geprüfte Texte für Impressum, Datenschutz und die anwendbaren Buchungs-/Stornobedingungen freigeben. Die vorhandenen Platzhalter sind keine fertigen Rechtstexte.
+- [x] Anbieterangaben für das Impressum geliefert: PK Hockey Academy, Einzelunternehmen/Inhaber Pierre Klein, Verbindungsweg 8, 46562 Voerde, Deutschland, info@pkhockeyacademy.de. Am 12. November 2026 bestätigt: keine USt-IdNr./W-IdNr., kein Handelsregistereintrag. Seit 18. November gilt +49 151 28790537 für Impressum und WhatsApp statt der vorläufigen Nummer.
+- [x] Impressum und Produktions-Datenschutztext am 18. November 2026 durch den Nutzer ausdrücklich inhaltlich bestätigt und festgeschrieben; siehe [gebundene Fassung](LEGAL-CONTENT-APPROVAL-2026-11-18.md). Dies dokumentiert keine externe juristische Zertifizierung oder Anbieter-Vertragsprüfung.
+- [ ] Anwendbare Buchungs-/Stornobedingungen und die übrigen tatsächlichen Launch-Voraussetzungen abgleichen; die Textbestätigung aktiviert keine Datenerfassung und entfernt keinen Passwortschutz.
 - [x] Gewünschte öffentliche Domain: **pkhockeyacademy.de**. Die spätere technische Domain-Verbindung ist noch nicht geprüft.
 - [x] Pierre hat laut Rückmeldung des Nutzers vom 6. November einen eigenen erfolgreichen Sanity-Probedurchlauf durchgeführt. Der Einzelnutzerumfang ist erfüllt; zusätzliche Redaktionskonten können später folgen. MFA/Kontowiederherstellung und weitere Mitglieder sind damit nicht als separat geprüft ausgewiesen.
 - [ ] Den öffentlichen Start ausdrücklich freigeben, sobald Inhalte, Kontakt-/Anmeldeabläufe und Rechtstexte bereit sind. Die derzeit geschützte Review-Website ist noch kein öffentlicher Launch.

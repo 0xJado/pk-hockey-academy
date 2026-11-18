@@ -46,11 +46,19 @@ Bei einer Kontaktaufnahme verarbeiten wir Ihre übermittelten Angaben, etwa Name
 
 Zwecke sind die Bearbeitung Ihrer Anfrage und die Kommunikation mit Ihnen. Soweit die Verarbeitung für die Anbahnung oder Erfüllung eines Vertrags mit Ihnen erforderlich ist, ist Art. 6 Abs. 1 lit. b DSGVO die Rechtsgrundlage. Bei allgemeinen Anfragen stützen wir uns auf Art. 6 Abs. 1 lit. f DSGVO; unser berechtigtes Interesse ist die Bearbeitung eingehender Anliegen.
 
-Bitte teilen Sie uns nur die für Ihr Anliegen erforderlichen Informationen mit. Senden Sie sensible Gesundheitsangaben nicht unaufgefordert per gewöhnlicher E-Mail.
+Bitte teilen Sie uns nur die für Ihr Anliegen erforderlichen Informationen mit. Senden Sie sensible Gesundheitsangaben nicht unaufgefordert per gewöhnlicher E-Mail oder WhatsApp.
 
 Anfragedaten werden gelöscht, wenn sie für den Zweck nicht mehr benötigt werden und keine gesetzlichen Pflichten oder sonstigen zulässigen Gründe für eine weitere Speicherung bestehen.
 
 Allgemeine Anfragen ohne Vertragsabschluss werden spätestens sechs Monate nach abschließender Bearbeitung gelöscht, früher bei entfallenem Zweck. Für gesetzlich aufzubewahrende Geschäftskorrespondenz gelten die in Abschnitt 13 genannten Regeln. Verantwortlicher Ansprechpartner ist Pierre Klein. Eine automatische Weiterleitung an private Postfächer erfolgt nicht.
+
+### Freiwillige Kontaktaufnahme über WhatsApp
+
+Sie können uns freiwillig über WhatsApp kontaktieren. Die Website stellt dafür ausschließlich einen externen Link bereit; es ist kein WhatsApp-Plugin eingebettet. Erst wenn Sie den Link öffnen, wird eine Verbindung zum externen Angebot hergestellt. Alternativ können Sie uns per E-Mail kontaktieren.
+
+Wenn Sie uns schreiben, verarbeiten wir Ihre Telefonnummer, gegebenenfalls Ihren Profilnamen sowie den von Ihnen übermittelten Nachrichteninhalt zur Bearbeitung Ihrer Anfrage. Es gelten die oben genannten Zwecke, Rechtsgrundlagen und Speicherregeln für Kontaktanfragen. Bitte übermitteln Sie über WhatsApp keine Gesundheitsinformationen oder ausgefüllten Anmeldeformulare.
+
+Anbieter für Nutzer in der europäischen Region ist WhatsApp Ireland Limited. WhatsApp verarbeitet auch Daten für eigene Zwecke, etwa Konto-, Nutzungs- und Verbindungsinformationen; dabei kann eine Verarbeitung außerhalb von EU/EWR stattfinden. Weitere Informationen finden Sie in der [WhatsApp-Datenschutzrichtlinie für die europäische Region](https://www.whatsapp.com/legal/privacy-policy-eea).
 
 ## 6. Trainingsanmeldung und organisatorische Daten
 

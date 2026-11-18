@@ -301,12 +301,21 @@ const legal = slug === "impressum" || slug === "datenschutz";
         <div>
           <p class="eyebrow">DEIN DRAHT ZUR ACADEMY</p>
           <h2>HIER ERREICHST DU <span>UNS.</span></h2>
-          <p class="lead">Schreib uns bei Fragen zum Training eine E-Mail.</p>
+          <p class="lead">Schreib uns bei Fragen zum Training per E-Mail oder WhatsApp.</p>
         </div>
         <div class="contact-options">
           <article>
             <h3>E-Mail</h3>
             <p><a class="contact-email" href="mailto:info@pkhockeyacademy.de">info@pkhockeyacademy.de</a></p>
+          </article>
+          <article>
+            <h3>WhatsApp</h3>
+            <p>{legalProvider.phone}</p>
+            <p>Der Link öffnet WhatsApp. Bitte sende dort keine Gesundheitsdaten.</p>
+            <a class="button button--outline" href={legalProvider.whatsappUrl} rel="external noreferrer">
+              <span>Per WhatsApp schreiben</span>
+              <span aria-hidden="true">↗</span>
+            </a>
           </article>
         </div>
       </div>
@@ -315,14 +324,6 @@ const legal = slug === "impressum" || slug === "datenschutz";
   {legal && (
     <section class="section light-section">
       <div class="wrap legal-content">
-        <div class="legal-warning">
-          <strong>NICHT ZUR VERÖFFENTLICHUNG FREIGEGEBEN</strong>
-          <p>
-            {slug === "impressum"
-              ? "Die Anbieterangaben wurden ergänzt und von Pierre bestätigt. Die abschließende rechtliche Prüfung und Freigabe für den Website-Start stehen aus."
-              : "Diese Fassung beschreibt den vorgesehenen Produktionsbetrieb auf STRATO mit Sanity. Die Anbieter- und Vertragsangaben, die tatsächliche Umsetzung der Datenschutzregeln sowie die abschließende rechtliche Prüfung müssen vor dem öffentlichen Start abgeglichen werden. Die Darstellung schaltet keine Anmeldung frei."}
-          </p>
-        </div>
         {slug === "impressum" ? (
           <>
             <h2>ANBIETER</h2>

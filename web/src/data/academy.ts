@@ -6,10 +6,14 @@ import type {
   Venue,
 } from "../types/content.ts";
 import { pierreProfile } from "../../../shared/pierre-profile.ts";
+import { legalProvider } from "./legal";
 
 export const settings: SiteSettings = {
   brandName: "PK Hockey Academy",
-  contactDestinations: { email: "info@pkhockeyacademy.de" },
+  contactDestinations: {
+    email: legalProvider.email,
+    whatsapp: legalProvider.whatsappUrl,
+  },
   globalCTAs: {
     schedule: "Trainingstermine ansehen",
     contact: "Training anfragen",

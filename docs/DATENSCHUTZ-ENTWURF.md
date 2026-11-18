@@ -2,7 +2,7 @@
 
 Stand: November 2026 · Überarbeiteter Arbeitsentwurf vom 10. November 2026
 
-**Arbeitsfassung für den Produktionsstart.** Registrierung und Gesundheitsdatenerhebung gehören zum fertigen Angebot. Auf Anweisung des Nutzers wurden Zugriffs-, Einwilligungs- und Löschregeln festgelegt; die [Betriebsregeln](DATENSCHUTZ-BETRIEBSREGELN.md) unterscheiden gesetzliche Pflichten von gewählten datensparsamen Fristen. Diese Fassung beschreibt den vorgesehenen Betrieb auf STRATO mit Sanity. Vor Freischaltung sind die technische Umsetzung und die noch gekennzeichneten Anbieterfakten abzugleichen. Sie bestätigt keine bereits laufende Datenerhebung oder automatische Löschung.
+**Interne Arbeitsunterlage und Entscheidungshistorie.** Die maßgebliche Website-Fassung wurde am 18. November 2026 vom Nutzer ausdrücklich inhaltlich bestätigt und [festgeschrieben](LEGAL-CONTENT-APPROVAL-2026-11-18.md). Die nachstehenden historischen Prüfanmerkungen sind kein offener Auftrag zu einer erneuten Textfreigabe. Registrierung und Gesundheitsdatenerhebung gehören zum fertigen Angebot; die [Betriebsregeln](DATENSCHUTZ-BETRIEBSREGELN.md) unterscheiden gesetzliche Pflichten von gewählten datensparsamen Fristen. Anbieterfakten und tatsächlicher Betrieb sind weiterhin sachlich abzugleichen; die Textbestätigung ist keine Behauptung einer Vertragsprüfung oder Laufzeitaktivierung.
 
 ## 1. Verantwortlicher
 
@@ -56,11 +56,19 @@ Bei einer Kontaktaufnahme verarbeiten wir Ihre übermittelten Angaben, etwa Name
 
 Zwecke sind die Bearbeitung Ihrer Anfrage und die Kommunikation mit Ihnen. Soweit die Verarbeitung für die Anbahnung oder Erfüllung eines Vertrags mit Ihnen erforderlich ist, ist Art. 6 Abs. 1 lit. b DSGVO die Rechtsgrundlage. Bei allgemeinen Anfragen stützen wir uns auf Art. 6 Abs. 1 lit. f DSGVO; unser berechtigtes Interesse ist die Bearbeitung eingehender Anliegen.
 
-Bitte teilen Sie uns nur die für Ihr Anliegen erforderlichen Informationen mit. Senden Sie sensible Gesundheitsangaben nicht unaufgefordert per gewöhnlicher E-Mail.
+Bitte teilen Sie uns nur die für Ihr Anliegen erforderlichen Informationen mit. Senden Sie sensible Gesundheitsangaben nicht unaufgefordert per gewöhnlicher E-Mail oder WhatsApp.
 
 Anfragedaten werden gelöscht, wenn sie für den Zweck nicht mehr benötigt werden und keine gesetzlichen Pflichten oder sonstigen zulässigen Gründe für eine weitere Speicherung bestehen.
 
 Allgemeine Anfragen ohne Vertragsabschluss werden spätestens sechs Monate nach abschließender Bearbeitung gelöscht, früher bei entfallenem Zweck. Für gesetzlich aufzubewahrende Geschäftskorrespondenz gelten die in Abschnitt 13 genannten Regeln. Verantwortlicher Ansprechpartner ist Pierre Klein. Eine automatische Weiterleitung an private Postfächer ist nicht vorgesehen.
+
+### Freiwillige Kontaktaufnahme über WhatsApp
+
+Sie können uns freiwillig über WhatsApp kontaktieren. Die Website stellt dafür ausschließlich einen externen Link bereit; es ist kein WhatsApp-Plugin eingebettet. Erst wenn Sie den Link öffnen, wird eine Verbindung zum externen Angebot hergestellt. Alternativ können Sie uns per E-Mail kontaktieren.
+
+Wenn Sie uns schreiben, verarbeiten wir Ihre Telefonnummer, gegebenenfalls Ihren Profilnamen sowie den von Ihnen übermittelten Nachrichteninhalt zur Bearbeitung Ihrer Anfrage. Es gelten die oben genannten Zwecke, Rechtsgrundlagen und Speicherregeln für Kontaktanfragen. Bitte übermitteln Sie über WhatsApp keine Gesundheitsinformationen oder ausgefüllten Anmeldeformulare.
+
+Anbieter für Nutzer in der europäischen Region ist WhatsApp Ireland Limited. WhatsApp verarbeitet auch Daten für eigene Zwecke, etwa Konto-, Nutzungs- und Verbindungsinformationen; dabei kann eine Verarbeitung außerhalb von EU/EWR stattfinden. Weitere Informationen finden Sie in der [WhatsApp-Datenschutzrichtlinie für die europäische Region](https://www.whatsapp.com/legal/privacy-policy-eea).
 
 ## 6. Trainingsanmeldung und organisatorische Daten
 
@@ -78,7 +86,7 @@ Soweit die Verarbeitung für die Anbahnung und Erfüllung eines Vertrags mit der
 
 Ein erreichbarer erziehungsberechtigter Kontakt und die für die Buchung/Trainingszuordnung notwendigen Angaben werden als erforderlich gekennzeichnet. Ohne diese Angaben kann die Anmeldung nicht bearbeitet werden. Ein zweiter vollständiger Kontaktdatensatz oder die vollständige Kinderanschrift sind nicht pauschal verpflichtend. Freiwillige Angaben werden entsprechend gekennzeichnet. Über die Verarbeitung benannter weiterer Kontaktpersonen informieren wir nach Maßgabe des Art. 14 DSGVO.
 
-**Technischer Abgleich vor Start:** Umsetzung der [Betriebsregeln](DATENSCHUTZ-BETRIEBSREGELN.md), des [einfachen Pflichtfeldmodells](REGISTRATION-LAUNCH-POLICY.md) und der Interessenabwägung prüfen. Die Website überträgt keine Anmeldungen an fremde Organisationsdienste. Keine WhatsApp-/Zahlungsintegration aus dieser Entscheidung ableiten.
+**Technischer Abgleich vor Start:** Umsetzung der [Betriebsregeln](DATENSCHUTZ-BETRIEBSREGELN.md), des [einfachen Pflichtfeldmodells](REGISTRATION-LAUNCH-POLICY.md) und der Interessenabwägung prüfen. Die Website überträgt keine Anmeldungen an fremde Organisationsdienste. WhatsApp ist seit 18. November ausschließlich als separat bestätigter externer Kontaktlink vorgesehen; keine Formularübertragung oder Zahlungsintegration daraus ableiten.
 
 ## 7. Gesundheitsbezogene Angaben
 
@@ -214,8 +222,8 @@ Geprüft am 10. November 2026. Keine erneute Live-Abnahme des Servers vorgenomme
 
 ### Festgelegter Produktionsumfang
 
-Die [Betriebsregeln](DATENSCHUTZ-BETRIEBSREGELN.md) setzen als datensparsamen Startumfang STRATO-E-Mail, private Trainingsanfragen mit einem Hauptkontakt und getrennte Einwilligungen. SpielerPlus ist ein vollständig getrennter Vorgang und gehört weder zur Website-Integration noch zu deren Launch-Abnahme. Keine Formularübertragung an SpielerPlus, keine WhatsApp-Einrichtung und keine Freigabe der Interview-/Sprachtests für echte Teilnehmerdaten. Diese Regeln sind bei der Launch-Umsetzung zu berücksichtigen; die technische Auslieferung wurde durch die Dokumentbearbeitung nicht geändert.
+Die [Betriebsregeln](DATENSCHUTZ-BETRIEBSREGELN.md) setzen als datensparsamen Startumfang STRATO-E-Mail, private Trainingsanfragen mit einem Hauptkontakt und getrennte Einwilligungen. SpielerPlus ist ein vollständig getrennter Vorgang und gehört weder zur Website-Integration noch zu deren Launch-Abnahme. Keine Formularübertragung an SpielerPlus und keine Freigabe der Interview-/Sprachtests für echte Teilnehmerdaten. Am 18. November 2026 wurde die Nummer +49 151 28790537 für Impressum und WhatsApp bestätigt; WhatsApp wird ausschließlich über einen externen Kontaktlink angeboten, ohne Plugin oder automatische Datenübertragung der Website. Der Zusatz in Abschnitt 5 bildet diese spätere Kontaktentscheidung ab.
 
 Verbleibende Faktenprüfungen sind die konkreten Website-Anbieter-/Auftragsverarbeitungsbedingungen, Sanity-Vertragspartner/Transfermechanismen und die Abnahme der implementierten Produktionsfunktionen. SpielerPlus ist keine Website-Freigabeabhängigkeit. Betriebsfristen und Zugriffsrollen müssen nicht erneut als unbeantwortete Fragen an Pierre gestellt werden; sie wurden hier festgelegt.
 
-Dieser Entwurf hält die internen Prüfhinweise fest und bestätigt keine rechtliche Vollständigkeit. Am 12. November 2026 wurde der Besuchertext in [die Website-Fassung](../web/src/content/legal/datenschutz.md) überführt. `/datenschutz` rendert deren 17 Abschnitte mit Inhaltsverzeichnis; interne Bearbeitungshinweise stehen nicht im Richtlinientext. Ein sichtbarer Vorabhinweis nennt den ausstehenden Anbieter-/Vertragsabgleich und die notwendige Produktions-/Rechtsprüfung. Die Website-Fassung beschreibt das einfache Trainingsanfragemodell ohne fremde Organisationsintegration. Vor dem öffentlichen Start muss sie der abgenommenen Umsetzung entsprechen.
+Am 12. November 2026 wurde der Besuchertext in [die Website-Fassung](../web/src/content/legal/datenschutz.md) überführt. Diese einschließlich des WhatsApp-Kontaktzusatzes wurde am 18. November durch den Nutzer bestätigt. `/datenschutz` rendert die 17 Abschnitte mit Inhaltsverzeichnis ohne interne Bearbeitungshinweise oder Entwurfsbanner. Maßgeblich ist die [gebundene Textfassung](LEGAL-CONTENT-APPROVAL-2026-11-18.md); diese Arbeitsunterlage bleibt als interne Entscheidungshistorie erhalten. Anbieterabgleich, Betriebsübergabe, echte Datenerfassung und öffentlicher Start sind getrennte Vorgänge.
