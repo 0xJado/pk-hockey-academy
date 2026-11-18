@@ -36,7 +36,9 @@ try {
     'Listen 127.0.0.1:'+port,'User '+userInfo().username,'Group #'+userInfo().gid,'StartServers 1','MaxRequestWorkers 3',
     'DocumentRoot "'+web+'"','<Directory "'+web+'">','Options FollowSymLinks','AllowOverride All','Require all granted','</Directory>'];
   await writeFile(join(dir,'test.conf'),config.join('\n')+'\n');
-  apache=spawn('/usr/sbin/apache2',['-DFOREGROUND','-f',join(dir,'test.conf')],{stdio:'inherit'});
+  // Apache signals its process group during shutdown. Isolate the test server
+  // from the CI step so that cleanup cannot terminate the runner or this test.
+  apache=spawn('/usr/sbin/apache2',['-DFOREGROUND','-f',join(dir,'test.conf')],{stdio:'inherit',detached:true});
   const exited=once(apache,'exit');
   async function request(path,authorized=false) {
     return new Promise((resolve,reject)=>{
