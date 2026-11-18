@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
-      PUBLIC_LAUNCH_READY: 'false'
+      PUBLIC_LAUNCH_READY: ${{ vars.STRATO_PUBLIC_LAUNCH_READY || 'false' }}
       PUBLIC_REGISTRATION_ENABLED: ${{ vars.STRATO_REGISTRATION_ENABLED || 'false' }}
       SITE_URL: https://pkhockeyacademy.de
       SANITY_PROJECT_ID: ${{ vars.SANITY_PROJECT_ID }}

@@ -40,6 +40,37 @@ function artifact(version='a') {
   const inventory=[...contents].map(([path,bytes])=>({path,size:bytes.length,sha256:sha256(bytes)}));
   return {contents,ready:{schemaVersion:1,target:'strato',files:contents.size,inventory,contentHash:sha256(JSON.stringify(inventory))}};
 }
+function publicArtifact(version) {
+  const candidate=artifact(version);
+  const {contents,ready}=candidate;
+  contents.set('index.html',Buffer.from('<meta name="robots" content="index,follow">'+version));
+  contents.set('anmeldung/index.html',Buffer.from('<div data-training-request data-enabled="true">'));
+  contents.set('api/requests.php',Buffer.from('<?php'));
+  contents.set('robots.txt',Buffer.from('User-agent: *\nAllow: /\n'));
+  contents.set('sitemap.xml',Buffer.from('<urlset><url><loc>https://pkhockeyacademy.de/trainingstermine</loc></url></urlset>'));
+  ready.registration='form-enabled';
+  ready.inventory=[...contents].map(([path,bytes])=>({path,size:bytes.length,sha256:sha256(bytes)}));
+  ready.files=contents.size;
+  ready.contentHash=sha256(JSON.stringify(ready.inventory));
+  return candidate;
+}
+test('public cutover requires a public registration artifact and restores the review router on failure',async()=>{
+  const store=new Memory(),candidate=publicArtifact('a');
+  await assert.rejects(deployRelease(store,candidate));
+  await assert.rejects(deployRelease(store,artifact(),{publicLaunch:true}));
+  await assert.rejects(deployRelease(store,candidate,{publicLaunch:true,id:'release-bad-live',health:async()=>{throw Error('intake unavailable');}}));
+  assert.equal((await store.get('.htaccess')).toString(),original);
+  await deployRelease(store,candidate,{publicLaunch:true,id:'release-live-one'});
+  const first=(await store.get('.htaccess')).toString();
+  assert.match(first,/^# PK PUBLIC WEBSITE/);
+  assert.ok(first.includes('AuthUserFile "/private/review"'));
+  assert.ok(first.includes('api/preview'));
+  assert.ok(!first.includes('Header always set X-Robots-Tag'));
+  await assert.rejects(deployRelease(store,artifact()));
+  await deployRelease(store,publicArtifact('b'),{publicLaunch:true,id:'release-live-two'});
+  await rollbackRelease(store,{publicLaunch:true});
+  assert.equal((await store.get('.htaccess')).toString(),first);
+});
 test('complete releases, stale routes and rollback retain current authentication',async()=>{
   const store=new Memory();await deployRelease(store,artifact(),{id:'release-aaaa'});
   await deployRelease(store,artifact('b'),{id:'release-bbbb'});

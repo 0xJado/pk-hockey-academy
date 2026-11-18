@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {sha256} from './artifact.mjs';
+import {verifyPublicRelease} from '../verify-public-release.mjs';
 
 export function verifyPreviewHandshake(bytes,expectedHash) {
   if(sha256(bytes)===expectedHash)return; // Previous releases have no runtime substitution.
@@ -10,24 +11,26 @@ export function verifyPreviewHandshake(bytes,expectedHash) {
   assert.equal(sha256(Buffer.from(template)),expectedHash,'Unexpected preview handshake');
 }
 
-export function deliveryHealth(env) {
+export function deliveryHealth(env,{publicLaunch=false}={}) {
   assert.ok(env.STRATO_PREVIEW_USERNAME&&env.STRATO_PREVIEW_PASSWORD,'Missing review credentials');
   const authentication='Basic '+Buffer.from(`${env.STRATO_PREVIEW_USERNAME}:${env.STRATO_PREVIEW_PASSWORD}`).toString('base64');
   const request=async(path,status,anonymous=false)=>{
     const response=await fetch('https://pkhockeyacademy.de'+path,{redirect:'manual',signal:AbortSignal.timeout(15000),headers:anonymous?{}:{Authorization:authentication}});
     const bytes=Buffer.from(await response.arrayBuffer());
     assert.equal(response.status,status,'Unexpected delivery status');
-    if(!anonymous&&status===200)assert.match(response.headers.get('x-robots-tag')||'',/noindex/,'Missing indexing guard');
+    if(!publicLaunch&&!anonymous&&status===200)assert.match(response.headers.get('x-robots-tag')||'',/noindex/,'Missing indexing guard');
     return {response,bytes};
   };
   return async({ready,previousReady}={})=>{
-    for(const [path,status,anonymous] of [['/',200,false],['/',401,true],['/training',200,false],['/robots.txt',200,false],['/api/registration',503,false],['/.pk-state/test',403,false],['/.pk-releases/test',403,false],['/manifest.json',403,false]]) {
+    if(publicLaunch)await verifyPublicRelease();
+    for(const [path,status,anonymous] of [['/',200,false],['/',publicLaunch?200:401,true],['/training',200,false],['/robots.txt',200,false],['/api/registration',publicLaunch?405:503,false],['/.pk-state/test',403,false],['/.pk-releases/test',403,false],['/manifest.json',403,false]]) {
       // The first legacy upload does not contain version metadata.
       if(!ready&&path==='/manifest.json')continue;
       await request(path,status,anonymous);
     }
     const served=ready?.inventory.filter(file=>file.path!=='.htaccess'&&!file.path.endsWith('.php')&&!file.path.startsWith('api/preview-lib/'))||[];
     if(ready?.inventory.some(file=>file.path==='api/editor.php')) {
+      if(publicLaunch)await request('/redaktion/verbinden',401,true);
       await request('/redaktion/trainerpool',401);
       await request('/redaktion/daten',401);
       const connect=await request('/redaktion/verbinden',200);

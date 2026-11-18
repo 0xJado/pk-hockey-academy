@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
 import {validateArtifact,sha256} from './artifact.mjs';
-import {authLayer,activeRelease,renderRouter,releaseId} from './release-router.mjs';
+import {authLayer,activeRelease,renderRouter,releaseId,isPublicRouter} from './release-router.mjs';
 
 const STATE='.pk-state';
 const ROOT='.htaccess';
@@ -32,17 +32,18 @@ async function activate(store,before,next,health) {
     throw error;
   }
 }
-export async function deployRelease(store,artifact,{health=async()=>{},id=new Date().toISOString().replace(/[^0-9a-z]/gi,'-').toLowerCase()+'-'+randomUUID().slice(0,8)}={}) {
-  validateArtifact(artifact.ready,artifact.contents);
+export async function deployRelease(store,artifact,{health=async()=>{},publicLaunch=false,id=new Date().toISOString().replace(/[^0-9a-z]/gi,'-').toLowerCase()+'-'+randomUUID().slice(0,8)}={}) {
+  validateArtifact(artifact.ready,artifact.contents,{publicLaunch});
   assert.ok(releaseId(id),'Invalid release identifier');
   return withReleaseLock(store,async()=>{
-    const before=await store.get(ROOT);authLayer(before.toString());
+    const before=await store.get(ROOT);
+    if(!publicLaunch||!isPublicRouter(before.toString()))authLayer(before.toString());
     const previous=activeRelease(before.toString());
     let previousReady;
     if(previous!=='legacy') {
       const current=JSON.parse(await store.get(`.pk-releases/${previous}/manifest.json`));
       previousReady=current;
-      if(current.contentHash===artifact.ready.contentHash){await health({ready:current});return {release:previous,unchanged:true};}
+      if(current.contentHash===artifact.ready.contentHash&&isPublicRouter(before.toString())===publicLaunch){await health({ready:current});return {release:previous,unchanged:true};}
     }
     const folder='.pk-releases/'+id;
     assert.ok(!await store.exists(folder),'Release already exists');
@@ -55,22 +56,25 @@ export async function deployRelease(store,artifact,{health=async()=>{},id=new Da
       } else await checkedPut(store,folder+'/'+path,bytes);
     }
     await checkedPut(store,folder+'/manifest.json',JSON.stringify(artifact.ready));
+    if(publicLaunch)await checkedPut(store,STATE+'/export-'+id+'.conf',artifact.contents.get('.htaccess'));
     await checkedPut(store,STATE+'/before-'+id+'.conf',before);
     await checkedPut(store,folder+'/previous.json',JSON.stringify({release:previous}));
-    const next=Buffer.from(renderRouter(before.toString(),id,artifact.ready.inventory));
+    const next=Buffer.from(renderRouter(before.toString(),id,artifact.ready.inventory,{publicLaunch}));
     await activate(store,before,next,()=>health({ready:artifact.ready,previousReady}));
     return {release:id,previous,unchanged:false};
   });
 }
-export async function rollbackRelease(store,{target,health=async()=>{}}={}) {
+export async function rollbackRelease(store,{target,health=async()=>{},publicLaunch=false}={}) {
   return withReleaseLock(store,async()=>{
     const before=await store.get(ROOT),current=activeRelease(before.toString());
+    assert.equal(isPublicRouter(before.toString()),publicLaunch,'Rollback must match the active access mode');
     assert.notEqual(current,'legacy','No versioned release to roll back');
     target??=JSON.parse(await store.get(`.pk-releases/${current}/previous.json`)).release;
     // The initial upload predates atomic releases. Use its saved routing while
     // retaining today's authentication and response headers.
     let next,ready;
     if(target==='legacy') {
+      assert.ok(!publicLaunch,'Legacy release is protected');
       const {ROUTER_MARKER}=await import('./release-router.mjs');
       const old=(await store.get(STATE+'/before-'+current+'.conf')).toString();
       assert.equal(activeRelease(old),'legacy','Legacy rollback unavailable for this release');
@@ -85,7 +89,11 @@ export async function rollbackRelease(store,{target,health=async()=>{}}={}) {
       // Exported .htaccess is not served; validate all served bytes against their inventory.
       for(const file of ready.inventory.filter(x=>x.path!=='.htaccess'))assert.equal(sha256(contents.get(file.path)),file.sha256,'Rollback content changed');
       assert.equal(sha256(JSON.stringify(ready.inventory)),ready.contentHash,'Rollback manifest changed');
-      next=Buffer.from(renderRouter(before.toString(),target,ready.inventory));
+      if(publicLaunch) {
+        contents.set('.htaccess',await store.get(STATE+'/export-'+target+'.conf'));
+        validateArtifact(ready,contents,{publicLaunch});
+      }
+      next=Buffer.from(renderRouter(before.toString(),target,ready.inventory,{publicLaunch}));
     }
     const previousReady=JSON.parse(await store.get(`.pk-releases/${current}/manifest.json`));
     await activate(store,before,next,()=>health({ready,previousReady}));return {release:target,previous:current};

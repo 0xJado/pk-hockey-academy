@@ -3,17 +3,24 @@ import {connect,settings} from './lib/sftp.mjs';
 import {SftpReleaseStore} from './lib/release-store.mjs';
 import {deployRelease,rollbackRelease} from './lib/releases.mjs';
 import {deliveryHealth} from './lib/delivery.mjs';
+import {verifyIntakeToken} from './verify-public-release.mjs';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {privateRoot} from './lib/sftp.mjs';
 
 const env=await settings();
 let connection;
 try {
-  const health=deliveryHealth(env);
+  const publicLaunch=process.env.PUBLIC_LAUNCH_READY==='true';
+  const options={publicLaunch};
+  const health=deliveryHealth(env,options);
   const rollback=process.argv.includes('--rollback');
-  const artifact=rollback?null:await loadArtifact(undefined,[env.STRATO_SFTP_PASSWORD,env.STRATO_PREVIEW_PASSWORD,env.STRATO_DISPATCH_TOKEN]);
+  const artifact=rollback?null:await loadArtifact(undefined,[env.STRATO_SFTP_PASSWORD,env.STRATO_PREVIEW_PASSWORD,env.STRATO_DISPATCH_TOKEN],options);
+  if(publicLaunch&&!rollback) {
+    const authorization='Basic '+Buffer.from(env.STRATO_PREVIEW_USERNAME+':'+env.STRATO_PREVIEW_PASSWORD).toString('base64');
+    await verifyIntakeToken({Authorization:authorization});
+  }
   connection=await connect();const store=new SftpReleaseStore(connection.call);
-  const result=rollback?await rollbackRelease(store,{target:process.env.STRATO_ROLLBACK_RELEASE||undefined,health}):await deployRelease(store,artifact,{health});
+  const result=rollback?await rollbackRelease(store,{target:process.env.STRATO_ROLLBACK_RELEASE||undefined,health,publicLaunch}):await deployRelease(store,artifact,{health,publicLaunch});
   console.log(JSON.stringify({delivered:true,...result}));
 } catch(error) {
   if(!process.env.CI) {

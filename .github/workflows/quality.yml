@@ -60,6 +60,10 @@ jobs:
         run: npm run review:registration --prefix web -- --check
       - name: Test STRATO release failure and rollback guards
         run: node --test hosting/strato/tests/*.test.mjs
+      - name: Exercise public routing on loopback Apache
+        run: |
+          test -x /usr/sbin/apache2 || (sudo apt-get update && sudo apt-get install -y apache2-bin)
+          node hosting/strato/tests/apache-public-router.mjs
       - name: Check Studio types
         run: npm run check --prefix studio
       - name: Test Studio
