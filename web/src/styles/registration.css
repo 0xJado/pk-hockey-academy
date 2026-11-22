@@ -1,4 +1,5 @@
-.registration-hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
+.registration-hero-actions { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 14px; margin-top: 30px; }
+.registration-hero-pdfs { display: grid; justify-items: start; gap: 14px; }
 .training-request { color: var(--ink); overflow-wrap: anywhere; }
 .training-request p { margin-block: 12px; font-size: 14px; line-height: 1.7; }
 .training-request fieldset { min-width: 0; margin-block: 28px; padding: 22px; border: 1px solid #bbcde0; background: #fff; }
@@ -97,4 +98,5 @@
   .registration-pricing { grid-template-columns: minmax(0, 1fr); }
   .registration-pricing > div { padding: 20px; }
   .registration-hero-actions { flex-direction: column; align-items: stretch; }
+  .registration-hero-pdfs { justify-items: stretch; }
 }
