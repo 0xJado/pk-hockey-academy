@@ -5,12 +5,13 @@ export interface RegistrationField {
   type?: "text" | "tel" | "email" | "textarea";
 }
 
+export const parentChecklistUrl = "https://cdn.sanity.io/files/e6ffkfhj/production/482036f2536340d4ef734285fa5d5a04951b147e.pdf";
+
 // Transcribed from the supplied v2 PDF. Requiredness and online consent rules
 // are deliberately undefined until the registration process is approved.
 export const registration = {
   downloadUrl: "/downloads/PK-Hockey-Academy-Anmeldung-v2.pdf",
   downloadName: "PK-Hockey-Academy-Anmeldung-v2.pdf",
-  parentChecklistUrl: "https://cdn.sanity.io/files/e6ffkfhj/production/482036f2536340d4ef734285fa5d5a04951b147e.pdf",
   sourceName: "PK_Hockey_Academy_Anmeldeformular_v2.pdf",
   pages: 2,
   sizeBytes: 203522,

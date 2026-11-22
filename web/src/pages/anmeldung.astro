@@ -2,7 +2,7 @@
 import Base from "../layouts/Base.astro";
 import Arrow from "../components/Arrow.astro";
 import TrainingRequestForm from "../components/TrainingRequestForm.astro";
-import { registration } from "../data/registration";
+import { parentChecklistUrl, registration } from "../data/registration";
 import "../styles/registration.css";
 import { getTraining } from "../lib/training-source";
 import { requestableSessionOptions } from "../lib/registration/sessions";
@@ -23,7 +23,7 @@ const enabled = registrationFormEnabled(import.meta.env, policy);
         <a href="#formular" class="button button--primary"><span>{enabled ? "Trainingsanfrage ausfüllen" : "Formularvorschau ansehen"}</span><Arrow /></a>
         <div class="registration-hero-pdfs">
           <a href={registration.downloadUrl} download={registration.downloadName} class="button button--outline"><span>Trainingsanfrage als PDF</span><Arrow diagonal /></a>
-          <a href={registration.parentChecklistUrl} target="_blank" rel="noopener" class="button button--outline"><span>Eltern-Checkliste als PDF</span><Arrow diagonal /></a>
+          <a href={parentChecklistUrl} target="_blank" rel="noopener" class="button button--outline"><span>Eltern-Checkliste als PDF</span><Arrow diagonal /></a>
         </div>
       </div>
     </div>
