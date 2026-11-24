@@ -81,6 +81,11 @@ try {
   await coach.locator("#interview-form").waitFor();
   assert.equal(new URL(coach.url()).hash, "");
   assert.equal(await coach.locator("textarea[required]").count(), 1);
+  assert.equal(await coach.getByRole("heading", { name: "Dein Trainerprofil" }).isVisible(), true);
+  assert.equal(await coach.getByText(/ab Ausstellung zehn Tage gültig/).isVisible(), true);
+  assert.equal(await coach.getByText(/keine Auswirkungen auf deine Zusammenarbeit/).isVisible(), true);
+  assert.equal(await coach.locator('[name="publishProfile"]').isChecked(), false);
+  assert.equal(await coach.locator('[name="publishPhoto"]').isChecked(), false);
   assert.equal(await coach.locator("[data-answer]").count(), 13);
   assert.equal(await coach.locator("details").count(), 9);
   assert.equal(await coach.evaluate(() => document.documentElement.scrollWidth), 375);
@@ -114,6 +119,18 @@ try {
   await resumed.goto(link);
   await resumed.locator("#interview-form").waitFor();
   assert.equal(await resumed.locator('[name="answers[role][answer]"]').inputValue(), "Skating");
+  const staleVersion = await resumed.request.post(cleanUrl, {
+    headers: { Origin: origin },
+    multipart: {
+      action: "submit",
+      interview: await resumed.locator('[name="interview"]').inputValue(),
+      revision: await resumed.locator('[name="revision"]').inputValue(),
+      permissionVersion: "1",
+      "answers[name][answer]": "Fictional Coach",
+    },
+  });
+  assert.equal(staleVersion.status(), 409);
+  assert.match((await staleVersion.json()).error, /Hinweise zur Veröffentlichung wurden aktualisiert/);
   await resumed.locator('[name="publishProfile"]').check();
   await resumed.locator('[name="photo"]').setInputFiles({
     name: "bad.png", mimeType: "image/png", buffer: Buffer.from("<script>bad</script>"),
@@ -151,7 +168,9 @@ try {
   assert.equal(denied.status, 403);
   const json = await staff.request.get(detail + "&download=json");
   assert.match(json.headers()["content-disposition"], /attachment/);
-  assert.equal((await json.json()).answers.contact.answer, "internal@example.invalid");
+  const exported = await json.json();
+  assert.equal(exported.answers.contact.answer, "internal@example.invalid");
+  assert.equal(exported.permissionVersion, 2);
   const photo = await staff.request.get(detail + "&download=photo");
   assert.equal(photo.headers()["content-type"], "image/png");
   const pdf = await staff.pdf({ format: "A4" });

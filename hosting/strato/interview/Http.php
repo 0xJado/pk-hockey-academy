@@ -103,6 +103,11 @@ final class Http
             if ($action === 'save') {
                 $result = ['revision' => $this->store->save($token, $revision, $answers, $now)];
             } else {
+                if (($_POST['permissionVersion'] ?? null) !== (string)Interviews::PERMISSION_VERSION) {
+                    http_response_code(409);
+                    $this->failure('Die Hinweise zur Veröffentlichung wurden aktualisiert. Speichere deinen Entwurf und lade die Seite neu, bevor du das Interview absendest.');
+                    return;
+                }
                 $id = $this->store->submit($token, $revision, $answers, isset($_POST['publishProfile']), $now, $this->photo(), isset($_POST['publishPhoto']));
                 // A mail problem cannot undo durable submission or its receipt.
                 try {
@@ -134,8 +139,13 @@ final class Http
 
     private function coachForm(array $session): string
     {
-        $html = '<form id="interview-form" hidden><p>Du kannst den Entwurf speichern und mit demselben Einladungslink innerhalb von zehn Tagen nach Ausstellung fortsetzen.</p>'
+        $html = '<form id="interview-form" hidden><section aria-labelledby="profile-notice">'
+            .'<h2 id="profile-notice">Dein Trainerprofil</h2>'
+            .'<p>Mit deinen Antworten erstellt Pierre dein Trainerprofil für die Website der PK Hockey Academy. Du entscheidest, welche freiwilligen Fragen du beantwortest und ob du ein Foto hochlädst. Kontaktdaten für Rückfragen bleiben intern.</p>'
+            .'<p>Dein Einladungslink und ein nicht abgeschickter Entwurf sind ab Ausstellung zehn Tage gültig. Pierre löscht die vollständigen Antworten und die interne Fotokopie, sobald er sie für dein Profil nicht mehr benötigt.</p>'
+            .'</section>'
             .'<input type="hidden" name="interview" value="'.self::e($session['id']).'">'
+            .'<input type="hidden" name="permissionVersion" value="'.Interviews::PERMISSION_VERSION.'">'
             .'<input type="hidden" name="revision" value="'.self::e($session['revision']).'">'
             .'<label class="check"><input type="checkbox" id="voice-opt-in"> Optionale Spracheingabe aktivieren. Je nach Browser kann Audio an dessen Spracherkennungsdienst übertragen werden.</label>'
             .'<p id="voice-status" role="status"></p>';
@@ -156,9 +166,9 @@ final class Http
         return $html.'<fieldset><legend>Foto und Veröffentlichung</legend>'
             .'<label>Trainerfoto (freiwillig, JPEG oder PNG bis 2 MB)<input type="file" name="photo" accept="image/jpeg,image/png"></label>'
             .'<p>Das Foto wird erst beim Absenden übertragen.</p>'
-            .'<label class="check"><input type="checkbox" name="publishProfile"> Ich stimme der Veröffentlichung meines Trainerprofils auf der Website der PK Hockey Academy zu. Interne Kontaktdaten bleiben vertraulich.</label>'
-            .'<label class="check"><input type="checkbox" name="publishPhoto"> Ich stimme zu, dass mein hochgeladenes Foto im Trainerprofil auf der Academy-Website gezeigt wird.</label>'
-            .'<p>Die Zustimmung ist freiwillig und kann per E-Mail an info@pkhockeyacademy.de widerrufen werden.</p></fieldset>'
+            .'<label class="check"><input type="checkbox" name="publishProfile"> Ich bin damit einverstanden, dass die PK Hockey Academy mein Trainerprofil auf ihrer Website veröffentlicht.</label>'
+            .'<label class="check"><input type="checkbox" name="publishPhoto"> Ich bin damit einverstanden, dass die PK Hockey Academy mein hochgeladenes Foto für mein Trainerprofil auf ihrer Website verwendet.</label>'
+            .'<p>Du kannst den Fragebogen auch ohne Zustimmung zur Veröffentlichung absenden. Deine Entscheidung hat keine Auswirkungen auf deine Zusammenarbeit mit der Academy. Du kannst deine Zustimmung jederzeit per E-Mail an info@pkhockeyacademy.de für die Zukunft widerrufen.</p></fieldset>'
             .'<p><a href="/datenschutz" target="_blank" rel="noopener">Datenschutzhinweise</a></p>'
             .'<button type="button" id="save-draft">Entwurf speichern</button> <button type="submit">Interview absenden</button></form>';
     }

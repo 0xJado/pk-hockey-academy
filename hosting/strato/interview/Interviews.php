@@ -11,6 +11,7 @@ final class Unavailable extends \RuntimeException {}
 /** Private storage. Staff authorization and coach session checks belong at the HTTP boundary. */
 final class Interviews
 {
+    public const PERMISSION_VERSION = 2;
     public const INVITATION_SECONDS = 10 * 24 * 60 * 60;
     private const QUESTIONS = [
         'name', 'role', 'contact', 'start', 'teams', 'highlights', 'experience',
@@ -95,7 +96,7 @@ final class Interviews
             'publishProfile' => $publishProfile,
             'publishPhoto' => $publishPhoto,
             'photo' => $photo,
-            'permissionVersion' => 1,
+            'permissionVersion' => self::PERMISSION_VERSION,
         ];
         try {
             $this->write($row, $revision, $payload, $now, $now);
