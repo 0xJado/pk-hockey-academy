@@ -4,6 +4,7 @@ import {
   type InterviewKind,
 } from "../../data/interviews.ts";
 import { InterviewSession } from "./model.ts";
+import { trainerProfilePrefill } from "./trainer-profile.ts";
 import { SpeechCapture, type SpeechWindow } from "./speech.ts";
 
 function mountInterview(root: HTMLElement): () => void {
@@ -134,6 +135,15 @@ function mountInterview(root: HTMLElement): () => void {
     focusStage(question);
     if (autoRead.checked) readQuestion();
   }
+  function renderProfilePrefill() {
+    if (kind !== "trainer") return;
+    const profile = trainerProfilePrefill((id) => session.getAnswer(id));
+    for (const [field, value] of Object.entries(profile)) {
+      find<HTMLElement>(`[data-profile-field="${field}"]`).textContent =
+        value || "Keine Angabe";
+    }
+  }
+
   function renderReview() {
     stopMedia();
     showStage();
@@ -154,6 +164,7 @@ function mountInterview(root: HTMLElement): () => void {
       fieldset.querySelector<HTMLElement>("[data-follow-label]")!.textContent =
         `Rückfrage: ${value.followUpQuestion}`;
     }
+    renderProfilePrefill();
     focusStage(find<HTMLElement>("[data-review-heading]"));
   }
   function checkedExport() {
@@ -306,6 +317,7 @@ function mountInterview(root: HTMLElement): () => void {
         case "confirm-reset":
           stopMedia();
           session.reset();
+          renderProfilePrefill();
           for (const field of root.querySelectorAll<
             HTMLInputElement | HTMLTextAreaElement
           >("input,textarea")) {
@@ -349,6 +361,7 @@ function mountInterview(root: HTMLElement): () => void {
               : "answer",
             target.value,
           );
+          renderProfilePrefill();
           error("[data-review-error]");
         } catch (failure) {
           error(
@@ -395,6 +408,7 @@ function mountInterview(root: HTMLElement): () => void {
     stopMedia();
     lifecycle.abort();
     session.reset();
+    renderProfilePrefill();
     for (const [url, timer] of downloads) {
       clearTimeout(timer);
       URL.revokeObjectURL(url);

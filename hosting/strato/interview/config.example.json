@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "origin": "https://pkhockeyacademy.de",
+  "enabled": false,
+  "realDataApproved": false,
+  "dsn": "mysql:host=;dbname=;charset=utf8mb4",
+  "username": "",
+  "password": "",
+  "dataKey": "",
+  "staffLibrary": "",
+  "staffConfig": "",
+  "notificationTo": "",
+  "notificationFrom": ""
+}

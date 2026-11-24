@@ -151,3 +151,12 @@ test('PHP preview routing is explicit, templates stay denied and incomplete pack
   incomplete.ready.files++;incomplete.ready.contentHash=sha256(JSON.stringify(incomplete.ready.inventory));
   assert.throws(()=>validateArtifact(incomplete.ready,incomplete.contents),/Incomplete private preview/);
 });
+
+test('trainer interview routes use the independent fail-closed entry', () => {
+  const router = renderRouter(auth, 'trainer-audit-20261123', [
+    { path: 'api/requests.php' },
+    { path: 'api/trainer-interviews.php' },
+  ]);
+  assert.ok(router.includes('^(?:coach/interview|intern/trainerinterviews)$ .pk-releases/trainer-audit-20261123/api/trainer-interviews.php'));
+  assert.ok(router.indexOf('R=308') < router.indexOf('^(?:coach/interview'));
+});
