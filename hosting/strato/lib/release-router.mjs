@@ -55,6 +55,9 @@ export function renderRouter(authentication,id,inventory,{publicLaunch=false}={}
       `RewriteRule ^api/registration(?:/token)?/?$ ${prefix}api/requests.php [END]`,
       `RewriteRule ^intern/anmeldungen/?$ ${prefix}api/requests.php [END]`,
     ] : [`RewriteRule ^api/registration/?$ ${prefix}api/registration.php [END]`]),
+    ...(inventory.some(file=>file.path==='api/trainer-interviews.php')?[
+      `RewriteRule ^(?:coach/interview|intern/trainerinterviews)$ ${prefix}api/trainer-interviews.php [END]`,
+    ]:[]),
     ...(publicLaunch?[`RewriteRule ^redaktion/(pk-maintenance-[a-f0-9-]{36})$ ${prefix}api/$1.php [END]`]:[]),
     ...(preview?[`RewriteRule ^(?:api/preview/enable|redaktion/(?:verbinden|trainerpool|daten|abmelden))/?$ ${prefix}api/editor.php [END]`]:[]),
     `RewriteRule ^(?:api/preview(?:/.*)?|redaktion(?:/.*)?)$ ${prefix}api/preview-unavailable.php [END]`,

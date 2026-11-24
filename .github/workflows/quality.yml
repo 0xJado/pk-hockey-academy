@@ -84,6 +84,10 @@ jobs:
         run: npm run test:strato:interview-scope --prefix web
       - name: Verify STRATO download publication and withdrawal
         run: npm run test:strato:downloads --prefix web
+      - name: Check trainer interview storage lifecycle
+        run: php hosting/strato/tests/trainer-interviews.php
+      - name: Audit fictional coach and staff browser workflow
+        run: node --experimental-strip-types web/tests/trainer-interview-browser.mjs
       - name: Check PHP private-preview security
         run: php -n hosting/strato/tests/preview.php
       - name: Check staff authentication, lifecycle and private restore
