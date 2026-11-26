@@ -51,10 +51,14 @@ try{
  page.on('pageerror',error=>errors.push(error.message));
  page.on('console',message=>{if(message.type()==='error')errors.push(message.text());});
  await context.route('**/*',route=>{if(new URL(route.request().url()).origin!==origin){external.push(route.request().url());return route.abort();}return route.continue();});
- await page.goto(origin+path);await page.getByLabel('Kennung',{exact:true}).fill('fixture-owner');await page.getByLabel('Passwort',{exact:true}).fill('SYNTHETIC-staff-password-only');
+ await page.goto(origin+path);
+ check(await page.getByRole('link',{name:'Trainerinterviews',exact:true}).count()===0,'staff navigation requires sign-in');
+ await page.getByLabel('Kennung',{exact:true}).fill('fixture-owner');await page.getByLabel('Passwort',{exact:true}).fill('SYNTHETIC-staff-password-only');
  const submitted=page.waitForResponse(response=>response.request().method()==='POST');
  await page.getByRole('button',{name:'Anmelden',exact:true}).click();
  const loginResponse=await submitted;assert.equal(loginResponse.status(),303,'Browser login rejected; inspect synthetic request metadata');
+ const interviews=page.getByRole('navigation',{name:'Interne Verwaltung'}).getByRole('link',{name:'Trainerinterviews',exact:true});
+ check(await interviews.getAttribute('href')==='/intern/trainerinterviews','signed-in staff can open trainer interviews');
  await page.getByRole('link',{name:/FIKTIVES TESTKIND/}).click();
  check(await page.getByText('Einzeltermin',{exact:true}).isVisible(),'booking type is human-readable German');
  check(/\d{2}\.\d{2}\.\d{4} \d{2}:\d{2}/.test(await page.locator('body').innerText()),'proof timestamps are readable local dates');
