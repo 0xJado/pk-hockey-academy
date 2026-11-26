@@ -75,6 +75,7 @@ final class Http
             if (isset($_GET['record'])) http_response_code(403);
             echo '<p>Nur für persönlich berechtigte Personen. Der Sanity-Zugang gilt hier nicht.</p><form method="post" action="'.$e($path).'"><input type="hidden" name="csrf" value="'.$e($csrf).'"><input type="hidden" name="action" value="login"><label>Kennung<input name="login" autocomplete="username" maxlength="64" required></label><label>Passwort<input name="password" type="password" autocomplete="current-password" maxlength="72" required></label><button>Anmelden</button></form>';
         } else {
+            echo '<nav aria-label="Interne Verwaltung"><a href="'.$e($path).'" aria-current="page">Anmeldungen</a> · <a href="/intern/trainerinterviews">Trainerinterviews</a></nav>';
             echo '<form method="post" action="'.$e($path).'"><input type="hidden" name="csrf" value="'.$e($csrf).'"><button name="action" value="logout">Abmelden</button></form><p class="notice">Eine Statusänderung versendet keine E-Mail und reserviert keinen Trainingsplatz. Bestätigungen persönlich erledigen. Keine Downloads oder CSV-Exporte verfügbar.</p>';
             try {
                 if (isset($_GET['record'])) {

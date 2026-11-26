@@ -2,66 +2,78 @@
 import Base from "../layouts/Base.astro";
 import Button from "../components/Button.astro";
 import { getStudioUrl } from "../lib/admin";
+
 const studioUrl = getStudioUrl(import.meta.env);
 ---
 
 <Base
   noindex
-  title="Redaktion – Trainerprofile und Camp-Galerie verwalten"
-  description="Geschützter Redaktionszugang für Pierre Klein und freigeschaltete Administratoren der PK Hockey Academy."
+  title="Redaktion und interne Verwaltung – PK Hockey Academy"
+  description="Zugang zur Sanity-Redaktion und zur internen Verwaltung für Trainingsanfragen und Trainerinterviews."
 >
   <section class="page-hero">
     <div class="wrap">
       <a href="/" class="breadcrumb">
         STARTSEITE <span aria-hidden="true">/</span> REDAKTION
       </a>
-      <p class="eyebrow">PK HOCKEY ACADEMY · REDAKTION</p>
-      <h1>
-        UNSERE ACADEMY.
-        <br />
-        <span>GEMEINSAM GESTALTEN.</span>
-      </h1>
-      <p class="page-intro">
-        Der Redaktionsbereich für Pierre und freigeschaltete Administratoren.
-        Trainerprofile bearbeiten, Camp-Alben anlegen, Fotos und Videos hochladen
-        und bestätigte Inhalte freigeben.
-      </p>
+      <p class="eyebrow">PK HOCKEY ACADEMY</p>
+      <h1>Redaktion <span>&amp; Verwaltung.</span></h1>
+      <p class="page-intro">Wähle den Zugang für deine Aufgabe.</p>
     </div>
   </section>
   <section class="section light-section">
-    <div class="wrap editorial-intro">
-      <p class="eyebrow">PERSÖNLICHER ZUGANG</p>
-      <h2>{studioUrl ? "ZUR REDAKTION." : "ZUGANG FOLGT."}</h2>
-      {studioUrl ? (
-        <>
-          <p class="lead">
-            Melde dich mit deinem freigeschalteten Sanity-Konto an.
-          </p>
-          <p>
-            Verwende dieselbe Anmeldemethode wie bei deiner Einladung. Nur
-            freigeschaltete Projektmitglieder mit passenden Rechten können
-            Profile und Alben bearbeiten. Die Anmeldung erfolgt direkt bei Sanity.
-          </p>
-          <Button href={studioUrl}>Redaktion öffnen</Button>
-          <p class="small">
-            Hilfe zu Vorschau, Veröffentlichung und Abmeldung findest du im
-            Studio unter „Redaktionshilfe“. Änderungen erscheinen nach einem
-            erfolgreichen Website-Build.
-          </p>
-        </>
-      ) : (
-        <>
-          <p class="lead">Der Redaktionszugang wird noch eingerichtet.</p>
-          <p>
-            Sobald der geschützte Bereich verbunden ist, können eingeladene
-            Administratoren hier zur Anmeldung gelangen. Aktuell ist über diese
-            Seite keine Bearbeitung und kein Upload möglich.
-          </p>
-          <Button href="/galerie" variant="outline">
-            Zur Camp-Galerie
-          </Button>
-        </>
-      )}
+    <div class="wrap access-options">
+      <article class="access-option">
+        <h2>Sanity-Redaktion</h2>
+        <p>Trainerprofile und Trainingsinhalte bearbeiten, Camp-Alben pflegen und Inhalte für die Website veröffentlichen.</p>
+        {studioUrl ? (
+          <Button href={studioUrl}>Bei Sanity anmelden</Button>
+        ) : (
+          <p>Der Sanity-Zugang ist hier derzeit nicht verfügbar.</p>
+        )}
+      </article>
+      <article class="access-option">
+        <h2>Interne Web-App</h2>
+        <p>Trainingsanfragen prüfen und ihren Bearbeitungsstand dokumentieren. Trainer einladen und eingegangene Interviews ansehen oder exportieren.</p>
+        <Button href="/intern/anmeldungen">In der Web-App anmelden</Button>
+      </article>
     </div>
   </section>
 </Base>
+
+<style>
+  .access-options {
+    display: grid;
+    gap: clamp(1rem, 3vw, 2rem);
+  }
+
+  .access-option {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border: 1px solid #b8cde0;
+  }
+
+  .access-option h2 {
+    margin: 0;
+    font-size: clamp(1.85rem, 4vw, 2.75rem);
+  }
+
+  .access-option p {
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .access-option :global(.button) {
+    margin-top: auto;
+    white-space: normal;
+  }
+
+  @media (min-width: 700px) {
+    .access-options {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

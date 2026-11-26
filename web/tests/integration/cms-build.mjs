@@ -414,6 +414,7 @@ for (const mode of [
     "utf8",
   );
   assert.match(admin, /href="https:\/\/pk-hockey-academy\.sanity\.studio\/"/);
+  assert.match(admin, /href="\/intern\/anmeldungen"/);
   assert.match(admin, /content="noindex,nofollow"/);
   console.log(
     `${mode}: CMS activation, rendering and ${await scan(folder, false)} public text artifacts passed.`,
